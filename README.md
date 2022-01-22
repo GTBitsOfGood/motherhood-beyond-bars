@@ -24,3 +24,11 @@ cd mobile
 npm install
 npm run dev
 ```
+
+## Getting Started: Functions
+We're using firebase functions for a couple of small things — mainly custom claims for whitelisted emails as described [here](https://stackoverflow.com/questions/46552886/firebase-authentication-with-whitelisted-email-addresses). Otherwise, we'll be writing to firebase using client-side packages and validating the data with firestore security rules.
+
+```bash
+firebase login
+firebase emulators:start --only functions
+```
