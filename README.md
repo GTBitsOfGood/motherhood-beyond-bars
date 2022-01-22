@@ -1,5 +1,8 @@
-# Motherhood Beyond Bars
+# [Motherhood Beyond Bars](https://www.motherhoodbeyond.org/)
 
+When babies are born to women in the Georgia prison system, the mother is allotted a 48-hour stay in the hospital. After these 48 hours, the mother is returned to prison and a chosen caretaker will then come to the hospital to pick up the baby and bring it home. The nonprofit works with these caretakers to provide them with resources and supplies, but lacks a platform for the client to interact with. 
+
+**We're building that platform.**
 ## What developers need to get started
 1. Figma access (can be found on [notion page](https://www.notion.so/gtbitsofgood/Motherhood-Beyond-Bars-2c8b73628cda49b090319de9d61f0f0b))
 2. Firebase access (ask [@phultquist](https://github.com/phultquist))
