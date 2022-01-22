@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+<!-- Describe the ticket at a high level here. -->
+
 ## The Task
 
 ## Important Information
