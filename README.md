@@ -28,7 +28,7 @@ npm run dev
 ```bash
 cd mobile
 npm install
-npm run dev
+npm run start
 ```
 
 ## Getting Started: Functions
