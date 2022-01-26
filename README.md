@@ -40,3 +40,5 @@ You'll need to [install the firebase emulator](https://firebase.google.com/docs/
 firebase login
 firebase emulators:start --only functions
 ```
+
+Use another terminal session to make requests, or use Postman.
