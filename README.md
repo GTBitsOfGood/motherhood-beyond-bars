@@ -3,11 +3,14 @@
 When babies are born to women in the Georgia prison system, the mother is allotted a 48-hour stay in the hospital. After these 48 hours, the mother is returned to prison and a chosen caretaker will then come to the hospital to pick up the baby and bring it home. The nonprofit works with these caretakers to provide them with resources and supplies, but lacks a platform for the client to interact with. 
 
 **We're building that platform.**
-## What developers need to get started
+## Developers
+You'll need:
 1. Figma access (can be found on [notion page](https://www.notion.so/gtbitsofgood/Motherhood-Beyond-Bars-2c8b73628cda49b090319de9d61f0f0b))
 2. Firebase access (ask [@phultquist](https://github.com/phultquist))
 
-## Monorepo
+### Making Changes
+When you make a change, create a new branch on the repository 
+## A note about the Monorepo
 This project is organized as a monorepo. This means that while there are essentially two parts — the web app and the mobile app — they are under the same repository. Each has its own folder `/web` and `/mobile`, respectively. There are few shared components between these two apps, which is why a monorepo mananger like turborepo was not used. 
 
 ## Your development environment
