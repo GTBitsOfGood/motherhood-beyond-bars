@@ -1,9 +1,9 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Card } from "../components/";
+import { Card } from "@components/index";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { auth } from "@lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 interface Props {
