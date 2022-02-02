@@ -1,0 +1,13 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended"],
+  "plugins": ["@typescript-eslint"],
+  "ignorePatterns": ["dist", "node_modules", "examples", "scripts"],
+  "rules": {
+    "no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn"]
+  }
+}
