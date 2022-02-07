@@ -11,7 +11,7 @@ import {
   DarkTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import { ColorSchemeName, Pressable } from "react-native";
@@ -22,7 +22,7 @@ import useColorScheme from "../hooks/useColorScheme";
 import { AuthenticatedUserContext } from "../providers";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import TabOneScreen from "../screens/TabOneScreen";
+import LoginScreen from "../screens/LoginScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
   RootStackParamList,
@@ -38,8 +38,23 @@ export default function Navigation({
 }) {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [userCaregiver, setUserCaregiver] = useState(false);
+
+  async function onChange(user: User | null) {
+    if (user) {
+      const tokenId = await user.getIdTokenResult();
+      setUserCaregiver(!!tokenId.claims.caregiver);
+    } else {
+      setUserCaregiver(false);
+    }
+  }
 
   useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(onChange);
+    return () => unsubscribe();
+  }, []);
+
+  /* useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
     const unsubscribeAuthStateChanged = onAuthStateChanged(
       auth,
@@ -51,7 +66,7 @@ export default function Navigation({
 
     // unsubscribe auth listener on unmount
     return unsubscribeAuthStateChanged;
-  }, [user]);
+  }, [user]); */
 
   return (
     <NavigationContainer
@@ -107,7 +122,7 @@ function BottomTabNavigator() {
     >
       <BottomTab.Screen
         name="TabOne"
-        component={TabOneScreen}
+        component={LoginScreen}
         options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
           title: "Tab One",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
