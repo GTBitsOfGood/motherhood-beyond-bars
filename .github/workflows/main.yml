@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Lint files and run type-checks
-        run: yarn lint
+        run: cd web && yarn lint
   deploy:
     runs-on: ubuntu-latest
     steps:
