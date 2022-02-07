@@ -1,16 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import { Card } from "@components/index";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  User,
-} from "firebase/auth";
+import { User } from "firebase/auth";
 import { auth } from "@lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import NavBar from "@components/navBar";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -36,7 +27,7 @@ const Home: NextPage<Props> = ({ data }: Props) => {
   }, []);
 
   return (
-    <div className="bg-red-200 p-10">
+    <div className="bg-gray-200 p-10">
       {user?.displayName}
       {userAdmin ? <p>Welcome Admin</p> : <p>Insufficient Access</p>}
     </div>
