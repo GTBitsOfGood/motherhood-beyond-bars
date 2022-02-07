@@ -36,6 +36,9 @@ export default function WaiverPage({ waiver }: Props) {
 
   return (
     <div className="p-10">
+      <a className="hover:underline" href="/waivers">
+        Back
+      </a>
       <h1 className="font-bold text-2xl my-6">{waiver.name}</h1>
       <MdEditor
         style={{}}
