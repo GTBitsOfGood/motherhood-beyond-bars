@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+td {
+  border-spacing: 5px;
+  @apply p-5;
+}
