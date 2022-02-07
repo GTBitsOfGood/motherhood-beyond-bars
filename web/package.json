@@ -8,11 +8,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.8.3",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@grpc/grpc-js": "^1.5.4",
+    "autoprefixer": "^10.4.2",
     "firebase": "^9.6.4",
+    "framer-motion": "^5.6.0",
     "next": "12.0.8",
+    "postcss": "^8.4.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-firebase-hooks": "^5.0.0",
+    "react-redux-firebase": "^3.11.0",
+    "react-router-dom": "^6.2.1",
+    "react-step-builder": "^3.0.3",
     "tailwindcss": "^3.0.15"
   },
   "devDependencies": {

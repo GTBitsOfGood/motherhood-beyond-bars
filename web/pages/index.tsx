@@ -31,6 +31,9 @@ const Home: NextPage<Props> = ({ data }: Props) => {
         {user ? "Log out" : "Sign in with Google"}
       </button>
       {user?.displayName}
+      <div>
+        <a href="/profile">Sign Up</a>
+      </div>
     </div>
   );
 };
