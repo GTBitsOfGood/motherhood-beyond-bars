@@ -1,6 +1,11 @@
 import { doc, DocumentSnapshot, getDoc, Timestamp } from "firebase/firestore";
 import { db } from ".";
 
+/**
+ * A helper function to get a document from the database
+ * @param path
+ * @returns {Promise<DocumentSnapshot>} the document
+ */
 export async function getDocument(path: string) {
   // get firestore document that matches the path
   try {
@@ -12,6 +17,11 @@ export async function getDocument(path: string) {
   }
 }
 
+/**
+ * Adds the id to the document snapshot
+ * @param doc
+ * @returns
+ */
 export function formatDoc<T = any>(doc: DocumentSnapshot) {
   type WithTimestamp = T & { lastUpdated?: Timestamp };
   const data = doc.data() as WithTimestamp;

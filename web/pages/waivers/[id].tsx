@@ -28,8 +28,6 @@ type Params = {
 } & ParsedUrlQuery;
 
 export default function WaiverPage({ waiver }: Props) {
-  // const [value, setValue] = useState<Descendant[]>(initialValue)
-
   const [markdown, setMarkdown] = useState(waiver.content);
   const [showSaved, setShowSaved] = useState(false);
   const [loading, setLoading] = useState(false);
