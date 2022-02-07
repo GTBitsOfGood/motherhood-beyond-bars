@@ -1,11 +1,24 @@
 import { db } from "@lib/firebase";
 import { formatDoc } from "@lib/firebase/getDoc";
 import { Waiver } from "@lib/types";
-import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { ParsedUrlQuery } from "querystring";
-
+import MdEditor from "react-markdown-editor-lite";
+import MarkdownIt from "markdown-it";
+import "react-markdown-editor-lite/lib/index.css";
 import { useState } from "react";
+
+const mdParser = new MarkdownIt();
+
 interface Props {
   waiver: Waiver;
 }
@@ -15,9 +28,43 @@ type Params = {
 } & ParsedUrlQuery;
 
 export default function WaiverPage({ waiver }: Props) {
+  // const [value, setValue] = useState<Descendant[]>(initialValue)
+
+  const [markdown, setMarkdown] = useState(waiver.content);
+  const [showSaved, setShowSaved] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="p-10">
       <h1 className="font-bold text-2xl my-6">{waiver.name}</h1>
+      <MdEditor
+        style={{}}
+        value={markdown}
+        renderHTML={(text) => mdParser.render(text)}
+        onChange={({ text }) => {
+          setMarkdown(text);
+        }}
+      />
+      <button
+        className={`p-4 bg-black text-white rounded-md m-4 w-32 ${
+          loading ? "opacity-50" : ""
+        }`}
+        onClick={async () => {
+          const docRef = doc(db, `waivers/${waiver.id}`);
+          setLoading(true);
+          await updateDoc(docRef, {
+            content: markdown,
+            lastUpdated: Timestamp.now(),
+          });
+          setLoading(false);
+          setShowSaved(true);
+          setTimeout(() => {
+            setShowSaved(false);
+          }, 1000);
+        }}
+      >
+        {showSaved ? "Saved" : "Save"}
+      </button>
     </div>
   );
 }
@@ -45,3 +92,6 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
     fallback: false,
   };
 };
+function createEditor(): any {
+  throw new Error("Function not implemented.");
+}
