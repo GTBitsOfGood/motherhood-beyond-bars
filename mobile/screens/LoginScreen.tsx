@@ -3,13 +3,13 @@ import React, { useState, useContext, useEffect } from "react";
 
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
-import { Button } from "react-native";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
-import { LoginContext } from "../App";
+import { UserContext } from "../providers";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import LogoutButton from "../components/app/LogoutButton";
 import PrimaryButton from "../components/app/PrimaryButton";
@@ -19,7 +19,7 @@ export default function LoginScreen({
 }: RootTabScreenProps<"TabOne">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const authData = useContext(LoginContext);
+  const authData = useContext(UserContext);
   const [message, setMessage] = useState("");
   const [babies, setBabies] = useState<any>([]);
 

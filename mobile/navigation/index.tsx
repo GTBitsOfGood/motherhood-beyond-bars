@@ -19,7 +19,7 @@ import { auth } from "../config/firebase";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import { AuthenticatedUserContext } from "../providers";
+
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -36,7 +36,6 @@ export default function Navigation({
 }: {
   colorScheme: ColorSchemeName;
 }) {
-  const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [userCaregiver, setUserCaregiver] = useState(false);
 

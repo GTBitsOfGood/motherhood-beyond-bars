@@ -1,25 +1,25 @@
+import { onAuthStateChanged, User } from "firebase/auth";
 import React, { useState, createContext } from "react";
+import { auth } from "../config/firebase";
 
-interface Context {
-  user: any;
-  setUser: (user: any) => void;
-}
+export const UserContext = React.createContext<User | null>(null);
 
-export const AuthenticatedUserContext = createContext<Context>({
-  user: null,
-  setUser: (user) => null,
-});
-
-export const AuthenticatedUserProvider = ({
+export const UserProvider = ({
   children,
 }: {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 }) => {
-  const [user, setUser] = useState(null);
+  const [authData, setAuthData] = useState<User | null>(null);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      setAuthData(user); // also include caregiver's babies
+    } else {
+      setAuthData(null);
+    }
+  });
 
   return (
-    <AuthenticatedUserContext.Provider value={{ user, setUser }}>
-      {children}
-    </AuthenticatedUserContext.Provider>
+    <UserContext.Provider value={authData}>{children}</UserContext.Provider>
   );
 };
