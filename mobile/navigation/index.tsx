@@ -22,7 +22,7 @@ import useColorScheme from "../hooks/useColorScheme";
 import { AuthenticatedUserContext } from "../providers";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import TabOneScreen from "../screens/TabOneScreen";
+import LoginScreen from "../screens/LoginScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
   RootStackParamList,
@@ -44,9 +44,9 @@ export default function Navigation({
     if (user) {
       const tokenId = await user.getIdTokenResult();
       setUserCaregiver(!!tokenId.claims.caregiver);
-  } else {
+    } else {
       setUserCaregiver(false);
-  }
+    }
   }
 
   useEffect(() => {
@@ -122,7 +122,7 @@ function BottomTabNavigator() {
     >
       <BottomTab.Screen
         name="TabOne"
-        component={TabOneScreen}
+        component={LoginScreen}
         options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
           title: "Tab One",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
