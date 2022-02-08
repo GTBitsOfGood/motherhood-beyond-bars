@@ -19,12 +19,8 @@ import useColorScheme from "../hooks/useColorScheme";
 
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-<<<<<<< HEAD
-import TabOneScreen from "../screens/TabOneScreen";
 import SignWaiver from "../screens/SignWaiver";
-=======
 import LoginScreen from "../screens/LoginScreen";
->>>>>>> 97aa9b9786a83e0f637a8d0fb6b1c9ea18d69478
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
   OnboardingParamList,
@@ -129,6 +125,13 @@ function OnboardingNavigator() {
             component={GetStartedScreen}
           />
           <Onboarding.Screen
+            name="SignWaiver"
+            component={SignWaiver}
+            options={{
+              title: "Sign Waiver",
+            }}
+          />
+          <Onboarding.Screen
             name="Info"
             component={InfoScreen}
             options={{ headerShown: false }}
@@ -189,14 +192,6 @@ function BottomTabNavigator() {
         component={TabTwoScreen}
         options={{
           title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="SignWaiver"
-        component={SignWaiver}
-        options={{
-          title: "Sign Waiver",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

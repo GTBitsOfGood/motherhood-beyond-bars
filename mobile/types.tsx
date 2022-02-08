@@ -39,6 +39,10 @@ export type OnboardingParamList = {
   Login: undefined;
   GetStarted: undefined;
   Info: undefined;
+  SignWaiver: {
+    waiverStack: Waiver[];
+    index: number;
+  };
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
