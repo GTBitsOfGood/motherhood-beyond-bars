@@ -1,19 +1,45 @@
 import { onAuthStateChanged, User } from "firebase/auth";
-import React, { useState, createContext } from "react";
-import { auth } from "../config/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import React, { useState } from "react";
+import { auth, db } from "../config/firebase";
+import { Caregiver } from "../types";
 
-export const UserContext = React.createContext<User | null>(null);
+export type UserContextType = (User & { caregiver?: Caregiver }) | null;
+export const UserContext = React.createContext<UserContextType>(null);
 
 export const UserProvider = ({
   children,
 }: {
   children: JSX.Element | JSX.Element[];
 }) => {
-  const [authData, setAuthData] = useState<User | null>(null);
+  const [authData, setAuthData] = useState<UserContextType>(null);
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      setAuthData(user); // also include caregiver's babies
+      const caregiverRef = doc(db, `caregivers/${user.uid}`);
+      let caregiverData: any = {
+        name: user.displayName,
+        id: user.uid,
+        signedWaivers: [],
+        address: "",
+        numAdults: "",
+        numChildren: "",
+      } as Caregiver;
+      try {
+        caregiverData = {
+          ...(await getDoc(caregiverRef)).data(),
+          id: user.uid,
+        };
+      } catch (e) {
+        await setDoc(caregiverRef, caregiverData);
+        // caregiver doc doesn't exist
+      }
+
+      const data = {
+        ...user,
+        caregiver: { ...caregiverData } as Caregiver,
+      };
+      setAuthData(data); // also include caregiver's babies
     } else {
       setAuthData(null);
     }

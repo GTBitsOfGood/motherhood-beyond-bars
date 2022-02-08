@@ -11,36 +11,41 @@ admin.initializeApp();
 const db = admin.firestore();
 
 export const helloWorld = functions.https.onRequest(
-    (request: Request, response: Response) => {
-        functions.logger.info("Hello logs!", { structuredData: true });
-        response.send("Hello from Firebase!");
-    }
+  (request: Request, response: Response) => {
+    functions.logger.info("Hello logs!", { structuredData: true });
+    response.send("Hello from Firebase!");
+  }
 );
 
 export const validateSigninRequest = functions.auth
-    .user()
-    .onCreate(async (user: UserRecord, context: EventContext) => {
-        const authorizedEmails = await db.collection("app").doc("admin").get();
+  .user()
+  .onCreate(async (user: UserRecord, context: EventContext) => {
+    const authorizedEmails = await db.collection("app").doc("admin").get();
 
-        if (authorizedEmails.data()?.whitelist.includes(user.email)) {
-            // user is an admin
-            await admin.auth().setCustomUserClaims(user.uid, { admin: true });
-            console.log(`${user.email} - admin claim added`);
-            return true;
-        } else {
-            // user is not an admin
+    if (authorizedEmails.data()?.whitelist.includes(user.email)) {
+      // user is an admin
+      await admin.auth().setCustomUserClaims(user.uid, { admin: true });
+      console.log(`${user.email} - admin claim added`);
+      return true;
+    } else {
+      // user is not an admin
 
-            // check if user (caregiver) has baby associated to them
-            const allBabies = await db.collection("babies").get();
-            allBabies.docs.forEach(async (doc) => {
-                console.log(doc.data());
-                if (user.email === doc.data().caregiverEmail) {
-                    console.log("Found a baby!");
-                    await admin.auth().setCustomUserClaims(user.uid, { caregiver: true });
-                }
-            });
-
-            console.log(`${user.email} - admin claim not added`);
-            return false;
+      let babies: Baby[] = [];
+      // check if user (caregiver) has baby associated to them
+      const allBabies = await db.collection("babies").get();
+      allBabies.docs.forEach(async (doc) => {
+        if (user.email === doc.data().caregiverEmail) {
+          babies.push(doc.data() as Baby);
         }
-    });
+      });
+
+      if (babies.length !== 0) {
+        await admin.auth().setCustomUserClaims(user.uid, { caregiver: true });
+      } else return false;
+    }
+  });
+
+interface Baby {
+  name: string;
+  caregiverEmail: string;
+}

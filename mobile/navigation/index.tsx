@@ -12,7 +12,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
+import { Button, ColorSchemeName, Pressable } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -33,9 +33,13 @@ import {
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { UserContext } from "../providers";
+import { UserContext, UserContextType } from "../providers";
 import { useContext } from "react";
-import GetStartedScreen from "../screens/onboarding/GetStarted";
+import GetStartedScreen from "../screens/onboarding/GetStartedScreen";
+import LogoutButton from "../components/app/LogoutButton";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
+import InfoScreen from "../screens/onboarding/InfoScreen";
 
 export default function Navigation({
   colorScheme,
@@ -52,6 +56,13 @@ export default function Navigation({
   );
 }
 
+const validateAuthData = (authData: UserContextType) => {
+  // Determine if a user is ready to see the app yet, or if they still need to be onboarded
+  return (
+    authData?.uid && authData.caregiver?.address && authData.caregiver?.name
+  );
+};
+
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
@@ -65,7 +76,7 @@ function RootNavigator() {
   // The users should only have to complete onboarding if they're a new user.
   return (
     <Stack.Navigator>
-      {authData || false ? (
+      {validateAuthData(authData) ? (
         <>
           <Stack.Screen
             name="Root"
@@ -85,7 +96,18 @@ function RootNavigator() {
         <Stack.Screen
           name="Root"
           component={OnboardingNavigator}
-          options={{ title: "Welcome", headerShown: true }}
+          options={({ navigation }) => ({
+            headerShown: true,
+            title: "Welcome",
+            headerRight: () => (
+              <Button
+                title="Logout"
+                onPress={() => {
+                  signOut(auth);
+                }}
+              />
+            ),
+          })}
         />
       )}
     </Stack.Navigator>
@@ -95,18 +117,30 @@ function RootNavigator() {
 const Onboarding = createNativeStackNavigator<OnboardingParamList>();
 
 function OnboardingNavigator() {
+  const authData = useContext(UserContext);
+
   return (
     <Onboarding.Navigator>
-      <Onboarding.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Onboarding.Screen
-        name="GetStarted"
-        component={GetStartedScreen}
-        options={{ headerShown: false }}
-      />
+      {Boolean(authData) ? (
+        <>
+          <Onboarding.Screen
+            name="GetStarted"
+            options={{ headerShown: false }}
+            component={GetStartedScreen}
+          />
+          <Onboarding.Screen
+            name="Info"
+            component={InfoScreen}
+            options={{ headerShown: false }}
+          />
+        </>
+      ) : (
+        <Onboarding.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+      )}
     </Onboarding.Navigator>
   );
 }
