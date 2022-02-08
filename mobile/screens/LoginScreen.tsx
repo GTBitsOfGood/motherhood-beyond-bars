@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, Switch } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 
 import { Text, View } from "../components/Themed";

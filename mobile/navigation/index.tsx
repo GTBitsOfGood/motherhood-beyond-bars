@@ -11,11 +11,8 @@ import {
   DarkTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { onAuthStateChanged, User } from "firebase/auth";
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
 import { ColorSchemeName, Pressable } from "react-native";
-import { auth } from "../config/firebase";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -25,48 +22,21 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import LoginScreen from "../screens/LoginScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
+  OnboardingParamList,
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { UserContext } from "../providers";
+import { useContext } from "react";
+import GetStartedScreen from "../screens/onboarding/GetStarted";
 
 export default function Navigation({
   colorScheme,
 }: {
   colorScheme: ColorSchemeName;
 }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [userCaregiver, setUserCaregiver] = useState(false);
-
-  async function onChange(user: User | null) {
-    if (user) {
-      const tokenId = await user.getIdTokenResult();
-      setUserCaregiver(!!tokenId.claims.caregiver);
-    } else {
-      setUserCaregiver(false);
-    }
-  }
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(onChange);
-    return () => unsubscribe();
-  }, []);
-
-  /* useEffect(() => {
-    // onAuthStateChanged returns an unsubscriber
-    const unsubscribeAuthStateChanged = onAuthStateChanged(
-      auth,
-      (authenticatedUser) => {
-        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
-        setIsLoading(false);
-      }
-    );
-
-    // unsubscribe auth listener on unmount
-    return unsubscribeAuthStateChanged;
-  }, [user]); */
-
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -84,22 +54,55 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const authData = useContext(UserContext);
+
+  // TODO: add navigation items to this flow
+  // The users should only have to complete onboarding if they're a new user.
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
+      {authData || false ? (
+        <>
+          <Stack.Screen
+            name="Root"
+            component={BottomTabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="NotFound"
+            component={NotFoundScreen}
+            options={{ title: "Oops!" }}
+          />
+          <Stack.Group screenOptions={{ presentation: "modal" }}>
+            <Stack.Screen name="Modal" component={ModalScreen} />
+          </Stack.Group>
+        </>
+      ) : (
+        <Stack.Screen
+          name="Root"
+          component={OnboardingNavigator}
+          options={{ title: "Welcome", headerShown: true }}
+        />
+      )}
+    </Stack.Navigator>
+  );
+}
+
+const Onboarding = createNativeStackNavigator<OnboardingParamList>();
+
+function OnboardingNavigator() {
+  return (
+    <Onboarding.Navigator>
+      <Onboarding.Screen
+        name="Login"
+        component={LoginScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
+      <Onboarding.Screen
+        name="GetStarted"
+        component={GetStartedScreen}
+        options={{ headerShown: false }}
       />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
+    </Onboarding.Navigator>
   );
 }
 

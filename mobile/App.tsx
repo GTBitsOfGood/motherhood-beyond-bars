@@ -1,9 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { FirebaseError } from "firebase/app";
-import { onAuthStateChanged, User } from "firebase/auth";
-import React, { useState } from "react";
+import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { auth } from "./config/firebase";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
