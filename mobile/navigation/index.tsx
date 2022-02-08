@@ -19,7 +19,7 @@ import useColorScheme from "../hooks/useColorScheme";
 
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import SignWaiver from "../screens/SignWaiver";
+import SignWaiver from "../screens/onboarding/SignWaiver";
 import LoginScreen from "../screens/LoginScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {

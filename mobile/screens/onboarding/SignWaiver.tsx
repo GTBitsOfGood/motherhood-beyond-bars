@@ -1,8 +1,8 @@
 import { StyleSheet, TextInput, Switch, ScrollView } from "react-native";
-import { Text, View } from "../components/Themed";
-import { OnboardingStackScreenProps } from "../types";
+import { Text, View } from "../../components/Themed";
+import { OnboardingStackScreenProps } from "../../types";
 import { Button } from "react-native";
-import { auth, db } from "../config/firebase";
+import { auth, db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
 //@ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
@@ -14,7 +14,7 @@ import {
   getDoc,
   Timestamp,
 } from "firebase/firestore";
-import { UserContext } from "../providers";
+import { UserContext } from "../../providers";
 
 export default function SignWaiver({
   navigation,
