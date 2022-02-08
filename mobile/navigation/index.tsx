@@ -23,6 +23,7 @@ import { AuthenticatedUserContext } from "../providers";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import TabOneScreen from "../screens/TabOneScreen";
+import SignWaiver from "../screens/SignWaiver";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
   RootStackParamList,
@@ -133,6 +134,14 @@ function BottomTabNavigator() {
         component={TabTwoScreen}
         options={{
           title: "Tab Two",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="SignWaiver"
+        component={SignWaiver}
+        options={{
+          title: "Sign Waiver",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
