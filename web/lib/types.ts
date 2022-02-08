@@ -8,8 +8,9 @@ export interface User {
 
 export interface Waiver {
   content: string;
-  id: string;
+  id?: string;
   description: string;
-  lastUpdated: string;
+  lastUpdated: string | Timestamp;
   name: string;
+  order: number;
 }

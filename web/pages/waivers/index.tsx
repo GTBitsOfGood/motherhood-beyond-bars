@@ -2,7 +2,16 @@ import { formatDate } from "@lib/date";
 import { db } from "@lib/firebase";
 import { formatDoc } from "@lib/firebase/getDoc";
 import { Waiver } from "@lib/types";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+} from "firebase/firestore";
 import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 
@@ -14,7 +23,25 @@ export default function Waivers({ waivers }: Props) {
   const router = useRouter();
   return (
     <div className="p-10">
-      <h1 className="font-bold text-2xl my-6">Waivers</h1>
+      <div className="flex flex-row justify-between">
+        <h1 className="font-bold text-2xl my-6">Waivers</h1>
+        <button
+          className={`p-2 bg-black  transition-colors text-white rounded-md m-4 px-6 `}
+          onClick={async () => {
+            const newDoc = await addDoc(collection(db, "waivers"), {
+              name: "New Waiver",
+              content: "*Put the waiver body here*",
+              lastUpdated: serverTimestamp(),
+              description: "Waiver Description",
+              order: waivers.length,
+            } as Waiver);
+
+            router.push(`/waivers/${newDoc.id}`);
+          }}
+        >
+          + New
+        </button>
+      </div>
 
       {/* <pre>{JSON.stringify(waivers, null, 2)}</pre> */}
       <table className="w-full overflow-hidden rounded-lg">
@@ -30,7 +57,7 @@ export default function Waivers({ waivers }: Props) {
           >
             <td className=" text-gray-800 text-lg">{waiver.name}</td>
             <td className="uppercase font-semibold text-xs text-gray-600">
-              {formatDate(waiver.lastUpdated)}
+              {formatDate(waiver.lastUpdated as string)}
             </td>
             <td className="text-xs text-gray-600">{waiver.description}</td>
           </tr>
@@ -43,6 +70,8 @@ export default function Waivers({ waivers }: Props) {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const queryRef = query(collection(db, "waivers"), orderBy("order", "asc"));
   const allWaivers = (await getDocs(queryRef)).docs.map(formatDoc) as Waiver[];
+
+  console.log(allWaivers.length);
 
   return {
     props: {
