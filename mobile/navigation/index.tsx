@@ -19,6 +19,7 @@ import useColorScheme from "../hooks/useColorScheme";
 
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
+import SignWaiver from "../screens/SignWaiver";
 import LoginScreen from "../screens/LoginScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
@@ -122,6 +123,13 @@ function OnboardingNavigator() {
             name="GetStarted"
             options={{ headerShown: false }}
             component={GetStartedScreen}
+          />
+          <Onboarding.Screen
+            name="SignWaiver"
+            component={SignWaiver}
+            options={{
+              title: "Sign Waiver",
+            }}
           />
           <Onboarding.Screen
             name="Info"
