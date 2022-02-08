@@ -31,6 +31,12 @@ npm install
 npm run start
 ```
 
+You may have to install the `expo-cli` which you can do with the following command:
+
+```bash
+npm install -g expo-cli
+```
+
 ## Getting Started: Functions
 We're using firebase functions for a couple of small things — mainly custom claims for whitelisted emails as described [here](https://stackoverflow.com/questions/46552886/firebase-authentication-with-whitelisted-email-addresses). Otherwise, we'll be writing to firebase using client-side packages and validating the data with firestore security rules.
 
@@ -42,3 +48,5 @@ firebase emulators:start --only functions
 ```
 
 Use another terminal session to make requests, or use Postman.
+
+
