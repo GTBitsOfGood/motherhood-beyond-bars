@@ -42,6 +42,10 @@ export default function LoginScreen({
       // user is logged in
       getBabies();
     }
+
+    return () => {
+      // cleanup
+    };
   }, [authData]);
 
   return (
