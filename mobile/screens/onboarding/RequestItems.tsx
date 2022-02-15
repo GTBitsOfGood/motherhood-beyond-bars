@@ -9,6 +9,12 @@ export default function RequestItems({ navigation }: Props) {
   return (
     <View>
       <Text>Request Items</Text>
+      <Button
+        title="Next"
+        onPress={() => {
+          navigation.navigate("ShippingAddress");
+        }}
+      />
     </View>
   );
 }

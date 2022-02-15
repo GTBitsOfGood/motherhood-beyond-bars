@@ -96,7 +96,7 @@ export default function SignWaiver({
                 index: index + 1,
               });
             } else {
-              alert("All Waivers Signed!");
+              navigation.navigate("RequestItems");
             }
           } else {
             alert("You must agree to the liability waiver before continuing.");

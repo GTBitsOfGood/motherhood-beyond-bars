@@ -9,6 +9,12 @@ export default function BestContact({ navigation }: Props) {
   return (
     <View>
       <Text>Best Method of Contact</Text>
+      <Button
+        title="Finish"
+        onPress={() => {
+          alert("You've finished this donation request!")
+        }}
+      />
     </View>
   );
 }

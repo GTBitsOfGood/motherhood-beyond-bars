@@ -36,6 +36,9 @@ import LogoutButton from "../components/app/LogoutButton";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import InfoScreen from "../screens/onboarding/InfoScreen";
+import RequestItems from "../screens/onboarding/RequestItems";
+import ShippingAddress from "../screens/onboarding/ShippingAddress";
+import BestContact from "../screens/onboarding/BestContact";
 
 export default function Navigation({
   colorScheme,
@@ -135,6 +138,27 @@ function OnboardingNavigator() {
             name="Info"
             component={InfoScreen}
             options={{ headerShown: false }}
+          />
+          <Onboarding.Screen
+            name="RequestItems"
+            component={RequestItems}
+            options={{
+              title: "Request Items",
+            }}
+          />
+          <Onboarding.Screen
+            name="ShippingAddress"
+            component={ShippingAddress}
+            options={{
+              title: "Shipping Address",
+            }}
+          />
+          <Onboarding.Screen
+            name="BestContact"
+            component={BestContact}
+            options={{
+              title: "BestContact",
+            }}
           />
         </>
       ) : (

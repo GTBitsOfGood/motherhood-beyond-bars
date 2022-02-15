@@ -9,6 +9,12 @@ export default function ShippingAddress({ navigation }: Props) {
   return (
     <View>
       <Text>Shipping Address</Text>
+      <Button
+        title="Next"
+        onPress={() => {
+          navigation.navigate("BestContact");
+        }}
+      />
     </View>
   );
 }
