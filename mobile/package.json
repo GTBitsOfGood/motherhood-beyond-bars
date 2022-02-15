@@ -31,7 +31,8 @@
     "react-native-markdown-view": "^1.1.4",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "expo-checkbox": "~2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

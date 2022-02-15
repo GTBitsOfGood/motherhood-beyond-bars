@@ -9,6 +9,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Timestamp } from "firebase/firestore";
 
 declare global {
   namespace ReactNavigation {
@@ -61,6 +62,7 @@ export interface Caregiver {
   address: "";
   numAdults: "";
   numChildren: "";
+  itemsRequested: Item[];
 }
 
 export interface Waiver {
@@ -69,4 +71,11 @@ export interface Waiver {
   description: string;
   lastUpdated: string;
   name: string;
+}
+
+export interface Item {
+  name: string;
+  fulfilled: Boolean;
+  requestedOn: Timestamp;
+  // gender and size for baby clothing?
 }
