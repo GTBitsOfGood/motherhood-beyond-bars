@@ -2,6 +2,7 @@ import { View } from "../../components/Themed";
 import { Button, Text } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
+import { RadioButton } from 'react-native-paper';
 
 import {
   doc,
@@ -12,7 +13,6 @@ import {
 } from "firebase/firestore";
 import { UserContext } from "../../providers";
 import { db } from "../../config/firebase";
-import { Picker } from "@react-native-picker/picker";
 
 export default function BestContact({
   navigation
@@ -32,21 +32,16 @@ export default function BestContact({
   return (
     <View>
       <Text>What's the best way to contact you?</Text>
-      <Picker
-        selectedValue={contact}
-        onValueChange={(contact) => {
-          setContact(contact);
-        }}
-      >
-        <Picker.Item label="Phone" value="Phone"/>
-        <Picker.Item label="Text" value="Text"/>
-        <Picker.Item label="Email" value="Email"/>
-      </Picker>
+      <RadioButton.Group onValueChange={contact => setContact(contact)} value={contact}>
+        <RadioButton.Item label="Phone" value="Phone"/>
+        <RadioButton.Item label="Email" value="Email"/>
+        <RadioButton.Item label="Text" value="Text"/>
+      </RadioButton.Group>
 
       <Button
         title="Finish"
         onPress={() => {
-
+          
           setBestContact();
 
           navigation.navigate("AllDone");

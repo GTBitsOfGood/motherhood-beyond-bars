@@ -129,7 +129,7 @@ export default function RequestItems({
       />}
       {clothing && <Text>Clothing Size</Text>}
       {clothing && <TextInput
-        keyboardType='numeric'
+        keyboardType='number-pad'
         onChangeText={(size) => {
           setSize(Number(size));
         }}
