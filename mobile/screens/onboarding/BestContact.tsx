@@ -12,12 +12,14 @@ import {
 } from "firebase/firestore";
 import { UserContext } from "../../providers";
 import { db } from "../../config/firebase";
+import { Picker } from "@react-native-picker/picker";
 
 export default function BestContact({
   navigation
 }: OnboardingStackScreenProps<"BestContact">) {
 
   const authData = useContext(UserContext);
+  const [contact, setContact] = useState("");
 
   async function setBestContact() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
@@ -29,11 +31,22 @@ export default function BestContact({
 
   return (
     <View>
-      <Text>Best Method of Contact</Text>
+      <Text>What's the best way to contact you?</Text>
+      <Picker
+        selectedValue={contact}
+        onValueChange={(contact) => {
+          setContact(contact);
+        }}
+      >
+        <Picker.Item label="Phone" value="Phone"/>
+        <Picker.Item label="Text" value="Text"/>
+        <Picker.Item label="Email" value="Email"/>
+      </Picker>
+
       <Button
         title="Finish"
         onPress={() => {
-          alert("You've finished this donation request!")
+          navigation.navigate("AllDone");
         }}
       />
     </View>

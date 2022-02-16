@@ -1,6 +1,6 @@
 import { View } from "../../components/Themed";
 import { Button, Text, TextInput } from "react-native";
-import { OnboardingStackScreenProps } from "../../types";
+import { Item, OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import Checkbox from 'expo-checkbox';
 
@@ -58,14 +58,17 @@ export default function RequestItems({
     }
 
     if (clothing) {
-      updateDoc(caregiverDoc, {
-        itemsRequested: arrayUnion({
+      const itemToWrite: Item = {
+        
           name: "Baby Clothing",
           gender: gender,
           size: size,
           fulfilled: false,
           requestedOn: Timestamp.now(),
-        })
+        
+      }
+      updateDoc(caregiverDoc, {
+        itemsRequested: arrayUnion(itemToWrite)
       })
     }
 
@@ -142,7 +145,7 @@ export default function RequestItems({
         title="Next"
         onPress={() => {
 
-          setRequestedItems();
+          setRequestedItems()
           
           navigation.navigate("ShippingAddress");
         }}

@@ -47,6 +47,7 @@ export type OnboardingParamList = {
   RequestItems: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
+  AllDone: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -59,10 +60,8 @@ export interface Caregiver {
   name: string;
   id: string;
   signedWaivers: Waiver[];
-  address: "";
-  numAdults: "";
-  numChildren: "";
-  itemsRequested: Item[];
+  itemsRequested?: Item[];
+  address: string;
 }
 
 export interface Waiver {
@@ -77,5 +76,6 @@ export interface Item {
   name: string;
   fulfilled: Boolean;
   requestedOn: Timestamp;
-  // gender and size for baby clothing?
+  gender?: string;
+  size?: number;
 }

@@ -39,6 +39,7 @@ import InfoScreen from "../screens/onboarding/InfoScreen";
 import RequestItems from "../screens/onboarding/RequestItems";
 import ShippingAddress from "../screens/onboarding/ShippingAddress";
 import BestContact from "../screens/onboarding/BestContact";
+import AllDone from "../screens/onboarding/AllDone";
 
 export default function Navigation({
   colorScheme,
@@ -157,7 +158,14 @@ function OnboardingNavigator() {
             name="BestContact"
             component={BestContact}
             options={{
-              title: "BestContact",
+              title: "Best Contact",
+            }}
+          />
+          <Onboarding.Screen
+            name="AllDone"
+            component={AllDone}
+            options={{
+              title: "AllDone",
             }}
           />
         </>
