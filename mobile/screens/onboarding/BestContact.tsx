@@ -25,7 +25,7 @@ export default function BestContact({
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     
     updateDoc(caregiverDoc, {
-      // put what to update here
+      contact: contact,
     })
   }
 
@@ -46,6 +46,9 @@ export default function BestContact({
       <Button
         title="Finish"
         onPress={() => {
+
+          setBestContact();
+
           navigation.navigate("AllDone");
         }}
       />

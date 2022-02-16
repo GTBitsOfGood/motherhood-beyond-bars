@@ -24,7 +24,7 @@ export default function RequestItems({
   const [sleep, setSleep] = useState(false);
   const [clothing, setClothing] = useState(false);
   const [gender, setGender] = useState("");
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState(0);
   const [addReqs, setAddReqs] = useState("");
 
   async function setRequestedItems() {
@@ -71,15 +71,16 @@ export default function RequestItems({
         itemsRequested: arrayUnion(itemToWrite)
       })
     }
-
-    updateDoc(caregiverDoc, {
-      itemsRequested: arrayUnion({
-        name: "Additional Requests",
-        request: addReqs,
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
+    if (addReqs) {
+      updateDoc(caregiverDoc, {
+        itemsRequested: arrayUnion({
+          name: "Additional Requests",
+          request: addReqs,
+          fulfilled: false,
+          requestedOn: Timestamp.now(),
+        })
       })
-    })
+    }
   }
 
   return (
@@ -128,8 +129,9 @@ export default function RequestItems({
       />}
       {clothing && <Text>Clothing Size</Text>}
       {clothing && <TextInput
+        keyboardType='numeric'
         onChangeText={(size) => {
-          setSize(size);
+          setSize(Number(size));
         }}
       />}
 

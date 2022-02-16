@@ -60,8 +60,10 @@ export interface Caregiver {
   name: string;
   id: string;
   signedWaivers: Waiver[];
-  itemsRequested?: Item[];
+  itemsRequested: Item[];
   address: string;
+  // need save address?
+  contact: string;
 }
 
 export interface Waiver {

@@ -29,7 +29,7 @@ export default function ShippingAddress({
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     
     updateDoc(caregiverDoc, {
-      address: address + city + state + zipCode,
+      address: address + ", " + city + ", " + state + ", " + zipCode,
       // what to do with save address?
     })
   }
@@ -79,6 +79,9 @@ export default function ShippingAddress({
       <Button
         title="Next"
         onPress={() => {
+
+          setShippingAddress();
+
           navigation.navigate("BestContact");
         }}
       />
