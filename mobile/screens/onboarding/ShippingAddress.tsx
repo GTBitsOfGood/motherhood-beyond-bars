@@ -22,15 +22,18 @@ export default function ShippingAddress({
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
+  const [zipCode, setZipCode] = useState(0);
   const [save, setSave] = useState(false);
 
   async function setShippingAddress() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     
     updateDoc(caregiverDoc, {
-      address: address + ", " + city + ", " + state + ", " + zipCode,
-      // what to do with save address?
+      address: address,
+      city: city,
+      state: state,
+      zipCode: zipCode,
+      // save address feature is not yet implemented
     })
   }
   
@@ -63,8 +66,9 @@ export default function ShippingAddress({
 
       <Text>Zip Code</Text>
       <TextInput
+        keyboardType='numeric'
         onChangeText={(zipCode) => {
-          setZipCode(zipCode);
+          setZipCode(Number(zipCode));
         }}
       />
 
@@ -79,10 +83,18 @@ export default function ShippingAddress({
       <Button
         title="Next"
         onPress={() => {
-
-          setShippingAddress();
-
-          navigation.navigate("BestContact");
+          if (address === '') { // if address not inputted
+            alert("Please enter a street address."); // change this from alert to red message
+          } else if (city === '') { // if city not inputted
+            alert("Please enter a city."); // change this from alert to red message
+          } else if (state === '') { // if state not inputted
+            alert("Please enter a state."); // change this from alert to red message
+          } else if (zipCode === 0) { // if zipCode not inputted
+            alert("Please enter a zipCode."); // change this from alert to red message
+          } else {
+            setShippingAddress();
+            navigation.navigate("BestContact");
+          }
         }}
       />
     </View>

@@ -62,7 +62,9 @@ export interface Caregiver {
   signedWaivers: Waiver[];
   itemsRequested: Item[];
   address: string;
-  // need save address?
+  city: string;
+  state: string;
+  zipCode: Number;
   contact: string;
 }
 

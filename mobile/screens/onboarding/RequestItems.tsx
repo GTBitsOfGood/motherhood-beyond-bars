@@ -24,7 +24,7 @@ export default function RequestItems({
   const [sleep, setSleep] = useState(false);
   const [clothing, setClothing] = useState(false);
   const [gender, setGender] = useState("");
-  const [size, setSize] = useState(0);
+  const [size, setSize] = useState(-1);
   const [addReqs, setAddReqs] = useState("");
 
   async function setRequestedItems() {
@@ -129,7 +129,7 @@ export default function RequestItems({
       />}
       {clothing && <Text>Clothing Size</Text>}
       {clothing && <TextInput
-        keyboardType='number-pad'
+        keyboardType='numeric'
         onChangeText={(size) => {
           setSize(Number(size));
         }}
@@ -146,10 +146,14 @@ export default function RequestItems({
       <Button
         title="Next"
         onPress={() => {
-
-          setRequestedItems()
-          
-          navigation.navigate("ShippingAddress");
+          if (clothing && gender === '') { // gender is not inputted
+            alert("Please enter a gender for the baby clothing.") // change this from alert to red message
+          } else if (clothing && size === -1) { // size is not inputted
+            alert("Please enter a size for the baby clothing.") // change this from alert to red message
+          } else {
+            setRequestedItems()
+            navigation.navigate("ShippingAddress");
+          }
         }}
       />
     </View>
