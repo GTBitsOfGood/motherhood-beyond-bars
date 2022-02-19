@@ -1,4 +1,5 @@
 import React from "react"
+import Image from 'next/image'
 
 function SideBar(
     props: any
@@ -16,7 +17,7 @@ function SideBar(
                         <a href={item.route}>
                         <li className="flex w-full justify-between text-gray-600 hover:text-gray-500 cursor-pointer items-center mb-6">
                             <div className="flex items-center">
-                            <img src={item.icon}/>
+                            <Image src={item.icon}/>
                                 <span className="text-base  ml-4">{item.name}</span>
                             </div>
                         </li>

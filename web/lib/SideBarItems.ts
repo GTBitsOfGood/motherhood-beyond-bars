@@ -2,8 +2,7 @@ import caretakers_icon from "../public/caretakers_icon.png";
 import children_and_baby_books_icon from "../public/children_and_baby_books_icon.png";
 import item_requests_icon from "../public/item_requests_icon.png";
 import resource_library_icon from "../public/resource_library_icon.png";
-// import settings_icon from "../public/settings_icon.png";
-import settings_icon from "../public/admin_portal_gradient.png";
+import settings_icon from "../public/settings_icon.png";
 
 
 const SideBarItems = [
