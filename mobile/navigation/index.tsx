@@ -40,6 +40,7 @@ import RequestItems from "../screens/onboarding/RequestItems";
 import ShippingAddress from "../screens/onboarding/ShippingAddress";
 import BestContact from "../screens/onboarding/BestContact";
 import AllDone from "../screens/onboarding/AllDone";
+import Header from "../screens/Header";
 
 export default function Navigation({
   colorScheme,

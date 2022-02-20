@@ -1,5 +1,5 @@
 import { View } from "../../components/Themed";
-import { Button, Text, TextInput } from "react-native";
+import { Button, Modal, Text, TextInput, StyleSheet, Dimensions} from "react-native";
 import { Item, OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import Checkbox from 'expo-checkbox';
@@ -26,6 +26,7 @@ export default function RequestItems({
   const [gender, setGender] = useState("");
   const [size, setSize] = useState(-1);
   const [addReqs, setAddReqs] = useState("");
+  const [finished, setFinished] = useState(false);
 
   async function setRequestedItems() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
@@ -151,12 +152,52 @@ export default function RequestItems({
           } else if (clothing && size === -1) { // size is not inputted
             alert("Please enter a size for the baby clothing.") // change this from alert to red message
           } else {
-            setRequestedItems()
-            navigation.navigate("ShippingAddress");
+            setRequestedItems();
+            setFinished(true);
           }
         }}
       />
+
+      <Modal
+        animated
+        animationType="fade"
+        visible={finished}
+        transparent
+        onRequestClose={() => {}}
+      >
+        <View style={styles.modalView}>
+          <Text>Do you have your own carseat?</Text>
+          <Text>Please confirm that you have a car seat suitable for the baby. You won't be able to take them home without it!</Text>
+          <Button
+            title="Yep, I do!"
+            onPress={() => {
+              navigation.navigate("ShippingAddress");
+              setFinished(false);
+            }}
+          />
+          <Button
+            title="No, I don't."
+            onPress={() => {
+              setFinished(false);
+              setCarSeat(true);
+            }}
+          />
+        </View>
+      </Modal>
+
     </View>
   );
-  // need to add car seat confirmation modal
 }
+
+const windowHeight = Dimensions.get('window').height;
+
+const styles = StyleSheet.create({
+
+  modalView: {
+    backgroundColor: '#FFFFFF',
+    height: windowHeight / 3,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: (windowHeight * 2) / 3
+  },
+});
