@@ -25,7 +25,7 @@ export default function SignWaiver({
 
   const [name, setName] = useState("");
   const authData = useContext(UserContext);
-  const [isSelected, setSelection] = useState(true); // HELEN - CHANGE IT BACK TO FALSE
+  const [isSelected, setSelection] = useState(false);
 
   async function setSignedWaivers() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
@@ -73,9 +73,9 @@ export default function SignWaiver({
 
       <Switch
         value={isSelected}
-        /*onChange={() => {
+        onChange={() => {
           setSelection(!isSelected);
-        }} */ // HELEN - UNCOMMENT THIS LATER
+        }}
       />
       <Text style={styles.agree}>I agree to the Liability Waiver</Text>
       {/* <Text style={styles.textLabel}>Signature</Text>
