@@ -12,7 +12,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Button, ColorSchemeName, Pressable } from "react-native";
+import { Button, ColorSchemeName, Pressable, View, Text } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -40,7 +40,7 @@ import RequestItems from "../screens/onboarding/RequestItems";
 import ShippingAddress from "../screens/onboarding/ShippingAddress";
 import BestContact from "../screens/onboarding/BestContact";
 import AllDone from "../screens/onboarding/AllDone";
-import Header from "../screens/Header";
+import { ScreenStackHeaderRightView } from "react-native-screens";
 
 export default function Navigation({
   colorScheme,
@@ -124,50 +124,60 @@ function OnboardingNavigator() {
     <Onboarding.Navigator>
       {Boolean(authData) ? (
         <>
-          <Onboarding.Screen
+          {<Onboarding.Screen
             name="GetStarted"
-            options={{ headerShown: false }}
+            options={{headerShown: false }}
             component={GetStartedScreen}
-          />
-          <Onboarding.Screen
+          />}
+          {<Onboarding.Screen
             name="SignWaiver"
             component={SignWaiver}
             options={{
-              title: "Sign Waiver",
+              headerTitle: () => // add progress bar/circles and styling here
+                <View>
+                  <Text>Step 2</Text>
+                </View>
             }}
-          />
-          <Onboarding.Screen
+          />}
+          {<Onboarding.Screen
             name="Info"
             component={InfoScreen}
             options={{ headerShown: false }}
-          />
-          <Onboarding.Screen
+          />}
+          {<Onboarding.Screen
             name="RequestItems"
             component={RequestItems}
             options={{
-              title: "Request Items",
+              headerTitle: () => // add progress bar/circles and styling here
+                <View>
+                  <Text>Step 3</Text>
+                </View>
             }}
-          />
-          <Onboarding.Screen
+          />}
+          {<Onboarding.Screen
             name="ShippingAddress"
             component={ShippingAddress}
             options={{
-              title: "Shipping Address",
+              headerTitle: () => // add progress bar/circles and styling here
+                <View>
+                  <Text>Step 4</Text>
+                </View>
             }}
-          />
-          <Onboarding.Screen
+          />}
+          {<Onboarding.Screen
             name="BestContact"
             component={BestContact}
             options={{
-              title: "Best Contact",
+              headerTitle: () => // add progress bar/circles and styling here
+                <View>
+                  <Text>Step 5</Text>
+                </View>
             }}
-          />
+          />}
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
-            options={{
-              title: "AllDone",
-            }}
+            options={{headerShown: false }}
           />
         </>
       ) : (
