@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <div>
       <NavBar />
       <div className="flex flex-no-wrap h-screen">
-        <SideBar items={SideBarItems}/>
+        <SideBar items={SideBarItems} />
         <Component {...pageProps} />
       </div>
     </div>

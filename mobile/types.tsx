@@ -43,6 +43,7 @@ export type OnboardingParamList = {
     waiverStack: Waiver[];
     index: number;
   };
+  RequestItems: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
