@@ -28,6 +28,7 @@ export default function RequestItems({
   const [gender, setGender] = useState("");
   const [size, setSize] = useState(-1);
   const [addReqs, setAddReqs] = useState("");
+  const [finished, setFinished] = useState(false);
 
   async function setRequestedItems() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
