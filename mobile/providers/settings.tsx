@@ -1,5 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
 
 type RequestableItems = {
@@ -10,18 +10,14 @@ type RequestableItems = {
 };
 
 type AppConfigSettings = {
-  settings: {
-    contact: {
-      phone?: string;
-    };
-    items?: [RequestableItems];
+  contact: {
+    phone?: string;
   };
+  items?: [RequestableItems];
 };
 
 const defaultSettings: AppConfigSettings = {
-  settings: {
-    contact: {},
-  },
+  contact: {},
 };
 
 export type SettingsContextType = AppConfigSettings;
@@ -36,9 +32,17 @@ export const SettingsProvider = ({
   const [appSettings, setAppSettings] =
     useState<SettingsContextType>(defaultSettings);
 
-  onSnapshot(doc(db, "app", "settings"), (doc) => {
-    setAppSettings(doc.data() as SettingsContextType);
-  });
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "app", "settings"), (doc) => {
+      if (appSettings !== doc.data()) {
+        setAppSettings(doc.data() as SettingsContextType);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <SettingsContext.Provider value={appSettings}>

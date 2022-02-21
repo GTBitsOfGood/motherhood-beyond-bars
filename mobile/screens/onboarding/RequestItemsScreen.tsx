@@ -33,7 +33,7 @@ function MyCheckbox({
 }
 
 export default function SupportScreen({ navigation }: Props) {
-  const { settings } = useContext(SettingsContext);
+  const settings = useContext(SettingsContext);
 
   const length = (settings.items?.length || 0) + 1;
 

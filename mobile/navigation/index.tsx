@@ -69,7 +69,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const authData = useContext(UserContext);
-  const { settings } = useContext(SettingsContext);
+  const { contact } = useContext(SettingsContext);
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
@@ -110,7 +110,7 @@ function RootNavigator() {
               <Button
                 title="Call"
                 onPress={() => {
-                  Linking.openURL(`tel:${settings.contact.phone}`);
+                  Linking.openURL(`tel:${contact.phone}`);
                 }}
               />
             ),
