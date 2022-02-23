@@ -58,7 +58,7 @@ export default function ShippingAddress({
       <View style={{padding:10}}></View>
 
       <View style={{flexDirection: 'row'}}>
-        <Checkbox value={save} onValueChange={() => {setSave(save);}}></Checkbox><Text style={{paddingLeft: 5}}>Save address for future deliveries</Text>
+        <Checkbox value={save} onValueChange={() => {setSave(!save);}}></Checkbox><Text style={{paddingLeft: 5}}>Save address for future deliveries</Text>
       </View>
 
       <View style={{padding:10}}></View>
