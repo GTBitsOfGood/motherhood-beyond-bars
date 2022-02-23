@@ -7,6 +7,8 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+import { functions } from "../../config/firebase";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { OnboardingStackScreenProps } from "../../types";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
@@ -82,19 +84,7 @@ export default function SupportScreen({ navigation }: Props) {
 
     try {
       console.log(items);
-      const authToken = await auth.currentUser?.getIdToken();
-
-      const res = await mbbAxios.post(
-        "/requestItems",
-        {
-          items: items,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}}`,
-          },
-        }
-      );
+      await httpsCallable(functions, "items")({ items });
     } catch (error) {
       alert("Unable to request items. Please try again later");
     }
