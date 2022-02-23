@@ -22,7 +22,7 @@ export default function ShippingAddress({
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState(0);
+  const [zipCode, setZipCode] = useState("");
   const [save, setSave] = useState(false);
 
   async function setShippingAddress() {
@@ -53,7 +53,7 @@ export default function ShippingAddress({
       <TextInput style={styles.input} onChangeText={(state) => {setState(state);}}></TextInput>
 
       <Text style={styles.text}>Zip Code</Text>
-      <TextInput style={styles.input} keyboardType='numeric' onChangeText={(zipCode) => {setZipCode(Number(zipCode));}}></TextInput>
+      <TextInput style={styles.input} keyboardType='numeric' onChangeText={(zipCode) => {setZipCode(zipCode);}}></TextInput>
 
       <View style={{padding:10}}></View>
 
@@ -72,7 +72,7 @@ export default function ShippingAddress({
             alert("Please enter a city."); // change this from alert to red message
           } else if (state === '') { // if state not inputted
             alert("Please enter a state."); // change this from alert to red message
-          } else if (zipCode === 0) { // if zipCode not inputted
+          } else if (zipCode === '') { // if zipCode not inputted
             alert("Please enter a zipCode."); // change this from alert to red message
           } else {
             setShippingAddress();

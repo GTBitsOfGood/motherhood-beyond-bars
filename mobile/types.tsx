@@ -64,7 +64,7 @@ export interface Caregiver {
   address: string;
   city: string;
   state: string;
-  zipCode: Number;
+  zipCode: string;
   contact: string;
 }
 
