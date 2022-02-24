@@ -39,7 +39,7 @@ export default function SignWaiver({
     });
   }
 
-  return (
+  return waiver ? (
     <View style={styles.container}>
       {/* <TextInput style={styles.textInput} value={waiver} editable={false} /> */}
       <ScrollView
@@ -106,6 +106,25 @@ export default function SignWaiver({
         // style={[styles.button]}
       />
     </View>
+  ) : (
+    <>
+      <Text>no waivers</Text>
+      <Button
+        title={"Next"}
+        onPress={() => {
+          setSignedWaivers();
+
+          if (waiverStack.length > index + 1) {
+            navigation.push("SignWaiver", {
+              waiverStack,
+              index: index + 1,
+            });
+          } else {
+            navigation.navigate("RequestItems");
+          }
+        }}
+      />
+    </>
   );
 }
 
