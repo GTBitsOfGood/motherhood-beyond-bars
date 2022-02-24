@@ -14,7 +14,7 @@ export const UserProvider = ({
 }) => {
   const [authData, setAuthData] = useState<UserContextType>(null);
 
-  let unsub = () => {}
+  let unsub = () => {};
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const caregiverRef = doc(db, `caregivers/${user.uid}`);
@@ -27,10 +27,9 @@ export const UserProvider = ({
         city: "",
         zipCode: "",
         state: "",
-        contact: ""
+        contact: "",
       } as Caregiver;
       try {
-        console.log("hit")
         // unsub = onSnapshot(caregiverRef,(doc) => {
         //   caregiverData = {
         //     ...(doc.data()),
