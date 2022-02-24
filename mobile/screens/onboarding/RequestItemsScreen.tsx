@@ -122,7 +122,6 @@ export default function SupportScreen({ navigation }: Props) {
             style={[styles.input, styles.otherInput]}
             placeholder="Enter items"
             placeholderTextColor="#666666"
-            placeholderMarginLeft="20"
             onChangeText={setOtherItems}
             value={otherItems}
           />
@@ -134,7 +133,6 @@ export default function SupportScreen({ navigation }: Props) {
           style={[styles.input, styles.additionalInput]}
           placeholder="Specific item dimensions, shipping directions, etc."
           placeholderTextColor="#666666"
-          placeholderMarginLeft="20"
           multiline
           value={additionalComments}
           onChangeText={setAdditionalComments}
