@@ -12,7 +12,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Button, ColorSchemeName, Pressable } from "react-native";
+import { Button, ColorSchemeName, Linking, Pressable } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -36,6 +36,8 @@ import LogoutButton from "../components/app/LogoutButton";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import InfoScreen from "../screens/onboarding/InfoScreen";
+import SupportScreen from "../screens/onboarding/RequestItemsScreen";
+import { SettingsContext } from "../providers/settings";
 
 export default function Navigation({
   colorScheme,
@@ -67,6 +69,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const authData = useContext(UserContext);
+  const { contact } = useContext(SettingsContext);
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
@@ -103,6 +106,14 @@ function RootNavigator() {
                 }}
               />
             ),
+            headerLeft: () => (
+              <Button
+                title="Call"
+                onPress={() => {
+                  Linking.openURL(`tel:${contact.phone}`);
+                }}
+              />
+            ),
           })}
         />
       )}
@@ -119,6 +130,11 @@ function OnboardingNavigator() {
     <Onboarding.Navigator>
       {Boolean(authData) ? (
         <>
+          <Onboarding.Screen
+            name="RequestItems"
+            options={{ title: "Request Items" }}
+            component={SupportScreen}
+          />
           <Onboarding.Screen
             name="GetStarted"
             options={{ headerShown: false }}

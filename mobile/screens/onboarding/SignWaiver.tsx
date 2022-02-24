@@ -97,6 +97,7 @@ export default function SignWaiver({
               });
             } else {
               alert("All Waivers Signed!");
+              navigation.navigate("SupportScreen");
             }
           } else {
             alert("You must agree to the liability waiver before continuing.");
