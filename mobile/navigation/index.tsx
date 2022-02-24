@@ -12,7 +12,15 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Button, ColorSchemeName, Pressable, View, Text } from "react-native";
+
+import {
+  Button,
+  ColorSchemeName,
+  Linking,
+  Pressable,
+  View,
+  Text,
+} from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -40,7 +48,9 @@ import RequestItems from "../screens/onboarding/RequestItems";
 import ShippingAddress from "../screens/onboarding/ShippingAddress";
 import BestContact from "../screens/onboarding/BestContact";
 import AllDone from "../screens/onboarding/AllDone";
-import { ScreenStackHeaderRightView } from "react-native-screens";
+
+import { SettingsContext } from "../providers/settings";
+import SupportScreen from "../screens/onboarding/RequestItemsScreen";
 
 export default function Navigation({
   colorScheme,
@@ -60,11 +70,14 @@ export default function Navigation({
 const validateAuthData = (authData: UserContextType) => {
   // Determine if a user is ready to see the app yet, or if they still need to be onboarded
   return (
-    authData?.uid // && authData.caregiver?.name
-    && authData.caregiver?.signedWaivers
-    && authData.caregiver?.address && authData.caregiver?.city
-    && authData.caregiver?.state && authData.caregiver?.zipCode
-    && authData.caregiver?.itemsRequested && authData.caregiver?.contact
+    authData?.uid && // && authData.caregiver?.name
+    authData.caregiver?.signedWaivers &&
+    authData.caregiver?.address &&
+    authData.caregiver?.city &&
+    authData.caregiver?.state &&
+    authData.caregiver?.zipCode &&
+    authData.caregiver?.itemsRequested &&
+    authData.caregiver?.contact
   );
 };
 
@@ -76,6 +89,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const authData = useContext(UserContext);
+  const { contact } = useContext(SettingsContext);
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
@@ -112,6 +126,14 @@ function RootNavigator() {
                 }}
               />
             ),
+            headerLeft: () => (
+              <Button
+                title="Call"
+                onPress={() => {
+                  Linking.openURL(`tel:${contact.phone}`);
+                }}
+              />
+            ),
           })}
         />
       )}
@@ -128,60 +150,83 @@ function OnboardingNavigator() {
     <Onboarding.Navigator>
       {Boolean(authData) ? (
         <>
-          {<Onboarding.Screen
-            name="GetStarted"
-            options={{headerShown: false }}
-            component={GetStartedScreen}
-          />}
-          {<Onboarding.Screen
-            name="SignWaiver"
-            component={SignWaiver}
-            options={{
-              headerTitle: () => // add progress bar/circles and styling here
-                <View>
-                  <Text>Step 2</Text>
-                </View>
-            }}
-          />}
-          {<Onboarding.Screen
-            name="Info"
-            component={InfoScreen}
-            options={{ headerShown: false }}
-          />}
-          {<Onboarding.Screen
+          <Onboarding.Screen
             name="RequestItems"
-            component={RequestItems}
-            options={{
-              headerTitle: () => // add progress bar/circles and styling here
-                <View>
-                  <Text>Step 3</Text>
-                </View>
-            }}
-          />}
-          {<Onboarding.Screen
-            name="ShippingAddress"
-            component={ShippingAddress}
-            options={{
-              headerTitle: () => // add progress bar/circles and styling here
-                <View>
-                  <Text>Step 4</Text>
-                </View>
-            }}
-          />}
-          {<Onboarding.Screen
-            name="BestContact"
-            component={BestContact}
-            options={{
-              headerTitle: () => // add progress bar/circles and styling here
-                <View>
-                  <Text>Step 5</Text>
-                </View>
-            }}
-          />}
+            options={{ title: "Request Items" }}
+            component={SupportScreen}
+          />
+          <Onboarding.Screen
+            name="GetStarted"
+            options={{ headerShown: false }}
+            component={GetStartedScreen}
+          />
+          {
+            <Onboarding.Screen
+              name="SignWaiver"
+              component={SignWaiver}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 2</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="Info"
+              component={InfoScreen}
+              options={{ headerShown: false }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="RequestItems"
+              component={RequestItems}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 3</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="ShippingAddress"
+              component={ShippingAddress}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 4</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="BestContact"
+              component={BestContact}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 5</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
-            options={{headerShown: false }}
+            options={{ headerShown: false }}
           />
         </>
       ) : (

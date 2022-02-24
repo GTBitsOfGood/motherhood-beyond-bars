@@ -27,9 +27,11 @@ const Home: NextPage<Props> = ({ data }: Props) => {
   }, []);
 
   return (
-    <div className="bg-gray-200 p-10">
-      {user?.displayName}
-      {userAdmin ? <p>Welcome Admin</p> : <p>Insufficient Access</p>}
+    <div>
+      <div className="bg-gray-200 p-10">
+        {user?.displayName}
+        {userAdmin ? <p>Welcome Admin</p> : <p>Insufficient Access</p>}
+      </div>
     </div>
   );
 };
