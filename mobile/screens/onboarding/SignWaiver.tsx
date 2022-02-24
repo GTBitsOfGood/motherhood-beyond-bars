@@ -20,10 +20,11 @@ export default function SignWaiver({
   navigation,
   route,
 }: OnboardingStackScreenProps<"SignWaiver">) {
+  console.log(route);
+
   const { waiverStack, index } = route.params;
   const waiver = waiverStack[index];
 
-  const [name, setName] = useState("");
   const authData = useContext(UserContext);
   const [isSelected, setSelection] = useState(false);
 

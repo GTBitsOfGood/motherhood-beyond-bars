@@ -39,8 +39,7 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 import { UserContext, UserContextType } from "../providers";
 import { useContext } from "react";
-import GetStartedScreen from "../screens/onboarding/GetStartedScreen";
-import LogoutButton from "../components/app/LogoutButton";
+
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import InfoScreen from "../screens/onboarding/InfoScreen";
@@ -150,20 +149,14 @@ function OnboardingNavigator() {
     <Onboarding.Navigator>
       {Boolean(authData) ? (
         <>
-          <Onboarding.Screen
-            name="RequestItems"
-            options={{ title: "Request Items" }}
-            component={SupportScreen}
-          />
-          <Onboarding.Screen
-            name="GetStarted"
-            options={{ headerShown: false }}
-            component={GetStartedScreen}
-          />
           {
             <Onboarding.Screen
               name="SignWaiver"
               component={SignWaiver}
+              initialParams={{
+                waiverStack: [],
+                index: 0,
+              }}
               options={{
                 headerTitle: () => (
                   // add progress bar/circles and styling here

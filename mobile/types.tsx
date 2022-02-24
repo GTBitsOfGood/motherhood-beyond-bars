@@ -33,7 +33,7 @@ export type OnboardingStackScreenProps<
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
-  SignWaiver: undefined;
+  // SignWaiver: undefined;
 };
 
 export type OnboardingParamList = {
