@@ -9,6 +9,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Timestamp } from "firebase/firestore";
 
 declare global {
   namespace ReactNavigation {
@@ -32,7 +33,7 @@ export type OnboardingStackScreenProps<
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
-  SignWaiver: undefined;
+  // SignWaiver: undefined;
 };
 
 export type OnboardingParamList = {
@@ -44,6 +45,9 @@ export type OnboardingParamList = {
     index: number;
   };
   RequestItems: undefined;
+  ShippingAddress: undefined;
+  BestContact: undefined;
+  AllDone: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -56,9 +60,12 @@ export interface Caregiver {
   name: string;
   id: string;
   signedWaivers: Waiver[];
-  address: "";
-  numAdults: "";
-  numChildren: "";
+  itemsRequested: Item[];
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  contact: string;
 }
 
 export interface Waiver {
@@ -67,4 +74,12 @@ export interface Waiver {
   description: string;
   lastUpdated: string;
   name: string;
+}
+
+export interface Item {
+  name: string;
+  fulfilled: Boolean;
+  requestedOn: Timestamp;
+  gender?: string;
+  size?: number;
 }
