@@ -12,7 +12,15 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { Button, ColorSchemeName, Linking, Pressable } from "react-native";
+
+import {
+  Button,
+  ColorSchemeName,
+  Linking,
+  Pressable,
+  View,
+  Text,
+} from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -31,13 +39,17 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 import { UserContext, UserContextType } from "../providers";
 import { useContext } from "react";
-import GetStartedScreen from "../screens/onboarding/GetStartedScreen";
-import LogoutButton from "../components/app/LogoutButton";
+
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import InfoScreen from "../screens/onboarding/InfoScreen";
-import SupportScreen from "../screens/onboarding/RequestItemsScreen";
+import RequestItems from "../screens/onboarding/RequestItems";
+import ShippingAddress from "../screens/onboarding/ShippingAddress";
+import BestContact from "../screens/onboarding/BestContact";
+import AllDone from "../screens/onboarding/AllDone";
+
 import { SettingsContext } from "../providers/settings";
+import SupportScreen from "../screens/onboarding/RequestItemsScreen";
 
 export default function Navigation({
   colorScheme,
@@ -57,7 +69,14 @@ export default function Navigation({
 const validateAuthData = (authData: UserContextType) => {
   // Determine if a user is ready to see the app yet, or if they still need to be onboarded
   return (
-    authData?.uid && authData.caregiver?.address && authData.caregiver?.name
+    authData?.uid && // && authData.caregiver?.name
+    authData.caregiver?.signedWaivers &&
+    authData.caregiver?.address &&
+    authData.caregiver?.city &&
+    authData.caregiver?.state &&
+    authData.caregiver?.zipCode &&
+    authData.caregiver?.itemsRequested &&
+    authData.caregiver?.contact
   );
 };
 
@@ -130,26 +149,76 @@ function OnboardingNavigator() {
     <Onboarding.Navigator>
       {Boolean(authData) ? (
         <>
+          {
+            <Onboarding.Screen
+              name="SignWaiver"
+              component={SignWaiver}
+              initialParams={{
+                waiverStack: [],
+                index: 0,
+              }}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 2</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="Info"
+              component={InfoScreen}
+              options={{ headerShown: false }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="RequestItems"
+              component={RequestItems}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 3</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="ShippingAddress"
+              component={ShippingAddress}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 4</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="BestContact"
+              component={BestContact}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Step 5</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
           <Onboarding.Screen
-            name="RequestItems"
-            options={{ title: "Request Items" }}
-            component={SupportScreen}
-          />
-          <Onboarding.Screen
-            name="GetStarted"
-            options={{ headerShown: false }}
-            component={GetStartedScreen}
-          />
-          <Onboarding.Screen
-            name="SignWaiver"
-            component={SignWaiver}
-            options={{
-              title: "Sign Waiver",
-            }}
-          />
-          <Onboarding.Screen
-            name="Info"
-            component={InfoScreen}
+            name="AllDone"
+            component={AllDone}
             options={{ headerShown: false }}
           />
         </>

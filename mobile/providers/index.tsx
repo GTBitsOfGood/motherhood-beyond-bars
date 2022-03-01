@@ -1,5 +1,5 @@
 import { onAuthStateChanged, User } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { auth, db } from "../config/firebase";
 import { Caregiver } from "../types";
@@ -14,6 +14,7 @@ export const UserProvider = ({
 }) => {
   const [authData, setAuthData] = useState<UserContextType>(null);
 
+  let unsub = () => {};
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const caregiverRef = doc(db, `caregivers/${user.uid}`);
@@ -22,15 +23,25 @@ export const UserProvider = ({
         id: user.uid,
         signedWaivers: [],
         address: "",
-        numAdults: "",
-        numChildren: "",
+        itemsRequested: [],
+        city: "",
+        zipCode: "",
+        state: "",
+        contact: "",
       } as Caregiver;
       try {
+        // unsub = onSnapshot(caregiverRef,(doc) => {
+        //   caregiverData = {
+        //     ...(doc.data()),
+        //     id: doc.id
+        //   }
+        // })
         caregiverData = {
           ...(await getDoc(caregiverRef)).data(),
           id: user.uid,
         };
       } catch (e) {
+        console.log(e);
         await setDoc(caregiverRef, caregiverData);
         // caregiver doc doesn't exist
       }
