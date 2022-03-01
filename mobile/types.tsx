@@ -44,6 +44,10 @@ export type OnboardingParamList = {
     index: number;
   };
   RequestItems: undefined;
+  BabyBookAccess: undefined;
+  BabyBook: undefined;
+  StartBook: undefined;
+  SelectPicture: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
