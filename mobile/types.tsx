@@ -41,8 +41,7 @@ export type OnboardingParamList = {
   GetStarted: undefined;
   Info: undefined;
   SignWaiver: {
-    waiverStack: Waiver[];
-    index: number;
+    unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
   ShippingAddress: undefined;

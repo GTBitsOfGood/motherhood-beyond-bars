@@ -153,10 +153,6 @@ function OnboardingNavigator() {
             <Onboarding.Screen
               name="SignWaiver"
               component={SignWaiver}
-              initialParams={{
-                waiverStack: [],
-                index: 0,
-              }}
               options={{
                 headerTitle: () => (
                   // add progress bar/circles and styling here

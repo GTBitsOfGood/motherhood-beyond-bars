@@ -1,6 +1,6 @@
 import { StyleSheet, TextInput, Switch, ScrollView } from "react-native";
 import { Text, View } from "../../components/Themed";
-import { OnboardingStackScreenProps } from "../../types";
+import { OnboardingStackScreenProps, Waiver } from "../../types";
 import { Button } from "react-native";
 import { auth, db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
@@ -15,28 +15,46 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { UserContext } from "../../providers";
+import { getWaivers } from "../../lib/getWaivers";
 
 export default function SignWaiver({
   navigation,
   route,
 }: OnboardingStackScreenProps<"SignWaiver">) {
-  console.log(route);
-
-  const { waiverStack, index } = route.params;
-  const waiver = waiverStack[index];
-
   const authData = useContext(UserContext);
   const [isSelected, setSelection] = useState(false);
+  const [unsigned, setUnsigned] = useState<Waiver[]>(
+    route?.params?.unsignedWaivers || []
+  );
+  const [waiver, setWaiver] = useState<Waiver | null>(
+    route.params?.unsignedWaivers?.[0] || null
+  );
+
+  useEffect(() => {
+    if (
+      route?.params?.unsignedWaivers === undefined ||
+      route?.params?.unsignedWaivers === null
+    ) {
+      // If the waivers do not exist, find them
+      async function setWaviers() {
+        const allWaivers = await getWaivers();
+        setUnsigned(allWaivers);
+        setWaiver(allWaivers[0]);
+      }
+      setWaviers();
+    }
+  }, []);
 
   async function setSignedWaivers() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
 
-    updateDoc(caregiverDoc, {
-      signedWaivers: arrayUnion({
-        id: waiver.id,
-        timestamp: Timestamp.now(),
-      }),
-    });
+    waiver &&
+      updateDoc(caregiverDoc, {
+        signedWaivers: arrayUnion({
+          id: waiver.id,
+          timestamp: Timestamp.now(),
+        }),
+      });
   }
 
   return waiver ? (
@@ -91,10 +109,11 @@ export default function SignWaiver({
 
             setSignedWaivers();
 
-            if (waiverStack.length > index + 1) {
+            if (unsigned.length > 0) {
+              const newWaivers = Array.from(unsigned);
+              newWaivers.shift();
               navigation.push("SignWaiver", {
-                waiverStack,
-                index: index + 1,
+                unsignedWaivers: newWaivers,
               });
             } else {
               navigation.navigate("RequestItems");
@@ -114,14 +133,7 @@ export default function SignWaiver({
         onPress={() => {
           setSignedWaivers();
 
-          if (waiverStack.length > index + 1) {
-            navigation.push("SignWaiver", {
-              waiverStack,
-              index: index + 1,
-            });
-          } else {
-            navigation.navigate("RequestItems");
-          }
+          navigation.navigate("RequestItems");
         }}
       />
     </>
