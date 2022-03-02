@@ -13,6 +13,7 @@ import {
   arrayUnion,
   getDoc,
   Timestamp,
+  setDoc,
 } from "firebase/firestore";
 import { UserContext } from "../../providers";
 import { getWaivers } from "../../lib/getWaivers";
@@ -49,12 +50,16 @@ export default function SignWaiver({
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
 
     waiver &&
-      updateDoc(caregiverDoc, {
-        signedWaivers: arrayUnion({
-          id: waiver.id,
-          timestamp: Timestamp.now(),
-        }),
-      });
+      setDoc(
+        caregiverDoc,
+        {
+          signedWaivers: arrayUnion({
+            id: waiver.id,
+            timestamp: Timestamp.now(),
+          }),
+        },
+        { merge: true }
+      );
   }
 
   return waiver ? (

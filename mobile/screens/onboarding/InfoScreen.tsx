@@ -3,9 +3,9 @@ import { View } from "../../components/Themed";
 import { Button, Text } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 
-type Props = OnboardingStackScreenProps<"GetStarted">;
-
-export default function InfoScreen({ navigation }: Props) {
+export default function InfoScreen({
+  navigation,
+}: OnboardingStackScreenProps<"Info">) {
   return (
     <View>
       <Button

@@ -68,6 +68,20 @@ export default function Navigation({
 
 const validateAuthData = (authData: UserContextType) => {
   // Determine if a user is ready to see the app yet, or if they still need to be onboarded
+  console.log("caregiver", authData?.caregiver, Date.now());
+
+  console
+    .log
+    // authData?.uid, // && authData.caregiver?.name
+    // authData?.caregiver?.signedWaivers
+    // authData.caregiver?.address &&
+    // authData.caregiver?.city &&
+    // authData.caregiver?.state &&
+    // authData.caregiver?.zipCode &&
+    // authData.caregiver?.itemsRequested &&
+    // authData.caregiver?.contact
+    ();
+
   return (
     authData?.uid && // && authData.caregiver?.name
     authData.caregiver?.signedWaivers &&
