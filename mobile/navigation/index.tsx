@@ -50,6 +50,10 @@ import AllDone from "../screens/onboarding/AllDone";
 
 import { SettingsContext } from "../providers/settings";
 import SupportScreen from "../screens/onboarding/RequestItemsScreen";
+import BabyBookAccess from "../screens/babybook/BabyBookAccess";
+import BabyBook from "../screens/babybook/BabyBook";
+import StartBook from "../screens/babybook/StartBook";
+import SelectPicture from "../screens/babybook/SelectPicture";
 
 export default function Navigation({
   colorScheme,
@@ -211,6 +215,62 @@ function OnboardingNavigator() {
                   // add progress bar/circles and styling here
                   <View>
                     <Text>Step 5</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="BabyBookAccess"
+              component={BabyBookAccess}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book Access</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="BabyBook"
+              component={BabyBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="StartBook"
+              component={StartBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Start A Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="SelectPicture"
+              component={SelectPicture}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
                   </View>
                 ),
               }}

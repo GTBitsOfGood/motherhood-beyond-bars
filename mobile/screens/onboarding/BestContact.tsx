@@ -42,7 +42,7 @@ export default function BestContact({
       <Button
         title="Finish"
         onPress={() => {setBestContact();
-          navigation.navigate("AllDone");}}/>
+          navigation.navigate("BabyBookAccess");}}/>
 
     </View>
   );
