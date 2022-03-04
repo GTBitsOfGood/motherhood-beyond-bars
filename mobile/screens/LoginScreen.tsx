@@ -58,8 +58,6 @@ export default function LoginScreen({
         autoFocus={true}
         style={styles.input}
         onChangeText={(email) => {
-          console.log('emailchanged');
-          
           setEmail(email);
         }}
       />
@@ -79,8 +77,8 @@ export default function LoginScreen({
           <PrimaryButton
             text="Sign In"
             onPress={async () => {
-              console.log('clicked');
-              
+              console.log("clicked");
+
               await signInWithEmailAndPassword(
                 auth,
                 email.trim(),

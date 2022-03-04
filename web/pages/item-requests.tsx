@@ -19,8 +19,6 @@ type RequestItem = {
 };
 
 function genItemRequestsTab({ itemRequests }: { itemRequests: RequestItem[] }) {
-  console.log(itemRequests);
-
   const getData = () => {
     return itemRequests;
   };
