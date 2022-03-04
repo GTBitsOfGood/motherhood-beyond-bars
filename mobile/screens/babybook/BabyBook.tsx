@@ -17,10 +17,7 @@ export default function BabyBook({ navigation }: Props) {
           <Text style={styles.title}>No Photos Yet</Text>
           <Text style={{textAlign: 'center'}}>Get started by tapping this button to add a photo of Jordan!</Text>
       </View>
-      <Button
-        title='+'
-        onPress={() => {}}
-        ></Button>
+      <Button title='+' onPress={() => navigation.navigate("SelectPicture")}></Button>
     </View>
   );
 }
