@@ -14,7 +14,7 @@ import {
   getDoc,
   Timestamp,
 } from "firebase/firestore";
-import { UserContext } from "../../providers";
+import { UserContext } from "../../providers/User";
 
 export default function SignWaiver({
   navigation,

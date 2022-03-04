@@ -9,7 +9,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Timestamp } from "firebase/firestore";
+import { CollectionReference, Timestamp } from "firebase/firestore";
 
 declare global {
   namespace ReactNavigation {
@@ -70,6 +70,19 @@ export interface Caregiver {
   state: string;
   zipCode: string;
   contact: string;
+}
+
+export interface Baby {
+  name: string;
+  caregiverEmail: string;
+  caregiverID: string;
+}
+
+export interface Book {
+  caption: string;
+  caregiverID: string;
+  date: Timestamp;
+  imageURL: string;
 }
 
 export interface Waiver {

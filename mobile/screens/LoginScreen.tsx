@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
-import { UserContext } from "../providers";
+import { UserContext } from "../providers/User";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import LogoutButton from "../components/app/LogoutButton";
 import PrimaryButton from "../components/app/PrimaryButton";
