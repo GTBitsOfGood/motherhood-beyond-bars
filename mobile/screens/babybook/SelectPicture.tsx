@@ -1,12 +1,13 @@
 import React, { useState, useContext } from "react";
 import { View } from "../../components/Themed";
-import { StyleSheet, Button, Switch, Text, TextInput } from "react-native";
+import { StyleSheet, Button, Switch, Text, TextInput, Platform, Alert } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { doc, updateDoc, arrayUnion, getDoc, Timestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
 import { BabyContext } from "../../providers/Baby";
+import { firebase } from "@react-native-firebase/storage";
 
 type Props = OnboardingStackScreenProps<"SelectPicture">;
 
@@ -16,26 +17,33 @@ export default function SelectPicture({ navigation }: Props) {
   const caregiver = useContext(UserContext);
   const [caption, setCaption] = useState("");
   const [imageURL, setImageURL] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
 
-  const storage = getStorage();
-//   https://firebase.google.com/docs/storage/web/upload-files
-//   var storageRef = ref(storage, 'dummy.png');
-//   uploadBytes(storageRef, file).then((snapshot) => { // file from File API
-//       console.log("uploaded file?")
-//   })
+  
 
-async function addPicture() {
-  const babyDoc = doc(db, "babies", baby?.uid as string); 
-  // const babyDoc = doc(db, "babies", "4tzVD1aHglb287A9UHgC");
+async function addPicture(this: any) {
+  // const babyDoc = doc(db, "babies", baby?.uid as string); 
+  const babyDoc = doc(db, "babies/book", "4tzVD1aHglb287A9UHgC");
 
   updateDoc(babyDoc, { // fix this too
-      book: arrayUnion({
-          imageURL: imageURL,
-          caption: caption,
-          date: Timestamp.now(),
-          caregiverID: caregiver?.uid as string,
-      })
+      imageURL: imageURL,
+      caption: caption,
+      date: Timestamp.now(),
+      caregiverID: caregiver?.uid as string,
   })
+
+  const {imageName, uploadUri} = this.state;
+  firebase
+    .storage()
+    .ref(imageName)
+    .putFile(uploadUri)
+    .then((snapshot: any) => {
+      //You can check the image is now uploaded in the storage bucket
+      console.log(`${imageName} has been successfully uploaded.`);
+    })
+    .catch((e: any) => console.log('uploading image error => ', e));
+
 }
 
   return (

@@ -23,7 +23,7 @@ export default function SignWaiver({
   route,
 }: OnboardingStackScreenProps<"SignWaiver">) {
   const authData = useContext(UserContext);
-  const [isSelected, setSelection] = useState(false);
+  const [isSelected, setSelection] = useState(true); // change this back to false!
   const [unsigned, setUnsigned] = useState<Waiver[]>(
     route?.params?.unsignedWaivers || []
   );

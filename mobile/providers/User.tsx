@@ -1,10 +1,14 @@
 import { onAuthStateChanged, User } from "firebase/auth";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { Caregiver } from "../types";
 
-export type UserContextType = (User & { caregiver?: Caregiver }) | null;
+export type UserContextType =
+  | (Pick<User, "email" | "displayName" | "emailVerified" | "uid"> & {
+      caregiver?: Caregiver;
+    } & { reloadCaregiver: () => void })
+  | null;
 export const UserContext = React.createContext<UserContextType>(null);
 
 export const UserProvider = ({
@@ -14,8 +18,23 @@ export const UserProvider = ({
 }) => {
   const [authData, setAuthData] = useState<UserContextType>(null);
 
-  let unsub = () => {};
+  const reloadCaregiver = async () => {
+    if (!authData) return;
+    const caregiverRef = doc(db, `caregivers/${authData.uid}`);
+    const newCaregiverData = (await getDoc(caregiverRef)).data() as Caregiver;
+    // setAuthData({
+    //   ...user,
+    //   caregiver: newCaregiverData,
+    //   reloadCaregiver,
+    // });
+  };
+
   onAuthStateChanged(auth, async (user) => {
+    if (!user || user?.uid === authData?.uid) {
+      return;
+    }
+    console.log("auth state changed");
+
     if (user) {
       const caregiverRef = doc(db, `caregivers/${user.uid}`);
       let caregiverData: any = {
@@ -30,12 +49,6 @@ export const UserProvider = ({
         contact: "",
       } as Caregiver;
       try {
-        // unsub = onSnapshot(caregiverRef,(doc) => {
-        //   caregiverData = {
-        //     ...(doc.data()),
-        //     id: doc.id
-        //   }
-        // })
         caregiverData = {
           ...(await getDoc(caregiverRef)).data(),
           id: user.uid,
@@ -43,12 +56,19 @@ export const UserProvider = ({
       } catch (e) {
         console.log(e);
         await setDoc(caregiverRef, caregiverData);
+
         // caregiver doc doesn't exist
       }
 
       const data = {
-        ...user,
+        ...{
+          email: user.email,
+          displayName: user.displayName,
+          emailVerified: user.emailVerified,
+          uid: user.uid,
+        },
         caregiver: { ...caregiverData } as Caregiver,
+        reloadCaregiver,
       };
       setAuthData(data); // also include caregiver's babies
     } else {

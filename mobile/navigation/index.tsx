@@ -37,7 +37,7 @@ import {
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { UserContext, UserContextType } from "../providers";
+import { UserContext, UserContextType } from "../providers/User";
 import { useContext } from "react";
 
 import { signOut } from "firebase/auth";
