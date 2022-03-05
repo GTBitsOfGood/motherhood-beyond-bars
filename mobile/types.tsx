@@ -30,6 +30,10 @@ export type OnboardingStackScreenProps<
   Screen extends keyof OnboardingParamList
 > = NativeStackScreenProps<OnboardingParamList, Screen>;
 
+export type BookStackScreenProps<
+  Screen extends keyof BookParamList
+> = NativeStackScreenProps<BookParamList, Screen>;
+
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
@@ -43,14 +47,17 @@ export type OnboardingParamList = {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
-  BabyBookAccess: undefined;
-  BabyBook: undefined;
-  StartBook: undefined;
-  SelectPicture: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
 };
+
+export type BookParamList = {
+  BabyBookAccess: undefined;
+  BabyBook: undefined;
+  StartBook: undefined;
+  SelectPicture: undefined;
+}
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<

@@ -1,6 +1,6 @@
 import { onAuthStateChanged, User } from "firebase/auth";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { Baby } from "../types";
 

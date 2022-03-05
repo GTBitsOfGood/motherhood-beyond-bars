@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { View } from "../../components/Themed";
 import { StyleSheet, Button, Switch, Text } from "react-native";
-import { OnboardingStackScreenProps } from "../../types";
+import { BookStackScreenProps } from "../../types";
 
-type Props = OnboardingStackScreenProps<"BabyBook">;
+type Props = BookStackScreenProps<"BabyBook">;
 
 export default function BabyBook({ navigation }: Props) {
 
