@@ -1,14 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View } from "../../components/Themed";
 import { StyleSheet, Button, Switch, Text, TextInput, Platform, Alert, Animated } from "react-native";
 import { BookStackScreenProps } from "../../types";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import { doc, updateDoc, arrayUnion, getDoc, Timestamp, setDoc } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { db, storage } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
 import { BabyContext } from "../../providers/Baby";
-import { firebase } from "@react-native-firebase/storage";
-import ImagePicker from 'react-native-image-picker';
 import { ProgressBar, Colors } from 'react-native-paper';
 
 
@@ -20,57 +18,77 @@ export default function SelectPicture({ navigation }: Props) {
   const caregiver = useContext(UserContext);
   const [caption, setCaption] = useState("");
   const [imageURL, setImageURL] = useState("");
-  const options = {
-    title: 'Select Image',
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
 
-  
+async function uploadPicture() {
+  const file = new File(["test"], "file.txt", {type: "text/plain"}); // change this to image
 
-async function addPicture(this: any) {
-  // const babyRef = doc(db, "babies", baby?.uid as string); 
-  const babyRef = doc(db, "babies", "4tzVD1aHglb287A9UHgC");
-  const bookDoc = doc(babyRef, "book", Timestamp.now().valueOf().trim());
-  await setDoc(bookDoc, {
-    imageURL: imageURL,
-    caption: caption,
-    date: Timestamp.now(),
-    caregiverID: caregiver?.uid as string,
-  })
+  const babyRef = doc(db, "babies", baby?.id as string); 
 
-  /* const {imageName, uploadUri} = this.state;
-  firebase
-    .storage()
-    .ref(imageName)
-    .putFile(uploadUri)
-    .then((snapshot: any) => {
-      //You can check the image is now uploaded in the storage bucket
-      console.log(`${imageName} has been successfully uploaded.`);
+  // add timestamp to file name
+  const extension = file.name.split('.').pop();
+  const name = file.name.split('.').slice(0, -1).join(".");
+  const picName = name + Date.now() + '.' + extension;
+
+  setUploading(true);
+  setTransferred(0);
+
+  const storageRef = ref(storage, baby?.id + '/' + picName);
+  const uploadTask = uploadBytesResumable(storageRef, file)
+    
+  uploadTask.on('state_changed', (snapshot) => {
+    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+    setTransferred(progress);
+  }, 
+    (error) => {
+      // unsuccessful upload
+      console.log(error);
+    }, 
+    () => {
+      // successful upload
+      getDownloadURL(ref(storage,baby?.id + '/' + picName))
+      .then(async (url) => {
+        setImageURL(url);
+
+        // create baby book document
+        const bookDoc = doc(babyRef, "book", picName);
+        await setDoc(bookDoc, {
+          imageURL: url,
+          caption: caption,
+          date: Timestamp.now(),
+          caregiverID: caregiver?.uid as string,
+        })
+      })
+
+      // alert user finished uploading
+      setUploading(false)
+      Alert.alert(
+        'Image uploaded!', 
+        'Your image has been uploaded successfully!'
+      )
+
     })
-    .catch((e: any) => console.log('uploading image error => ', e)); */
-
 }
 
   return (
     <View style={styles.container}>
           <Text style={styles.title}>Description</Text>
-          <TextInput placeholder="How the baby is doing, what s/he did today, etc."
-          placeholderTextColor="#666666"></TextInput>
+          <TextInput
+            placeholder="How the baby is doing, what s/he did today, etc."
+            placeholderTextColor="#666666"
+            onChangeText={(caption) => {setCaption(caption);}}
+            ></TextInput>
       <Button
         title='Upload'
         onPress={() => {
-          addPicture();
-          navigation.navigate("BabyBook")
+          uploadPicture();
+          // navigation.navigate("BabyBook")
         }}
       ></Button>
-        <Text>
-          Uploading...
-        </Text>
-        <ProgressBar progress={0.5} color={Colors.blue800}></ProgressBar>
-        <Text>50%</Text>
+        {uploading && <Text>Uploading...</Text>}
+        {uploading ? <ProgressBar progress={transferred} color={Colors.blue800}></ProgressBar> : <View></View>}
+        {uploading && <Text>{transferred}%</Text>}
     </View>
   );
 }

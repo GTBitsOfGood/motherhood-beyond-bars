@@ -32,7 +32,8 @@ export default function LoginScreen({
         )
       );
       setBabies(babiesArray.docs.map((doc) => doc.data().name));
-      if (babies.length > 0) {
+      console.log(babies)
+      if (babiesArray.docs.length > 0) {
         setMessage("Congrats! You're signed in.");
       } else {
         setMessage("You don't have access.");

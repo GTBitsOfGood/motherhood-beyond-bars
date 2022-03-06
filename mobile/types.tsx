@@ -79,6 +79,7 @@ export interface Caregiver {
 
 export interface Baby {
   name: string;
+  id: string;
   caregiverEmail: string;
   caregiverID: string;
 }
