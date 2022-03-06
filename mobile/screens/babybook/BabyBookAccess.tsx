@@ -14,10 +14,13 @@ export default function BabyBookAccess({ navigation }: Props) {
         value={isSelected}
         onChange={() => {
           setSelection(!isSelected);
-          navigation.navigate("StartBook");
+          if (isSelected == false) {
+            navigation.navigate("StartBook");
+          }
         }}
       />
       <Text>Access to Baby Book</Text>
+      <View style={{padding:'30%'}}></View>
       <View style={{padding:25}}>
           <Text style={styles.title}>Restricted Access</Text>
           <Text style={{textAlign: 'center'}}>Looks lik eyour account is not assigned to a baby yet!</Text>

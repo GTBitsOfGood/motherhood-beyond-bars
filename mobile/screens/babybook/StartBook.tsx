@@ -10,7 +10,7 @@ export default function StartBook({ navigation }: Props) {
   return (
     <View style={styles.container}>
           <Text style={styles.title}>Start a Baby Book</Text>
-          <Text>The Baby Book is a place where you can document the baby's journey by uploading images and descriptions. Motherhood Beyond Bars will then deliver the images to the mothers, so they can stay updated on their baby's growth.</Text>
+          <Text style={{paddingBottom:15}}>The Baby Book is a place where you can document the baby's journey by uploading images and descriptions. Motherhood Beyond Bars will then deliver the images to the mothers, so they can stay updated on their baby's growth.</Text>
       <Button title='Get Started' onPress={() => navigation.navigate("BabyBook")}></Button>
     </View>
   );
@@ -24,8 +24,7 @@ const styles = StyleSheet.create({
     title: {
       fontSize: 20,
       fontWeight: "bold",
-      paddingBottom: 15,
-      textAlign: 'center'
+      paddingBottom: 15
     },
     textbox: {
         backgroundColor: "#f5f5f5",
