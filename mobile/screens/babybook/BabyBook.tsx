@@ -2,10 +2,25 @@ import React, { useState } from "react";
 import { View } from "../../components/Themed";
 import { StyleSheet, Button, Switch, Text, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
+import * as ImagePicker from 'expo-image-picker';
 
 type Props = OnboardingStackScreenProps<"BabyBook">;
 
 export default function BabyBook({ navigation }: Props) {
+
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    navigation.navigate("SelectPicture");
+  
+  }
 
   return (
     <View style={styles.container}>
@@ -18,11 +33,13 @@ export default function BabyBook({ navigation }: Props) {
           <Text style={styles.center}>No Photos Yet</Text>
           <Text style={{textAlign: 'center'}}>Get started by tapping this button to add a photo of Jordan!</Text>
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("SelectPicture")}
-        style={styles.roundButton1}>
-        <Text style={styles.buttonText}>+</Text>
-      </TouchableOpacity>
+      <View style={{paddingTop:'50%', paddingLeft: '75%'}}>
+        <TouchableOpacity
+          onPress={openImagePickerAsync}
+          style={styles.roundButton1}>
+          <Text style={styles.buttonText}>+</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -64,5 +81,10 @@ const styles = StyleSheet.create({
     buttonText: {
       color: 'white',
       fontSize: 45
+    },
+    thumbnail: {
+      width: 300,
+      height: 300,
+      resizeMode: "contain"
     }
 });
