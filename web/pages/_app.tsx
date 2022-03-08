@@ -7,7 +7,7 @@ import SideBarItems from "@lib/SideBarItems";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="flex flex-no-wrap h-screen">
         <SideBar items={SideBarItems} />
         <Component {...pageProps} />
