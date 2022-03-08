@@ -30,6 +30,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "^0.64.3",
+    "react-native-image-picker": "^4.7.3",
     "react-native-markdown-view": "^1.1.4",
     "react-native-paper": "^4.11.2",
     "react-native-safe-area-context": "3.3.2",

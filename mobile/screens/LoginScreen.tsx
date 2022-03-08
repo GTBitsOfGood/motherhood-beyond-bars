@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
-import { UserContext } from "../providers";
+import { UserContext } from "../providers/User";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import LogoutButton from "../components/app/LogoutButton";
 import PrimaryButton from "../components/app/PrimaryButton";
@@ -32,7 +32,8 @@ export default function LoginScreen({
         )
       );
       setBabies(babiesArray.docs.map((doc) => doc.data().name));
-      if (babies.length) {
+      console.log(babies)
+      if (babiesArray.docs.length > 0) {
         setMessage("Congrats! You're signed in.");
       } else {
         setMessage("You don't have access.");
