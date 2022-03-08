@@ -11,10 +11,10 @@ function ButtonWithIcon({
 }) {
   return (
     <button
-      className="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center border-2"
+      className=" text-indigo-600 bg-white border-2 border-indigo-600 p-2 rounded flex"
       onClick={onClick}
     >
-      {icon}
+      <span className="mt-1 mr-2">{icon}</span>
       <span>{text}</span>
     </button>
   );
