@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "../../components/Themed";
-import { StyleSheet, Button, Switch, Text } from "react-native";
+import { StyleSheet, Button, Text } from "react-native";
 import { BookStackScreenProps } from "../../types";
 
 type Props = BookStackScreenProps<"StartBook">;
