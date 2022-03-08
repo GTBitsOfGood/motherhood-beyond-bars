@@ -38,11 +38,9 @@ export type RootTabParamList = {
 
 export type OnboardingParamList = {
   Login: undefined;
-  GetStarted: undefined;
   Info: undefined;
   SignWaiver: {
-    waiverStack: Waiver[];
-    index: number;
+    unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
   ShippingAddress: undefined;
