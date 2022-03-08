@@ -11,21 +11,8 @@ import {
   Animated,
 } from "react-native";
 import { BookStackScreenProps } from "../../types";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  Timestamp,
-  setDoc,
-} from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { doc, Timestamp, setDoc } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
 import { BabyContext } from "../../providers/Baby";
