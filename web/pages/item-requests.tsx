@@ -1,5 +1,5 @@
 import React from "react";
-import Table from "@components/Table";
+import ItemRequestsTable from "@components/ItemRequestsTable";
 import { GetServerSideProps } from "next";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@lib/firebase";
@@ -52,10 +52,15 @@ function genItemRequestsTab({ itemRequests }: { itemRequests: RequestItem[] }) {
   const data = React.useMemo(() => getData(), []);
 
   return (
-    <div className="px-8 flex h-full flex-col justify-left">
-      <h1 className="text-2xl mb-5 font-bold">Item Requests</h1>
-      <div>
-        <Table columns={columns} data={data} />
+    <div>
+      <div className="absolute mt-20 border-t w-full" />
+      <div className="pt-6 px-8 flex h-full flex-col justify-left">
+        <div className="flex flex-row">
+          <h1 className="text-2xl mb-5 font-bold">Item Requests</h1>
+        </div>
+        <div>
+          <ItemRequestsTable columns={columns} data={data} />
+        </div>
       </div>
     </div>
   );

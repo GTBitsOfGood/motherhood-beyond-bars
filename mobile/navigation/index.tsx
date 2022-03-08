@@ -231,6 +231,62 @@ function OnboardingNavigator() {
               }}
             />
           }
+          {
+            <Onboarding.Screen
+              name="BabyBookAccess"
+              component={BabyBookAccess}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book Access</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="BabyBook"
+              component={BabyBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="StartBook"
+              component={StartBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Start A Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="SelectPicture"
+              component={SelectPicture}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}

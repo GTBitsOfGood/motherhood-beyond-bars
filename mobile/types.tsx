@@ -47,6 +47,10 @@ export type OnboardingParamList = {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
+  BabyBookAccess: undefined;
+  BabyBook: undefined;
+  StartBook: undefined;
+  SelectPicture: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
