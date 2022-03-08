@@ -2,7 +2,7 @@ import { View } from "../../components/Themed";
 import { Text } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect } from "react";
-import { UserContext } from "../../providers";
+import { UserContext } from "../../providers/User";
 
 export default function AllDone({
   navigation,

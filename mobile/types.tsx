@@ -9,7 +9,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Timestamp } from "firebase/firestore";
+import { CollectionReference, Timestamp } from "firebase/firestore";
 
 declare global {
   namespace ReactNavigation {
@@ -30,6 +30,10 @@ export type OnboardingStackScreenProps<
   Screen extends keyof OnboardingParamList
 > = NativeStackScreenProps<OnboardingParamList, Screen>;
 
+export type BookStackScreenProps<
+  Screen extends keyof BookParamList
+> = NativeStackScreenProps<BookParamList, Screen>;
+
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
@@ -43,10 +47,21 @@ export type OnboardingParamList = {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
+  BabyBookAccess: undefined;
+  BabyBook: undefined;
+  StartBook: undefined;
+  SelectPicture: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
 };
+
+export type BookParamList = {
+  BabyBookAccess: undefined;
+  BabyBook: undefined;
+  StartBook: undefined;
+  SelectPicture: undefined;
+}
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<
@@ -64,6 +79,20 @@ export interface Caregiver {
   state: string;
   zipCode: string;
   contact: string;
+}
+
+export interface Baby {
+  name: string;
+  id: string;
+  caregiverEmail: string;
+  caregiverID: string;
+}
+
+export interface Book {
+  caption: string;
+  caregiverID: string;
+  date: Timestamp;
+  imageURL: string;
 }
 
 export interface Waiver {

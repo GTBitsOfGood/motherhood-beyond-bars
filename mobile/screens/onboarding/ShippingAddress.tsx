@@ -10,7 +10,7 @@ import {
   getDoc,
   Timestamp,
 } from "firebase/firestore";
-import { UserContext } from "../../providers";
+import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 import Checkbox from "expo-checkbox";
 

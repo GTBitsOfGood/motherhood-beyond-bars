@@ -31,13 +31,14 @@ import SignWaiver from "../screens/onboarding/SignWaiver";
 import LoginScreen from "../screens/LoginScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
+  BookParamList,
   OnboardingParamList,
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { UserContext, UserContextType } from "../providers";
+import { UserContext, UserContextType } from "../providers/User";
 import { useContext } from "react";
 
 import { signOut } from "firebase/auth";
@@ -50,6 +51,10 @@ import AllDone from "../screens/onboarding/AllDone";
 
 import { SettingsContext } from "../providers/settings";
 import SupportScreen from "../screens/onboarding/RequestItemsScreen";
+import BabyBookAccess from "../screens/babybook/BabyBookAccess";
+import BabyBook from "../screens/babybook/BabyBook";
+import StartBook from "../screens/babybook/StartBook";
+import SelectPicture from "../screens/babybook/SelectPicture";
 
 export default function Navigation({
   colorScheme,
@@ -226,6 +231,62 @@ function OnboardingNavigator() {
               }}
             />
           }
+          {
+            <Onboarding.Screen
+              name="BabyBookAccess"
+              component={BabyBookAccess}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book Access</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="BabyBook"
+              component={BabyBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="StartBook"
+              component={StartBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Start A Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
+              name="SelectPicture"
+              component={SelectPicture}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
@@ -233,13 +294,84 @@ function OnboardingNavigator() {
           />
         </>
       ) : (
+        <>
         <Onboarding.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
+        </>
       )}
     </Onboarding.Navigator>
+  );
+} 
+
+const Book = createNativeStackNavigator<BookParamList>();
+
+function BookNavigator() {
+  return (
+    <Book.Navigator>
+      {
+        <>
+          {/*
+            <Book.Screen
+              name="BabyBookAccess"
+              component={BabyBookAccess}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book Access</Text>
+                  </View>
+                ),
+              }}
+            /> */
+          }
+          {
+            <Book.Screen
+              name="StartBook"
+              component={StartBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Start A Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Book.Screen
+              name="SelectPicture"
+              component={SelectPicture}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Book.Screen
+              name="BabyBook"
+              component={BabyBook}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+        </>
+      }
+    </Book.Navigator>
   );
 }
 
@@ -284,7 +416,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabTwo"
-        component={TabTwoScreen}
+        component={BookNavigator}
         options={{
           title: "Tab Two",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,

@@ -11,7 +11,7 @@ import {
   getDoc,
   Timestamp,
 } from "firebase/firestore";
-import { UserContext } from "../../providers";
+import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 
 export default function BestContact({
@@ -42,7 +42,7 @@ export default function BestContact({
       <Button
         title="Finish"
         onPress={() => {setBestContact();
-          navigation.navigate("AllDone");}}/>
+          navigation.navigate("BabyBookAccess");}}/>
 
     </View>
   );
