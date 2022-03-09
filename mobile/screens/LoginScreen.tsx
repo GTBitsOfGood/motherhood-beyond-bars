@@ -21,33 +21,6 @@ export default function LoginScreen({
   const [password, setPassword] = useState("");
   const authData = useContext(UserContext);
   const [message, setMessage] = useState("");
-  const [babies, setBabies] = useState<any>([]);
-
-  useEffect(() => {
-    async function getBabies() {
-      const babiesArray = await getDocs(
-        query(
-          collection(db, "babies"),
-          where("caregiverEmail", "==", authData?.email)
-        )
-      );
-      setBabies(babiesArray.docs.map((doc) => doc.data().name));
-      console.log(babies)
-      if (babiesArray.docs.length > 0) {
-        setMessage("Congrats! You're signed in.");
-      } else {
-        setMessage("You don't have access.");
-      }
-    }
-    if (authData) {
-      // user is logged in
-      getBabies();
-    }
-
-    return () => {
-      // cleanup
-    };
-  }, [authData]);
 
   return (
     <View style={styles.container}>
@@ -116,9 +89,6 @@ export default function LoginScreen({
 
       <Text>{message}</Text>
       {authData && <Text>Your email: {authData?.email}</Text>}
-      {authData && (
-        <Text>Babies under your care: {JSON.stringify(babies)}</Text>
-      )}
 
       {authData && (
         <LogoutButton

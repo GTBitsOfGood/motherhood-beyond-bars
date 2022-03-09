@@ -1,9 +1,19 @@
 import { onAuthStateChanged, User } from "firebase/auth";
-import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  limit,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { getMetadata } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { Baby } from "../types";
+import { UserContext } from "./User";
 
 export type BabyContextType = Baby | null;
 export const BabyContext = React.createContext<BabyContextType>(null);
@@ -13,34 +23,41 @@ export const BabyProvider = ({
 }: {
   children: JSX.Element | JSX.Element[];
 }) => {
-
+  const userContext = React.useContext(UserContext);
   const [baby, setBaby] = useState<Baby | null>(null);
-  const ref = doc(db, "babies/4tzVD1aHglb287A9UHgC"); // change this to specific baby
 
   useEffect(() => {
     let unsubscribe: (() => void) | null = null;
     async function getData() {
+      // Get baby id
+      const caregiverRef = doc(db, "caregivers", userContext?.uid as string);
+      const ref = query(
+        collection(db, "babies"),
+        where("caretaker", "==", caregiverRef),
+        limit(1)
+      );
+
       unsubscribe = onSnapshot(ref, (snapshot) => {
+        if (snapshot.docs.length === 0) {
+          setBaby(null);
+          return;
+        }
+        const babyDoc = snapshot.docs[0];
 
         const babyData = {
-        ... snapshot.data(),
-        id: snapshot.id
-        } as Baby
-        console.log(babyData);
+          ...babyDoc.data(),
+          id: babyDoc.id,
+        } as Baby;
+
         setBaby(babyData as Baby);
       });
-      
     }
     getData();
     return () => {
       // unsubscribe if it exists
-      unsubscribe && unsubscribe()
-    }
-  }, [])
+      unsubscribe && unsubscribe();
+    };
+  }, []);
 
-  
-  
-  return (
-    <BabyContext.Provider value={baby}>{children}</BabyContext.Provider>
-  );
+  return <BabyContext.Provider value={baby}>{children}</BabyContext.Provider>;
 };
