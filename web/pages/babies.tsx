@@ -142,10 +142,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
 
-      const caretaker = (await getDoc(data?.caretaker))?.data() as {
+      console.log(data.caretaker);
+
+      let caretaker: {
         firstName: string;
         lastName: string;
-      };
+      } = { firstName: "No Caregiver Assigned", lastName: "" };
+      try {
+        caretaker = (await getDoc(data?.caretaker))?.data() as {
+          firstName: string;
+          lastName: string;
+        };
+      } catch (e) {
+        console.log(`Couldn't get caretaker for ${data.firstName}`);
+      }
       return {
         name: data?.firstName + " " + data?.lastName || null,
         caretakerName: caretaker?.firstName + " " + caretaker?.lastName || null,
