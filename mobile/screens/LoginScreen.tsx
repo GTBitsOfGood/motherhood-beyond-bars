@@ -51,8 +51,6 @@ export default function LoginScreen({
           <PrimaryButton
             text="Sign In"
             onPress={async () => {
-              console.log("clicked");
-
               await signInWithEmailAndPassword(
                 auth,
                 email.trim(),
@@ -69,6 +67,7 @@ export default function LoginScreen({
           <PrimaryButton
             text="Create Account"
             onPress={async () => {
+              console.log("clicked");
               await createUserWithEmailAndPassword(
                 auth,
                 email.trim(),
@@ -88,7 +87,7 @@ export default function LoginScreen({
       )}
 
       <Text>{message}</Text>
-      {authData && <Text>Your email: {authData?.email}</Text>}
+      {authData && <Text>Your email: {authData?.email} Your city: {authData?.caregiver?.city}</Text>}
 
       {authData && (
         <LogoutButton

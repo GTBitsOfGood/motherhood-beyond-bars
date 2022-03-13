@@ -34,9 +34,10 @@ export default function BestContact({
       <Text style={styles.title}>What's The Best Way To Contact You?</Text>
 
       <RadioButton.Group onValueChange={contact => setContact(contact)} value={contact}>
-        <RadioButton.Item label="Phone" value="Phone"/>
-        <RadioButton.Item label="Email" value="Email"/>
-        <RadioButton.Item label="Text" value="Text"/>
+        <RadioButton.Item value="Phone" label="Phone" mode="android"/>
+        <RadioButton.Item label="Email" value="Email" mode="android"/>
+        <RadioButton.Item label="Text" value="Text" mode="android"/>
+
       </RadioButton.Group>
 
       <Button

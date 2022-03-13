@@ -124,7 +124,7 @@ function RootNavigator() {
             headerShown: true,
             title: "Welcome",
             headerRight: () => (
-              <Button
+              (!authData?.uid) ? null : <Button
                 title="Logout"
                 onPress={() => {
                   signOut(auth);

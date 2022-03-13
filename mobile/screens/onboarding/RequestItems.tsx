@@ -1,5 +1,5 @@
 import { View } from "../../components/Themed";
-import { Button, Text, TextInput, StyleSheet, Modal, ScrollView } from "react-native";
+import { Button, Text, TextInput, StyleSheet, Modal, ScrollView, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Item, OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import Checkbox from 'expo-checkbox';
@@ -89,6 +89,7 @@ export default function RequestItems({
 
   return (
     <View style={styles.container}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView>
         <Text style={styles.title}>Request Items</Text>
         <Text style={{paddingBottom: 10}}>Motherhood Beyond Bars will deliver you supplies, so you're ready for the child!</Text>
@@ -191,6 +192,7 @@ export default function RequestItems({
             </View>
         </Modal>
       </ScrollView>
+      </TouchableWithoutFeedback>
     </View>
 )}
 

@@ -1,5 +1,5 @@
 import { View } from "../../components/Themed";
-import { Button, Text, TextInput, StyleSheet } from "react-native";
+import { Button, Text, TextInput, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -38,7 +38,9 @@ export default function ShippingAddress({
   }
   
   return (
-    <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+
       <Text style={styles.title}>Shipping Address</Text>
       <Text style={{paddingBottom: 10}}>Let us know where we can deliver your requested supplies!</Text>
 
@@ -82,6 +84,7 @@ export default function ShippingAddress({
       />
 
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
