@@ -7,7 +7,7 @@ import { Caregiver } from "../types";
 export type UserContextType =
   | (Pick<User, "email" | "displayName" | "emailVerified" | "uid"> & {
       caregiver?: Caregiver;
-    } & { reloadCaregiver: () => void })
+    })
   | null;
 export const UserContext = React.createContext<UserContextType>(null);
 
@@ -18,63 +18,82 @@ export const UserProvider = ({
 }) => {
   const [authData, setAuthData] = useState<UserContextType>(null);
 
-  const reloadCaregiver = async () => {
-    if (!authData) return;
-    const caregiverRef = doc(db, `caregivers/${authData.uid}`);
-    const newCaregiverData = (await getDoc(caregiverRef)).data() as Caregiver;
-    // setAuthData({
-    //   ...user,
-    //   caregiver: newCaregiverData,
-    //   reloadCaregiver,
-    // });
-  };
+  const unsubs: (() => void)[] = [];
+  useEffect(() => {
+    unsubs.push(
+      onAuthStateChanged(auth, async (user) => {
+        if (!user || user?.uid === authData?.uid) {
+          return;
+        }
+        console.log("auth state changed");
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user || user?.uid === authData?.uid) {
-      return;
-    }
-    console.log("auth state changed");
+        if (user) {
+          const caregiverRef = doc(db, `caregivers/${user.uid}`);
 
-    if (user) {
-      const caregiverRef = doc(db, `caregivers/${user.uid}`);
-      let caregiverData: any = {
-        name: user.displayName,
-        id: user.uid,
-        signedWaivers: [],
-        address: "",
-        itemsRequested: [],
-        city: "",
-        zipCode: "",
-        state: "",
-        contact: "",
-      } as Caregiver;
-      try {
-        caregiverData = {
-          ...(await getDoc(caregiverRef)).data(),
-          id: user.uid,
-        };
-      } catch (e) {
-        console.log(e);
-        await setDoc(caregiverRef, caregiverData);
+          // Used if the caregiver has not yet been created
+          let caregiverData: any = {
+            name: user.displayName,
+            id: user.uid,
+            signedWaivers: [],
+            address: "",
+            itemsRequested: [],
+            city: "",
+            zipCode: "",
+            state: "",
+            contact: "",
+          } as Caregiver;
 
-        // caregiver doc doesn't exist
-      }
+          try {
+            unsubs.push(
+              onSnapshot(caregiverRef, (snapshot) => {
+                setAuthData({
+                  ...{
+                    email: user.email,
+                    displayName: user.displayName,
+                    emailVerified: user.emailVerified,
+                    uid: user.uid,
+                  },
+                  caregiver: {
+                    ...(snapshot.data() as Caregiver),
+                    id: user.uid,
+                  },
+                });
+              })
+            );
+          } catch (e) {
+            // Caregiver doesn't exist
 
-      const data = {
-        ...{
-          email: user.email,
-          displayName: user.displayName,
-          emailVerified: user.emailVerified,
-          uid: user.uid,
-        },
-        caregiver: { ...caregiverData } as Caregiver,
-        reloadCaregiver,
-      };
-      setAuthData(data); // also include caregiver's babies
-    } else {
-      setAuthData(null);
-    }
-  });
+            // First, set the doc so that the caregiver does exist
+            await setDoc(caregiverRef, caregiverData);
+
+            // Then, remake the snapshot listener
+            unsubs.push(
+              onSnapshot(caregiverRef, (snapshot) => {
+                setAuthData({
+                  ...{
+                    email: user.email,
+                    displayName: user.displayName,
+                    emailVerified: user.emailVerified,
+                    uid: user.uid,
+                  },
+                  caregiver: {
+                    ...(snapshot.data() as Caregiver),
+                    id: user.uid,
+                  },
+                });
+              })
+            );
+          }
+        } else {
+          setAuthData(null);
+        }
+      })
+    );
+
+    return () => {
+      unsubs.forEach((unsub) => unsub());
+    };
+  }, []);
 
   return (
     <UserContext.Provider value={authData}>{children}</UserContext.Provider>
