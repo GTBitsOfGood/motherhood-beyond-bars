@@ -31,12 +31,17 @@ type Baby = {
   lastName: string;
 };
 
+type BabyInput = Baby & { caretaker: string; dob: string };
+
 function genChildrenAndBabyBooksTab({
   babies,
   caregivers,
 }: {
   babies: Baby[];
-  caregivers: any[];
+  caregivers: {
+    id: string;
+    name: string;
+  }[];
 }) {
   const getData = () => babies;
 
@@ -74,12 +79,12 @@ function genChildrenAndBabyBooksTab({
 
   const [addModal, toggleAddModal] = useState(false);
 
-  const addNewChild = async (child: Baby) => {
-    const caretakerRef = doc(db, "caregivers", child.caretaker.id);
+  const addNewChild = async (child: BabyInput) => {
+    const caretakerRef = doc(db, "caregivers", child.caretaker);
 
     const newBaby = await addDoc(collection(db, "babies"), {
       ...child,
-      dob: child.dob,
+      dob: Timestamp.fromDate(new Date(child.dob)),
       createdAt: serverTimestamp(),
       caretaker: caretakerRef,
       babyBookEntries: [],
@@ -156,6 +161,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       } catch (e) {
         console.log(`Couldn't get caretaker for ${data.firstName}`);
       }
+      console.log(data.dob);
       return {
         name: data?.firstName + " " + data?.lastName || null,
         caretakerName: caretaker?.firstName + " " + caretaker?.lastName || null,
