@@ -155,6 +155,7 @@ function OnboardingNavigator() {
     <Onboarding.Navigator>
       {Boolean(authData) ? (
         <>
+          {/* The user is signed in */}
           {
             <Onboarding.Screen
               name="SignWaiver"
@@ -282,6 +283,7 @@ function OnboardingNavigator() {
         </>
       ) : (
         <>
+          {/* The user is not signed in and needs to login */}
           <Onboarding.Screen
             name="Login"
             component={LoginScreen}
