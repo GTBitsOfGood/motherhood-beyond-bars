@@ -47,7 +47,7 @@ jobs:
           vercel-args: ${{ steps.pipeline.outputs.pipeline == 'Production' && '--prod' || null}} #Optional
           vercel-org-id: ${{ secrets.ORG_ID}} #Required
           vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
-          #working-directory: ./sub-directory #Your Working Directory, Optional
+          working-directory: ./web #Your Working Directory, Optional
           # alias-domains: | #Optional, for when an actual domain is provided
           #   staging.angular.vercel-action.amond.dev
           #   pr-{{PR_NUMBER}}.angular.vercel-action.amond.dev
