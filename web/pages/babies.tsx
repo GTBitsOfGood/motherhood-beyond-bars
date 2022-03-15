@@ -141,9 +141,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let babies = await Promise.all(
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
-
-      console.log(data.caretaker);
-
       let caretaker: {
         firstName: string;
         lastName: string;
