@@ -31,6 +31,10 @@ export default function RequestItems({
 
   async function setRequestedItems() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+
+    const newDoc = {
+      
+    }
     
     updateDoc(caregiverDoc, {
       itemsRequested: arrayUnion({

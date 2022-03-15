@@ -29,13 +29,17 @@ import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SignWaiver from "../screens/onboarding/SignWaiver";
 import LoginScreen from "../screens/LoginScreen";
+import TabOneScreen from "../screens/TabOneScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
+import TabThreeScreen from "../screens/TabThreeScreen";
+import TabFourScreen from "../screens/TabFourScreen";
 import {
   BookParamList,
   OnboardingParamList,
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
+  SupportParamList,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { UserContext, UserContextType } from "../providers/User";
@@ -50,11 +54,14 @@ import BestContact from "../screens/onboarding/BestContact";
 import AllDone from "../screens/onboarding/AllDone";
 
 import { SettingsContext } from "../providers/settings";
-import SupportScreen from "../screens/onboarding/RequestItemsScreen";
+import SupportScreen from "../screens/support/RequestItemsScreen";
 import BabyBookAccess from "../screens/babybook/BabyBookAccess";
 import BabyBook from "../screens/babybook/BabyBook";
 import StartBook from "../screens/babybook/StartBook";
 import SelectPicture from "../screens/babybook/SelectPicture";
+import RequestItemsScreen from "../screens/support/RequestItemsScreen";
+import ReachOut from "../screens/support/ReachOut";
+import { blue100 } from "react-native-paper/lib/typescript/styles/colors";
 
 export default function Navigation({
   colorScheme,
@@ -363,6 +370,45 @@ function BookNavigator() {
   );
 }
 
+const Support = createNativeStackNavigator<SupportParamList>();
+
+function SupportNavigator() {
+  const colorScheme = useColorScheme();
+
+  return (
+    <Support.Navigator>
+      {
+        <Support.Screen
+          name="ReachOut"
+          component={ReachOut}
+          options={{
+            headerTitle: () => (
+              // add progress bar/circles and styling here
+              <View>
+                <Text>Reach out to us!</Text>
+              </View>
+            ),
+          }}
+        />
+      }
+      {
+        <Support.Screen
+          name="RequestItemsScreen"
+          component={RequestItemsScreen}
+          options={{
+            headerTitle: () => (
+              // add progress bar/circles and styling here
+              <View>
+                <Text>Request Items</Text>
+              </View>
+            ),
+          }}
+        />
+      }
+    </Support.Navigator>
+  )
+}
+
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
@@ -374,16 +420,40 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabTwo"
+      initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}
     >
       <BottomTab.Screen
-        name="TabTwo"
+        name="TabOne"
         component={BookNavigator}
         options={{
-          title: "Tab Two",
+          title: "Baby Book",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="TabTwo"
+        component={SupportNavigator}
+        options={{
+          title: "MBB Support",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="TabThree"
+        component={BookNavigator}
+        options={{
+          title: "Resources",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="TabFour"
+        component={BookNavigator}
+        options={{
+          title: "Settings",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

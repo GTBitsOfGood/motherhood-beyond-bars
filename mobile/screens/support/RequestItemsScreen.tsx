@@ -6,16 +6,17 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  Modal
 } from "react-native";
 import { functions } from "../../config/firebase";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { OnboardingStackScreenProps } from "../../types";
+import { SupportStackScreenProps } from "../../types";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
 import mbbAxios from "../../api/api_axios";
 import { auth } from "../../config/firebase";
 
-type Props = OnboardingStackScreenProps<"RequestItems">;
+type Props = SupportStackScreenProps<"RequestItemsScreen">;
 
 function MyCheckbox({
   onPress,
@@ -44,6 +45,8 @@ export default function SupportScreen({ navigation }: Props) {
   );
   const [otherItems, setOtherItems] = useState<string>("");
   const [additionalComments, setAdditionalComments] = useState<string>("");
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   const toggleItem = (index: number) => {
     const newItemsCount = [...itemsCount];
@@ -138,11 +141,37 @@ export default function SupportScreen({ navigation }: Props) {
           onChangeText={setAdditionalComments}
         />
         <View style={styles.button}>
-          <Button title="Request" onPress={requestItems} color="#304CD1" />
+          <Button
+            title="Request"
+            onPress={() => {
+              setModalVisible(modalVisible);
+            }}
+            color="#304CD1" />
         </View>
         <Text style={styles.footer}>
           Expect a call from us to confirm the order details!
         </Text>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={{padding: 20, height: '30%', marginTop: 'auto', justifyContent: 'space-around', borderRadius: 5}}>
+            <Text style={{fontWeight: "bold", paddingBottom: 15}}>All done!</Text>
+            <Text style={{paddingBottom: 20}}>Please expect a call from MBB soon to confirm your requested supplies!</Text>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{width: "50%"}}><Button title="Close"
+                onPress={() => {
+                  setModalVisible(!modalVisible)
+                  navigation.navigate("ReachOut");
+                }}/></View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ScrollView>
   );

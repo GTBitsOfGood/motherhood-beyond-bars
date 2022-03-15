@@ -34,9 +34,15 @@ export type BookStackScreenProps<
   Screen extends keyof BookParamList
 > = NativeStackScreenProps<BookParamList, Screen>;
 
+export type SupportStackScreenProps<
+  Screen extends keyof SupportParamList
+> = NativeStackScreenProps<SupportParamList, Screen>;
+
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
+  TabThree: undefined;
+  TabFour: undefined;
   // SignWaiver: undefined;
 };
 
@@ -55,6 +61,11 @@ export type OnboardingParamList = {
   BestContact: undefined;
   AllDone: undefined;
 };
+
+export type SupportParamList = {
+  ReachOut: undefined;
+  RequestItemsScreen: undefined;
+}
 
 export type BookParamList = {
   BabyBookAccess: undefined;

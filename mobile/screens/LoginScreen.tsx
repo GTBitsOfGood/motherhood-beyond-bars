@@ -24,30 +24,29 @@ export default function LoginScreen({
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="email"
-        autoCompleteType="email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoFocus={true}
-        style={styles.input}
-        onChangeText={(email) => {
-          setEmail(email);
-        }}
-      />
-      <TextInput
-        placeholder="password"
-        style={styles.input}
-        autoCompleteType="password"
-        onChangeText={(password) => {
-          setPassword(password);
-        }}
-        secureTextEntry={true}
-      />
-
       {/* Don't show sign in / sign out if the user is logged in  */}
       {!authData && (
-        <>
+      <>
+        <TextInput
+          placeholder="email"
+          autoCompleteType="email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoFocus={true}
+          style={styles.input}
+          onChangeText={(email) => {
+            setEmail(email);
+          }}
+        />
+        <TextInput
+          placeholder="password"
+          style={styles.input}
+          autoCompleteType="password"
+          onChangeText={(password) => {
+            setPassword(password);
+          }}
+          secureTextEntry={true}
+        />
           <PrimaryButton
             text="Sign In"
             onPress={async () => {

@@ -40,7 +40,7 @@ export default function BabyBook({ navigation }: Props) {
           Get started by tapping this button to add a photo of Jordan!
         </Text>
       </View>
-      <View style={{ paddingTop: "50%", paddingLeft: "75%" }}>
+      <View style={{ paddingLeft: "75%" }}>
         <TouchableOpacity
           onPress={openImagePickerAsync}
           style={styles.roundButton1}
@@ -88,11 +88,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 45,
+    fontSize: 25,
   },
   thumbnail: {
     width: 300,
     height: 300,
     resizeMode: "contain",
-  },
+  },  
 });

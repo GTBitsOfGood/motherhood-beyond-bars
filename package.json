@@ -1,4 +1,5 @@
 {
   "dependencies": {
+    "react-native-vector-icons": "^9.1.0"
   }
 }
