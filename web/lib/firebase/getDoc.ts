@@ -22,7 +22,7 @@ export async function getDocument(path: string) {
  * @param doc
  * @returns
  */
-export function formatDoc<T = any>(doc: DocumentSnapshot) {
+export function formatDoc<T = object>(doc: DocumentSnapshot) {
   type WithTimestamp = T & { lastUpdated?: Timestamp };
   const data = doc.data() as WithTimestamp;
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { auth } from "@lib/firebase";
@@ -16,7 +16,8 @@ type AuthFormValues = {
 
 function NavBar() {
   const { register, handleSubmit } = useForm<AuthFormValues>();
-  const [user, loading, error] = useAuthState(auth);
+  // TODO: loading states with loading, error
+  const [user] = useAuthState(auth);
 
   const loginWithCredentials: SubmitHandler<AuthFormValues> = (data) => {
     signInWithEmailAndPassword(auth, data.email, data.password);
