@@ -9,9 +9,9 @@ const PictureArray = ({ babyBook } : Props) => {
             {Object.entries(months).map(([month, images] : [string, BabyImage[]]) => {
               return (
                 <div key={month}>
-                  {images.map(image => {
+                  {images.map((image, i) => {
                     return (
-                      <div>
+                      <div key={i}>
                         image
                       </div>
                     )
