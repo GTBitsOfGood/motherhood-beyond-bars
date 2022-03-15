@@ -4,7 +4,7 @@ name: deploy website
 # On merge into prod, flag prod, make a deployment to Production
 on:
   push:
-    branches: [main, production]
+    branches: [main, production, linting]
   pull_request:
     branches: [main]
 jobs:
