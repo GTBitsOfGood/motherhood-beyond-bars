@@ -35,7 +35,7 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
 
   return (
     <div>
-      <div class="absolute mt-20 border-t w-full"/>
+      <div className="absolute mt-20 border-t w-full" />
       <div className="pt-6 px-8 flex h-full flex-col justify-left">
         <h1 className="text-2xl mb-5 font-bold">Settings</h1>
         <h2 className="text-md mt-5 mb-5 font-bold">
@@ -52,7 +52,7 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
               aria-label="Phone number"
               {...register("phoneNumber", {
                 pattern:
-                  /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
+                  /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
                 required: true,
               })}
             />

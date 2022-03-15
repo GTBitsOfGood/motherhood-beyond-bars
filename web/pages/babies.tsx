@@ -136,9 +136,9 @@ export default genChildrenAndBabyBooksTab;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const itemsRef = query(collection(db, "babies"));
-  let babyDocs = await getDocs(itemsRef);
+  const babyDocs = await getDocs(itemsRef);
 
-  let babies = await Promise.all(
+  const babies = await Promise.all(
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
 
