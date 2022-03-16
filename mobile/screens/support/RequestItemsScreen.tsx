@@ -8,13 +8,15 @@ import {
   ScrollView,
   Modal
 } from "react-native";
-import { functions } from "../../config/firebase";
+import { db, functions } from "../../config/firebase";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { SupportStackScreenProps } from "../../types";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
 import mbbAxios from "../../api/api_axios";
 import { auth } from "../../config/firebase";
+import { arrayUnion, doc, Timestamp } from "firebase/firestore";
+import { UserContext } from "../../providers/User";
 
 type Props = SupportStackScreenProps<"RequestItemsScreen">;
 
@@ -39,7 +41,7 @@ export default function SupportScreen({ navigation }: Props) {
   const settings = useContext(SettingsContext);
 
   const length = (settings.items?.length || 0) + 1;
-
+  const authData = useContext(UserContext);
   const [itemsCount, setItemsCount] = useState<Array<boolean>>(
     Array(length).fill(false)
   );
@@ -53,6 +55,66 @@ export default function SupportScreen({ navigation }: Props) {
     newItemsCount[index] = !newItemsCount[index];
     setItemsCount(newItemsCount);
   };
+
+  /* async function setRequestedItems() {
+    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+
+    var newDoc = {
+      itemsRequested: arrayUnion({
+        name: "Begin Box",
+        fulfilled: false,
+        requestedOn: Timestamp.now(),
+      })
+    }
+    if (carSeat) {
+      newDoc = {
+        ...newDoc,
+        itemsRequested: arrayUnion({
+          name: "Car Seat",
+          fulfilled: false,
+          requestedOn: Timestamp.now(),
+        })
+      }
+    }
+
+    if (sleep) {
+      newDoc = {
+        ...newDoc,
+        itemsRequested: arrayUnion({
+          name: "Safe Place to Sleep",
+          fulfilled: false,
+          requestedOn: Timestamp.now(),
+        })
+      }
+    }
+
+    if (clothing) {
+      newDoc = {
+        ...newDoc,
+        itemsRequested: arrayUnion({
+          name: "Baby Clothing",
+          gender: gender,
+          size: size,
+          fulfilled: false,
+          requestedOn: Timestamp.now(),
+        })
+      }
+    }
+    
+    if (addReqs) {
+      newDoc = {
+        itemsRequested: arrayUnion({
+          name: "Additional Requests",
+          request: addReqs,
+          fulfilled: false,
+          requestedOn: Timestamp.now(),
+        })
+      }
+    }
+
+    updateDoc(caregiverDoc, newDoc)
+
+  } */
 
   const requestItems = async () => {
     if (length === 0) {

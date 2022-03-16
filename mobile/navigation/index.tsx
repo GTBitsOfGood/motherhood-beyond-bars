@@ -12,6 +12,10 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
+import BabyBookSVG from '../assets/images/babybook'
+import ResourcesSVG from '../assets/images/resources'
+import SettingsSVG from '../assets/images/settings'
+import SupportSVG from '../assets/images/support'
 
 import {
   Button,
@@ -20,6 +24,7 @@ import {
   Pressable,
   View,
   Text,
+  Image,
 } from "react-native";
 
 import Colors from "../constants/Colors";
@@ -61,7 +66,6 @@ import StartBook from "../screens/babybook/StartBook";
 import SelectPicture from "../screens/babybook/SelectPicture";
 import RequestItemsScreen from "../screens/support/RequestItemsScreen";
 import ReachOut from "../screens/support/ReachOut";
-import { blue100 } from "react-native-paper/lib/typescript/styles/colors";
 
 export default function Navigation({
   colorScheme,
@@ -422,7 +426,10 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: "#fff",
+        tabBarStyle: {
+          backgroundColor: "#000000"
+        }
       }}
     >
       <BottomTab.Screen
@@ -430,7 +437,10 @@ function BottomTabNavigator() {
         component={BookNavigator}
         options={{
           title: "Baby Book",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({focused}) => 
+          <BabyBookSVG
+            color={focused ? "#fff" : "#B2B2B2"}
+          />,
         }}
       />
       <BottomTab.Screen
@@ -438,7 +448,10 @@ function BottomTabNavigator() {
         component={SupportNavigator}
         options={{
           title: "MBB Support",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({focused}) => 
+          <SupportSVG
+            color={focused ? "#fff" : "#B2B2B2"}
+          />,
         }}
       />
       <BottomTab.Screen
@@ -446,7 +459,10 @@ function BottomTabNavigator() {
         component={BookNavigator}
         options={{
           title: "Resources",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({focused}) => 
+          <ResourcesSVG
+            color={focused ? "#fff" : "#B2B2B2"}
+          />,
         }}
       />
       <BottomTab.Screen
@@ -454,7 +470,10 @@ function BottomTabNavigator() {
         component={BookNavigator}
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({focused}) => 
+          <SettingsSVG
+            color={focused ? "#fff" : "#B2B2B2"}
+          />,
         }}
       />
     </BottomTab.Navigator>

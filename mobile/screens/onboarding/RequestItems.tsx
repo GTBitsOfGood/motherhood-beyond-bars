@@ -12,6 +12,7 @@ import {
   arrayUnion,
   getDoc,
   Timestamp,
+  FieldValue,
 } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
@@ -32,61 +33,51 @@ export default function RequestItems({
   async function setRequestedItems() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
 
-    const newDoc = {
-      
-    }
-    
-    updateDoc(caregiverDoc, {
-      itemsRequested: arrayUnion({
-        name: "Begin Box",
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
-      })
+    let itemsRequested: object[] = [];
+
+    itemsRequested.push({
+      name: "Begin Box",
+      fulfilled: false,
+      requestedOn: Timestamp.now()
     })
 
     if (carSeat) {
-      updateDoc(caregiverDoc, {
-        itemsRequested: arrayUnion({
+        itemsRequested.push({
           name: "Car Seat",
           fulfilled: false,
           requestedOn: Timestamp.now(),
         })
-      })
     }
+
     if (sleep) {
-      updateDoc(caregiverDoc, {
-        itemsRequested: arrayUnion({
-          name: "Safe Place to Sleep",
-          fulfilled: false,
-          requestedOn: Timestamp.now(),
-        })
+      itemsRequested.push({
+        name: "Safe Place to Sleep",
+        fulfilled: false,
+        requestedOn: Timestamp.now(),
       })
     }
 
     if (clothing) {
-      const itemToWrite: Item = {
-        
-          name: "Baby Clothing",
-          gender: gender,
-          size: size,
-          fulfilled: false,
-          requestedOn: Timestamp.now(),
-        
-      }
-      updateDoc(caregiverDoc, {
-        itemsRequested: arrayUnion(itemToWrite)
+      itemsRequested.push({
+        name: "Baby Clothing",
+        gender: gender,
+        size: size,
+        fulfilled: false,
+        requestedOn: Timestamp.now(),
       })
     }
+    
     if (addReqs) {
-      updateDoc(caregiverDoc, {
-        itemsRequested: arrayUnion({
-          name: "Additional Requests",
-          request: addReqs,
-          fulfilled: false,
-          requestedOn: Timestamp.now(),
-        })
+      itemsRequested.push({
+        name: "Additional Requests",
+        request: addReqs,
+        fulfilled: false,
+        requestedOn: Timestamp.now(),
       })
     }
+
+    updateDoc(caregiverDoc, {itemsRequested: arrayUnion(...itemsRequested)})
+
   }
 
   const [modalVisible, setModalVisible] = useState(false);
