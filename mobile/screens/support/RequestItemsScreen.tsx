@@ -6,7 +6,8 @@ import {
   Pressable,
   TextInput,
   ScrollView,
-  Modal
+  Modal,
+  TouchableOpacity
 } from "react-native";
 import { db, functions } from "../../config/firebase";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -202,13 +203,12 @@ export default function SupportScreen({ navigation }: Props) {
           value={additionalComments}
           onChangeText={setAdditionalComments}
         />
-        <View style={styles.button}>
-          <Button
-            title="Request"
-            onPress={() => {
-              setModalVisible(modalVisible);
-            }}
-            color="#304CD1" />
+        <View style={{alignItems: "center"}}>
+          <TouchableOpacity style={[styles.button, {width: 350}]} onPress={() => {
+              setModalVisible(!modalVisible);
+          }}>
+            <Text style={styles.buttonText}>Request</Text>
+          </TouchableOpacity>
         </View>
         <Text style={styles.footer}>
           Expect a call from us to confirm the order details!
@@ -223,14 +223,15 @@ export default function SupportScreen({ navigation }: Props) {
           }}
         >
           <View style={{padding: 20, height: '30%', marginTop: 'auto', justifyContent: 'space-around', borderRadius: 5}}>
-            <Text style={{fontWeight: "bold", paddingBottom: 15}}>All done!</Text>
-            <Text style={{paddingBottom: 20}}>Please expect a call from MBB soon to confirm your requested supplies!</Text>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{width: "50%"}}><Button title="Close"
-                onPress={() => {
-                  setModalVisible(!modalVisible)
-                  navigation.navigate("ReachOut");
-                }}/></View>
+            <Text style={styles.title}>All done!</Text>
+            <Text style={styles.subheader}>Please expect a call from MBB soon to confirm your requested supplies!</Text>
+            <View style={{alignItems: "center"}}>
+              <TouchableOpacity style={[styles.button, {width: 350}]} onPress={() => {
+                setModalVisible(!modalVisible)
+                navigation.navigate("ReachOut");
+              }}>
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -241,18 +242,24 @@ export default function SupportScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    borderWidth: 1,
-    height: 45,
-    alignItems: "center",
-    borderColor: "#304CD1",
-    borderRadius: 4,
-    paddingTop: 3,
+    borderWidth:1,
+    borderColor:"#304CD1",
+    alignItems:'center',
+    justifyContent:'center',
+    height:50,
+    backgroundColor:'#fff',
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#304CD1",
+    padding: 10,
+    fontWeight: "500",
   },
   container: {
     flex: 1,
     padding: 30,
     flexDirection: "column",
-    backgroundColor: "#E5E5E5",
+    backgroundColor: "#FAFBFC",
   },
   title: {
     fontSize: 24,

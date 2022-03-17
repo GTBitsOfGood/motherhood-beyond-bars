@@ -1,8 +1,14 @@
 import { View } from "../../components/Themed";
-import { Text, StyleSheet, Button } from "react-native";
+import { Text, StyleSheet, Button, ScrollView, TouchableOpacity } from "react-native";
 import { SupportStackScreenProps } from "../../types";
 import React, { useContext, useEffect } from "react";
 import { UserContext } from "../../providers/User";
+import ReachOutSVG from '../../assets/images/reachout';
+import BabyBottleSVG from '../../assets/images/babybottle';
+import CallSVG from '../../assets/images/call';
+import EmailSVG from '../../assets/images/email';
+import PhoneSVG from '../../assets/images/phone';
+
 
 export default function ReachOut({
   navigation,
@@ -11,31 +17,50 @@ export default function ReachOut({
 
   return (
     <View style={styles.container}>
+      <ScrollView>
       <View style={styles.textbox}>
+        <ReachOutSVG/>
         <Text style={styles.title}>Reach out to us!</Text>
-        <Text>We know childcare isn't the easiest, but we're here to help. Let us know if you have any questions, concerns, feedback, or just want to chat.</Text>
-        <Text>Text</Text>
-        <Text>(678) 404-1397</Text>
-        <Text>Email</Text>
-        <Text>info@motherhoodbeyond.org</Text>
-        <Button
-            title="Call on Google Voice"
-            onPress={() => {
-                // call 678 404 1397
-            }}
-        />
+        <Text style={{paddingBottom: 10}}>We know childcare isn't the easiest, but we're here to help. Let us know if you have any questions, concerns, feedback, or just want to chat.</Text>
+        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 10}}>
+          <PhoneSVG/>
+          <View>
+          <Text style={{paddingBottom: 5, paddingLeft: 20}}>Text</Text>
+          <Text style={{paddingBottom: 5, paddingLeft: 20, color: 'gray'}}>(678) 404-1397</Text>
+          </View>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 10}}>
+        <EmailSVG/>
+          <View>
+          <Text style={{paddingBottom: 5, paddingLeft: 20}}>Email</Text>
+          <Text style={{paddingBottom: 5, paddingLeft: 20, color: 'gray'}}>info@motherhoodbeyond.org</Text>
+          </View>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 15}}>
+          <CallSVG/>
+          <View style={{paddingLeft: 20}}>
+          <TouchableOpacity style={styles.button} onPress={() => {
+              // call 678 404 1397
+          }}>
+            <Text style={styles.buttonText}>Call on Google Voice</Text>
+             </TouchableOpacity>
+          </View>
+        </View>
       </View>
       
       <View style={styles.textbox}>
+        <BabyBottleSVG/>
         <Text style={styles.title}>Request Items</Text>
-        <Text>Request additional items like diapers, baby formula, and clothing.</Text>
-        <Button
-            title="Request"
-            onPress={() => {
-                navigation.navigate("RequestItemsScreen")
-            }}
-        />
+        <Text style={{paddingBottom: 20}}>Request additional items like diapers, baby formula, and clothing.</Text>
+        <View style={{alignItems: "center"}}>
+          <TouchableOpacity style={[styles.button, {width: 300}]} onPress={() => {
+              navigation.navigate("RequestItemsScreen")
+          }}>
+            <Text style={styles.buttonText}>Request</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+      </ScrollView>
     </View>
   );
 }
@@ -43,32 +68,35 @@ export default function ReachOut({
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      padding: 30,
+      padding: 20,
+      backgroundColor: "#f5f5f5",
     },
     title: {
       fontSize: 20,
       fontWeight: "bold",
+      paddingTop: 5,
       paddingBottom: 15,
-    },
-    center: {
-      fontSize: 20,
-      fontWeight: "bold",
-      paddingBottom: 15,
-      textAlign: "center",
     },
     textbox: {
-      backgroundColor: "white",
+      backgroundColor: "#fff",
       borderRadius: 10,
-      padding: 10,
-      shadowColor: "#171717",
-      shadowOffset: { width: -2, height: 4 },
-      shadowOpacity: 0.2,
-      shadowRadius: 3,
+      padding: 20,
+      marginBottom: 20,
     },
-    thumbnail: {
-      width: 300,
-      height: 300,
-      resizeMode: "contain",
+    button: {
+      borderWidth:1,
+      borderColor:"#304CD1",
+      alignItems:'center',
+      justifyContent:'center',
+      height:50,
+      backgroundColor:'#fff',
+      borderRadius: 5,
+    },
+    buttonText: {
+      color: "#304CD1",
+      padding: 10,
+      fontWeight: "500",
     }
+
   });
   
