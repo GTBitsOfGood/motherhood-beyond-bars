@@ -16,6 +16,7 @@ import BabyBookSVG from '../assets/images/babybook'
 import ResourcesSVG from '../assets/images/resources'
 import SettingsSVG from '../assets/images/settings'
 import SupportSVG from '../assets/images/support'
+import HeaderBackgroundSVG from '../assets/images/headerbackground'
 
 import {
   Button,
@@ -25,19 +26,15 @@ import {
   View,
   Text,
   Image,
+  StyleSheet,
 } from "react-native";
 
-import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SignWaiver from "../screens/onboarding/SignWaiver";
 import LoginScreen from "../screens/LoginScreen";
-import TabOneScreen from "../screens/TabOneScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
-import TabThreeScreen from "../screens/TabThreeScreen";
-import TabFourScreen from "../screens/TabFourScreen";
 import {
   BookParamList,
   OnboardingParamList,
@@ -59,7 +56,6 @@ import BestContact from "../screens/onboarding/BestContact";
 import AllDone from "../screens/onboarding/AllDone";
 
 import { SettingsContext } from "../providers/settings";
-import SupportScreen from "../screens/support/RequestItemsScreen";
 import BabyBookAccess from "../screens/babybook/BabyBookAccess";
 import BabyBook from "../screens/babybook/BabyBook";
 import StartBook from "../screens/babybook/StartBook";
@@ -386,12 +382,7 @@ function SupportNavigator() {
           name="ReachOut"
           component={ReachOut}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Reach out to us!</Text>
-              </View>
-            ),
+            headerShown: false, 
           }}
         />
       }
@@ -402,10 +393,9 @@ function SupportNavigator() {
           options={{
             headerTitle: () => (
               // add progress bar/circles and styling here
-              <View>
-                <Text>Request Items</Text>
-              </View>
+              <View></View>
             ),
+            // headerShown: false,
           }}
         />
       }
@@ -429,7 +419,13 @@ function BottomTabNavigator() {
         tabBarActiveTintColor: "#fff",
         tabBarStyle: {
           backgroundColor: "#000000"
-        }
+        },
+        headerBackground: () => <HeaderBackgroundSVG/>,
+        headerStyle: {
+          backgroundColor: 'transparent',
+          height: 87
+        },
+        headerTitleStyle: {color: '#fff'}
       }}
     >
       <BottomTab.Screen
