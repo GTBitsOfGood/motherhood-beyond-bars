@@ -17,6 +17,9 @@ import ResourcesSVG from '../assets/images/resources'
 import SettingsSVG from '../assets/images/settings'
 import SupportSVG from '../assets/images/support'
 import HeaderBackgroundSVG from '../assets/images/headerbackground'
+import LogoutButton from "../components/app/LogoutButton";
+import CreateAccountSVG from '../assets/images/createaccount'
+
 
 import {
   Button,
@@ -62,6 +65,12 @@ import StartBook from "../screens/babybook/StartBook";
 import SelectPicture from "../screens/babybook/SelectPicture";
 import RequestItemsScreen from "../screens/support/RequestItemsScreen";
 import ReachOut from "../screens/support/ReachOut";
+import Welcome from "../screens/onboarding/Welcome";
+import CreateAccount from "../screens/onboarding/CreateAccount";
+import CreatePassword from "../screens/onboarding/CreatePassword";
+import GetStarted from "../screens/onboarding/GetStarted";
+import Login from "../screens/onboarding/Login";
+import RecoverPassword from "../screens/onboarding/RecoverPassword";
 
 export default function Navigation({
   colorScheme,
@@ -226,62 +235,6 @@ function OnboardingNavigator() {
               }}
             />
           }
-          {
-            <Onboarding.Screen
-              name="BabyBookAccess"
-              component={BabyBookAccess}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Baby Book Access</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="BabyBook"
-              component={BabyBook}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Baby Book</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="StartBook"
-              component={StartBook}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Start A Baby Book</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="SelectPicture"
-              component={SelectPicture}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Picture and Caption</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
@@ -292,10 +245,55 @@ function OnboardingNavigator() {
         <>
           {/* The user is not signed in and needs to login */}
           <Onboarding.Screen
+            name="Welcome"
+            component={Welcome}
+            options={{ headerShown: false}}
+          />
+          <Onboarding.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{
+              title: 'Create Account',
+              // header: () => <CreateAccountSVG/>
+            }}
+          />
+          <Onboarding.Screen
+            name="CreatePassword"
+            component={CreatePassword}
+            options={{
+              title: 'Create Password',
+              // header: () => <CreateAccountSVG/>
+            }}
+          />
+          <Onboarding.Screen
+            name="GetStarted"
+            component={GetStarted}
+            options={{
+              title: 'Get Started',
+              // header: () => <CreateAccountSVG/>
+            }}
+          />
+          <Onboarding.Screen
             name="Login"
+            component={Login}
+            options={{
+              title: 'Log In',
+              // header: () => <CreateAccountSVG/>
+            }}
+          />
+          <Onboarding.Screen
+            name="RecoverPassword"
+            component={RecoverPassword}
+            options={{
+              title: 'RecoverPassword',
+              // header: () => <CreateAccountSVG/>
+            }}
+          />
+          {/*<Onboarding.Screen
+            name="LoginScreen"
             component={LoginScreen}
             options={{ headerShown: false }}
-          />
+          />*/}
         </>
       )}
     </Onboarding.Navigator>

@@ -7,10 +7,10 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { OnboardingStackScreenProps } from "../../types";
+import { BookStackScreenProps } from "../../types";
 import * as ImagePicker from "expo-image-picker";
 
-type Props = OnboardingStackScreenProps<"BabyBook">;
+type Props = BookStackScreenProps<"BabyBook">;
 
 export default function BabyBook({ navigation }: Props) {
   let openImagePickerAsync = async () => {

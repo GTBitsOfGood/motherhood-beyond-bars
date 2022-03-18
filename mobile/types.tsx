@@ -43,20 +43,21 @@ export type RootTabParamList = {
   TabTwo: undefined;
   TabThree: undefined;
   TabFour: undefined;
-  // SignWaiver: undefined;
 };
 
 export type OnboardingParamList = {
+  Welcome: undefined;
+  CreateAccount: undefined;
+  CreatePassword: undefined;
+  GetStarted: undefined;
   Login: undefined;
+  RecoverPassword: undefined;
+  LoginScreen: undefined;
   Info: undefined;
   SignWaiver: {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
-  BabyBookAccess: undefined;
-  BabyBook: undefined;
-  StartBook: undefined;
-  SelectPicture: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;

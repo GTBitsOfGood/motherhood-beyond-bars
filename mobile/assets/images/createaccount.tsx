@@ -3,13 +3,13 @@ import Svg, { Path, Defs, RadialGradient, Stop } from "react-native-svg"
 
 const SvgComponent = (props: any) => (
   <Svg
-    viewBox="0 0 376 87"
+    viewBox="0 0 375 168"
     preserveAspectRatio="none"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <Path fill="url(#a)" d="M-1 0h376v87H-1z" />
+    <Path fill="url(#a)" d="M0 0h375v168H0z" />
     <Defs>
       <RadialGradient
         id="a"
@@ -17,10 +17,10 @@ const SvgComponent = (props: any) => (
         cy={0}
         r={1}
         gradientUnits="userSpaceOnUse"
-        gradientTransform="rotate(15.101 85.138 276.593) scale(422.892 206.8)"
+        gradientTransform="matrix(391.50036 137.67399 -118.05372 335.70664 91.5 50.69)"
       >
-        <Stop stopColor="#EDB1CB" />
-        <Stop offset={0.777} stopColor="#4C6AF4" />
+        <Stop offset={0} stopColor="#EDB1CB" />
+        <Stop offset={1} stopColor="#4C6AF4" />
       </RadialGradient>
     </Defs>
   </Svg>

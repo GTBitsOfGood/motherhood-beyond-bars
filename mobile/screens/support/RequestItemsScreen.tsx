@@ -14,7 +14,6 @@ import { getFunctions, httpsCallable } from "firebase/functions";
 import { SupportStackScreenProps } from "../../types";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
-import mbbAxios from "../../api/api_axios";
 import { auth } from "../../config/firebase";
 import { arrayUnion, doc, Timestamp } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
