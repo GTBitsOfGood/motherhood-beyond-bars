@@ -1,29 +1,59 @@
 import { View } from "../../components/Themed";
 import { Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../providers/User";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config/firebase";
 
 export default function Login({
   navigation,
 }: OnboardingStackScreenProps<"Login">) {
   const authData = useContext(UserContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Log in</Text>
       <Text style={styles.description}>Email or Phone Number</Text>
-      <TextInput style={styles.input}></TextInput>
+      <TextInput
+          autoCompleteType="email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoFocus={true}
+          style={styles.input}
+          onChangeText={(email) => {
+            setEmail(email);
+          }}
+        />
       <Text style={styles.description}>Password</Text>
-      <TextInput style={styles.input /* make it specific for password */}></TextInput>
-      <View style={{flexDirection: 'row', justifyContent: 'flex-end', paddingTop: 9}}>
+      <TextInput
+          style={styles.input}
+          autoCompleteType="password"
+          onChangeText={(password) => {
+            setPassword(password);
+          }}
+          secureTextEntry={true}
+        />
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end', paddingTop: 9}}>
         <TouchableOpacity onPress={() => navigation.navigate("RecoverPassword")}>
             <Text style={{color: '#304CD1'}}>Forgot Password</Text>
         </TouchableOpacity>
       </View>
       <View style={{paddingTop: 36}}>
-        <TouchableOpacity style={styles.button} onPress={() => {
-            // should navigate to onboarding
+        <TouchableOpacity style={styles.button} onPress={async () => {
+            await signInWithEmailAndPassword(
+              auth,
+              email.trim(),
+              password
+            ).catch((error) => {
+              if (error.code === "auth/user-not-found") {
+                // setMessage("User not found, try creating an account first.");
+              } else if (error.code === "auth/wrong-password") {
+                // setMessage("Incorrect password.");
+              }
+            });
           }}>
           <Text style={styles.buttonText}>Log in</Text>
         </TouchableOpacity>
@@ -61,7 +91,8 @@ const styles = StyleSheet.create({
     borderColor: '#D9D9D9',
     borderWidth: 1,
     borderRadius: 4,
-    width: '100%'
+    width: '100%',
+    paddingLeft: 8,
   },
   button: {
     borderWidth:1,

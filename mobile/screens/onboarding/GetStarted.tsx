@@ -3,6 +3,8 @@ import { Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect } from "react";
 import { UserContext } from "../../providers/User";
+import SignWaiver from "./SignWaiver";
+import { getWaivers } from "../../lib/getWaivers";
 
 export default function GetStarted({
   navigation,
@@ -20,8 +22,8 @@ export default function GetStarted({
         </Text>
 
         <View style={{paddingTop: 36}}>
-            <TouchableOpacity style={styles.button} onPress={() => {
-                // should send to onboarding
+            <TouchableOpacity style={styles.button} onPress={async () => {
+                navigation.navigate("HouseholdInfo");
             }}>
             <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>

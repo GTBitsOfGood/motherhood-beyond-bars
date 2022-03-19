@@ -1,28 +1,66 @@
 import { View } from "../../components/Themed";
 import { Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../providers/User";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 export default function CreateAccount({
   navigation,
 }: OnboardingStackScreenProps<"CreateAccount">) {
   const authData = useContext(UserContext);
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create your account</Text>
       <Text style={styles.description}>First Name</Text>
-      <TextInput style={styles.input}></TextInput>
+      <TextInput
+        autoFocus={true}
+        style={styles.input}
+        onChangeText={(first) => {
+          setFirst(first);
+        }}
+      />
       <Text style={styles.description}>Last Name</Text>
-      <TextInput style={styles.input}></TextInput>
+      <TextInput
+        autoFocus={true}
+        style={styles.input}
+        onChangeText={(last) => {
+          setLast(last);
+        }}
+      />
       <Text style={styles.description}>Email</Text>
-      <TextInput style={styles.input}></TextInput>
+      <TextInput
+          placeholder="email"
+          autoCompleteType="email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoFocus={true}
+          style={styles.input}
+          onChangeText={(email) => {
+            setEmail(email);
+          }}
+        />
       <Text style={styles.description}>Phone Number</Text>
-      <TextInput style={styles.input}></TextInput>
+      <TextInput
+        autoFocus={true}
+        style={styles.input}
+        onChangeText={(phone) => {
+          setPhone(phone);
+        }}
+      />
       <View style={{paddingTop: 36}}>
-        <TouchableOpacity style={styles.button} onPress={() => {
-            navigation.navigate("CreatePassword")
+        <TouchableOpacity style={styles.button} onPress={async () => {
+            navigation.navigate("CreatePassword", {
+              first: first,
+              last: last,
+              email: email,
+              phone: phone
+            })
           }}>
           <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
@@ -60,7 +98,8 @@ const styles = StyleSheet.create({
     borderColor: '#D9D9D9',
     borderWidth: 1,
     borderRadius: 4,
-    width: '100%'
+    width: '100%',
+    paddingLeft: 8,
   },
   button: {
     borderWidth:1,

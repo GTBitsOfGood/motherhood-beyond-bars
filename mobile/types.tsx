@@ -48,11 +48,16 @@ export type RootTabParamList = {
 export type OnboardingParamList = {
   Welcome: undefined;
   CreateAccount: undefined;
-  CreatePassword: undefined;
+  CreatePassword: {
+    first: string;
+    last: string;
+    email: string;
+    phone: string;
+  };
   GetStarted: undefined;
   Login: undefined;
   RecoverPassword: undefined;
-  LoginScreen: undefined;
+  HouseholdInfo: undefined;
   Info: undefined;
   SignWaiver: {
     unsignedWaivers: Waiver[] | undefined;

@@ -71,6 +71,7 @@ import CreatePassword from "../screens/onboarding/CreatePassword";
 import GetStarted from "../screens/onboarding/GetStarted";
 import Login from "../screens/onboarding/Login";
 import RecoverPassword from "../screens/onboarding/RecoverPassword";
+import HouseholdInfo from "../screens/onboarding/HouseholdInfo";
 
 export default function Navigation({
   colorScheme,
@@ -172,6 +173,26 @@ function OnboardingNavigator() {
       {Boolean(authData) ? (
         <>
           {/* The user is signed in */}
+          <Onboarding.Screen
+            name="GetStarted"
+            component={GetStarted}
+            options={{
+              title: 'Get Started',
+              // header: () => <CreateAccountSVG/>
+            }}
+          />
+          <Onboarding.Screen
+            name="HouseholdInfo"
+            component={HouseholdInfo}
+            options={{
+              headerTitle: () => (
+                // add progress bar/circles and styling here
+                <View>
+                  <Text>Step 1</Text>
+                </View>
+              ),
+            }}
+          />
           {
             <Onboarding.Screen
               name="SignWaiver"
@@ -266,14 +287,6 @@ function OnboardingNavigator() {
             }}
           />
           <Onboarding.Screen
-            name="GetStarted"
-            component={GetStarted}
-            options={{
-              title: 'Get Started',
-              // header: () => <CreateAccountSVG/>
-            }}
-          />
-          <Onboarding.Screen
             name="Login"
             component={Login}
             options={{
@@ -289,11 +302,6 @@ function OnboardingNavigator() {
               // header: () => <CreateAccountSVG/>
             }}
           />
-          {/*<Onboarding.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />*/}
         </>
       )}
     </Onboarding.Navigator>
@@ -423,7 +431,10 @@ function BottomTabNavigator() {
           backgroundColor: 'transparent',
           height: 87
         },
-        headerTitleStyle: {color: '#fff'}
+        headerTitleStyle: {color: '#fff'},
+        headerRight: () => (
+          <LogoutButton/>
+        )
       }}
     >
       <BottomTab.Screen
