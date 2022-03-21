@@ -18,52 +18,67 @@ export default function Login({
       <Text style={styles.title}>Log in</Text>
       <Text style={styles.description}>Email or Phone Number</Text>
       <TextInput
-          autoCompleteType="email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoFocus={true}
-          style={styles.input}
-          onChangeText={(email) => {
-            setEmail(email);
-          }}
-        />
+        autoCompleteType="email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoFocus={true}
+        style={styles.input}
+        onChangeText={(email) => {
+          setEmail(email);
+        }}
+      />
       <Text style={styles.description}>Password</Text>
       <TextInput
-          style={styles.input}
-          autoCompleteType="password"
-          onChangeText={(password) => {
-            setPassword(password);
-          }}
-          secureTextEntry={true}
-        />
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end', paddingTop: 9}}>
-        <TouchableOpacity onPress={() => navigation.navigate("RecoverPassword")}>
-            <Text style={{color: '#304CD1'}}>Forgot Password</Text>
+        style={styles.input}
+        autoCompleteType="password"
+        onChangeText={(password) => {
+          setPassword(password);
+        }}
+        secureTextEntry={true}
+      />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          paddingTop: 9,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.navigate("RecoverPassword")}
+        >
+          <Text style={{ color: "#304CD1" }}>Forgot Password</Text>
         </TouchableOpacity>
       </View>
-      <View style={{paddingTop: 36}}>
-        <TouchableOpacity style={styles.button} onPress={async () => {
+      <View style={{ paddingTop: 36 }}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
             await signInWithEmailAndPassword(
               auth,
               email.trim(),
               password
             ).catch((error) => {
               if (error.code === "auth/user-not-found") {
-                // setMessage("User not found, try creating an account first.");
+                alert("User not found, try creating an account first.");
               } else if (error.code === "auth/wrong-password") {
-                // setMessage("Incorrect password.");
+                alert("Incorrect password.");
               }
             });
-          }}>
+          }}
+        >
           <Text style={styles.buttonText}>Log in</Text>
         </TouchableOpacity>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 215.5}}>
-        <Text style={{fontSize: 14}}>Already have an account? </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          paddingTop: 215.5,
+        }}
+      >
+        <Text style={{ fontSize: 14 }}>Already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("CreateAccount")}>
-            <Text style={{color: '#304CD1'}}>
-                Sign Up.
-            </Text>
+          <Text style={{ color: "#304CD1" }}>Sign Up.</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -86,21 +101,21 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   input: {
-    backgroundColor: '#FAFBFC', 
-    height: 44, 
-    borderColor: '#D9D9D9',
+    backgroundColor: "#FAFBFC",
+    height: 44,
+    borderColor: "#D9D9D9",
     borderWidth: 1,
     borderRadius: 4,
-    width: '100%',
+    width: "100%",
     paddingLeft: 8,
   },
   button: {
-    borderWidth:1,
-    borderColor:"#304CD1",
-    alignItems:'center',
-    justifyContent:'center',
-    height:50,
-    backgroundColor:'#fff',
+    borderWidth: 1,
+    borderColor: "#304CD1",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    backgroundColor: "#fff",
     borderRadius: 5,
   },
   buttonText: {
@@ -108,5 +123,5 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: "500",
     fontSize: 16,
-  }
+  },
 });

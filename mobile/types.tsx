@@ -30,13 +30,11 @@ export type OnboardingStackScreenProps<
   Screen extends keyof OnboardingParamList
 > = NativeStackScreenProps<OnboardingParamList, Screen>;
 
-export type BookStackScreenProps<
-  Screen extends keyof BookParamList
-> = NativeStackScreenProps<BookParamList, Screen>;
+export type BookStackScreenProps<Screen extends keyof BookParamList> =
+  NativeStackScreenProps<BookParamList, Screen>;
 
-export type SupportStackScreenProps<
-  Screen extends keyof SupportParamList
-> = NativeStackScreenProps<SupportParamList, Screen>;
+export type SupportStackScreenProps<Screen extends keyof SupportParamList> =
+  NativeStackScreenProps<SupportParamList, Screen>;
 
 export type RootTabParamList = {
   TabOne: undefined;
@@ -71,14 +69,14 @@ export type OnboardingParamList = {
 export type SupportParamList = {
   ReachOut: undefined;
   RequestItemsScreen: undefined;
-}
+};
 
 export type BookParamList = {
   BabyBookAccess: undefined;
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: undefined;
-}
+};
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<
@@ -87,11 +85,18 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   >;
 
 export interface Caregiver {
-  name: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
   id: string;
+  numAdults: string;
+  numChildren: string;
+  agesOfChildren: string;
   signedWaivers: Waiver[];
   itemsRequested: Item[];
   address: string;
+  apartment?: string;
   city: string;
   state: string;
   zipCode: string;

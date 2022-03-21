@@ -110,7 +110,7 @@ export default function SignWaiver({
         title={"Next"}
         onPress={() => {
           if (isSelected) {
-            console.log("Signed waiver", waiver.id);
+            // console.log("Signed waiver", waiver.id);
 
             setSignedWaivers();
 

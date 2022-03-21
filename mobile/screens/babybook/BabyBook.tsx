@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { View } from "../../components/Themed";
-import {
-  StyleSheet,
-  Button,
-  Switch,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { BookStackScreenProps } from "../../types";
 import * as ImagePicker from "expo-image-picker";
 
@@ -94,5 +88,5 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     resizeMode: "contain",
-  },  
+  },
 });

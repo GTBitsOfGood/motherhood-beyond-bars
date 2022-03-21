@@ -12,32 +12,23 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import BabyBookSVG from '../assets/images/babybook'
-import ResourcesSVG from '../assets/images/resources'
-import SettingsSVG from '../assets/images/settings'
-import SupportSVG from '../assets/images/support'
-import HeaderBackgroundSVG from '../assets/images/headerbackground'
+import BabyBookSVG from "../assets/images/babybook";
+import ResourcesSVG from "../assets/images/resources";
+import SettingsSVG from "../assets/images/settings";
+import SupportSVG from "../assets/images/support";
+import HeaderBackgroundSVG from "../assets/images/headerbackground";
 import LogoutButton from "../components/app/LogoutButton";
-import CreateAccountSVG from '../assets/images/createaccount'
+import CircleBorder from "../components/app/CircleBorder";
+import FilledCircle from "../components/app/FilledCircle";
+import CreateAccountSVG from "../assets/images/createaccount";
 
-
-import {
-  Button,
-  ColorSchemeName,
-  Linking,
-  Pressable,
-  View,
-  Text,
-  Image,
-  StyleSheet,
-} from "react-native";
+import { Button, ColorSchemeName, Linking, View, Text } from "react-native";
 
 import useColorScheme from "../hooks/useColorScheme";
 
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SignWaiver from "../screens/onboarding/SignWaiver";
-import LoginScreen from "../screens/LoginScreen";
 import {
   BookParamList,
   OnboardingParamList,
@@ -90,9 +81,15 @@ export default function Navigation({
 
 const validateAuthData = (authData: UserContextType) => {
   // Determine if a user is ready to see the app yet, or if they still need to be onboarded
-
   return (
-    authData?.uid && // && authData.caregiver?.name
+    authData?.uid &&
+    // authData.caregiver?.firstName &&
+    // authData.caregiver?.lastName &&
+    // authData.caregiver?.phoneNumber &&
+    // authData.caregiver?.email &&
+    authData.caregiver?.numAdults &&
+    authData.caregiver?.numChildren &&
+    authData.caregiver?.agesOfChildren &&
     authData.caregiver?.signedWaivers &&
     authData.caregiver?.address &&
     authData.caregiver?.city &&
@@ -140,14 +137,15 @@ function RootNavigator() {
           options={({ navigation }) => ({
             headerShown: true,
             title: "Welcome",
-            headerRight: () => (
-              (!authData?.uid) ? null : <Button
-                title="Logout"
-                onPress={() => {
-                  signOut(auth);
-                }}
-              />
-            ),
+            headerRight: () =>
+              !authData?.uid ? null : (
+                <Button
+                  title="Logout"
+                  onPress={() => {
+                    signOut(auth);
+                  }}
+                />
+              ),
             headerLeft: () => (
               <Button
                 title="Call"
@@ -177,7 +175,7 @@ function OnboardingNavigator() {
             name="GetStarted"
             component={GetStarted}
             options={{
-              title: 'Get Started',
+              title: "Get Started",
               // header: () => <CreateAccountSVG/>
             }}
           />
@@ -185,77 +183,102 @@ function OnboardingNavigator() {
             name="HouseholdInfo"
             component={HouseholdInfo}
             options={{
-              headerTitle: () => (
-                // add progress bar/circles and styling here
-                <View>
-                  <Text>Step 1</Text>
+              headerStyle: {
+                backgroundColor: "#EBEDF8",
+              },
+              title: "",
+              headerRight: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ color: "#304CD1" }}>Step 1</Text>
+                  <FilledCircle />
+                  <CircleBorder />
+                  <CircleBorder />
+                  <CircleBorder />
+                  <CircleBorder />
                 </View>
               ),
             }}
           />
-          {
-            <Onboarding.Screen
-              name="SignWaiver"
-              component={SignWaiver}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Step 2</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="Info"
-              component={InfoScreen}
-              options={{ headerShown: false }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="RequestItems"
-              component={RequestItems}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Step 3</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="ShippingAddress"
-              component={ShippingAddress}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Step 4</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="BestContact"
-              component={BestContact}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Step 5</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
+          <Onboarding.Screen
+            name="SignWaiver"
+            component={SignWaiver}
+            options={{
+              headerStyle: {
+                backgroundColor: "#EBEDF8",
+              },
+              title: "",
+              headerRight: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ color: "#304CD1" }}>Step 2</Text>
+                  <FilledCircle />
+                  <FilledCircle />
+                  <CircleBorder />
+                  <CircleBorder />
+                  <CircleBorder />
+                </View>
+              ),
+            }}
+          />
+          <Onboarding.Screen
+            name="RequestItems"
+            component={RequestItems}
+            options={{
+              headerStyle: {
+                backgroundColor: "#EBEDF8",
+              },
+              title: "",
+              headerRight: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ color: "#304CD1" }}>Step 3</Text>
+                  <FilledCircle />
+                  <FilledCircle />
+                  <FilledCircle />
+                  <CircleBorder />
+                  <CircleBorder />
+                </View>
+              ),
+            }}
+          />
+          <Onboarding.Screen
+            name="ShippingAddress"
+            component={ShippingAddress}
+            options={{
+              headerStyle: {
+                backgroundColor: "#EBEDF8",
+              },
+              title: "",
+              headerRight: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ color: "#304CD1" }}>Step 4</Text>
+                  <FilledCircle />
+                  <FilledCircle />
+                  <FilledCircle />
+                  <FilledCircle />
+                  <CircleBorder />
+                </View>
+              ),
+            }}
+          />
+          <Onboarding.Screen
+            name="BestContact"
+            component={BestContact}
+            options={{
+              headerStyle: {
+                backgroundColor: "#EBEDF8",
+              },
+              title: "",
+              headerRight: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ color: "#304CD1" }}>Step 5</Text>
+                  <FilledCircle />
+                  <FilledCircle />
+                  <FilledCircle />
+                  <FilledCircle />
+                  <FilledCircle />
+                </View>
+              ),
+            }}
+          />
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
@@ -268,13 +291,13 @@ function OnboardingNavigator() {
           <Onboarding.Screen
             name="Welcome"
             component={Welcome}
-            options={{ headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Onboarding.Screen
             name="CreateAccount"
             component={CreateAccount}
             options={{
-              title: 'Create Account',
+              title: "Create Account",
               // header: () => <CreateAccountSVG/>
             }}
           />
@@ -282,7 +305,7 @@ function OnboardingNavigator() {
             name="CreatePassword"
             component={CreatePassword}
             options={{
-              title: 'Create Password',
+              title: "Create Password",
               // header: () => <CreateAccountSVG/>
             }}
           />
@@ -290,7 +313,7 @@ function OnboardingNavigator() {
             name="Login"
             component={Login}
             options={{
-              title: 'Log In',
+              title: "Log In",
               // header: () => <CreateAccountSVG/>
             }}
           />
@@ -298,7 +321,7 @@ function OnboardingNavigator() {
             name="RecoverPassword"
             component={RecoverPassword}
             options={{
-              title: 'RecoverPassword',
+              title: "RecoverPassword",
               // header: () => <CreateAccountSVG/>
             }}
           />
@@ -313,65 +336,56 @@ const Book = createNativeStackNavigator<BookParamList>();
 function BookNavigator() {
   return (
     <Book.Navigator>
-      {
-        <>
-          {/*
-            <Book.Screen
-              name="BabyBookAccess"
-              component={BabyBookAccess}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Baby Book Access</Text>
-                  </View>
-                ),
-              }}
-            /> */}
-          {
-            <Book.Screen
-              name="StartBook"
-              component={StartBook}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Start A Baby Book</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Book.Screen
-              name="SelectPicture"
-              component={SelectPicture}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Picture and Caption</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Book.Screen
-              name="BabyBook"
-              component={BabyBook}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Baby Book</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-        </>
-      }
+      <>
+        <Book.Screen
+          name="BabyBookAccess"
+          component={BabyBookAccess}
+          options={{
+            headerTitle: () => (
+              // add progress bar/circles and styling here
+              <View>
+                <Text>Baby Book Access</Text>
+              </View>
+            ),
+          }}
+        />
+        <Book.Screen
+          name="StartBook"
+          component={StartBook}
+          options={{
+            headerTitle: () => (
+              // add progress bar/circles and styling here
+              <View>
+                <Text>Start A Baby Book</Text>
+              </View>
+            ),
+          }}
+        />
+        <Book.Screen
+          name="SelectPicture"
+          component={SelectPicture}
+          options={{
+            headerTitle: () => (
+              // add progress bar/circles and styling here
+              <View>
+                <Text>Picture and Caption</Text>
+              </View>
+            ),
+          }}
+        />
+        <Book.Screen
+          name="BabyBook"
+          component={BabyBook}
+          options={{
+            headerTitle: () => (
+              // add progress bar/circles and styling here
+              <View>
+                <Text>Baby Book</Text>
+              </View>
+            ),
+          }}
+        />
+      </>
     </Book.Navigator>
   );
 }
@@ -383,30 +397,26 @@ function SupportNavigator() {
 
   return (
     <Support.Navigator>
-      {
-        <Support.Screen
-          name="ReachOut"
-          component={ReachOut}
-          options={{
-            headerShown: false, 
-          }}
-        />
-      }
-      {
-        <Support.Screen
-          name="RequestItemsScreen"
-          component={RequestItemsScreen}
-          options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View></View>
-            ),
-            // headerShown: false,
-          }}
-        />
-      }
+      <Support.Screen
+        name="ReachOut"
+        component={ReachOut}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Support.Screen
+        name="RequestItemsScreen"
+        component={RequestItemsScreen}
+        options={{
+          headerTitle: () => (
+            // add progress bar/circles and styling here
+            <View></View>
+          ),
+          // headerShown: false,
+        }}
+      />
     </Support.Navigator>
-  )
+  );
 }
 
 /**
@@ -424,17 +434,15 @@ function BottomTabNavigator() {
       screenOptions={{
         tabBarActiveTintColor: "#fff",
         tabBarStyle: {
-          backgroundColor: "#000000"
+          backgroundColor: "#000000",
         },
-        headerBackground: () => <HeaderBackgroundSVG/>,
+        headerBackground: () => <HeaderBackgroundSVG />,
         headerStyle: {
-          backgroundColor: 'transparent',
-          height: 87
+          backgroundColor: "transparent",
+          height: 87,
         },
-        headerTitleStyle: {color: '#fff'},
-        headerRight: () => (
-          <LogoutButton/>
-        )
+        headerTitleStyle: { color: "#fff" },
+        headerRight: () => <LogoutButton />,
       }}
     >
       <BottomTab.Screen
@@ -442,10 +450,9 @@ function BottomTabNavigator() {
         component={BookNavigator}
         options={{
           title: "Baby Book",
-          tabBarIcon: ({focused}) => 
-          <BabyBookSVG
-            color={focused ? "#fff" : "#B2B2B2"}
-          />,
+          tabBarIcon: ({ focused }) => (
+            <BabyBookSVG color={focused ? "#fff" : "#B2B2B2"} />
+          ),
         }}
       />
       <BottomTab.Screen
@@ -453,10 +460,9 @@ function BottomTabNavigator() {
         component={SupportNavigator}
         options={{
           title: "MBB Support",
-          tabBarIcon: ({focused}) => 
-          <SupportSVG
-            color={focused ? "#fff" : "#B2B2B2"}
-          />,
+          tabBarIcon: ({ focused }) => (
+            <SupportSVG color={focused ? "#fff" : "#B2B2B2"} />
+          ),
         }}
       />
       <BottomTab.Screen
@@ -464,10 +470,9 @@ function BottomTabNavigator() {
         component={BookNavigator}
         options={{
           title: "Resources",
-          tabBarIcon: ({focused}) => 
-          <ResourcesSVG
-            color={focused ? "#fff" : "#B2B2B2"}
-          />,
+          tabBarIcon: ({ focused }) => (
+            <ResourcesSVG color={focused ? "#fff" : "#B2B2B2"} />
+          ),
         }}
       />
       <BottomTab.Screen
@@ -475,10 +480,9 @@ function BottomTabNavigator() {
         component={BookNavigator}
         options={{
           title: "Settings",
-          tabBarIcon: ({focused}) => 
-          <SettingsSVG
-            color={focused ? "#fff" : "#B2B2B2"}
-          />,
+          tabBarIcon: ({ focused }) => (
+            <SettingsSVG color={focused ? "#fff" : "#B2B2B2"} />
+          ),
         }}
       />
     </BottomTab.Navigator>

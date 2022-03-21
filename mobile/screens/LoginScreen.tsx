@@ -10,7 +10,6 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 import { UserContext } from "../providers/User";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import LogoutButton from "../components/app/LogoutButton";
 import PrimaryButton from "../components/app/PrimaryButton";
 
@@ -26,27 +25,27 @@ export default function LoginScreen({
     <View style={styles.container}>
       {/* Don't show sign in / sign out if the user is logged in  */}
       {!authData && (
-      <>
-        <TextInput
-          placeholder="email"
-          autoCompleteType="email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoFocus={true}
-          style={styles.input}
-          onChangeText={(email) => {
-            setEmail(email);
-          }}
-        />
-        <TextInput
-          placeholder="password"
-          style={styles.input}
-          autoCompleteType="password"
-          onChangeText={(password) => {
-            setPassword(password);
-          }}
-          secureTextEntry={true}
-        />
+        <>
+          <TextInput
+            placeholder="email"
+            autoCompleteType="email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoFocus={true}
+            style={styles.input}
+            onChangeText={(email) => {
+              setEmail(email);
+            }}
+          />
+          <TextInput
+            placeholder="password"
+            style={styles.input}
+            autoCompleteType="password"
+            onChangeText={(password) => {
+              setPassword(password);
+            }}
+            secureTextEntry={true}
+          />
           <PrimaryButton
             text="Sign In"
             onPress={async () => {
@@ -86,7 +85,11 @@ export default function LoginScreen({
       )}
 
       <Text>{message}</Text>
-      {authData && <Text>Your email: {authData?.email} Your city: {authData?.caregiver?.city}</Text>}
+      {authData && (
+        <Text>
+          Your email: {authData?.email} Your city: {authData?.caregiver?.city}
+        </Text>
+      )}
 
       {authData && (
         <LogoutButton

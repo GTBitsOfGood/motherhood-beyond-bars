@@ -7,7 +7,7 @@ import {
   TextInput,
   ScrollView,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { db, functions } from "../../config/firebase";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -49,72 +49,11 @@ export default function SupportScreen({ navigation }: Props) {
   const [additionalComments, setAdditionalComments] = useState<string>("");
   const [modalVisible, setModalVisible] = useState(false);
 
-
   const toggleItem = (index: number) => {
     const newItemsCount = [...itemsCount];
     newItemsCount[index] = !newItemsCount[index];
     setItemsCount(newItemsCount);
   };
-
-  /* async function setRequestedItems() {
-    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-
-    var newDoc = {
-      itemsRequested: arrayUnion({
-        name: "Begin Box",
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
-      })
-    }
-    if (carSeat) {
-      newDoc = {
-        ...newDoc,
-        itemsRequested: arrayUnion({
-          name: "Car Seat",
-          fulfilled: false,
-          requestedOn: Timestamp.now(),
-        })
-      }
-    }
-
-    if (sleep) {
-      newDoc = {
-        ...newDoc,
-        itemsRequested: arrayUnion({
-          name: "Safe Place to Sleep",
-          fulfilled: false,
-          requestedOn: Timestamp.now(),
-        })
-      }
-    }
-
-    if (clothing) {
-      newDoc = {
-        ...newDoc,
-        itemsRequested: arrayUnion({
-          name: "Baby Clothing",
-          gender: gender,
-          size: size,
-          fulfilled: false,
-          requestedOn: Timestamp.now(),
-        })
-      }
-    }
-    
-    if (addReqs) {
-      newDoc = {
-        itemsRequested: arrayUnion({
-          name: "Additional Requests",
-          request: addReqs,
-          fulfilled: false,
-          requestedOn: Timestamp.now(),
-        })
-      }
-    }
-
-    updateDoc(caregiverDoc, newDoc)
-
-  } */
 
   const requestItems = async () => {
     if (length === 0) {
@@ -202,10 +141,13 @@ export default function SupportScreen({ navigation }: Props) {
           value={additionalComments}
           onChangeText={setAdditionalComments}
         />
-        <View style={{alignItems: "center"}}>
-          <TouchableOpacity style={[styles.button, {width: 350}]} onPress={() => {
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            style={[styles.button, { width: 350 }]}
+            onPress={() => {
               setModalVisible(!modalVisible);
-          }}>
+            }}
+          >
             <Text style={styles.buttonText}>Request</Text>
           </TouchableOpacity>
         </View>
@@ -221,14 +163,28 @@ export default function SupportScreen({ navigation }: Props) {
             setModalVisible(!modalVisible);
           }}
         >
-          <View style={{padding: 20, height: '30%', marginTop: 'auto', justifyContent: 'space-around', borderRadius: 5}}>
+          <View
+            style={{
+              padding: 20,
+              height: "30%",
+              marginTop: "auto",
+              justifyContent: "space-around",
+              borderRadius: 5,
+            }}
+          >
             <Text style={styles.title}>All done!</Text>
-            <Text style={styles.subheader}>Please expect a call from MBB soon to confirm your requested supplies!</Text>
-            <View style={{alignItems: "center"}}>
-              <TouchableOpacity style={[styles.button, {width: 350}]} onPress={() => {
-                setModalVisible(!modalVisible)
-                navigation.navigate("ReachOut");
-              }}>
+            <Text style={styles.subheader}>
+              Please expect a call from MBB soon to confirm your requested
+              supplies!
+            </Text>
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity
+                style={[styles.button, { width: 350 }]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  navigation.navigate("ReachOut");
+                }}
+              >
                 <Text style={styles.buttonText}>Close</Text>
               </TouchableOpacity>
             </View>
@@ -241,12 +197,12 @@ export default function SupportScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    borderWidth:1,
-    borderColor:"#304CD1",
-    alignItems:'center',
-    justifyContent:'center',
-    height:50,
-    backgroundColor:'#fff',
+    borderWidth: 1,
+    borderColor: "#304CD1",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    backgroundColor: "#fff",
     borderRadius: 5,
   },
   buttonText: {
