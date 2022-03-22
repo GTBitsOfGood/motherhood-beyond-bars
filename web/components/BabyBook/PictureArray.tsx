@@ -1,21 +1,23 @@
-import { BabyBook, BabyBookMonths, BabyImage } from "pages/book/[babyId]"
+import { monthIndexToString } from "@lib/date"
+import Image from "next/image"
+import { BabyBookYear, BabyImage } from "pages/book/[babyId]"
 
 const PictureArray = ({ babyBook } : Props) => {
   return (
-    <div>
-      {Object.entries(babyBook).map(([year, months] : [string, BabyBookMonths]) => {
+    <div className="overflow-auto grow p-12">
+      {babyBook.map((year) => {
         return (
-          <div key={year}>
-            {Object.entries(months).map(([month, images] : [string, BabyImage[]]) => {
+          <div key={year.year} className="mb-10">
+            <h1 className="text-3xl font-semibold mb-4">{year.year}</h1>
+            {year.months.map((month) => {
               return (
-                <div key={month}>
-                  {images.map((image, i) => {
-                    return (
-                      <div key={i}>
-                        image
-                      </div>
-                    )
-                  })}
+                <div key={month.month}>
+                  <h2 className="font-semibold mb-2">{monthIndexToString(month.month)} {year.year}</h2>
+                  <div className="flex flex-wrap">
+                    {month.images.map((image, i) => 
+                      <BabyBookImage image={image} key={i}/>
+                    )}
+                  </div>
                 </div>
               )
             })}
@@ -26,8 +28,17 @@ const PictureArray = ({ babyBook } : Props) => {
   )
 }
 
+const BabyBookImage = ({ image }: { image: BabyImage }) => {
+  return (
+    <div className="w-[200px] h-[300px] overflow-hidden relative shadow-lg rounded mx-3 my-3">
+      <Image src={image.imageUrl} layout={'fill'} objectFit={'cover'}/>
+      {image.caption && <p className="absolute bottom-0 line-clamp-3 text-ellipsis bg-white w-full min-h-[4.5rem]">{image.caption}</p>}
+    </div>
+  )
+}
+
 interface Props {
-  babyBook: BabyBook
+  babyBook: BabyBookYear[]
 }
 
 export default PictureArray

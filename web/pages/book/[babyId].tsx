@@ -2,7 +2,6 @@ import PictureArray from "@components/BabyBook/PictureArray";
 import PictureModal from "@components/BabyBook/PictureModal";
 import SideBar from "@components/BabyBook/Sidebar";
 import TopBar from "@components/BabyBook/Topbar";
-import { formatDate } from "@lib/date";
 import { db } from "@lib/firebase";
 import { collection, DocumentReference, getDocs, orderBy, query, Timestamp } from "firebase/firestore";
 import { GetServerSideProps } from "next";
@@ -22,22 +21,24 @@ export default function BabyBook({ babyId, babyBook }: Props) {
 
 interface Props {
   babyId?: string;
-  babyBook: BabyBook;
+  babyBook: BabyBookYear[];
 }
 
-export interface BabyBook {
-  [year: string]: BabyBookMonths
+export interface BabyBookYear {
+  year: number
+  months: BabyBookMonth[]
 }
 
-export interface BabyBookMonths {
-  [month: string] : BabyImage[]
+export interface BabyBookMonth {
+  month: number
+  images : BabyImage[]
 }
 
 export interface BabyImage {
   caption: string,
   date: string,
   imageUrl: string,
-  caregiverId: DocumentReference,
+  caregiverId: string,
 }
 
 interface RawBabyImage {
@@ -52,7 +53,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   const props = {
     babyId: params?.babyId as string,
-    babyBook: {} as BabyBook
+    babyBook: [] as BabyBookYear[]
   }
   if (!params || !params.babyId) return { props }
   const babyBookRef = query(collection(db, `babies/${params.babyId}/book`), orderBy("date", "desc"));
@@ -60,14 +61,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   babyBookDocs.docs.forEach(book => {
     const raw = book.data() as RawBabyImage
     const date = raw.date.toDate();
-    if (!props.babyBook[date.getFullYear()]) props.babyBook[date.getFullYear()] = {} as BabyBookMonths
-    const year = props.babyBook[date.getFullYear()]
-    if (!year[date.getMonth()]) year[date.getMonth()] = [] as BabyImage[]
-    year[date.getMonth()].push({
-      caption: raw.caption,
+
+    const currYear = date.getFullYear()
+    if (props.babyBook.length < 1 || props.babyBook[props.babyBook.length-1].year !== currYear) props.babyBook.push({ year: currYear, months: [] })
+    const year = props.babyBook[props.babyBook.length-1]
+
+    const currMonth = date.getMonth()
+    if (year.months.length < 1 || year.months[year.months.length-1].month !== currMonth) year.months.push({ month: currMonth, images: []})
+    year.months[year.months.length-1].images.push({
+      caption: raw.caption || '',
       imageUrl: raw.imageURL,
-      caregiverId: raw.caregiverID,
-      date: formatDate(raw.date.toString())
+      caregiverId: raw.caregiverID?.id || '',
+      date: raw.date.toString()
     })
   })
 
