@@ -8,13 +8,21 @@ import { GetServerSideProps } from "next";
 import { useState } from "react";
 
 export default function BabyBook({ babyId, babyBook }: Props) {
-  const [isPictureSelected, setIsPictureSelected] = useState(false)
+  const [isPictureSelected, setIsPictureSelected] = useState<boolean>(false)
+  const [selectedImage, setSelectedImage] = useState<BabyImage>()
+  const selectImage = (i: number, j: number, k: number) => {
+    setIsPictureSelected(true)
+    setSelectedImage(babyBook[i].months[j].images[k])
+  }
+  const deselectImage = () => {
+    setIsPictureSelected(false)
+  }
   return <div className="flex flex-col w-full h-full">
     <TopBar />
-    <div className="flex grow-0 overflow-hidden">
+    <div className="relative flex grow-0 overflow-hidden">
       <SideBar babyBook={babyBook}/>
-      <PictureArray babyBook={babyBook} />
-      {isPictureSelected && <PictureModal />}
+      <PictureArray babyBook={babyBook} select={selectImage}/>
+      {isPictureSelected && <PictureModal image={selectedImage} deselect={deselectImage}/>}
     </div>
     </div>;
 }
