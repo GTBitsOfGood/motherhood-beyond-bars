@@ -10,9 +10,36 @@ import { useState } from "react";
 export default function BabyBook({ babyId, babyBook, totImages }: Props) {
   const [isPictureSelected, setIsPictureSelected] = useState<boolean>(false)
   const [selectedImage, setSelectedImage] = useState<BabyImage>()
+  const [currIndexes, setCurrIndexes] = useState({i: -1, j: -1, k:-1})
   const selectImage = (i: number, j: number, k: number) => {
     setIsPictureSelected(true)
     setSelectedImage(babyBook[i].months[j].images[k])
+    setCurrIndexes({i, j, k})
+  }
+  const selectImageOffset = (i: number, j: number, k: number, forward: boolean) => {
+    const current = babyBook[i].months[j].images
+    k += (forward ? 1 : -1)
+    if (k === current.length || k < 0) {
+      if (forward) {
+        k = 0
+        j+=1
+      }
+      else j-=1
+      const currMonths = babyBook[i].months
+      if (j < 0 || j === currMonths.length) {
+        if (forward) {
+          j=0
+          i+=1
+        }
+        else {
+          i-=1
+          j = babyBook[i]?.months.length - 1
+          k = babyBook[i]?.months[j]?.images.length - 1
+        }
+        if (i < 0 || i === babyBook.length) return
+      }
+    }
+    selectImage(i,j,k)
   }
   const deselectImage = () => {
     setIsPictureSelected(false)
@@ -22,7 +49,7 @@ export default function BabyBook({ babyId, babyBook, totImages }: Props) {
     <div className="relative flex grow-0 overflow-hidden">
       <SideBar babyBook={babyBook}/>
       <PictureArray babyBook={babyBook} select={selectImage}/>
-      {isPictureSelected && <PictureModal image={selectedImage} deselect={deselectImage}/>}
+      {isPictureSelected && <PictureModal image={selectedImage} selectImage={selectImageOffset} currentIndexs={currIndexes} deselect={deselectImage}/>}
     </div>
     </div>;
 }

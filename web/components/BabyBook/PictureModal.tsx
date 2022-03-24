@@ -6,7 +6,7 @@ import { Timestamp } from "firebase/firestore"
 import Image from "next/image"
 import { BabyImage } from "pages/book/[babyId]"
 
-const PictureModal = ({ image, deselect } : { image: BabyImage | undefined, deselect: ()=>void}) => {
+const PictureModal = ({ image, deselect, selectImage, currentIndexs } : Props) => {
   if (image === undefined) return (<div className="absolute">No Image Found. There is probably an error.</div>)
   const date = new Timestamp(image.date.seconds, image.date.nanoseconds).toDate()
   return (
@@ -19,11 +19,11 @@ const PictureModal = ({ image, deselect } : { image: BabyImage | undefined, dese
       </div>
       <div className="flex w-full justify-between flex-grow p-4">
         <div className="flex flex-grow items-center py-8 px-8 text-white">
-          <button className="w-[60px] h-[60px] rounded-full flex justify-center items-center bg-dark-100"><LeftChevronIcon /></button>
+          <button onClick={() => selectImage(currentIndexs.i, currentIndexs.j, currentIndexs.k, false)} className="w-[60px] h-[60px] rounded-full flex justify-center items-center bg-dark-100"><LeftChevronIcon /></button>
           <div className="relative flex-grow h-full">
             <Image src={image.imageUrl} layout={'fill'} objectFit={'contain'} />
           </div>
-          <button className="w-[60px] h-[60px] rounded-full flex justify-center items-center bg-dark-100"><RightChevronIcon /></button>
+          <button onClick={() => selectImage(currentIndexs.i, currentIndexs.j, currentIndexs.k, true)} className="w-[60px] h-[60px] rounded-full flex justify-center items-center bg-dark-100"><RightChevronIcon /></button>
         </div>
         <div className="w-80 mx-4 flex-shrink-0">
           <h3 className="font-semibold text-2xl">{monthIndexToString(date.getMonth())} {date.getDate()}, {date.getFullYear()}</h3>
@@ -36,6 +36,17 @@ const PictureModal = ({ image, deselect } : { image: BabyImage | undefined, dese
       </div>
     </div>
   )
+}
+
+interface Props { 
+  image: BabyImage | undefined,
+  deselect: ()=>void,
+  selectImage: (arg0: number, arg1: number, arg2: number, arg3: boolean) => void
+  currentIndexs: {
+    i: number,
+    j: number,
+    k: number
+  }
 }
 
 export default PictureModal
