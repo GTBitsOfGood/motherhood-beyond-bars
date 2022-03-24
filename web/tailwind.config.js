@@ -12,6 +12,7 @@ module.exports = {
       },
       colors: {
         'dark' : {
+          100: '#BFBFBF',
           400: '#666666'
         },
         'highlight': '#304CD1',

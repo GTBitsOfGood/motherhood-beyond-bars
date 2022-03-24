@@ -7,10 +7,14 @@ import admin_portal_gradient from "../../public/admin_portal_gradient.png";
 import left_heart from "../../public/left_heart.png";
 import right_heart from "../../public/right_heart.png";
 
-const TopBar = () => {
+const TopBar = ({ number }: Props) => {
   const name = "ooga booga"
-  const number = 100
   const motherName = "oooooga balooga"
+
+  const copyLink = () => {
+    console.log()
+    navigator.clipboard.writeText(window.location.origin + window.location.pathname)
+  }
   return (
     <div className="flex justify-between w-full shadow-lg">
       <div className="flex items-center">
@@ -36,17 +40,21 @@ const TopBar = () => {
         </div>
       </div>
       <div className="flex items-center font-semibold text-highlight">
-        <div className="rounded px-4 py-2 border border-highlight mx-2 flex items-center">
+        <div className="rounded px-4 py-2 border border-highlight mx-2 flex items-center cursor-pointer">
           <DownloadIcon />
           <p className="ml-2">Download album</p>
         </div>
-        <div className="rounded px-4 py-2 border border-highlight mx-2 flex items-center">
+        <div className="rounded px-4 py-2 border border-highlight mx-2 flex items-center cursor-pointer" onClick={copyLink}>
           <LinkIcon />
           <p className="ml-2">Copy album link</p>
         </div>
       </div>
     </div>
   )
+}
+
+interface Props{
+  number: number
 }
 
 export default TopBar

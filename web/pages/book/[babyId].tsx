@@ -7,7 +7,7 @@ import { collection, DocumentReference, getDocs, orderBy, query, Timestamp } fro
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 
-export default function BabyBook({ babyId, babyBook }: Props) {
+export default function BabyBook({ babyId, babyBook, totImages }: Props) {
   const [isPictureSelected, setIsPictureSelected] = useState<boolean>(false)
   const [selectedImage, setSelectedImage] = useState<BabyImage>()
   const selectImage = (i: number, j: number, k: number) => {
@@ -18,7 +18,7 @@ export default function BabyBook({ babyId, babyBook }: Props) {
     setIsPictureSelected(false)
   }
   return <div className="flex flex-col w-full h-full">
-    <TopBar />
+    <TopBar number={totImages}/>
     <div className="relative flex grow-0 overflow-hidden">
       <SideBar babyBook={babyBook}/>
       <PictureArray babyBook={babyBook} select={selectImage}/>
@@ -30,6 +30,7 @@ export default function BabyBook({ babyId, babyBook }: Props) {
 interface Props {
   babyId?: string;
   babyBook: BabyBookYear[];
+  totImages: number
 }
 
 export interface BabyBookYear {
@@ -44,7 +45,10 @@ export interface BabyBookMonth {
 
 export interface BabyImage {
   caption: string,
-  date: string,
+  date: {
+    seconds: number,
+    nanoseconds: number
+  },
   imageUrl: string,
   caregiverId: string,
 }
@@ -61,12 +65,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   const props = {
     babyId: params?.babyId as string,
-    babyBook: [] as BabyBookYear[]
+    babyBook: [] as BabyBookYear[],
+    totImages: 0
   }
   if (!params || !params.babyId) return { props }
   const babyBookRef = query(collection(db, `babies/${params.babyId}/book`), orderBy("date", "desc"));
   const babyBookDocs = await getDocs(babyBookRef);
   babyBookDocs.docs.forEach(book => {
+    props.totImages = props.totImages + 1
     const raw = book.data() as RawBabyImage
     const date = raw.date.toDate();
 
@@ -80,7 +86,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
       caption: raw.caption || '',
       imageUrl: raw.imageURL,
       caregiverId: raw.caregiverID?.id || '',
-      date: raw.date.toString()
+      date: {
+        seconds: raw.date.seconds,
+        nanoseconds: raw.date.nanoseconds
+      }
     })
   })
 
