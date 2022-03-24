@@ -3,11 +3,12 @@ import PictureModal from "@components/BabyBook/PictureModal";
 import SideBar from "@components/BabyBook/Sidebar";
 import TopBar from "@components/BabyBook/Topbar";
 import { db } from "@lib/firebase";
-import { collection, DocumentReference, getDocs, orderBy, query, Timestamp } from "firebase/firestore";
+import { collection, doc, DocumentReference, getDoc, getDocs, orderBy, query, Timestamp } from "firebase/firestore";
 import { GetServerSideProps } from "next";
+import { Baby } from "pages/babies";
 import { useState } from "react";
 
-export default function BabyBook({ babyId, babyBook, totImages }: Props) {
+export default function BabyBook({ babyId, babyBook, totImages, baby }: Props) {
   const [isPictureSelected, setIsPictureSelected] = useState<boolean>(false)
   const [selectedImage, setSelectedImage] = useState<BabyImage>()
   const [currIndexes, setCurrIndexes] = useState({i: -1, j: -1, k:-1})
@@ -45,7 +46,7 @@ export default function BabyBook({ babyId, babyBook, totImages }: Props) {
     setIsPictureSelected(false)
   }
   return <div className="flex flex-col w-full h-full">
-    <TopBar number={totImages}/>
+    <TopBar number={totImages} name={baby.name} motherName={baby.mother}/>
     <div className="relative flex grow-0 overflow-hidden">
       <SideBar babyBook={babyBook}/>
       <PictureArray babyBook={babyBook} select={selectImage}/>
@@ -58,6 +59,10 @@ interface Props {
   babyId?: string;
   babyBook: BabyBookYear[];
   totImages: number
+  baby: {
+    name: string,
+    mother: string
+  }
 }
 
 export interface BabyBookYear {
@@ -93,9 +98,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const props = {
     babyId: params?.babyId as string,
     babyBook: [] as BabyBookYear[],
-    totImages: 0
+    totImages: 0,
+    baby: { name: '', mother: ''}
   }
   if (!params || !params.babyId) return { props }
+  const babyRef = doc(db, "babies", params?.babyId as string)
+  const baby = await getDoc(babyRef)
+  const babyData = baby.data() as Baby
+  props.baby = {
+    name: babyData.firstName + ' ' + babyData.lastName,
+    mother: babyData.motherName
+  }
   const babyBookRef = query(collection(db, `babies/${params.babyId}/book`), orderBy("date", "desc"));
   const babyBookDocs = await getDocs(babyBookRef);
   babyBookDocs.docs.forEach(book => {

@@ -19,7 +19,7 @@ import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
 import AddChildModal from "modals/addChildModal";
 
-type Baby = {
+export type Baby = {
   caretakerName: string;
   caretaker: DocumentReference;
   motherName: string;

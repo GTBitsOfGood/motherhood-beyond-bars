@@ -7,12 +7,8 @@ import admin_portal_gradient from "../../public/admin_portal_gradient.png";
 import left_heart from "../../public/left_heart.png";
 import right_heart from "../../public/right_heart.png";
 
-const TopBar = ({ number }: Props) => {
-  const name = "ooga booga"
-  const motherName = "oooooga balooga"
-
+const TopBar = ({ number, motherName, name }: Props) => {
   const copyLink = () => {
-    console.log()
     navigator.clipboard.writeText(window.location.origin + window.location.pathname)
   }
   return (
@@ -54,7 +50,9 @@ const TopBar = ({ number }: Props) => {
 }
 
 interface Props{
-  number: number
+  number: number,
+  motherName: string,
+  name: string
 }
 
 export default TopBar
