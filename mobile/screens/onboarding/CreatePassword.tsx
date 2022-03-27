@@ -75,8 +75,9 @@ export default function CreatePassword({
                 }
               });
               setCaregiverInfo();
+            } else {
+              alert("Passwords aren't equal");
             }
-            alert("Passwords aren't equal");
           }}
         >
           <Text style={styles.buttonText}>Get started</Text>

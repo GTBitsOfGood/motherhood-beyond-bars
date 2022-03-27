@@ -15,7 +15,7 @@ import { SupportStackScreenProps } from "../../types";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
 import { auth } from "../../config/firebase";
-import { arrayUnion, doc, Timestamp } from "firebase/firestore";
+import { arrayUnion, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 
 type Props = SupportStackScreenProps<"RequestItemsScreen">;
@@ -60,38 +60,45 @@ export default function SupportScreen({ navigation }: Props) {
       return;
     }
 
-    const items = settings.items
-      ?.filter((_, index) => itemsCount[index])
-      .map((item) => {
-        return {
-          ...item,
-          itemQuantity: 1,
-        };
-      });
+    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+
+    const itemsRequested =
+      settings.items
+        ?.filter((_, index) => itemsCount[index])
+        .map((item) => {
+          return {
+            ...item,
+            itemQuantity: 1,
+            fulfilled: false,
+            requestedOn: Timestamp.now(),
+          };
+        }) || [];
 
     if (otherItems) {
-      items?.push(
-        {
-          itemName: "other",
-          itemDisplayName: otherItems,
-          itemQuantity: 1,
-          itemDescription: "",
-        },
-        {
-          itemName: "additionalComments",
-          itemDisplayName: additionalComments,
-          itemQuantity: 1,
-          itemDescription: "",
-        }
-      );
+      itemsRequested?.push({
+        itemName: "other",
+        itemDisplayName: otherItems,
+        itemQuantity: 1,
+        itemDescription: "",
+        onboarding: false,
+        fulfilled: false,
+        requestedOn: Timestamp.now(),
+      });
     }
 
-    try {
-      console.log(items);
-      await httpsCallable(functions, "items")({ items });
-    } catch (error) {
-      alert("Unable to request items. Please try again later");
+    if (additionalComments) {
+      itemsRequested?.push({
+        itemName: "additionalComments",
+        itemDisplayName: additionalComments,
+        itemQuantity: 1,
+        itemDescription: "",
+        onboarding: false,
+        fulfilled: false,
+        requestedOn: Timestamp.now(),
+      });
     }
+
+    updateDoc(caregiverDoc, { itemsRequested: arrayUnion(...itemsRequested) });
   };
 
   return (
@@ -102,18 +109,20 @@ export default function SupportScreen({ navigation }: Props) {
           Motherhood Beyond Bars will deliver you supplies, so you're ready for
           the child!
         </Text>
-        {settings.items?.map((item, idx) => (
-          <View style={styles.item} key={idx}>
-            <View style={styles.checkboxContainer}>
-              <MyCheckbox
-                onPress={() => toggleItem(idx)}
-                checked={itemsCount[idx]}
-              />
-              <Text style={styles.itemHeader}>{item.itemDisplayName}</Text>
+        {settings.items?.map((item, idx) =>
+          item.onboarding ? null : (
+            <View style={styles.item} key={idx}>
+              <View style={styles.checkboxContainer}>
+                <MyCheckbox
+                  onPress={() => toggleItem(idx)}
+                  checked={itemsCount[idx]}
+                />
+                <Text style={styles.itemHeader}>{item.itemDisplayName}</Text>
+              </View>
+              <Text style={styles.itemDescription}>{item.itemDescription}</Text>
             </View>
-            <Text style={styles.itemDescription}>{item.itemDescription}</Text>
-          </View>
-        ))}
+          )
+        )}
         <View style={styles.item}>
           <View style={styles.checkboxContainer}>
             <MyCheckbox
@@ -181,6 +190,7 @@ export default function SupportScreen({ navigation }: Props) {
               <TouchableOpacity
                 style={[styles.button, { width: 350 }]}
                 onPress={() => {
+                  requestItems();
                   setModalVisible(!modalVisible);
                   navigation.navigate("ReachOut");
                 }}
