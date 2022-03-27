@@ -4,6 +4,12 @@ import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../providers/User";
 import { sendPasswordResetEmail } from "firebase/auth";
+import CreateAccountSVG from "../../assets/images/createaccount";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase";
+
+const isUniqueEmail = async (email: string) => (await getDocs(query(collection(db, "caregivers"),where('email', '==', email)))).empty
+const isValidEmail = (email: string) => (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
 
 export default function CreateAccount({
   navigation,
@@ -16,6 +22,7 @@ export default function CreateAccount({
 
   return (
     <View style={styles.container}>
+      {/* <CreateAccountSVG /> */}
       <Text style={styles.title}>Create your account</Text>
       <Text style={styles.description}>First Name</Text>
       <TextInput
@@ -58,12 +65,18 @@ export default function CreateAccount({
         <TouchableOpacity
           style={styles.button}
           onPress={async () => {
-            navigation.navigate("CreatePassword", {
-              first: first,
-              last: last,
-              email: email,
-              phone: phone,
-            });
+            if (!isUniqueEmail(email)) {
+              alert("Email already in use. Try logging in instead.");
+            } else if (!isValidEmail(email)) {
+              alert("Invalid email address.");
+            } else {
+              navigation.navigate("CreatePassword", {
+                first: first,
+                last: last,
+                email: email,
+                phone: phone,
+              });
+            }
           }}
         >
           <Text style={styles.buttonText}>Continue</Text>
@@ -77,7 +90,7 @@ export default function CreateAccount({
         }}
       >
         <Text style={{ fontSize: 14 }}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity onPress={() => { navigation.navigate("Login")}}>
           <Text style={{ color: "#304CD1" }}>Log in.</Text>
         </TouchableOpacity>
       </View>

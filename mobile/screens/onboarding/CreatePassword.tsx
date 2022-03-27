@@ -65,6 +65,7 @@ export default function CreatePassword({
                 route?.params?.email.trim(),
                 password
               ).catch((error) => {
+                console.log(`account creation error: ${error}`);
                 if (error.code === "auth/email-already-in-use") {
                   alert("Email already in use. Try logging in instead.");
                 } else if (error.code === "auth/invalid-email") {

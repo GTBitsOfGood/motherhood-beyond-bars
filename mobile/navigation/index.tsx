@@ -3,7 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -20,7 +20,9 @@ import HeaderBackgroundSVG from "../assets/images/headerbackground";
 import LogoutButton from "../components/app/LogoutButton";
 import CircleBorder from "../components/app/CircleBorder";
 import FilledCircle from "../components/app/FilledCircle";
+import LoginHeader from "../components/app/LoginHeader";
 import CreateAccountSVG from "../assets/images/createaccount";
+import HeartSVG from "../assets/images/heart";
 
 import { Button, ColorSchemeName, Linking, View, Text } from "react-native";
 
@@ -135,7 +137,7 @@ function RootNavigator() {
           name="Root"
           component={OnboardingNavigator}
           options={({ navigation }) => ({
-            headerShown: true,
+            headerShown: false,
             title: "Welcome",
             headerRight: () =>
               !authData?.uid ? null : (
@@ -175,8 +177,7 @@ function OnboardingNavigator() {
             name="GetStarted"
             component={GetStarted}
             options={{
-              title: "Get Started",
-              // header: () => <CreateAccountSVG/>
+              header: () => <LoginHeader/>
             }}
           />
           <Onboarding.Screen
@@ -297,32 +298,91 @@ function OnboardingNavigator() {
             name="CreateAccount"
             component={CreateAccount}
             options={{
-              title: "Create Account",
-              // header: () => <CreateAccountSVG/>
+              header: () => <LoginHeader/>
             }}
           />
           <Onboarding.Screen
             name="CreatePassword"
             component={CreatePassword}
-            options={{
-              title: "Create Password",
-              // header: () => <CreateAccountSVG/>
-            }}
+            options={({ navigation }) => ({
+              // headerShown: false,
+              // title: "Welcome",
+              // headerRight: () =>
+              //   !authData?.uid ? null : (
+              //     <Button
+              //       title="Logout"
+              //       onPress={() => {
+              //         signOut(auth);
+              //       }}
+              //     />
+              //   ),
+              // headerLeft: () => (
+              //   <Button
+              //     title="Call"
+              //     onPress={() => {
+              //       Linking.openURL(`tel:${contact.phone}`);
+              //     }}
+              //   />
+              // ),
+              header: () => 
+              <View>
+                <CreateAccountSVG 
+                  style={{
+                    position: 'relative',
+                    height: 168,
+                  }}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    position: 'absolute',
+                    left: '7%',
+                    top: '30%'
+                  }}
+                >
+                  <AntDesign 
+                    name="left" 
+                    size={20} 
+                    color="black" 
+                  />
+                  <View
+                    style={{
+                      right: '10%',
+                      bottom: '10%'
+                    }}
+                  >
+                    <Button
+                      title="Back"
+                      color="black"
+                      onPress={() => {
+                        navigation.goBack();
+                      }}
+                    />
+                  </View>
+                  <HeartSVG
+                    style={{
+                      position: 'absolute',
+                      height: 168,
+                      left: '185%',
+                      top: '60%'
+                    }}
+                  />
+                </View>
+              </View>
+            })}
           />
           <Onboarding.Screen
             name="Login"
             component={Login}
             options={{
-              title: "Log In",
-              // header: () => <CreateAccountSVG/>
+              header: () => <LoginHeader/>
             }}
           />
           <Onboarding.Screen
             name="RecoverPassword"
             component={RecoverPassword}
             options={{
-              title: "RecoverPassword",
-              // header: () => <CreateAccountSVG/>
+              header: () => <LoginHeader/>
             }}
           />
         </>
