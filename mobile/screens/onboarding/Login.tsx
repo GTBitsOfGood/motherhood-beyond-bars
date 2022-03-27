@@ -1,5 +1,12 @@
 import { View } from "../../components/Themed";
-import { Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../providers/User";
@@ -14,74 +21,78 @@ export default function Login({
   const [password, setPassword] = useState("");
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Log in</Text>
-      <Text style={styles.description}>Email or Phone Number</Text>
-      <TextInput
-        autoCompleteType="email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoFocus={true}
-        style={styles.input}
-        onChangeText={(email) => {
-          setEmail(email);
-        }}
-      />
-      <Text style={styles.description}>Password</Text>
-      <TextInput
-        style={styles.input}
-        autoCompleteType="password"
-        onChangeText={(password) => {
-          setPassword(password);
-        }}
-        secureTextEntry={true}
-      />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          paddingTop: 9,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => navigation.navigate("RecoverPassword")}
-        >
-          <Text style={{ color: "#304CD1" }}>Forgot Password</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ paddingTop: 36 }}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => {
-            await signInWithEmailAndPassword(
-              auth,
-              email.trim(),
-              password
-            ).catch((error) => {
-              if (error.code === "auth/user-not-found") {
-                alert("User not found, try creating an account first.");
-              } else if (error.code === "auth/wrong-password") {
-                alert("Incorrect password.");
-              }
-            });
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Log in</Text>
+        <Text style={styles.description}>Email or Phone Number</Text>
+        <TextInput
+          autoCompleteType="email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoFocus={true}
+          style={styles.input}
+          onChangeText={(email) => {
+            setEmail(email);
+          }}
+        />
+        <Text style={styles.description}>Password</Text>
+        <TextInput
+          style={styles.input}
+          autoCompleteType="password"
+          onChangeText={(password) => {
+            setPassword(password);
+          }}
+          secureTextEntry={true}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            paddingTop: 9,
           }}
         >
-          <Text style={styles.buttonText}>Log in</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("RecoverPassword")}
+          >
+            <Text style={{ color: "#304CD1" }}>Forgot Password</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ paddingTop: 36 }}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              await signInWithEmailAndPassword(
+                auth,
+                email.trim(),
+                password
+              ).catch((error) => {
+                if (error.code === "auth/user-not-found") {
+                  alert("User not found, try creating an account first.");
+                } else if (error.code === "auth/wrong-password") {
+                  alert("Incorrect password.");
+                }
+              });
+            }}
+          >
+            <Text style={styles.buttonText}>Log in</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: 155.5,
+          }}
+        >
+          <Text style={{ fontSize: 14 }}>Already have an account? </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateAccount")}
+          >
+            <Text style={{ color: "#304CD1" }}>Sign Up.</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingTop: 215.5,
-        }}
-      >
-        <Text style={{ fontSize: 14 }}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("CreateAccount")}>
-          <Text style={{ color: "#304CD1" }}>Sign Up.</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

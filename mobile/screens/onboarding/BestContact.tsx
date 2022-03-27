@@ -45,6 +45,7 @@ export default function BestContact({
         title="Finish"
         onPress={() => {
           setBestContact();
+          navigation.navigate("AllDone");
         }}
       />
     </View>

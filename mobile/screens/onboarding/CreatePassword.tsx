@@ -4,14 +4,15 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../providers/User";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../config/firebase";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function CreatePassword({
   navigation,
@@ -33,69 +34,71 @@ export default function CreatePassword({
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create a password</Text>
-      <Text style={styles.description}>New Password</Text>
-      <TextInput
-        placeholder="password"
-        style={styles.input}
-        autoCompleteType="password"
-        onChangeText={(password) => {
-          setPassword(password);
-        }}
-        secureTextEntry={true}
-      />
-      <Text style={styles.description}>Confirm Password</Text>
-      <TextInput
-        placeholder="password"
-        style={styles.input}
-        autoCompleteType="password"
-        onChangeText={(password) => {
-          setConfirm(password);
-        }}
-        secureTextEntry={true}
-      />
-      <View style={{ paddingTop: 36 }}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => {
-            if (password === confirm) {
-              await createUserWithEmailAndPassword(
-                auth,
-                route?.params?.email.trim(),
-                password
-              ).catch((error) => {
-                console.log(`account creation error: ${error}`);
-                if (error.code === "auth/email-already-in-use") {
-                  alert("Email already in use. Try logging in instead.");
-                } else if (error.code === "auth/invalid-email") {
-                  alert("Invalid email address.");
-                } else if (error.code === "auth/invalid-password") {
-                  alert("Password must be at least 6 characters.");
-                }
-              });
-              setCaregiverInfo();
-            } else {
-              alert("Passwords aren't equal");
-            }
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Create a password</Text>
+        <Text style={styles.description}>New Password</Text>
+        <TextInput
+          placeholder="password"
+          style={styles.input}
+          autoCompleteType="password"
+          onChangeText={(password) => {
+            setPassword(password);
+          }}
+          secureTextEntry={true}
+        />
+        <Text style={styles.description}>Confirm Password</Text>
+        <TextInput
+          placeholder="password"
+          style={styles.input}
+          autoCompleteType="password"
+          onChangeText={(password) => {
+            setConfirm(password);
+          }}
+          secureTextEntry={true}
+        />
+        <View style={{ paddingTop: 36 }}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              if (password === confirm) {
+                await createUserWithEmailAndPassword(
+                  auth,
+                  route?.params?.email.trim(),
+                  password
+                ).catch((error) => {
+                  console.log(`account creation error: ${error}`);
+                  if (error.code === "auth/email-already-in-use") {
+                    alert("Email already in use. Try logging in instead.");
+                  } else if (error.code === "auth/invalid-email") {
+                    alert("Invalid email address.");
+                  } else if (error.code === "auth/invalid-password") {
+                    alert("Password must be at least 6 characters.");
+                  }
+                });
+                setCaregiverInfo();
+              } else {
+                alert("Passwords aren't equal");
+              }
+            }}
+          >
+            <Text style={styles.buttonText}>Get started</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: 249.5,
           }}
         >
-          <Text style={styles.buttonText}>Get started</Text>
-        </TouchableOpacity>
+          <Text style={{ fontSize: 14 }}>Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={{ color: "#304CD1" }}>Log in.</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingTop: 249.5,
-        }}
-      >
-        <Text style={{ fontSize: 14 }}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={{ color: "#304CD1" }}>Log in.</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

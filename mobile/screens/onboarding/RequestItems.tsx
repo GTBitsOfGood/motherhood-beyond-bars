@@ -37,7 +37,7 @@ function MyCheckbox({
   );
 }
 
-export default function ReuqestedItems({
+export default function RequestedItems({
   navigation,
 }: OnboardingStackScreenProps<"RequestItems">) {
   const settings = useContext(SettingsContext);
