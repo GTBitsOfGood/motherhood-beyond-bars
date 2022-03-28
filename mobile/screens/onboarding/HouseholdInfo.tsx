@@ -26,11 +26,15 @@ export default function HouseholdInfo({
   async function setHousehold() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
 
-    setDoc(caregiverDoc, {
-      numAdults: adults,
-      numChildren: children,
-      agesOfChildren: ages,
-    });
+    setDoc(
+      caregiverDoc,
+      {
+        numAdults: adults,
+        numChildren: children,
+        agesOfChildren: ages,
+      },
+      { merge: true }
+    );
   }
 
   useEffect(() => {
