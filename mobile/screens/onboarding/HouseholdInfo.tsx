@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
@@ -26,11 +27,15 @@ export default function HouseholdInfo({
   async function setHousehold() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
 
-    setDoc(caregiverDoc, {
-      numAdults: adults,
-      numChildren: children,
-      agesOfChildren: ages,
-    });
+    setDoc(
+      caregiverDoc,
+      {
+        numAdults: adults,
+        numChildren: children,
+        agesOfChildren: ages,
+      },
+      { merge: true }
+    );
   }
 
   useEffect(() => {
@@ -42,67 +47,76 @@ export default function HouseholdInfo({
   });
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Household Information</Text>
-        <Text style={styles.description}>Number of Adults</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          onChangeText={(adults) => {
-            setAdults(adults);
-          }}
-        />
-        <Text style={styles.description}>Number of Children (current)</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          onChangeText={(children) => {
-            setChildren(children);
-          }}
-        />
-        <Text style={styles.description}>Ages of Children</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          onChangeText={(ages) => {
-            setAges(ages);
-          }}
-          placeholder="ex. 3, 8, 11"
-        />
-        <View style={{ paddingTop: 36 }}>
-          {!completed && (
-            <TouchableOpacity
-              style={[styles.button, { borderColor: "#BFBFBF" }]}
-            >
-              <Text style={[styles.buttonText, { color: "#BFBFBF" }]}>
-                Next
-              </Text>
-            </TouchableOpacity>
-          )}
-          {completed && (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={async () => {
-                setHousehold();
-                navigation.push("SignWaiver", {
-                  unsignedWaivers: await getWaivers(),
-                });
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <Text style={styles.title}>Household Information</Text>
+            <Text style={styles.description}>Number of Adults</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={(adults) => {
+                setAdults(adults);
               }}
-            >
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+            />
+            <Text style={styles.description}>Number of Children (current)</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={(children) => {
+                setChildren(children);
+              }}
+            />
+            <Text style={styles.description}>Ages of Children</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={(ages) => {
+                setAges(ages);
+              }}
+              placeholder="ex. 3, 8, 11"
+            />
+            <View style={{ paddingTop: 36 }}>
+              {!completed && (
+                <TouchableOpacity
+                  style={[styles.button, { borderColor: "#BFBFBF" }]}
+                >
+                  <Text style={[styles.buttonText, { color: "#BFBFBF" }]}>
+                    Next
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {completed && (
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={async () => {
+                    setHousehold();
+                    navigation.push("SignWaiver", {
+                      unsignedWaivers: await getWaivers(),
+                    });
+                  }}
+                >
+                  <Text style={styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  inner: {
     padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 24,

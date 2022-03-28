@@ -24,7 +24,15 @@ import LoginHeader from "../components/app/LoginHeader";
 import CreateAccountSVG from "../assets/images/createaccount";
 import HeartSVG from "../assets/images/heart";
 
-import { Button, ColorSchemeName, Linking, View, Text } from "react-native";
+import {
+  Button,
+  ColorSchemeName,
+  Linking,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 
 import useColorScheme from "../hooks/useColorScheme";
 
@@ -115,51 +123,57 @@ function RootNavigator() {
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
   return (
-    <Stack.Navigator>
-      {validateAuthData(authData) ? (
-        <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // keyboardVerticalOffset={100}
+      style={{ flex: 1 }}
+    >
+      <Stack.Navigator>
+        {validateAuthData(authData) ? (
+          <>
+            <Stack.Screen
+              name="Root"
+              component={BottomTabNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="NotFound"
+              component={NotFoundScreen}
+              options={{ title: "Oops!" }}
+            />
+            <Stack.Group screenOptions={{ presentation: "modal" }}>
+              <Stack.Screen name="Modal" component={ModalScreen} />
+            </Stack.Group>
+          </>
+        ) : (
           <Stack.Screen
             name="Root"
-            component={BottomTabNavigator}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="NotFound"
-            component={NotFoundScreen}
-            options={{ title: "Oops!" }}
-          />
-          <Stack.Group screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen name="Modal" component={ModalScreen} />
-          </Stack.Group>
-        </>
-      ) : (
-        <Stack.Screen
-          name="Root"
-          component={OnboardingNavigator}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "Welcome",
-            headerRight: () =>
-              !authData?.uid ? null : (
+            component={OnboardingNavigator}
+            options={({ navigation }) => ({
+              headerShown: false,
+              title: "Welcome",
+              headerRight: () =>
+                !authData?.uid ? null : (
+                  <Button
+                    title="Logout"
+                    onPress={() => {
+                      signOut(auth);
+                    }}
+                  />
+                ),
+              headerLeft: () => (
                 <Button
-                  title="Logout"
+                  title="Call"
                   onPress={() => {
-                    signOut(auth);
+                    Linking.openURL(`tel:${contact.phone}`);
                   }}
                 />
               ),
-            headerLeft: () => (
-              <Button
-                title="Call"
-                onPress={() => {
-                  Linking.openURL(`tel:${contact.phone}`);
-                }}
-              />
-            ),
-          })}
-        />
-      )}
-    </Stack.Navigator>
+            })}
+          />
+        )}
+      </Stack.Navigator>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -177,7 +191,7 @@ function OnboardingNavigator() {
             name="GetStarted"
             component={GetStarted}
             options={{
-              header: () => <LoginHeader/>
+              header: () => <LoginHeader />,
             }}
           />
           <Onboarding.Screen
@@ -298,7 +312,7 @@ function OnboardingNavigator() {
             name="CreateAccount"
             component={CreateAccount}
             options={{
-              header: () => <LoginHeader/>
+              header: () => <LoginHeader />,
             }}
           />
           <Onboarding.Screen
@@ -324,65 +338,62 @@ function OnboardingNavigator() {
               //     }}
               //   />
               // ),
-              header: () => 
-              <View>
-                <CreateAccountSVG 
-                  style={{
-                    position: 'relative',
-                    height: 168,
-                  }}
-                />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    position: 'absolute',
-                    left: '7%',
-                    top: '30%'
-                  }}
-                >
-                  <AntDesign 
-                    name="left" 
-                    size={20} 
-                    color="black" 
+              header: () => (
+                <View>
+                  <CreateAccountSVG
+                    style={{
+                      position: "relative",
+                      height: 168,
+                    }}
                   />
                   <View
                     style={{
-                      right: '10%',
-                      bottom: '10%'
+                      flexDirection: "row",
+                      position: "absolute",
+                      left: "7%",
+                      top: "30%",
                     }}
                   >
-                    <Button
-                      title="Back"
-                      color="black"
-                      onPress={() => {
-                        navigation.goBack();
+                    <AntDesign name="left" size={20} color="black" />
+                    <View
+                      style={{
+                        right: "10%",
+                        bottom: "10%",
+                      }}
+                    >
+                      <Button
+                        title="Back"
+                        color="black"
+                        onPress={() => {
+                          navigation.goBack();
+                        }}
+                      />
+                    </View>
+                    <HeartSVG
+                      style={{
+                        position: "absolute",
+                        height: 168,
+                        left: "185%",
+                        top: "60%",
                       }}
                     />
                   </View>
-                  <HeartSVG
-                    style={{
-                      position: 'absolute',
-                      height: 168,
-                      left: '185%',
-                      top: '60%'
-                    }}
-                  />
                 </View>
-              </View>
+              ),
             })}
           />
           <Onboarding.Screen
             name="Login"
             component={Login}
             options={{
-              header: () => <LoginHeader/>
+              header: () => <LoginHeader />,
             }}
           />
           <Onboarding.Screen
             name="RecoverPassword"
             component={RecoverPassword}
             options={{
-              header: () => <LoginHeader/>
+              header: () => <LoginHeader />,
             }}
           />
         </>

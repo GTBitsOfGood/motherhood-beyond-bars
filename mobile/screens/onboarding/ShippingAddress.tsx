@@ -49,105 +49,112 @@ export default function ShippingAddress({
   });
 
   return (
-    <ScrollView>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Shipping Address</Text>
-          <Text style={{ paddingBottom: 10 }}>
-            Let us know where we can deliver your requested supplies!
-          </Text>
-
-          <Text style={styles.text}>Street Address</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Street number and name"
-            onChangeText={(address) => {
-              setAddress(address);
-            }}
-          ></TextInput>
-
-          <Text style={styles.text}>Apartment/Suite (Optional)</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Apartment number, suite number"
-            onChangeText={(apartment) => {
-              setApartment(apartment);
-            }}
-          ></TextInput>
-
-          <Text style={styles.text}>City</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={(city) => {
-              setCity(city);
-            }}
-          ></TextInput>
-
-          <Text style={styles.text}>State</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={(state) => {
-              setState(state);
-            }}
-          ></TextInput>
-
-          <Text style={styles.text}>Zip Code</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            onChangeText={(zipCode) => {
-              setZipCode(zipCode);
-            }}
-          ></TextInput>
-
-          <View style={{ padding: 10 }}></View>
-
-          <View style={{ flexDirection: "row" }}>
-            <Checkbox
-              value={save}
-              onValueChange={() => {
-                setSave(!save);
-              }}
-            ></Checkbox>
-            <Text style={{ paddingLeft: 5 }}>
-              Save address for future deliveries
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <Text style={styles.title}>Shipping Address</Text>
+            <Text style={{ paddingBottom: 10 }}>
+              Let us know where we can deliver your requested supplies!
             </Text>
-          </View>
 
-          <View style={{ padding: 10 }}></View>
+            <Text style={styles.text}>Street Address</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Street number and name"
+              onChangeText={(address) => {
+                setAddress(address);
+              }}
+            ></TextInput>
 
-          <View style={{ paddingTop: 36 }}>
-            {!completed && (
-              <TouchableOpacity
-                style={[styles.button, { borderColor: "#BFBFBF" }]}
-              >
-                <Text style={[styles.buttonText, { color: "#BFBFBF" }]}>
-                  Next
-                </Text>
-              </TouchableOpacity>
-            )}
-            {completed && (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={async () => {
-                  setShippingAddress();
-                  navigation.navigate("BestContact");
+            <Text style={styles.text}>Apartment/Suite (Optional)</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Apartment number, suite number"
+              onChangeText={(apartment) => {
+                setApartment(apartment);
+              }}
+            ></TextInput>
+
+            <Text style={styles.text}>City</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(city) => {
+                setCity(city);
+              }}
+            ></TextInput>
+
+            <Text style={styles.text}>State</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(state) => {
+                setState(state);
+              }}
+            ></TextInput>
+
+            <Text style={styles.text}>Zip Code</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={(zipCode) => {
+                setZipCode(zipCode);
+              }}
+            ></TextInput>
+
+            <View style={{ padding: 10 }}></View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Checkbox
+                value={save}
+                onValueChange={() => {
+                  setSave(!save);
                 }}
-              >
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            )}
+              ></Checkbox>
+              <Text style={{ paddingLeft: 5 }}>
+                Save address for future deliveries
+              </Text>
+            </View>
+
+            <View style={{ padding: 10 }}></View>
+
+            <View style={{ paddingTop: 36 }}>
+              {!completed && (
+                <TouchableOpacity
+                  style={[styles.button, { borderColor: "#BFBFBF" }]}
+                >
+                  <Text style={[styles.buttonText, { color: "#BFBFBF" }]}>
+                    Next
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {completed && (
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={async () => {
+                    setShippingAddress();
+                    navigation.navigate("BestContact");
+                  }}
+                >
+                  <Text style={styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  inner: {
     padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 20,

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useState } from "react";
@@ -48,84 +49,93 @@ export default function RecoverPassword({
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Recover Password</Text>
-        {reset ? (
-          <View>
-            {type === "phone" ? (
-              <Text style={styles.description}>
-                All done! A text has been sent to{" "}
-                <Text style={{ fontWeight: "bold" }}>{input}</Text> with
-                password recovery instructions.
-              </Text>
-            ) : (
-              <Text style={styles.description}>
-                All done! An email has been sent to{" "}
-                <Text style={{ fontWeight: "bold" }}>{input}</Text> with
-                password recovery instructions.
-              </Text>
-            )}
-            <View style={{ paddingTop: 36 }}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  navigation.navigate("Login");
-                }}
-              >
-                <Text style={styles.buttonText}>Back to Log In</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ paddingTop: 12 }}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  resetPassword(input);
-                }}
-              >
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <Text style={styles.title}>Recover Password</Text>
+            {reset ? (
+              <View>
                 {type === "phone" ? (
-                  <Text style={styles.buttonText}>Resend text</Text>
+                  <Text style={styles.description}>
+                    All done! A text has been sent to{" "}
+                    <Text style={{ fontWeight: "bold" }}>{input}</Text> with
+                    password recovery instructions.
+                  </Text>
                 ) : (
-                  <Text style={styles.buttonText}>Resend email</Text>
+                  <Text style={styles.description}>
+                    All done! An email has been sent to{" "}
+                    <Text style={{ fontWeight: "bold" }}>{input}</Text> with
+                    password recovery instructions.
+                  </Text>
                 )}
-              </TouchableOpacity>
-            </View>
+                <View style={{ paddingTop: 36 }}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      navigation.navigate("Login");
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Back to Log In</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ paddingTop: 12 }}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      resetPassword(input);
+                    }}
+                  >
+                    {type === "phone" ? (
+                      <Text style={styles.buttonText}>Resend text</Text>
+                    ) : (
+                      <Text style={styles.buttonText}>Resend email</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <View>
+                <Text style={styles.description}>
+                  Please send your email or phone number, and we'll send
+                  instructions for password recovery.
+                </Text>
+                <Text style={styles.description}>Email or phone number</Text>
+                <TextInput
+                  autoFocus={true}
+                  style={styles.input}
+                  onChangeText={(input) => {
+                    setInput(input);
+                  }}
+                />
+                <View style={{ paddingTop: 36 }}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                      resetPassword(input);
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           </View>
-        ) : (
-          <View>
-            <Text style={styles.description}>
-              Please send your email or phone number, and we'll send
-              instructions for password recovery.
-            </Text>
-            <Text style={styles.description}>Email or phone number</Text>
-            <TextInput
-              autoFocus={true}
-              style={styles.input}
-              onChangeText={(input) => {
-                setInput(input);
-              }}
-            />
-            <View style={{ paddingTop: 36 }}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={async () => {
-                  resetPassword(input);
-                }}
-              >
-                <Text style={styles.buttonText}>Submit</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  inner: {
     padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 24,

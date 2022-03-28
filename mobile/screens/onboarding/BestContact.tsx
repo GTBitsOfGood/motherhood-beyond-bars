@@ -1,5 +1,5 @@
 import { View } from "../../components/Themed";
-import { Button, Text, StyleSheet } from "react-native";
+import { Button, Text, StyleSheet, ScrollView } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import { RadioButton } from "react-native-paper";
@@ -30,24 +30,28 @@ export default function BestContact({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>What's The Best Way To Contact You?</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.inner}>
+          <Text style={styles.title}>What's The Best Way To Contact You?</Text>
 
-      <RadioButton.Group
-        onValueChange={(contact) => setContact(contact)}
-        value={contact}
-      >
-        <RadioButton.Item value="Phone" label="Phone" mode="android" />
-        <RadioButton.Item label="Email" value="Email" mode="android" />
-        <RadioButton.Item label="Text" value="Text" mode="android" />
-      </RadioButton.Group>
+          <RadioButton.Group
+            onValueChange={(contact) => setContact(contact)}
+            value={contact}
+          >
+            <RadioButton.Item value="Phone" label="Phone" mode="android" />
+            <RadioButton.Item label="Email" value="Email" mode="android" />
+            <RadioButton.Item label="Text" value="Text" mode="android" />
+          </RadioButton.Group>
 
-      <Button
-        title="Finish"
-        onPress={() => {
-          setBestContact();
-          navigation.navigate("AllDone");
-        }}
-      />
+          <Button
+            title="Finish"
+            onPress={() => {
+              setBestContact();
+              navigation.navigate("AllDone");
+            }}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -55,7 +59,12 @@ export default function BestContact({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  inner: {
     padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 20,
