@@ -93,10 +93,10 @@ const validateAuthData = (authData: UserContextType) => {
   // Determine if a user is ready to see the app yet, or if they still need to be onboarded
   return (
     authData?.uid &&
-    // authData.caregiver?.firstName &&
-    // authData.caregiver?.lastName &&
-    // authData.caregiver?.phoneNumber &&
-    // authData.caregiver?.email &&
+    authData.caregiver?.firstName &&
+    authData.caregiver?.lastName &&
+    authData.caregiver?.phoneNumber &&
+    authData.caregiver?.email &&
     authData.caregiver?.numAdults &&
     authData.caregiver?.numChildren &&
     authData.caregiver?.agesOfChildren &&
@@ -319,25 +319,6 @@ function OnboardingNavigator() {
             name="CreatePassword"
             component={CreatePassword}
             options={({ navigation }) => ({
-              // headerShown: false,
-              // title: "Welcome",
-              // headerRight: () =>
-              //   !authData?.uid ? null : (
-              //     <Button
-              //       title="Logout"
-              //       onPress={() => {
-              //         signOut(auth);
-              //       }}
-              //     />
-              //   ),
-              // headerLeft: () => (
-              //   <Button
-              //     title="Call"
-              //     onPress={() => {
-              //       Linking.openURL(`tel:${contact.phone}`);
-              //     }}
-              //   />
-              // ),
               header: () => (
                 <View>
                   <CreateAccountSVG
@@ -513,7 +494,15 @@ function BottomTabNavigator() {
           height: 87,
         },
         headerTitleStyle: { color: "#fff" },
-        headerRight: () => <LogoutButton />,
+        headerRight: () => 
+        <Button
+          title="Logout"
+          color="white"
+          onPress={() => {
+            console.log('signing out..')
+            signOut(auth);
+          }}
+        />
       }}
     >
       <BottomTab.Screen

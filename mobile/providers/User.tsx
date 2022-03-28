@@ -22,9 +22,6 @@ export const UserProvider = ({
   useEffect(() => {
     unsubs.push(
       onAuthStateChanged(auth, async (user) => {
-        if (!user || user?.uid === authData?.uid) {
-          return;
-        }
         console.log("auth state changed");
 
         if (user) {
