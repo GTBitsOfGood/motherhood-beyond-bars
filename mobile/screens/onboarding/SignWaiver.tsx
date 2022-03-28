@@ -1,4 +1,11 @@
-import { StyleSheet, TextInput, Switch, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  Switch,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";
 import { Button } from "react-native";
@@ -64,71 +71,78 @@ export default function SignWaiver({
 
   return waiver ? (
     <View style={styles.container}>
-      {/* <TextInput style={styles.textInput} value={waiver} editable={false} /> */}
-      <ScrollView
-        style={{
-          backgroundColor: "#f5f5f5",
-          borderRadius: 10,
-          padding: 20,
-          maxHeight: "60%",
-        }}
-      >
-        <MarkdownView
-          styles={{
-            heading1: {
-              fontSize: 24,
-            },
-          }}
-        >
-          {waiver.content}
-        </MarkdownView>
-      </ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <ScrollView
+              style={{
+                backgroundColor: "#f5f5f5",
+                borderRadius: 10,
+                padding: 20,
+                maxHeight: "60%",
+              }}
+            >
+              <MarkdownView
+                styles={{
+                  heading1: {
+                    fontSize: 24,
+                  },
+                }}
+              >
+                {waiver.content}
+              </MarkdownView>
+            </ScrollView>
 
-      <View
-        style={[
-          styles.container,
-          {
-            flexDirection: "row",
-          },
-        ]}
-      >
-        {/* <CheckBox value={isSelected} onValueChange={setSelection} /> */}
-      </View>
+            <View
+              style={[
+                styles.container,
+                {
+                  flexDirection: "row",
+                },
+              ]}
+            >
+              {/* <CheckBox value={isSelected} onValueChange={setSelection} /> */}
+            </View>
 
-      <Switch
-        value={isSelected}
-        onChange={() => {
-          setSelection(!isSelected);
-        }}
-      />
-      <Text style={styles.agree}>I agree to the Liability Waiver</Text>
-      {/* <Text style={styles.textLabel}>Signature</Text>
+            <Switch
+              value={isSelected}
+              onChange={() => {
+                setSelection(!isSelected);
+              }}
+            />
+            <Text style={styles.agree}>I agree to the Liability Waiver</Text>
+            {/* <Text style={styles.textLabel}>Signature</Text>
       <TextInput style={styles.sign} onChangeText={setName} />
       <Text style={styles.textLabel}>Date</Text>
       <TextInput style={styles.sign} /> */}
-      <Button
-        title={"Next"}
-        onPress={() => {
-          if (isSelected) {
-            // console.log("Signed waiver", waiver.id);
+            <Button
+              title={"Next"}
+              onPress={() => {
+                if (isSelected) {
+                  // console.log("Signed waiver", waiver.id);
 
-            setSignedWaivers();
+                  setSignedWaivers();
 
-            if (unsigned.length > 0) {
-              const newWaivers = Array.from(unsigned);
-              newWaivers.shift();
-              navigation.push("SignWaiver", {
-                unsignedWaivers: newWaivers,
-              });
-            } else {
-              navigation.navigate("RequestItems");
-            }
-          } else {
-            alert("You must agree to the liability waiver before continuing.");
-          }
-        }}
-        // style={[styles.button]}
-      />
+                  if (unsigned.length > 0) {
+                    const newWaivers = Array.from(unsigned);
+                    newWaivers.shift();
+                    navigation.push("SignWaiver", {
+                      unsignedWaivers: newWaivers,
+                    });
+                  } else {
+                    navigation.navigate("RequestItems");
+                  }
+                } else {
+                  alert(
+                    "You must agree to the liability waiver before continuing."
+                  );
+                }
+              }}
+              // style={[styles.button]}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     </View>
   ) : (
     <>
@@ -146,14 +160,19 @@ export default function SignWaiver({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  inner: {
+    padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
+  },
   agree: {
     fontSize: 15,
     fontWeight: "bold",
     paddingLeft: 15,
-  },
-  container: {
-    flex: 1,
-    padding: 30,
   },
   title: {
     fontSize: 20,

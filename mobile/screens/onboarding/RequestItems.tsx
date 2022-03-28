@@ -1,6 +1,5 @@
 import { View } from "../../components/Themed";
 import {
-  Button,
   Text,
   TextInput,
   StyleSheet,
@@ -13,12 +12,13 @@ import {
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useState } from "react";
-import Checkbox from "expo-checkbox";
 import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
+import ThumbsUpSVG from "../../assets/images/thumbsup";
+import ThumbsDownSVG from "../../assets/images/thumbsdown";
 
 function MyCheckbox({
   onPress,
@@ -143,162 +143,180 @@ export default function RequestedItems({
   };
 
   return (
-    <ScrollView>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Request Items</Text>
-          <Text style={styles.subheader}>
-            Motherhood Beyond Bars will deliver you supplies, so you're ready
-            for the child!
-          </Text>
-          {settings.items?.map((item, idx) =>
-            item.onboarding ? (
-              <View style={styles.item} key={idx}>
-                <View style={styles.checkboxContainer}>
-                  {item.itemName === "beginBox" ? (
-                    <MyCheckbox checked={true} onPress={() => null} />
-                  ) : (
-                    <MyCheckbox
-                      onPress={() => toggleItem(idx)}
-                      checked={itemsCount[idx]}
-                    />
-                  )}
-                  <Text style={styles.itemHeader}>{item.itemDisplayName}</Text>
-                </View>
-                <Text style={styles.itemDescription}>
-                  {item.itemDescription}
-                </Text>
-                {item.itemName === "clothing" && itemsCount[idx] && (
-                  <View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingLeft: 20,
-                        paddingTop: 10,
-                      }}
-                    >
-                      <Text style={styles.clothingtext}>Gender</Text>
-                      <Text style={styles.clothingtext}>Clothing Size</Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingLeft: 20,
-                      }}
-                    >
-                      <TextInput
-                        style={styles.clothinginput}
-                        onChangeText={(gender) => {
-                          setGender(gender);
-                        }}
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <Text style={styles.title}>Request Items</Text>
+            <Text style={styles.subheader}>
+              Motherhood Beyond Bars will deliver you supplies, so you're ready
+              for the child!
+            </Text>
+            {settings.items?.map((item, idx) =>
+              item.onboarding ? (
+                <View style={styles.item} key={idx}>
+                  <View style={styles.checkboxContainer}>
+                    {item.itemName === "beginBox" ? (
+                      <MyCheckbox checked={true} onPress={() => null} />
+                    ) : (
+                      <MyCheckbox
+                        onPress={() => toggleItem(idx)}
+                        checked={itemsCount[idx]}
                       />
-                      <TextInput
-                        style={styles.clothinginput}
-                        keyboardType="numeric"
-                        onChangeText={(size) => {
-                          setSize(Number(size));
-                        }}
-                      />
-                    </View>
+                    )}
+                    <Text style={styles.itemHeader}>
+                      {item.itemDisplayName}
+                    </Text>
                   </View>
-                )}
+                  <Text style={styles.itemDescription}>
+                    {item.itemDescription}
+                  </Text>
+                  {item.itemName === "clothing" && itemsCount[idx] && (
+                    <View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          paddingLeft: 20,
+                          paddingTop: 10,
+                        }}
+                      >
+                        <Text style={styles.clothingtext}>Gender</Text>
+                        <Text style={styles.clothingtext}>Clothing Size</Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          paddingLeft: 20,
+                        }}
+                      >
+                        <TextInput
+                          style={styles.clothinginput}
+                          onChangeText={(gender) => {
+                            setGender(gender);
+                          }}
+                        />
+                        <TextInput
+                          style={styles.clothinginput}
+                          keyboardType="numeric"
+                          onChangeText={(size) => {
+                            setSize(Number(size));
+                          }}
+                        />
+                      </View>
+                    </View>
+                  )}
+                </View>
+              ) : null
+            )}
+            <View style={styles.item}>
+              <View style={styles.checkboxContainer}>
+                <MyCheckbox
+                  onPress={() => toggleItem(length - 1)}
+                  checked={itemsCount[length - 1]}
+                />
+                <Text style={styles.itemHeader}>Other</Text>
               </View>
-            ) : null
-          )}
-          <View style={styles.item}>
-            <View style={styles.checkboxContainer}>
-              <MyCheckbox
-                onPress={() => toggleItem(length - 1)}
-                checked={itemsCount[length - 1]}
+              <TextInput
+                style={[styles.input, styles.otherInput]}
+                placeholder="Enter items"
+                placeholderTextColor="#666666"
+                onChangeText={setOtherItems}
+                value={otherItems}
               />
-              <Text style={styles.itemHeader}>Other</Text>
             </View>
+            <Text style={styles.additionalText}>
+              Additional requests or comments
+            </Text>
             <TextInput
-              style={[styles.input, styles.otherInput]}
-              placeholder="Enter items"
+              style={[styles.input, styles.additionalInput]}
+              placeholder="Specific item dimensions, shipping directions, etc."
               placeholderTextColor="#666666"
-              onChangeText={setOtherItems}
-              value={otherItems}
+              multiline
+              value={additionalComments}
+              onChangeText={setAdditionalComments}
             />
-          </View>
-          <Text style={styles.additionalText}>
-            Additional requests or comments
-          </Text>
-          <TextInput
-            style={[styles.input, styles.additionalInput]}
-            placeholder="Specific item dimensions, shipping directions, etc."
-            placeholderTextColor="#666666"
-            multiline
-            value={additionalComments}
-            onChangeText={setAdditionalComments}
-          />
-          <View style={{ alignItems: "center" }}>
-            <TouchableOpacity
-              style={[styles.button, { width: 350 }]}
-              onPress={() => {
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity
+                style={[styles.button, { width: 350 }]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.buttonText}>Request</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.footer}>
+              Expect a call from us to confirm the order details!
+            </Text>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
                 setModalVisible(!modalVisible);
               }}
             >
-              <Text style={styles.buttonText}>Request</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.footer}>
-            Expect a call from us to confirm the order details!
-          </Text>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <View
-              style={{
-                padding: 20,
-                height: "30%",
-                marginTop: "auto",
-                justifyContent: "space-around",
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ fontWeight: "bold", paddingBottom: 15 }}>
-                Do you have your own car seat?
-              </Text>
-              <Text style={{ paddingBottom: 20 }}>
-                Please confirm that you have a car seat suitable for the baby.
-                You won’t be able to take them home without it!
-              </Text>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ width: "50%" }}>
-                  <Button
-                    title="Yep, I do!"
-                    onPress={() => {
-                      requestItems(false);
-                      setModalVisible(!modalVisible);
-                      navigation.navigate("ShippingAddress");
-                    }}
-                  />
-                </View>
-                <View style={{ width: 10 }}></View>
-                <View style={{ width: "50%" }}>
-                  <Button
-                    title="No, I don't!"
-                    onPress={() => {
-                      requestItems(true);
-                      setModalVisible(!modalVisible);
-                      navigation.navigate("ShippingAddress");
-                    }}
-                  />
+              <View
+                style={{
+                  padding: 20,
+                  height: "30%",
+                  marginTop: "auto",
+                  justifyContent: "space-around",
+                  borderRadius: 5,
+                }}
+              >
+                <Text style={{ fontWeight: "bold", paddingBottom: 15 }}>
+                  Do you have your own car seat?
+                </Text>
+                <Text style={{ paddingBottom: 20 }}>
+                  Please confirm that you have a car seat suitable for the baby.
+                  You won’t be able to take them home without it!
+                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ width: "50%" }}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        requestItems(false);
+                        setModalVisible(!modalVisible);
+                        navigation.navigate("ShippingAddress");
+                      }}
+                    >
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <ThumbsUpSVG />
+                        <Text style={styles.buttonText}>Yep, I do!</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ width: 10 }}></View>
+                  <View style={{ width: "50%" }}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        requestItems(true);
+                        setModalVisible(!modalVisible);
+                        navigation.navigate("ShippingAddress");
+                      }}
+                    >
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <ThumbsDownSVG />
+                        <Text style={styles.buttonText}>No, I don't!</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          </Modal>
-          <View style={modalVisible && styles.overlay} />
-        </View>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+            </Modal>
+            <View style={modalVisible && styles.overlay} />
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -319,17 +337,19 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 30,
-    flexDirection: "column",
-    backgroundColor: "#FAFBFC",
-    position: 'relative'
+    backgroundColor: "white",
+  },
+  inner: {
+    padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   overlay: {
-    position: 'absolute',
-    width: '120%',
-    height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    opacity: 0.5
+    position: "absolute",
+    width: "120%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    opacity: 0.5,
   },
   title: {
     fontSize: 24,

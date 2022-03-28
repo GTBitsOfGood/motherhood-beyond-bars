@@ -9,7 +9,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { CollectionReference, Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 
 declare global {
   namespace ReactNavigation {

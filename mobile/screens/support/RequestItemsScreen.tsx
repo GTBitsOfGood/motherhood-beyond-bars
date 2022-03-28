@@ -1,20 +1,19 @@
 import React, { useContext, useState } from "react";
 import { Text, View } from "../../components/Themed";
 import {
-  Button,
   StyleSheet,
   Pressable,
   TextInput,
   ScrollView,
   Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
-import { db, functions } from "../../config/firebase";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { db } from "../../config/firebase";
 import { SupportStackScreenProps } from "../../types";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
-import { auth } from "../../config/firebase";
 import { arrayUnion, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 
@@ -102,106 +101,114 @@ export default function SupportScreen({ navigation }: Props) {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.title}>Request Items</Text>
-        <Text style={styles.subheader}>
-          Motherhood Beyond Bars will deliver you supplies, so you're ready for
-          the child!
-        </Text>
-        {settings.items?.map((item, idx) =>
-          item.onboarding ? null : (
-            <View style={styles.item} key={idx}>
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <Text style={styles.title}>Request Items</Text>
+            <Text style={styles.subheader}>
+              Motherhood Beyond Bars will deliver you supplies, so you're ready
+              for the child!
+            </Text>
+            {settings.items?.map((item, idx) =>
+              item.onboarding ? null : (
+                <View style={styles.item} key={idx}>
+                  <View style={styles.checkboxContainer}>
+                    <MyCheckbox
+                      onPress={() => toggleItem(idx)}
+                      checked={itemsCount[idx]}
+                    />
+                    <Text style={styles.itemHeader}>
+                      {item.itemDisplayName}
+                    </Text>
+                  </View>
+                  <Text style={styles.itemDescription}>
+                    {item.itemDescription}
+                  </Text>
+                </View>
+              )
+            )}
+            <View style={styles.item}>
               <View style={styles.checkboxContainer}>
                 <MyCheckbox
-                  onPress={() => toggleItem(idx)}
-                  checked={itemsCount[idx]}
+                  onPress={() => toggleItem(length - 1)}
+                  checked={itemsCount[length - 1]}
                 />
-                <Text style={styles.itemHeader}>{item.itemDisplayName}</Text>
+                <Text style={styles.itemHeader}>Other</Text>
               </View>
-              <Text style={styles.itemDescription}>{item.itemDescription}</Text>
+              <TextInput
+                style={[styles.input, styles.otherInput]}
+                placeholder="Enter items"
+                placeholderTextColor="#666666"
+                onChangeText={setOtherItems}
+                value={otherItems}
+              />
             </View>
-          )
-        )}
-        <View style={styles.item}>
-          <View style={styles.checkboxContainer}>
-            <MyCheckbox
-              onPress={() => toggleItem(length - 1)}
-              checked={itemsCount[length - 1]}
-            />
-            <Text style={styles.itemHeader}>Other</Text>
-          </View>
-          <TextInput
-            style={[styles.input, styles.otherInput]}
-            placeholder="Enter items"
-            placeholderTextColor="#666666"
-            onChangeText={setOtherItems}
-            value={otherItems}
-          />
-        </View>
-        <Text style={styles.additionalText}>
-          Additional requests or comments
-        </Text>
-        <TextInput
-          style={[styles.input, styles.additionalInput]}
-          placeholder="Specific item dimensions, shipping directions, etc."
-          placeholderTextColor="#666666"
-          multiline
-          value={additionalComments}
-          onChangeText={setAdditionalComments}
-        />
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
-            style={[styles.button, { width: 350 }]}
-            onPress={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <Text style={styles.buttonText}>Request</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.footer}>
-          Expect a call from us to confirm the order details!
-        </Text>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View
-            style={{
-              padding: 20,
-              height: "30%",
-              marginTop: "auto",
-              justifyContent: "space-around",
-              borderRadius: 5,
-            }}
-          >
-            <Text style={styles.title}>All done!</Text>
-            <Text style={styles.subheader}>
-              Please expect a call from MBB soon to confirm your requested
-              supplies!
+            <Text style={styles.additionalText}>
+              Additional requests or comments
             </Text>
+            <TextInput
+              style={[styles.input, styles.additionalInput]}
+              placeholder="Specific item dimensions, shipping directions, etc."
+              placeholderTextColor="#666666"
+              multiline
+              value={additionalComments}
+              onChangeText={setAdditionalComments}
+            />
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
                 style={[styles.button, { width: 350 }]}
                 onPress={() => {
-                  requestItems();
                   setModalVisible(!modalVisible);
-                  navigation.navigate("ReachOut");
                 }}
               >
-                <Text style={styles.buttonText}>Close</Text>
+                <Text style={styles.buttonText}>Request</Text>
               </TouchableOpacity>
             </View>
+            <Text style={styles.footer}>
+              Expect a call from us to confirm the order details!
+            </Text>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <View
+                style={{
+                  padding: 20,
+                  height: "30%",
+                  marginTop: "auto",
+                  justifyContent: "space-around",
+                  borderRadius: 5,
+                }}
+              >
+                <Text style={styles.title}>All done!</Text>
+                <Text style={styles.subheader}>
+                  Please expect a call from MBB soon to confirm your requested
+                  supplies!
+                </Text>
+                <View style={{ alignItems: "center" }}>
+                  <TouchableOpacity
+                    style={[styles.button, { width: 350 }]}
+                    onPress={() => {
+                      requestItems();
+                      setModalVisible(!modalVisible);
+                      navigation.navigate("ReachOut");
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           </View>
-        </Modal>
-      </View>
-    </ScrollView>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -222,9 +229,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 30,
-    flexDirection: "column",
-    backgroundColor: "#FAFBFC",
+    backgroundColor: "white",
+  },
+  inner: {
+    padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 24,

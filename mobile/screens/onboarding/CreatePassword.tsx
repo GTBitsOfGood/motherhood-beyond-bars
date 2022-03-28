@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useState } from "react";
@@ -32,75 +33,86 @@ export default function CreatePassword({
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Create a password</Text>
-        <Text style={styles.description}>New Password</Text>
-        <TextInput
-          placeholder="password"
-          style={styles.input}
-          autoCompleteType="password"
-          onChangeText={(password) => {
-            setPassword(password);
-          }}
-          secureTextEntry={true}
-        />
-        <Text style={styles.description}>Confirm Password</Text>
-        <TextInput
-          placeholder="password"
-          style={styles.input}
-          autoCompleteType="password"
-          onChangeText={(password) => {
-            setConfirm(password);
-          }}
-          secureTextEntry={true}
-        />
-        <View style={{ paddingTop: 36 }}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={async () => {
-              if (password === confirm) {
-                await createUserWithEmailAndPassword(
-                  auth,
-                  route?.params?.email.trim(),
-                  password
-                ).then((userCredential) => {
-                  setCaregiverInfo(userCredential);
-                }).catch((error) => {
-                  console.log(`account creation error: ${error}`);
-                  if (error.code === "auth/invalid-password") {
-                    alert("Password must be at least 6 characters.");
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <Text style={styles.title}>Create a password</Text>
+            <Text style={styles.description}>New Password</Text>
+            <TextInput
+              placeholder="password"
+              style={styles.input}
+              autoCompleteType="password"
+              onChangeText={(password) => {
+                setPassword(password);
+              }}
+              secureTextEntry={true}
+            />
+            <Text style={styles.description}>Confirm Password</Text>
+            <TextInput
+              placeholder="password"
+              style={styles.input}
+              autoCompleteType="password"
+              onChangeText={(password) => {
+                setConfirm(password);
+              }}
+              secureTextEntry={true}
+            />
+            <View style={{ paddingTop: 36 }}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={async () => {
+                  if (password === confirm) {
+                    await createUserWithEmailAndPassword(
+                      auth,
+                      route?.params?.email.trim(),
+                      password
+                    )
+                      .then((userCredential) => {
+                        setCaregiverInfo(userCredential);
+                      })
+                      .catch((error) => {
+                        console.log(`account creation error: ${error}`);
+                        if (error.code === "auth/invalid-password") {
+                          alert("Password must be at least 6 characters.");
+                        }
+                      });
+                  } else {
+                    alert("Passwords aren't equal");
                   }
-                });
-              } else {
-                alert("Passwords aren't equal");
-              }
-            }}
-          >
-            <Text style={styles.buttonText}>Get started</Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            paddingTop: 249.5,
-          }}
-        >
-          <Text style={{ fontSize: 14 }}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={{ color: "#304CD1" }}>Log in.</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+                }}
+              >
+                <Text style={styles.buttonText}>Get started</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                paddingTop: 200,
+              }}
+            >
+              <Text style={{ fontSize: 14 }}>Already have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text style={{ color: "#304CD1" }}>Log in.</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  inner: {
     padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 24,
