@@ -295,6 +295,7 @@ export default function RequestedItems({
               </View>
             </View>
           </Modal>
+          <View style={modalVisible && styles.overlay} />
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>
@@ -321,6 +322,14 @@ const styles = StyleSheet.create({
     padding: 30,
     flexDirection: "column",
     backgroundColor: "#FAFBFC",
+    position: 'relative'
+  },
+  overlay: {
+    position: 'absolute',
+    width: '120%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    opacity: 0.5
   },
   title: {
     fontSize: 24,
