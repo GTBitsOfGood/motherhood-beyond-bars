@@ -22,7 +22,7 @@ export default function Welcome({
       <View
         style={{
           alignItems: "center",
-          paddingTop: "40%",
+          paddingTop: "70%",
           backgroundColor: "transparent",
         }}
       >
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "bold",
     paddingTop: 20,
     paddingBottom: "50%",
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
+    fontSize: 16,
     color: "#fff",
     padding: 10,
     fontWeight: "500",
