@@ -23,11 +23,12 @@ const isUniqueEmail = async (email: string) =>
   ).empty;
 const isValidEmail = (email: string) =>
   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+const isValidPhoneNumber = (phone: string) => (
+  /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/).test(phone);
 
 export default function CreateAccount({
   navigation,
 }: OnboardingStackScreenProps<"CreateAccount">) {
-  const authData = useContext(UserContext);
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
   const [email, setEmail] = useState("");
@@ -79,10 +80,12 @@ export default function CreateAccount({
           <TouchableOpacity
             style={styles.button}
             onPress={async () => {
-              if (!isUniqueEmail(email)) {
+              if (!(await isUniqueEmail(email))) {
                 alert("Email already in use. Try logging in instead.");
               } else if (!isValidEmail(email)) {
                 alert("Invalid email address.");
+              } else if (!isValidPhoneNumber(phone)) {
+                alert("Invalid phone number");
               } else {
                 navigation.navigate("CreatePassword", {
                   first: first,

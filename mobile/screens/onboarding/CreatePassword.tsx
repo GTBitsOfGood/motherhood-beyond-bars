@@ -8,8 +8,7 @@ import {
   Keyboard,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useState } from "react";
-import { UserContext } from "../../providers/User";
+import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -18,13 +17,12 @@ export default function CreatePassword({
   navigation,
   route,
 }: OnboardingStackScreenProps<"CreatePassword">) {
-  const authData = useContext(UserContext);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
-  async function setCaregiverInfo() {
+  async function setCaregiverInfo(userCredential: any) {
+    const authData = userCredential.user;
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-    console.log(route?.params?.first + " is first name");
     setDoc(caregiverDoc, {
       firstName: route?.params?.first,
       lastName: route?.params?.last,
@@ -66,17 +64,14 @@ export default function CreatePassword({
                   auth,
                   route?.params?.email.trim(),
                   password
-                ).catch((error) => {
+                ).then((userCredential) => {
+                  setCaregiverInfo(userCredential);
+                }).catch((error) => {
                   console.log(`account creation error: ${error}`);
-                  if (error.code === "auth/email-already-in-use") {
-                    alert("Email already in use. Try logging in instead.");
-                  } else if (error.code === "auth/invalid-email") {
-                    alert("Invalid email address.");
-                  } else if (error.code === "auth/invalid-password") {
+                  if (error.code === "auth/invalid-password") {
                     alert("Password must be at least 6 characters.");
                   }
                 });
-                setCaregiverInfo();
               } else {
                 alert("Passwords aren't equal");
               }
