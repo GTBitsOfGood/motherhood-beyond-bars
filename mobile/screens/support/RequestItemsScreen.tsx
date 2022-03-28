@@ -200,6 +200,7 @@ export default function SupportScreen({ navigation }: Props) {
             </View>
           </View>
         </Modal>
+        <View style={modalVisible && styles.overlay} />
       </View>
     </ScrollView>
   );
@@ -225,6 +226,13 @@ const styles = StyleSheet.create({
     padding: 30,
     flexDirection: "column",
     backgroundColor: "#FAFBFC",
+  },
+  overlay: {
+    position: 'absolute',
+    width: '120%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    opacity: 0.5
   },
   title: {
     fontSize: 24,

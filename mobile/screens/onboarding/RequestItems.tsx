@@ -1,3 +1,5 @@
+
+   
 import { View } from "../../components/Themed";
 import {
   Button,
@@ -322,7 +324,6 @@ const styles = StyleSheet.create({
     padding: 30,
     flexDirection: "column",
     backgroundColor: "#FAFBFC",
-    position: 'relative'
   },
   overlay: {
     position: 'absolute',
