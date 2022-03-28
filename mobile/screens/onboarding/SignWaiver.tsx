@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";
@@ -74,6 +75,7 @@ export default function SignWaiver({
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.inner}>
+            <Text style={styles.title}>Liability Waiver</Text>
             <ScrollView
               style={{
                 backgroundColor: "#f5f5f5",
@@ -93,7 +95,7 @@ export default function SignWaiver({
               </MarkdownView>
             </ScrollView>
 
-            <View
+            {/* <View
               style={[
                 styles.container,
                 {
@@ -101,45 +103,54 @@ export default function SignWaiver({
                 },
               ]}
             >
-              {/* <CheckBox value={isSelected} onValueChange={setSelection} /> */}
+              <CheckBox value={isSelected} onValueChange={setSelection} />
+            </View> */}
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingTop: 16,
+              }}
+            >
+              <Switch
+                value={isSelected}
+                onChange={() => {
+                  setSelection(!isSelected);
+                }}
+              />
+              <Text style={styles.agree}>I agree to the Liability Waiver</Text>
             </View>
+            <Text style={styles.description}>Signature</Text>
+            <TextInput style={styles.input} />
+            <Text style={styles.description}>Date</Text>
+            <TextInput style={styles.input} />
+            <View style={{ paddingTop: 36 }}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  if (isSelected) {
+                    setSignedWaivers();
 
-            <Switch
-              value={isSelected}
-              onChange={() => {
-                setSelection(!isSelected);
-              }}
-            />
-            <Text style={styles.agree}>I agree to the Liability Waiver</Text>
-            {/* <Text style={styles.textLabel}>Signature</Text>
-      <TextInput style={styles.sign} onChangeText={setName} />
-      <Text style={styles.textLabel}>Date</Text>
-      <TextInput style={styles.sign} /> */}
-            <Button
-              title={"Next"}
-              onPress={() => {
-                if (isSelected) {
-                  // console.log("Signed waiver", waiver.id);
-
-                  setSignedWaivers();
-
-                  if (unsigned.length > 0) {
-                    const newWaivers = Array.from(unsigned);
-                    newWaivers.shift();
-                    navigation.push("SignWaiver", {
-                      unsignedWaivers: newWaivers,
-                    });
+                    if (unsigned.length > 0) {
+                      const newWaivers = Array.from(unsigned);
+                      newWaivers.shift();
+                      navigation.push("SignWaiver", {
+                        unsignedWaivers: newWaivers,
+                      });
+                    } else {
+                      navigation.navigate("RequestItems");
+                    }
                   } else {
-                    navigation.navigate("RequestItems");
+                    alert(
+                      "You must agree to the liability waiver before continuing."
+                    );
                   }
-                } else {
-                  alert(
-                    "You must agree to the liability waiver before continuing."
-                  );
-                }
-              }}
-              // style={[styles.button]}
-            />
+                }}
+              >
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
@@ -174,11 +185,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingLeft: 15,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    paddingBottom: 15,
-  },
   separator: {
     marginVertical: 30,
     height: 1,
@@ -204,10 +210,44 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingTop: 15,
   },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    paddingTop: 5,
+    paddingBottom: 15,
+  },
+  textbox: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+  },
   button: {
-    borderColor: "black",
     borderWidth: 1,
+    borderColor: "#304CD1",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#304CD1",
+    padding: 10,
+    fontWeight: "500",
+  },
+  description: {
+    paddingTop: 12,
+    fontSize: 14,
+    paddingBottom: 8,
+  },
+  input: {
+    backgroundColor: "#FAFBFC",
+    height: 44,
+    borderColor: "#D9D9D9",
+    borderWidth: 1,
+    borderRadius: 4,
     width: "100%",
-    paddingTop: 30,
+    paddingLeft: 8,
   },
 });
