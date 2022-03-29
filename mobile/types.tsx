@@ -51,6 +51,7 @@ export type OnboardingParamList = {
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: undefined;
+  ViewImage: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
@@ -61,6 +62,7 @@ export type BookParamList = {
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: undefined;
+  ViewImage: undefined;
 }
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -86,6 +88,7 @@ export interface Baby {
   id: string;
   caregiverEmail: string;
   caregiverID: string;
+  birthday: string;
 }
 
 export interface Book {

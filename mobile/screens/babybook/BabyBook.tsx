@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View } from "../../components/Themed";
 import {
   StyleSheet,
@@ -6,37 +6,55 @@ import {
   Switch,
   Text,
   TouchableOpacity,
+  Image,
+  TouchableHighlight
 } from "react-native";
-import { OnboardingStackScreenProps } from "../../types";
+import { Book, OnboardingStackScreenProps } from "../../types";
 import * as ImagePicker from "expo-image-picker";
+import { BabyContext } from "../../providers/Baby";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { db } from "../../config/firebase";
+import ViewImage from "./ViewImage";
 
 type Props = OnboardingStackScreenProps<"BabyBook">;
 
 export var imageFinal: string;
+export var view: Book;
 
 export default function BabyBook({ navigation }: Props) {
-  // let openImagePickerAsync = async () => {
-  //   let permissionResult =
-  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-  //   if (permissionResult.granted === false) {
-  //     alert("Permission to access camera roll is required!");
-  //     return;
-  //   }
+  const [image, setImage] = useState<string | null>(null);
+  const [book, setBook] = useState<Book[]>([]);
 
-  //   let pickerResult = await ImagePicker.launchImageLibraryAsync();
+  const babyContext = useContext(BabyContext);
+  useEffect(() => {
+    async function fetchBook() {
+      if (babyContext != null) {
+        const queryRef = query(
+          collection(db, "babies", babyContext.id, "book"),
+          orderBy("date", 'desc'),
+          limit(10)
+        );
+        const bookDocs = await getDocs(queryRef);
+        setBook(
+          bookDocs.docs.map((doc) => ({ ...doc.data(), id: doc.id } as unknown as Book))
+        );
+      }
+    }
+    fetchBook();
+  }, []);
 
-  //   navigation.navigate("SelectPicture");
-  // };
-
-  const [image, setImage] = useState<string | null>(null);;
+  function goToView(i: Book) {
+    view = i
+    navigation.navigate("ViewImage")
+  }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [3, 2],
       quality: 1,
     });
 
@@ -44,7 +62,6 @@ export default function BabyBook({ navigation }: Props) {
 
     if (!result.cancelled) {
       setImage(result.uri);
-
     }
 
     if (image != null) {
@@ -54,21 +71,44 @@ export default function BabyBook({ navigation }: Props) {
     navigation.navigate("SelectPicture");
   };
 
+  function body() {
+    if (book.length == 0) {
+      return (
+        <View>
+          <View style={{ padding: "30%" }}></View>
+          <View style={{ padding: 15 }}>
+            <Text style={styles.center}>No Photos Yet</Text>
+            <Text style={{ textAlign: "center" }}>
+              Get started by tapping this button to add a photo of {babyContext?.name}!
+            </Text>
+          </View>
+        </View>
+      )
+    } else {
+      return (
+        <View>
+          <View style={{paddingTop:25}}></View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', width: (book.length * 83.33) + ((book.length - 1)*5), alignSelf: "flex-start"}}>
+            {book.map((i) => <TouchableHighlight onPress={() => goToView(i)}>
+            <Image source={{ uri: i.imageURL }} style={styles.image} />
+              </TouchableHighlight>)}
+          </View>
+        </View>
+      )
+    }
+  }
+
+  console.log(babyContext?.name)
 
 
   return (
     <View style={styles.container}>
       <View style={styles.textbox}>
-        <Text style={styles.title}>Jordan Jacobs</Text>
-        <Text>Birthday 00/00/0000</Text>
+        <Text style={styles.title}>{babyContext?.name}'s Album</Text>
+        <Text>Birthday</Text><Text>{babyContext?.birthday}</Text>
       </View>
-      <View style={{ padding: "30%" }}></View>
-      <View style={{ padding: 15 }}>
-        <Text style={styles.center}>No Photos Yet</Text>
-        <Text style={{ textAlign: "center" }}>
-          Get started by tapping this button to add a photo of Jordan!
-        </Text>
-      </View>
+      {body()}
+      
       <View style={{position: 'absolute', bottom: 15, left: 300}}>
         <TouchableOpacity
           onPress={pickImage}
@@ -118,9 +158,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 45,
   },
-  thumbnail: {
-    width: 100,
+  image: {
+    width: 83.33,
     height: 150,
-    resizeMode: "contain",
-  },
+  }
 });
