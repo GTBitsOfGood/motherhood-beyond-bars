@@ -17,7 +17,6 @@ import ResourcesSVG from "../assets/images/resources";
 import SettingsSVG from "../assets/images/settings";
 import SupportSVG from "../assets/images/support";
 import HeaderBackgroundSVG from "../assets/images/headerbackground";
-import LogoutButton from "../components/app/LogoutButton";
 import CircleBorder from "../components/app/CircleBorder";
 import FilledCircle from "../components/app/FilledCircle";
 import LoginHeader from "../components/app/LoginHeader";
@@ -42,9 +41,11 @@ import SignWaiver from "../screens/onboarding/SignWaiver";
 import {
   BookParamList,
   OnboardingParamList,
+  ResourcesParamList,
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
+  SettingsParamList,
   SupportParamList,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -73,6 +74,11 @@ import GetStarted from "../screens/onboarding/GetStarted";
 import Login from "../screens/onboarding/Login";
 import RecoverPassword from "../screens/onboarding/RecoverPassword";
 import HouseholdInfo from "../screens/onboarding/HouseholdInfo";
+import AccountInfo from "../screens/settings/AccountInfo";
+import EditAccount from "../screens/settings/EditAccount";
+import EditPassword from "../screens/settings/EditPassword";
+import EditAddress from "../screens/settings/EditAddress";
+import General from "../screens/resources/General";
 
 export default function Navigation({
   colorScheme,
@@ -149,7 +155,7 @@ function RootNavigator() {
           <Stack.Screen
             name="Root"
             component={OnboardingNavigator}
-            options={({ navigation }) => ({
+            options={() => ({
               headerShown: false,
               title: "Welcome",
               headerRight: () =>
@@ -460,14 +466,63 @@ function SupportNavigator() {
         name="RequestItemsScreen"
         component={RequestItemsScreen}
         options={{
-          headerTitle: () => (
-            // add progress bar/circles and styling here
-            <View></View>
-          ),
-          // headerShown: false,
+          headerTitle: () => <View></View>,
         }}
       />
     </Support.Navigator>
+  );
+}
+
+const Settings = createNativeStackNavigator<SettingsParamList>();
+
+function SettingsNavigator() {
+  return (
+    <Settings.Navigator>
+      <Settings.Screen
+        name="AccountInfo"
+        component={AccountInfo}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Settings.Screen
+        name="EditAccount"
+        component={EditAccount}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Settings.Screen
+        name="EditPassword"
+        component={EditPassword}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Settings.Screen
+        name="EditAddress"
+        component={EditAddress}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Settings.Navigator>
+  );
+}
+
+const Resources = createNativeStackNavigator<ResourcesParamList>();
+
+function ResourcesNavigator() {
+  return (
+    <Resources.Navigator>
+      <Resources.Screen
+        name="General"
+        component={General}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Resources.Navigator>
   );
 }
 
@@ -487,6 +542,9 @@ function BottomTabNavigator() {
         tabBarActiveTintColor: "#fff",
         tabBarStyle: {
           backgroundColor: "#000000",
+          height: 75,
+          paddingBottom: 15,
+          paddingTop: 15,
         },
         headerBackground: () => <HeaderBackgroundSVG />,
         headerStyle: {
@@ -494,15 +552,16 @@ function BottomTabNavigator() {
           height: 87,
         },
         headerTitleStyle: { color: "#fff" },
-        headerRight: () => 
-        <Button
-          title="Logout"
-          color="white"
-          onPress={() => {
-            console.log('signing out..')
-            signOut(auth);
-          }}
-        />
+        headerRight: () => (
+          <Button
+            title="Logout"
+            color="white"
+            onPress={() => {
+              console.log("signing out..");
+              signOut(auth);
+            }}
+          />
+        ),
       }}
     >
       <BottomTab.Screen
@@ -527,7 +586,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabThree"
-        component={BookNavigator}
+        component={ResourcesNavigator}
         options={{
           title: "Resources",
           tabBarIcon: ({ focused }) => (
@@ -537,7 +596,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabFour"
-        component={BookNavigator}
+        component={SettingsNavigator}
         options={{
           title: "Settings",
           tabBarIcon: ({ focused }) => (
