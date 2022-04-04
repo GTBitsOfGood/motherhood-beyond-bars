@@ -302,7 +302,7 @@ function BookNavigator() {
     <Book.Navigator>
       {
         <>
-          {/*
+          
             <Book.Screen
               name="BabyBookAccess"
               component={BabyBookAccess}
@@ -314,7 +314,7 @@ function BookNavigator() {
                   </View>
                 ),
               }}
-            /> */}
+            />
           {
             <Book.Screen
               name="StartBook"

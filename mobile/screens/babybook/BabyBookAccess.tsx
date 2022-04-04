@@ -2,14 +2,29 @@ import React, { useState } from "react";
 import { View } from "../../components/Themed";
 import { StyleSheet, Button, Switch, Text } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
+import { UserContext } from "../../providers/User";
+import { BabyContext } from "../../providers/Baby";
+import { useContext } from "react";
+import { collection, doc, Firestore, getDoc } from "firebase/firestore";
+import { db } from "../../config/firebase";
+import BabyBook from "./BabyBook";
+import { Baby } from "../../types";
 
 type Props = OnboardingStackScreenProps<"BabyBookAccess">;
 
 export default function BabyBookAccess({ navigation }: Props) {
-  const [isSelected, setSelection] = useState(false);
+  
+  // const [isSelected, setSelection] = useState(false);
+
+  var baby = useContext(BabyContext);
+  
+  if (baby != null) {
+    navigation.navigate('BabyBook');
+  }
+
   return (
     <View style={styles.container}>
-      <Switch
+      {/* <Switch
         value={isSelected}
         onChange={() => {
           setSelection(!isSelected);
@@ -17,8 +32,8 @@ export default function BabyBookAccess({ navigation }: Props) {
             navigation.navigate("StartBook");
           }
         }}
-      />
-      <Text>Access to Baby Book</Text>
+      /> */}
+      {/* <Text>Access to Baby Book</Text> */}
       <View style={{ padding: "30%" }}></View>
       <View style={{ padding: 25 }}>
         <Text style={styles.title}>Restricted Access</Text>
