@@ -95,6 +95,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const authData = useContext(UserContext);
   const { contact } = useContext(SettingsContext);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.

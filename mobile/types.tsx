@@ -82,10 +82,15 @@ export interface Caregiver {
 }
 
 export interface Baby {
-  name: string;
+  firstName: string;
+  lastName: string;
   id: string;
   caregiverEmail: string;
   caregiverID: string;
+<<<<<<< Updated upstream
+=======
+  dob: string;
+>>>>>>> Stashed changes
 }
 
 export interface Book {

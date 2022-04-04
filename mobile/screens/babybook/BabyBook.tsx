@@ -54,10 +54,47 @@ export default function BabyBook({ navigation }: Props) {
     navigation.navigate("SelectPicture");
   };
 
+<<<<<<< Updated upstream
+=======
+  function body() {
+    if (book.length == 0) {
+      return (
+        <View>
+          <View style={{ padding: "30%" }}></View>
+          <View style={{ padding: 15 }}>
+            <Text style={styles.center}>No Photos Yet</Text>
+            <Text style={{ textAlign: "center" }}>
+              Get started by tapping this button to add a photo of {babyContext?.firstName}!
+            </Text>
+          </View>
+        </View>
+      )
+    } else {
+      return (
+        <View>
+          <View style={{paddingTop:25}}></View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', width: (book.length * 83.33) + ((book.length - 1)*5), alignSelf: "flex-start"}}>
+            {book.map((i) => <TouchableHighlight onPress={() => goToView(i)}>
+            <Image source={{ uri: i.imageURL }} style={styles.image} />
+              </TouchableHighlight>)}
+          </View>
+        </View>
+      )
+    }
+  }
+
+  var timestemp = new Date( babyContext?.dob["seconds"]*1000 );
+  var date = timestemp.getDate()
+  var month = timestemp.getMonth() + 1
+  var year = timestemp.getFullYear()
+  
+
+>>>>>>> Stashed changes
 
 
   return (
     <View style={styles.container}>
+<<<<<<< Updated upstream
       <View style={styles.textbox}>
         <Text style={styles.title}>Jordan Jacobs</Text>
         <Text>Birthday 00/00/0000</Text>
@@ -69,6 +106,12 @@ export default function BabyBook({ navigation }: Props) {
           Get started by tapping this button to add a photo of Jordan!
         </Text>
       </View>
+=======
+        <Text style={styles.title}>{babyContext?.firstName} {babyContext?.lastName}'s Album</Text>
+        <Text>Birthday: {month}/{date}/{year}</Text>
+      {body()}
+      
+>>>>>>> Stashed changes
       <View style={{position: 'absolute', bottom: 15, left: 300}}>
         <TouchableOpacity
           onPress={pickImage}
@@ -116,7 +159,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 45,
+    fontSize: 65,
+    bottom: 13
   },
   thumbnail: {
     width: 100,
