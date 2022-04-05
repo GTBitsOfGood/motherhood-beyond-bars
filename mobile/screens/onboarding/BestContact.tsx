@@ -1,8 +1,8 @@
 import { View } from "../../components/Themed";
-import { Button, Text, StyleSheet } from "react-native";
+import { Button, Text, StyleSheet, ScrollView } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
-import { RadioButton } from 'react-native-paper';
+import { RadioButton } from "react-native-paper";
 
 import {
   doc,
@@ -15,35 +15,67 @@ import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 
 export default function BestContact({
-  navigation
+  navigation,
 }: OnboardingStackScreenProps<"BestContact">) {
-
   const authData = useContext(UserContext);
   const [contact, setContact] = useState("");
 
   async function setBestContact() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-    
+
     updateDoc(caregiverDoc, {
       contact: contact,
-    })
+    });
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>What's The Best Way To Contact You?</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.inner}>
+          <Text style={styles.title}>What's The Best Way To Contact You?</Text>
 
-      <RadioButton.Group onValueChange={contact => setContact(contact)} value={contact}>
-        <RadioButton.Item label="Phone" value="Phone"/>
-        <RadioButton.Item label="Email" value="Email"/>
-        <RadioButton.Item label="Text" value="Text"/>
-      </RadioButton.Group>
+          <RadioButton.Group
+            onValueChange={(contact) => setContact(contact)}
+            value={contact}
+          >
+            <RadioButton.Item
+              position="leading"
+              value="Phone"
+              label="Phone"
+              mode="android"
+              labelStyle={{
+                textAlign: "left",
+              }}
+            />
+            <RadioButton.Item
+              position="leading"
+              label="Email"
+              value="Email"
+              mode="android"
+              labelStyle={{
+                textAlign: "left",
+              }}
+            />
+            <RadioButton.Item
+              position="leading"
+              label="Text"
+              value="Text"
+              mode="android"
+              labelStyle={{
+                textAlign: "left",
+              }}
+            />
+          </RadioButton.Group>
 
-      <Button
-        title="Finish"
-        onPress={() => {setBestContact();
-          navigation.navigate("BabyBookAccess");}}/>
-
+          <Button
+            title="Finish"
+            onPress={() => {
+              setBestContact();
+              navigation.navigate("AllDone");
+            }}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -51,7 +83,12 @@ export default function BestContact({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  inner: {
     padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
     fontSize: 20,
@@ -64,14 +101,14 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   description: {
-    color: 'gray'
+    color: "gray",
   },
   input: {
-    backgroundColor: 'white', 
-    height: 30, 
-    borderColor: 'lightgray',
+    backgroundColor: "white",
+    height: 30,
+    borderColor: "lightgray",
     borderWidth: 0.5,
-    width: '50%',
-    paddingRight: 5
-  }
+    width: "50%",
+    paddingRight: 5,
+  },
 });

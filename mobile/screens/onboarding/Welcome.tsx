@@ -2,13 +2,12 @@ import { View } from "../../components/Themed";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React from "react";
-import { UserContext } from "../../providers/User";
 import WelcomeSVG from "../../assets/images/welcome";
 import HeartSVG from "../../assets/images/heart";
 
-export default function AllDone({
+export default function Welcome({
   navigation,
-}: OnboardingStackScreenProps<"AllDone">) {
+}: OnboardingStackScreenProps<"Welcome">) {
   return (
     <View style={styles.container}>
       <WelcomeSVG
@@ -23,23 +22,30 @@ export default function AllDone({
       <View
         style={{
           alignItems: "center",
-          paddingTop: "40%",
+          paddingTop: "70%",
           backgroundColor: "transparent",
         }}
       >
         <HeartSVG />
-        <Text style={styles.title}>ALL DONE!</Text>
-        <Text style={styles.subtitle}>
-          Please expect a call from MBB soon to confirm the order.
-        </Text>
+        <Text style={styles.title}>MOTHERHOOD{"\n"}BEYOND BARS</Text>
         <View style={{ paddingBottom: 10, backgroundColor: "transparent" }}>
           <TouchableOpacity
             style={[styles.button, { width: 350 }]}
             onPress={() => {
-              //  navigate to app
+              navigation.navigate("CreateAccount");
             }}
           >
-            <Text style={styles.buttonText}>Close</Text>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ paddingBottom: 10, backgroundColor: "transparent" }}>
+          <TouchableOpacity
+            style={[styles.button, { width: 350 }]}
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+          >
+            <Text style={styles.buttonText}>Log In</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -54,15 +60,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "bold",
     paddingTop: 20,
+    paddingBottom: "50%",
     color: "white",
-  },
-  subtitle: {
-    fontSize: 16,
-    paddingTop: 20,
-    color: "white",
+    textAlign: 'center'
   },
   button: {
     borderWidth: 1,
@@ -74,6 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
+    fontSize: 16,
     color: "#fff",
     padding: 10,
     fontWeight: "500",
