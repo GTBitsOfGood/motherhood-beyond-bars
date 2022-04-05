@@ -17,7 +17,6 @@ import ResourcesSVG from "../assets/images/resources";
 import SettingsSVG from "../assets/images/settings";
 import SupportSVG from "../assets/images/support";
 import HeaderBackgroundSVG from "../assets/images/headerbackground";
-import LogoutButton from "../components/app/LogoutButton";
 import CircleBorder from "../components/app/CircleBorder";
 import FilledCircle from "../components/app/FilledCircle";
 import LoginHeader from "../components/app/LoginHeader";
@@ -445,8 +444,6 @@ function BookNavigator() {
 const Support = createNativeStackNavigator<SupportParamList>();
 
 function SupportNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <Support.Navigator>
       <Support.Screen
@@ -460,11 +457,7 @@ function SupportNavigator() {
         name="RequestItemsScreen"
         component={RequestItemsScreen}
         options={{
-          headerTitle: () => (
-            // add progress bar/circles and styling here
-            <View></View>
-          ),
-          // headerShown: false,
+          headerShown: false,
         }}
       />
     </Support.Navigator>
@@ -478,8 +471,6 @@ function SupportNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
@@ -494,15 +485,16 @@ function BottomTabNavigator() {
           height: 87,
         },
         headerTitleStyle: { color: "#fff" },
-        headerRight: () => 
-        <Button
-          title="Logout"
-          color="white"
-          onPress={() => {
-            console.log('signing out..')
-            signOut(auth);
-          }}
-        />
+        headerRight: () => (
+          <Button
+            title="Logout"
+            color="white"
+            onPress={() => {
+              console.log("signing out..");
+              signOut(auth);
+            }}
+          />
+        ),
       }}
     >
       <BottomTab.Screen

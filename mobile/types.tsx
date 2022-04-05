@@ -68,7 +68,9 @@ export type OnboardingParamList = {
 
 export type SupportParamList = {
   ReachOut: undefined;
-  RequestItemsScreen: undefined;
+  RequestItemsScreen: {
+    backButtonShown: boolean;
+  };
 };
 
 export type BookParamList = {
