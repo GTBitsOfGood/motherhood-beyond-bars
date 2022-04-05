@@ -457,7 +457,7 @@ function SupportNavigator() {
         name="RequestItemsScreen"
         component={RequestItemsScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
         }}
       />
     </Support.Navigator>
