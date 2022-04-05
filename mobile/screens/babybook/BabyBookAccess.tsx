@@ -9,8 +9,6 @@ import { useContext } from "react";
 type Props = BookStackScreenProps<"BabyBookAccess">;
 
 export default function BabyBookAccess({ navigation }: Props) {
-  // const [isSelected, setSelection] = useState(false);
-
   var baby = useContext(BabyContext);
 
   if (baby != null) {
@@ -19,15 +17,6 @@ export default function BabyBookAccess({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      {/* <Switch
-        value={isSelected}
-        onChange={() => {
-          setSelection(!isSelected);
-          if (isSelected == false) {
-            navigation.navigate("StartBook");
-          }
-        }}
-      /> */}
       {/* <Text>Access to Baby Book</Text> */}
       <View style={{ padding: "30%" }}></View>
       <View style={{ padding: 25 }}>

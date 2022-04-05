@@ -6,23 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 
 type Props = BookStackScreenProps<"BabyBook">;
 
-export var imageFinal: string;
-
 export default function BabyBook({ navigation }: Props) {
-  // let openImagePickerAsync = async () => {
-  //   let permissionResult =
-  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-  //   if (permissionResult.granted === false) {
-  //     alert("Permission to access camera roll is required!");
-  //     return;
-  //   }
-
-  //   let pickerResult = await ImagePicker.launchImageLibraryAsync();
-
-  //   navigation.navigate("SelectPicture");
-  // };
-
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
@@ -34,14 +18,8 @@ export default function BabyBook({ navigation }: Props) {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
-    }
-
-    if (image != null) {
-      imageFinal = image;
     }
 
     navigation.navigate("SelectPicture");
