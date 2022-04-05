@@ -1,5 +1,3 @@
-
-   
 import { View } from "../../components/Themed";
 import {
   Text,
@@ -314,10 +312,10 @@ export default function RequestedItems({
                 </View>
               </View>
             </Modal>
-            <View style={modalVisible && styles.overlay} />
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
+      <View style={modalVisible && styles.overlay} />
     </View>
   );
 }

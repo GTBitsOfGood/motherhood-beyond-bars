@@ -489,21 +489,21 @@ function SettingsNavigator() {
         name="EditAccount"
         component={EditAccount}
         options={{
-          headerShown: false,
+          headerTitle: () => <View></View>,
         }}
       />
       <Settings.Screen
         name="EditPassword"
         component={EditPassword}
         options={{
-          headerShown: false,
+          headerTitle: () => <View></View>,
         }}
       />
       <Settings.Screen
         name="EditAddress"
         component={EditAddress}
         options={{
-          headerShown: false,
+          headerTitle: () => <View></View>,
         }}
       />
     </Settings.Navigator>
@@ -552,16 +552,7 @@ function BottomTabNavigator() {
           height: 87,
         },
         headerTitleStyle: { color: "#fff" },
-        headerRight: () => (
-          <Button
-            title="Logout"
-            color="white"
-            onPress={() => {
-              console.log("signing out..");
-              signOut(auth);
-            }}
-          />
-        ),
+        tabBarHideOnKeyboard: true,
       }}
     >
       <BottomTab.Screen

@@ -38,6 +38,13 @@ export const UserProvider = ({
             zipCode: "",
             state: "",
             contact: "",
+            firstName: "",
+            lastName: "",
+            phoneNumber: "",
+            email: "",
+            numAdults: "",
+            numChildren: "",
+            agesOfChildren: "",
           } as Caregiver;
 
           try {

@@ -7,18 +7,28 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Modal,
 } from "react-native";
 import { SettingsStackScreenProps } from "../../types";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { UserContext } from "../../providers/User";
+import { updatePassword } from "firebase/auth";
+import { auth } from "../../config/firebase";
 
 export default function EditPassword({
   navigation,
 }: SettingsStackScreenProps<"EditPassword">) {
+  const authData = useContext(UserContext);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
-  async function updatePassword() {}
+  async function updatePass() {
+    if (auth.currentUser) {
+      updatePassword(auth.currentUser, newPassword);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -63,16 +73,73 @@ export default function EditPassword({
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
-                  updatePassword();
+                  updatePass();
                   navigation.navigate("AccountInfo");
                 }}
               >
                 <Text style={styles.buttonText}>Change Password</Text>
               </TouchableOpacity>
             </View>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <View
+                style={{
+                  padding: 20,
+                  height: "30%",
+                  marginTop: "auto",
+                  justifyContent: "space-around",
+                  borderRadius: 5,
+                }}
+              >
+                <Text style={styles.title}>Your changes won't be saved.</Text>
+                <Text style={styles.subheader}>
+                  If you return to the previous screen, your changes will not be
+                  saved.
+                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ width: "50%" }}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                        navigation.goBack();
+                      }}
+                    >
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Text style={styles.buttonText}>Don't save</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ width: 10 }}></View>
+                  <View style={{ width: "50%" }}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                      }}
+                    >
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Text style={styles.buttonText}>Keep editing</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
+      <View style={modalVisible && styles.overlay} />
     </View>
   );
 }
@@ -121,5 +188,16 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: "500",
     fontSize: 16,
+  },
+  subheader: {
+    fontSize: 16,
+    marginBottom: 24,
+  },
+  overlay: {
+    position: "absolute",
+    width: "120%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    opacity: 0.5,
   },
 });

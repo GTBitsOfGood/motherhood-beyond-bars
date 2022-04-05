@@ -205,10 +205,10 @@ export default function SupportScreen({ navigation }: Props) {
                 </View>
               </View>
             </Modal>
-            <View style={modalVisible && styles.overlay} />
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
+      <View style={modalVisible && styles.overlay} />
     </View>
   );
 }
@@ -238,11 +238,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   overlay: {
-    position: 'absolute',
-    width: '120%',
-    height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    opacity: 0.5
+    position: "absolute",
+    width: "120%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    opacity: 0.5,
   },
   title: {
     fontSize: 24,

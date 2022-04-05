@@ -91,7 +91,7 @@ export default function SignWaiver({
       );
   }
 
-  return waiver ? (
+  return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -112,7 +112,7 @@ export default function SignWaiver({
                   },
                 }}
               >
-                {waiver.content}
+                {waiver?.content}
               </MarkdownView>
             </ScrollView>
 
@@ -182,18 +182,6 @@ export default function SignWaiver({
         </TouchableWithoutFeedback>
       </ScrollView>
     </View>
-  ) : (
-    <>
-      <Text>no waivers</Text>
-      <Button
-        title={"Next"}
-        onPress={() => {
-          setSignedWaivers();
-
-          navigation.navigate("RequestItems");
-        }}
-      />
-    </>
   );
 }
 

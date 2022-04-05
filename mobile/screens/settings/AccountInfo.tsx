@@ -59,7 +59,7 @@ export default function AccountInfo({
               {authData?.caregiver?.phoneNumber}
             </Text>
             <Text style={styles.subtitle}>Password</Text>
-            <Text style={styles.description}>{/* need to fix password */}</Text>
+            <Text style={styles.description}>••••••••••</Text>
             <View
               style={{
                 flexDirection: "row",

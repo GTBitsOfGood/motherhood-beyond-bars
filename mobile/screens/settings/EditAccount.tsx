@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Modal,
 } from "react-native";
 import { SettingsStackScreenProps } from "../../types";
 import React, { useContext, useState } from "react";
@@ -20,6 +21,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
+import { getAuth, updateEmail } from "firebase/auth";
 
 const isUniqueEmail = async (email: string) =>
   (
@@ -40,6 +42,7 @@ export default function EditAccount({
   const [last, setLast] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   async function updateCaregiverInfo() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
@@ -49,6 +52,7 @@ export default function EditAccount({
       phoneNumber: phone,
       email: email,
     });
+    // updateEmail(authData, email)
   }
 
   return (
@@ -132,9 +136,66 @@ export default function EditAccount({
                 <Text style={styles.buttonText}>Save Changes</Text>
               </TouchableOpacity>
             </View>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <View
+                style={{
+                  padding: 20,
+                  height: "30%",
+                  marginTop: "auto",
+                  justifyContent: "space-around",
+                  borderRadius: 5,
+                }}
+              >
+                <Text style={styles.title}>Your changes won't be saved.</Text>
+                <Text style={styles.subheader}>
+                  If you return to the previous screen, your changes will not be
+                  saved.
+                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ width: "50%" }}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                        navigation.goBack();
+                      }}
+                    >
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Text style={styles.buttonText}>Don't save</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ width: 10 }}></View>
+                  <View style={{ width: "50%" }}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                      }}
+                    >
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Text style={styles.buttonText}>Keep editing</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
+      <View style={modalVisible && styles.overlay} />
     </View>
   );
 }
@@ -159,6 +220,17 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     fontSize: 16,
     paddingBottom: 8,
+  },
+  subheader: {
+    fontSize: 16,
+    marginBottom: 24,
+  },
+  overlay: {
+    position: "absolute",
+    width: "120%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    opacity: 0.5,
   },
   input: {
     backgroundColor: "#FAFBFC",
