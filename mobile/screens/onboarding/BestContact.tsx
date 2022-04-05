@@ -38,9 +38,33 @@ export default function BestContact({
             onValueChange={(contact) => setContact(contact)}
             value={contact}
           >
-            <RadioButton.Item value="Phone" label="Phone" mode="android" />
-            <RadioButton.Item label="Email" value="Email" mode="android" />
-            <RadioButton.Item label="Text" value="Text" mode="android" />
+            <RadioButton.Item
+              position="leading"
+              value="Phone"
+              label="Phone"
+              mode="android"
+              labelStyle={{
+                textAlign: "left",
+              }}
+            />
+            <RadioButton.Item
+              position="leading"
+              label="Email"
+              value="Email"
+              mode="android"
+              labelStyle={{
+                textAlign: "left",
+              }}
+            />
+            <RadioButton.Item
+              position="leading"
+              label="Text"
+              value="Text"
+              mode="android"
+              labelStyle={{
+                textAlign: "left",
+              }}
+            />
           </RadioButton.Group>
 
           <Button
