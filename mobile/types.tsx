@@ -51,9 +51,9 @@ export type OnboardingParamList = {
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: undefined;
+  ViewImage: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
-  ViewImage: undefined;
   AllDone: undefined;
 };
 

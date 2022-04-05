@@ -96,6 +96,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const authData = useContext(UserContext);
   const { contact } = useContext(SettingsContext);
+  React.useEffect(() => {
+    console.log(authData);
+    
+  },[authData])
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
@@ -250,6 +254,19 @@ function OnboardingNavigator() {
           }
           {
             <Onboarding.Screen
+              name="ViewImage"
+              component={ViewImage}
+              options={{
+                headerTitle: () => (
+                  <View>
+                    <Text>View Selected Image</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Onboarding.Screen
               name="StartBook"
               component={StartBook}
               options={{
@@ -348,6 +365,20 @@ function BookNavigator() {
             <Book.Screen
               name="SelectPicture"
               component={SelectPicture}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Book.Screen
+              name="ViewImage"
+              component={ViewImage}
               options={{
                 headerTitle: () => (
                   // add progress bar/circles and styling here

@@ -13,8 +13,6 @@ import { Baby } from "../../types";
 type Props = OnboardingStackScreenProps<"BabyBookAccess">;
 
 export default function BabyBookAccess({ navigation }: Props) {
-  
-  // const [isSelected, setSelection] = useState(false);
 
   var baby = useContext(BabyContext);
   
@@ -32,8 +30,8 @@ export default function BabyBookAccess({ navigation }: Props) {
             navigation.navigate("StartBook");
           }
         }}
-      /> */}
-      {/* <Text>Access to Baby Book</Text> */}
+      />
+      <Text>Access to Baby Book</Text> */}
       <View style={{ padding: "30%" }}></View>
       <View style={{ padding: 25 }}>
         <Text style={styles.title}>Restricted Access</Text>
