@@ -24,8 +24,8 @@ function SideBar(props: any) {
           </h1>
         </span>
         <ul className="px-[31px] py-[36px] static">
-          {props.items.map((item: any) => (
-            <a href={item.route}>
+          {props.items.map((item: any, idx: number) => (
+            <a key={idx} href={item.route}>
               <li className="flex w-full justify-between text-gray-600 hover:text-gray-500 cursor-pointer items-center mb-6">
                 <div className="flex items-center">
                   <Image src={item.icon} />
