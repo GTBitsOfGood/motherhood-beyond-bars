@@ -55,6 +55,7 @@ import BabyBookAccess from "../screens/babybook/BabyBookAccess";
 import BabyBook from "../screens/babybook/BabyBook";
 import StartBook from "../screens/babybook/StartBook";
 import SelectPicture from "../screens/babybook/SelectPicture";
+import ViewImage from "../screens/babybook/ViewImage";
 
 export default function Navigation({
   colorScheme,
@@ -95,10 +96,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const authData = useContext(UserContext);
   const { contact } = useContext(SettingsContext);
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
@@ -279,6 +276,20 @@ function OnboardingNavigator() {
               }}
             />
           }
+          {
+            <Onboarding.Screen
+              name="ViewImage"
+              component={ViewImage}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
@@ -356,6 +367,20 @@ function BookNavigator() {
                   // add progress bar/circles and styling here
                   <View>
                     <Text>Baby Book</Text>
+                  </View>
+                ),
+              }}
+            />
+          }
+          {
+            <Book.Screen
+              name="ViewImage"
+              component={ViewImage}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
                   </View>
                 ),
               }}

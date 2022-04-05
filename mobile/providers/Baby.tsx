@@ -27,12 +27,9 @@ export const BabyProvider = ({
   const [baby, setBaby] = useState<Baby | null>(null);
 
   useEffect(() => {
-<<<<<<< Updated upstream
-=======
     console.log('userid', userContext?.uid);
     
 
->>>>>>> Stashed changes
     let unsubscribe: (() => void) | null = null;
     async function getData() {
       // Get baby id
