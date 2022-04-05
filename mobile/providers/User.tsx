@@ -24,8 +24,6 @@ export const UserProvider = ({
       onAuthStateChanged(auth, async (user) => {
         console.log("auth state changed");
 
-        console.log(user?.uid);
-
         if (user) {
           const caregiverRef = doc(db, `caregivers/${user.uid}`);
 
