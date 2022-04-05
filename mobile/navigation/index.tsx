@@ -33,8 +33,6 @@ import {
   Platform,
 } from "react-native";
 
-import useColorScheme from "../hooks/useColorScheme";
-
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SignWaiver from "../screens/onboarding/SignWaiver";
@@ -43,7 +41,6 @@ import {
   OnboardingParamList,
   RootStackParamList,
   RootTabParamList,
-  RootTabScreenProps,
   SupportParamList,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -52,7 +49,6 @@ import { useContext } from "react";
 
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
-import InfoScreen from "../screens/onboarding/InfoScreen";
 import RequestItems from "../screens/onboarding/RequestItems";
 import ShippingAddress from "../screens/onboarding/ShippingAddress";
 import BestContact from "../screens/onboarding/BestContact";

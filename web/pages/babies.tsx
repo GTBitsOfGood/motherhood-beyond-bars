@@ -19,7 +19,7 @@ import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
 import AddChildModal from "modals/addChildModal";
 
-type Baby = {
+export type Baby = {
   caretakerName: string;
   caretaker: DocumentReference;
   motherName: string;
@@ -141,9 +141,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const babies = await Promise.all(
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
-
-      console.log(data.caretaker);
-
       let caretaker: {
         firstName: string;
         lastName: string;
