@@ -19,7 +19,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
 import { getAuth, updateEmail } from "firebase/auth";
 
@@ -38,10 +38,12 @@ export default function EditAccount({
   navigation,
 }: SettingsStackScreenProps<"EditAccount">) {
   const authData = useContext(UserContext);
-  const [first, setFirst] = useState("");
-  const [last, setLast] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [first, setFirst] = useState(authData?.caregiver?.firstName as string);
+  const [last, setLast] = useState(authData?.caregiver?.lastName as string);
+  const [email, setEmail] = useState(authData?.caregiver?.email as string);
+  const [phone, setPhone] = useState(
+    authData?.caregiver?.phoneNumber as string
+  );
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updateCaregiverInfo() {

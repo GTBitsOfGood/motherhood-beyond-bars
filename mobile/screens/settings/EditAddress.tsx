@@ -20,11 +20,17 @@ export default function EditAddress({
   navigation,
 }: SettingsStackScreenProps<"EditAddress">) {
   const authData = useContext(UserContext);
-  const [address, setAddress] = useState("");
-  const [apartment, setApartment] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
+  const [address, setAddress] = useState(
+    authData?.caregiver?.address as string
+  );
+  const [apartment, setApartment] = useState(
+    authData?.caregiver?.apartment as string
+  );
+  const [city, setCity] = useState(authData?.caregiver?.city as string);
+  const [state, setState] = useState(authData?.caregiver?.state as string);
+  const [zipCode, setZipCode] = useState(
+    authData?.caregiver?.zipCode as string
+  );
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updateAddress() {
