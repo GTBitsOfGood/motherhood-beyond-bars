@@ -10,40 +10,14 @@ import {
 } from "react-native";
 import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";
-import { Button } from "react-native";
-import { auth, db } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
 //@ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
-
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  Timestamp,
-  setDoc,
-} from "firebase/firestore";
+import { doc, arrayUnion, Timestamp, setDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
-import { Ionicons } from "@expo/vector-icons";
-
-function MyCheckbox({
-  onPress,
-  checked,
-}: {
-  onPress: () => void;
-  checked: boolean;
-}) {
-  return (
-    <Pressable
-      style={[styles.checkboxBase, checked && styles.checkboxChecked]}
-      onPress={onPress}
-    >
-      {checked && <Ionicons name="checkmark" size={15} color="white" />}
-    </Pressable>
-  );
-}
+import Checkbox from "../../components/app/Checkbox";
 
 export default function SignWaiver({
   navigation,
@@ -115,18 +89,6 @@ export default function SignWaiver({
                 {waiver?.content}
               </MarkdownView>
             </ScrollView>
-
-            {/* <View
-              style={[
-                styles.container,
-                {
-                  flexDirection: "row",
-                },
-              ]}
-            >
-              <CheckBox value={isSelected} onValueChange={setSelection} />
-            </View> */}
-
             <View
               style={{
                 flexDirection: "row",
@@ -134,7 +96,7 @@ export default function SignWaiver({
                 paddingTop: 16,
               }}
             >
-              <MyCheckbox
+              <Checkbox
                 onPress={() => setSelection(!isSelected)}
                 checked={isSelected}
               />
@@ -259,19 +221,5 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     width: "100%",
     paddingLeft: 8,
-  },
-  checkboxBase: {
-    width: 16,
-    height: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#304CD1",
-    backgroundColor: "transparent",
-    marginRight: 8,
-  },
-  checkboxChecked: {
-    backgroundColor: "#304CD1",
   },
 });

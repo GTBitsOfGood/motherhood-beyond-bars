@@ -2,14 +2,13 @@ import { View } from "../../components/Themed";
 import {
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
 } from "react-native";
 import { SettingsStackScreenProps } from "../../types";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { UserContext } from "../../providers/User";
 import { auth } from "../../config/firebase";
 import { signOut } from "firebase/auth";
