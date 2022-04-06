@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { Text, View } from "../../components/Themed";
 import {
   StyleSheet,
-  Pressable,
   TextInput,
   ScrollView,
   Modal,
@@ -12,29 +11,12 @@ import {
 } from "react-native";
 import { db } from "../../config/firebase";
 import { SupportStackScreenProps } from "../../types";
-import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../../providers/settings";
 import { arrayUnion, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
+import Checkbox from "../../components/app/Checkbox";
 
 type Props = SupportStackScreenProps<"RequestItemsScreen">;
-
-function MyCheckbox({
-  onPress,
-  checked,
-}: {
-  onPress: () => void;
-  checked: boolean;
-}) {
-  return (
-    <Pressable
-      style={[styles.checkboxBase, checked && styles.checkboxChecked]}
-      onPress={onPress}
-    >
-      {checked && <Ionicons name="checkmark" size={15} color="white" />}
-    </Pressable>
-  );
-}
 
 export default function SupportScreen({ navigation }: Props) {
   const settings = useContext(SettingsContext);
@@ -114,7 +96,7 @@ export default function SupportScreen({ navigation }: Props) {
               item.onboarding ? null : (
                 <View style={styles.item} key={idx}>
                   <View style={styles.checkboxContainer}>
-                    <MyCheckbox
+                    <Checkbox
                       onPress={() => toggleItem(idx)}
                       checked={itemsCount[idx]}
                     />
@@ -130,7 +112,7 @@ export default function SupportScreen({ navigation }: Props) {
             )}
             <View style={styles.item}>
               <View style={styles.checkboxContainer}>
-                <MyCheckbox
+                <Checkbox
                   onPress={() => toggleItem(length - 1)}
                   checked={itemsCount[length - 1]}
                 />
@@ -278,20 +260,6 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginBottom: 12,
     marginRight: 16,
-  },
-  checkboxBase: {
-    width: 16,
-    height: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#304CD1",
-    backgroundColor: "transparent",
-    marginRight: 8,
-  },
-  checkboxChecked: {
-    backgroundColor: "#304CD1",
   },
   checkboxContainer: {
     flexDirection: "row",
