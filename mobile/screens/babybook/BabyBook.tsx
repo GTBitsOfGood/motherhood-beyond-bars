@@ -7,16 +7,20 @@ import * as ImagePicker from "expo-image-picker";
 type Props = BookStackScreenProps<"BabyBook">;
 
 export default function BabyBook({ navigation }: Props) {
-  let openImagePickerAsync = async () => {
-    let permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const [image, setImage] = useState<string | null>(null);
 
-    if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
-      return;
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
     }
-
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
 
     navigation.navigate("SelectPicture");
   };
@@ -28,17 +32,14 @@ export default function BabyBook({ navigation }: Props) {
         <Text>Birthday 00/00/0000</Text>
       </View>
       <View style={{ padding: "30%" }}></View>
-      <View style={{ padding: 25 }}>
+      <View style={{ padding: 15 }}>
         <Text style={styles.center}>No Photos Yet</Text>
         <Text style={{ textAlign: "center" }}>
           Get started by tapping this button to add a photo of Jordan!
         </Text>
       </View>
-      <View style={{ paddingLeft: "75%" }}>
-        <TouchableOpacity
-          onPress={openImagePickerAsync}
-          style={styles.roundButton1}
-        >
+      <View style={{ position: "absolute", bottom: 15, left: 300 }}>
+        <TouchableOpacity onPress={pickImage} style={styles.roundButton1}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   thumbnail: {
-    width: 300,
-    height: 300,
+    width: 100,
+    height: 150,
     resizeMode: "contain",
   },
 });

@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { OnboardingStackScreenProps } from "../../types";
+import { Caregiver, OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
-import Checkbox from "expo-checkbox";
+import Checkbox from "../../components/app/Checkbox";
 
 export default function ShippingAddress({
   navigation,
@@ -36,8 +36,8 @@ export default function ShippingAddress({
       city: city,
       state: state,
       zipCode: zipCode,
-      // save address feature is not yet implemented
-    });
+      saveAddressForFutureDelivery: save,
+    } as Partial<Caregiver>);
   }
 
   useEffect(() => {
@@ -105,11 +105,11 @@ export default function ShippingAddress({
 
             <View style={{ flexDirection: "row" }}>
               <Checkbox
-                value={save}
-                onValueChange={() => {
+                checked={save}
+                onPress={() => {
                   setSave(!save);
                 }}
-              ></Checkbox>
+              />
               <Text style={{ paddingLeft: 5 }}>
                 Save address for future deliveries
               </Text>

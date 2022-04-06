@@ -7,7 +7,6 @@ import {
   ScrollView,
   Keyboard,
   TouchableWithoutFeedback,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
@@ -15,27 +14,11 @@ import React, { useContext, useState } from "react";
 import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
-import { Ionicons } from "@expo/vector-icons";
+import Checkbox from "../../components/app/Checkbox";
+
 import { SettingsContext } from "../../providers/settings";
 import ThumbsUpSVG from "../../assets/images/thumbsup";
 import ThumbsDownSVG from "../../assets/images/thumbsdown";
-
-function MyCheckbox({
-  onPress,
-  checked,
-}: {
-  onPress: () => void;
-  checked: boolean;
-}) {
-  return (
-    <Pressable
-      style={[styles.checkboxBase, checked && styles.checkboxChecked]}
-      onPress={onPress}
-    >
-      {checked && <Ionicons name="checkmark" size={15} color="white" />}
-    </Pressable>
-  );
-}
 
 export default function RequestedItems({
   navigation,
@@ -157,9 +140,9 @@ export default function RequestedItems({
                 <View style={styles.item} key={idx}>
                   <View style={styles.checkboxContainer}>
                     {item.itemName === "beginBox" ? (
-                      <MyCheckbox checked={true} onPress={() => null} />
+                      <Checkbox checked={true} onPress={() => null} />
                     ) : (
-                      <MyCheckbox
+                      <Checkbox
                         onPress={() => toggleItem(idx)}
                         checked={itemsCount[idx]}
                       />
@@ -210,7 +193,7 @@ export default function RequestedItems({
             )}
             <View style={styles.item}>
               <View style={styles.checkboxContainer}>
-                <MyCheckbox
+                <Checkbox
                   onPress={() => toggleItem(length - 1)}
                   checked={itemsCount[length - 1]}
                 />
@@ -386,20 +369,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginRight: 16,
   },
-  checkboxBase: {
-    width: 16,
-    height: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#304CD1",
-    backgroundColor: "transparent",
-    marginRight: 8,
-  },
-  checkboxChecked: {
-    backgroundColor: "#304CD1",
-  },
+
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",

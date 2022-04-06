@@ -33,8 +33,6 @@ import {
   Platform,
 } from "react-native";
 
-import useColorScheme from "../hooks/useColorScheme";
-
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SignWaiver from "../screens/onboarding/SignWaiver";
@@ -44,7 +42,6 @@ import {
   ResourcesParamList,
   RootStackParamList,
   RootTabParamList,
-  RootTabScreenProps,
   SettingsParamList,
   SupportParamList,
 } from "../types";
@@ -54,7 +51,6 @@ import { useContext } from "react";
 
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
-import InfoScreen from "../screens/onboarding/InfoScreen";
 import RequestItems from "../screens/onboarding/RequestItems";
 import ShippingAddress from "../screens/onboarding/ShippingAddress";
 import BestContact from "../screens/onboarding/BestContact";
@@ -451,8 +447,6 @@ function BookNavigator() {
 const Support = createNativeStackNavigator<SupportParamList>();
 
 function SupportNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <Support.Navigator>
       <Support.Screen
@@ -466,7 +460,7 @@ function SupportNavigator() {
         name="RequestItemsScreen"
         component={RequestItemsScreen}
         options={{
-          headerTitle: () => <View></View>,
+          headerShown: true,
         }}
       />
     </Support.Navigator>
@@ -533,8 +527,6 @@ function ResourcesNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
