@@ -12,7 +12,11 @@ import {
 import { SettingsStackScreenProps } from "../../types";
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../providers/User";
-import { updatePassword } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from "firebase/auth";
 import { auth } from "../../config/firebase";
 
 export default function EditPassword({
@@ -25,8 +29,28 @@ export default function EditPassword({
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updatePass() {
-    if (auth.currentUser) {
-      updatePassword(auth.currentUser, newPassword);
+    if (auth.currentUser && auth.currentUser.email) {
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser.email,
+        oldPassword
+      );
+
+      reauthenticateWithCredential(auth.currentUser, credential)
+        .then(function () {
+          // update password
+          if (newPassword === confirmPassword && auth.currentUser) {
+            updatePassword(auth.currentUser, newPassword);
+            navigation.navigate("AccountInfo");
+          } else {
+            alert("passwords do not match");
+          }
+        })
+        .catch(function (e) {
+          // wrong old password
+          if (e.code === "auth/wrong-password") {
+            alert("wrong password");
+          }
+        });
     }
   }
 
@@ -108,7 +132,6 @@ export default function EditPassword({
                       style={styles.button}
                       onPress={() => {
                         setModalVisible(!modalVisible);
-                        navigation.goBack();
                       }}
                     >
                       <View

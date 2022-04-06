@@ -395,48 +395,28 @@ function BookNavigator() {
           name="BabyBookAccess"
           component={BabyBookAccess}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Baby Book Access</Text>
-              </View>
-            ),
+            headerShown: false,
           }}
         />
         <Book.Screen
           name="StartBook"
           component={StartBook}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Start A Baby Book</Text>
-              </View>
-            ),
+            header: () => <View></View>,
           }}
         />
         <Book.Screen
           name="SelectPicture"
           component={SelectPicture}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Picture and Caption</Text>
-              </View>
-            ),
+            header: () => <View></View>,
           }}
         />
         <Book.Screen
           name="BabyBook"
           component={BabyBook}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Baby Book</Text>
-              </View>
-            ),
+            header: () => <View></View>,
           }}
         />
       </>
@@ -460,10 +440,26 @@ function SupportNavigator() {
         name="RequestItemsScreen"
         component={RequestItemsScreen}
         options={{
-          headerShown: true,
+          header: () => <View></View>,
         }}
       />
     </Support.Navigator>
+  );
+}
+
+const Resources = createNativeStackNavigator<ResourcesParamList>();
+
+function ResourcesNavigator() {
+  return (
+    <Resources.Navigator>
+      <Resources.Screen
+        name="General"
+        component={General}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Resources.Navigator>
   );
 }
 
@@ -501,22 +497,6 @@ function SettingsNavigator() {
         }}
       />
     </Settings.Navigator>
-  );
-}
-
-const Resources = createNativeStackNavigator<ResourcesParamList>();
-
-function ResourcesNavigator() {
-  return (
-    <Resources.Navigator>
-      <Resources.Screen
-        name="General"
-        component={General}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </Resources.Navigator>
   );
 }
 
@@ -589,14 +569,4 @@ function BottomTabNavigator() {
       />
     </BottomTab.Navigator>
   );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }

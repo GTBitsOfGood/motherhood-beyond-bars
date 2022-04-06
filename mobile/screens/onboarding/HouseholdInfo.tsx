@@ -71,7 +71,6 @@ export default function HouseholdInfo({
             <Text style={styles.description}>Ages of Children</Text>
             <TextInput
               style={styles.input}
-              keyboardType="numeric"
               onChangeText={(ages) => {
                 setAges(ages);
               }}

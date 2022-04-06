@@ -10,7 +10,7 @@ import {
   Modal,
 } from "react-native";
 import { SettingsStackScreenProps } from "../../types";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   collection,
   query,
@@ -21,7 +21,9 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
-import { getAuth, updateEmail } from "firebase/auth";
+import { updateEmail } from "firebase/auth";
+import { BackHandler } from "react-native";
+import RequiredField from "../../components/app/RequiredField";
 
 const isUniqueEmail = async (email: string) =>
   (
@@ -39,11 +41,15 @@ export default function EditAccount({
 }: SettingsStackScreenProps<"EditAccount">) {
   const authData = useContext(UserContext);
   const [first, setFirst] = useState(authData?.caregiver?.firstName as string);
+  const [firstEmpty, setFirstEmpty] = useState(false);
   const [last, setLast] = useState(authData?.caregiver?.lastName as string);
+  const [lastEmpty, setLastEmpty] = useState(false);
   const [email, setEmail] = useState(authData?.caregiver?.email as string);
+  const [emailEmpty, setEmailEmpty] = useState(false);
   const [phone, setPhone] = useState(
     authData?.caregiver?.phoneNumber as string
   );
+  const [phoneEmpty, setPhoneEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updateCaregiverInfo() {
@@ -54,8 +60,21 @@ export default function EditAccount({
       phoneNumber: phone,
       email: email,
     });
-    // updateEmail(authData, email)
+    if (auth.currentUser) {
+      updateEmail(auth.currentUser, email);
+    }
   }
+
+  useEffect(() => {
+    // const gestureEndListener = (e: any) => {
+    //   e.preventDefault();
+    //   setModalVisible(!modalVisible);
+    // };
+    // navigation.addListener("beforeRemove", gestureEndListener);
+    // return () => {
+    //   navigation.removeListener("beforeRemove", gestureEndListener);
+    // };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -66,21 +85,25 @@ export default function EditAccount({
             <Text style={styles.description}>First Name</Text>
             <TextInput
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, firstEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(first) => {
+                setFirstEmpty(first === "" ? true : false);
                 setFirst(first);
               }}
               defaultValue={authData?.caregiver?.firstName}
             />
+            {firstEmpty && <RequiredField />}
             <Text style={styles.description}>Last Name</Text>
             <TextInput
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, lastEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(last) => {
+                setLastEmpty(last === "" ? true : false);
                 setLast(last);
               }}
               defaultValue={authData?.caregiver?.lastName}
             />
+            {lastEmpty && <RequiredField />}
             <Text style={styles.description}>Email</Text>
             <TextInput
               placeholder="email"
@@ -88,22 +111,26 @@ export default function EditAccount({
               keyboardType="email-address"
               autoCapitalize="none"
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, emailEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(email) => {
+                setEmailEmpty(email === "" ? true : false);
                 setEmail(email);
               }}
               defaultValue={authData?.caregiver?.email}
             />
+            {emailEmpty && <RequiredField />}
             <Text style={styles.description}>Phone Number</Text>
             <TextInput
               keyboardType="numeric"
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, phoneEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(phone) => {
+                setPhoneEmpty(phone === "" ? true : false);
                 setPhone(phone);
               }}
               defaultValue={authData?.caregiver?.phoneNumber}
             />
+            {phoneEmpty && <RequiredField />}
             <View
               style={{
                 flexDirection: "row",
@@ -123,21 +150,31 @@ export default function EditAccount({
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
-                  if (!(await isUniqueEmail(email))) {
-                    alert("Email already in use. Try logging in instead.");
-                  } else if (!isValidEmail(email)) {
-                    alert("Invalid email address.");
-                  } else if (!isValidPhoneNumber(phone)) {
-                    alert("Invalid phone number");
+                  if (
+                    first === "" ||
+                    last === "" ||
+                    email === "" ||
+                    phone === ""
+                  ) {
+                    alert("Please fill out required fields.");
                   } else {
-                    await updateCaregiverInfo();
-                    navigation.navigate("AccountInfo");
+                    if (!(await isUniqueEmail(email))) {
+                      alert("Email already in use. Try logging in instead.");
+                    } else if (!isValidEmail(email)) {
+                      alert("Invalid email address.");
+                    } else if (!isValidPhoneNumber(phone)) {
+                      alert("Invalid phone number");
+                    } else {
+                      await updateCaregiverInfo();
+                      navigation.navigate("AccountInfo");
+                    }
                   }
                 }}
               >
                 <Text style={styles.buttonText}>Save Changes</Text>
               </TouchableOpacity>
             </View>
+
             <Modal
               animationType="slide"
               transparent={true}

@@ -50,7 +50,7 @@ export default function EditAddress({
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.inner}>
             <Text style={styles.title}>Edit Account Information</Text>
-            <Text style={styles.description}>First Name</Text>
+            <Text style={styles.description}>Street Name</Text>
             <TextInput
               autoFocus={true}
               style={styles.input}
@@ -137,7 +137,7 @@ export default function EditAddress({
                       style={styles.button}
                       onPress={() => {
                         setModalVisible(!modalVisible);
-                        navigation.goBack();
+                        navigation.navigate("AccountInfo");
                       }}
                     >
                       <View
