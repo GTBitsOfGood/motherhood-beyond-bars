@@ -12,7 +12,7 @@ import {
 import { Book, OnboardingStackScreenProps } from "../../types";
 import * as ImagePicker from "expo-image-picker";
 import { BabyContext } from "../../providers/Baby";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query, Timestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import ViewImage from "./ViewImage";
 
@@ -49,9 +49,33 @@ export default function BabyBook({ navigation }: Props) {
     navigation.navigate("ViewImage")
   }
 
-  function categorizePics() {
-    book.forEach
+  let picDict = new Map<string, Book[]>();
+
+  function findTime(d: Timestamp) {
+    var timestemp = new Date( d["seconds"]*1000 );
+    var m = timestemp.getMonth() + 1
+    var y = timestemp.getFullYear()
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    return months[m] + " " + y.toString()
   }
+
+  function categorizePics() {
+    book.forEach((e) => {
+        var date = findTime(e.date);
+        if (picDict.get(date) != undefined) {
+          var oldVal = picDict.get(date)
+          oldVal.push(e)
+          picDict.set(date, oldVal)
+        } else {
+          let arr: Book[] = []
+          arr.push(e)
+          picDict.set(date, arr)
+        }
+    })
+  }
+
+  categorizePics()
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -61,8 +85,6 @@ export default function BabyBook({ navigation }: Props) {
       aspect: [3, 2],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -93,9 +115,16 @@ export default function BabyBook({ navigation }: Props) {
         <View>
           <View style={{paddingTop:25}}></View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', width: (book.length * 83.33) + ((book.length - 1)*5), alignSelf: "flex-start"}}>
-            {book.map((i) => <TouchableHighlight onPress={() => goToView(i)}>
+            {picDict.forEach((key,val) => 
+              <View>
+                <Text>{val}</Text>
+                {key.map((i) => <TouchableHighlight onPress={() => goToView(i)}>
+                  <Image source={{ uri: i.imageURL }} style={styles.image} />
+                </TouchableHighlight>)}
+              </View>)}
+              {/* {book.map((i) => <TouchableHighlight onPress={() => goToView(i)}>
             <Image source={{ uri: i.imageURL }} style={styles.image} />
-              </TouchableHighlight>)}
+              </TouchableHighlight>)} */}
           </View>
         </View>
       )
@@ -106,16 +135,12 @@ export default function BabyBook({ navigation }: Props) {
   var date = timestemp.getDate()
   var month = timestemp.getMonth() + 1
   var year = timestemp.getFullYear()
-  
-
-
 
   return (
     <View style={styles.container}>
         <Text style={styles.title}>{babyContext?.firstName} {babyContext?.lastName}'s Album</Text>
         <Text>Birthday: {month}/{date}/{year}</Text>
       {body()}
-      
       <View style={{position: 'absolute', bottom: 15, left: 300}}>
         <TouchableOpacity
           onPress={pickImage}

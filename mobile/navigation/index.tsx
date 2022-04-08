@@ -279,34 +279,6 @@ function OnboardingNavigator() {
               }}
             />
           }
-          {
-            <Onboarding.Screen
-              name="SelectPicture"
-              component={SelectPicture}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Picture and Caption</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Onboarding.Screen
-              name="ViewImage"
-              component={ViewImage}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Picture and Caption</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
@@ -398,20 +370,6 @@ function BookNavigator() {
                   // add progress bar/circles and styling here
                   <View>
                     <Text>Baby Book</Text>
-                  </View>
-                ),
-              }}
-            />
-          }
-          {
-            <Book.Screen
-              name="ViewImage"
-              component={ViewImage}
-              options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Picture and Caption</Text>
                   </View>
                 ),
               }}
