@@ -1,12 +1,10 @@
 import {
   StyleSheet,
   TextInput,
-  Switch,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
-  Pressable,
 } from "react-native";
 import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";

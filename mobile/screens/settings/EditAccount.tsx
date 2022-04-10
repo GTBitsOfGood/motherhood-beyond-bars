@@ -21,9 +21,13 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
-import { updateEmail } from "firebase/auth";
-import { BackHandler } from "react-native";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updateEmail,
+} from "firebase/auth";
 import RequiredField from "../../components/app/RequiredField";
+import { AntDesign } from "@expo/vector-icons";
 
 const isUniqueEmail = async (email: string) =>
   (
@@ -46,6 +50,8 @@ export default function EditAccount({
   const [lastEmpty, setLastEmpty] = useState(false);
   const [email, setEmail] = useState(authData?.caregiver?.email as string);
   const [emailEmpty, setEmailEmpty] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordEmpty, setPasswordEmpty] = useState(false);
   const [phone, setPhone] = useState(
     authData?.caregiver?.phoneNumber as string
   );
@@ -54,30 +60,50 @@ export default function EditAccount({
 
   async function updateCaregiverInfo() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+    if (auth.currentUser && auth.currentUser.email) {
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser.email,
+        password
+      );
+      reauthenticateWithCredential(auth.currentUser, credential)
+        .then(function () {
+          // update email
+          if (auth.currentUser) {
+            if (email != (authData?.caregiver?.email as string)) {
+              updateEmail(auth.currentUser, email);
+            }
+            navigation.navigate("AccountInfo");
+          }
+        })
+        .catch(function (e) {
+          alert(e);
+          if (auth.currentUser && auth.currentUser.email) {
+            setEmail(auth.currentUser.email);
+          }
+          // wrong old password
+          if (e.code === "auth/wrong-password") {
+            alert("wrong password");
+          }
+        });
+    }
     updateDoc(caregiverDoc, {
       firstName: first,
       lastName: last,
       phoneNumber: phone,
       email: email,
     });
-    if (auth.currentUser) {
-      updateEmail(auth.currentUser, email);
-    }
   }
-
-  useEffect(() => {
-    // const gestureEndListener = (e: any) => {
-    //   e.preventDefault();
-    //   setModalVisible(!modalVisible);
-    // };
-    // navigation.addListener("beforeRemove", gestureEndListener);
-    // return () => {
-    //   navigation.removeListener("beforeRemove", gestureEndListener);
-    // };
-  }, []);
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{ paddingLeft: 10, paddingTop: 10 }}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <AntDesign name="left" size={30} color="black" />
+      </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.inner}>
@@ -87,7 +113,7 @@ export default function EditAccount({
               autoFocus={true}
               style={[styles.input, firstEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(first) => {
-                setFirstEmpty(first === "" ? true : false);
+                first !== "" && setFirstEmpty(false);
                 setFirst(first);
               }}
               defaultValue={authData?.caregiver?.firstName}
@@ -98,7 +124,7 @@ export default function EditAccount({
               autoFocus={true}
               style={[styles.input, lastEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(last) => {
-                setLastEmpty(last === "" ? true : false);
+                last !== "" && setLastEmpty(false);
                 setLast(last);
               }}
               defaultValue={authData?.caregiver?.lastName}
@@ -113,19 +139,41 @@ export default function EditAccount({
               autoFocus={true}
               style={[styles.input, emailEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(email) => {
-                setEmailEmpty(email === "" ? true : false);
+                email !== "" && setEmailEmpty(false) && setPasswordEmpty(false);
                 setEmail(email);
               }}
               defaultValue={authData?.caregiver?.email}
             />
             {emailEmpty && <RequiredField />}
+            {email != (authData?.caregiver?.email as string) && (
+              <View>
+                <Text style={[styles.description, { fontSize: 14 }]}>
+                  Please confirm your password
+                </Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    passwordEmpty && { borderColor: "#FF3939" },
+                  ]}
+                  onChangeText={(password) => {
+                    password !== "" && setPasswordEmpty(false);
+                    setPassword(password);
+                  }}
+                  autoCompleteType="password"
+                  secureTextEntry={true}
+                  placeholder="Type your current password"
+                />
+              </View>
+            )}
+            {email != (authData?.caregiver?.email as string) &&
+              passwordEmpty && <RequiredField />}
             <Text style={styles.description}>Phone Number</Text>
             <TextInput
               keyboardType="numeric"
               autoFocus={true}
               style={[styles.input, phoneEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(phone) => {
-                setPhoneEmpty(phone === "" ? true : false);
+                phone !== "" && setPhoneEmpty(false);
                 setPhone(phone);
               }}
               defaultValue={authData?.caregiver?.phoneNumber}
@@ -154,11 +202,22 @@ export default function EditAccount({
                     first === "" ||
                     last === "" ||
                     email === "" ||
-                    phone === ""
+                    phone === "" ||
+                    (email != (authData?.caregiver?.email as string) &&
+                      password === "")
                   ) {
-                    alert("Please fill out required fields.");
+                    first === "" && setFirstEmpty(true);
+                    last === "" && setLastEmpty(true);
+                    email === "" && setEmailEmpty(true);
+                    phone === "" && setPhoneEmpty(true);
+                    email != (authData?.caregiver?.email as string) &&
+                      password === "" &&
+                      setPasswordEmpty(true);
                   } else {
-                    if (!(await isUniqueEmail(email))) {
+                    if (
+                      email != (authData?.caregiver?.email as string) &&
+                      !(await isUniqueEmail(email))
+                    ) {
                       alert("Email already in use. Try logging in instead.");
                     } else if (!isValidEmail(email)) {
                       alert("Invalid email address.");
@@ -166,7 +225,6 @@ export default function EditAccount({
                       alert("Invalid phone number");
                     } else {
                       await updateCaregiverInfo();
-                      navigation.navigate("AccountInfo");
                     }
                   }
                 }}
@@ -203,7 +261,7 @@ export default function EditAccount({
                       style={styles.button}
                       onPress={() => {
                         setModalVisible(!modalVisible);
-                        navigation.goBack();
+                        navigation.navigate("AccountInfo");
                       }}
                     >
                       <View
@@ -252,7 +310,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    paddingTop: 28,
     paddingBottom: 6,
   },
   description: {

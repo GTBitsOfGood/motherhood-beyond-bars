@@ -18,14 +18,19 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { auth } from "../../config/firebase";
+import { AntDesign } from "@expo/vector-icons";
+import RequiredField from "../../components/app/RequiredField";
 
 export default function EditPassword({
   navigation,
 }: SettingsStackScreenProps<"EditPassword">) {
   const authData = useContext(UserContext);
   const [oldPassword, setOldPassword] = useState("");
+  const [oldEmpty, setOldEmpty] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+  const [newEmpty, setNewEmpty] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmEmpty, setConfirmEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updatePass() {
@@ -56,6 +61,14 @@ export default function EditPassword({
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{ paddingLeft: 10, paddingTop: 10 }}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <AntDesign name="left" size={30} color="black" />
+      </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.inner}>
@@ -63,42 +76,58 @@ export default function EditPassword({
             <Text style={styles.description}>Old Password</Text>
             <TextInput
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, oldEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(oldPassword) => {
+                oldPassword !== "" && setOldEmpty(false);
                 setOldPassword(oldPassword);
               }}
               autoCompleteType="password"
               secureTextEntry={true}
               placeholder="Type your current password"
             />
+            {oldEmpty && <RequiredField />}
             <Text style={styles.description}>New Password</Text>
             <TextInput
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, newEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(newPassword) => {
+                newPassword !== "" && setNewEmpty(false);
                 setNewPassword(newPassword);
               }}
               autoCompleteType="password"
               secureTextEntry={true}
               placeholder="Create a new secure password"
             />
+            {newEmpty && <RequiredField />}
             <Text style={styles.description}>Confirm New Password</Text>
             <TextInput
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, confirmEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(confirmPassword) => {
+                confirmPassword !== "" && setConfirmEmpty(false);
                 setConfirmPassword(confirmPassword);
               }}
               autoCompleteType="password"
               secureTextEntry={true}
               placeholder="Confirm your password"
             />
+            {confirmEmpty && <RequiredField />}
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
-                  updatePass();
-                  navigation.navigate("AccountInfo");
+                  if (
+                    oldPassword === "" ||
+                    newPassword === "" ||
+                    confirmPassword === ""
+                  ) {
+                    oldPassword === "" && setOldEmpty(true);
+                    newPassword === "" && setNewEmpty(true);
+                    confirmPassword === "" && setConfirmEmpty(true);
+                  } else {
+                    updatePass();
+                    navigation.navigate("AccountInfo");
+                  }
                 }}
               >
                 <Text style={styles.buttonText}>Change Password</Text>
@@ -131,6 +160,7 @@ export default function EditPassword({
                     <TouchableOpacity
                       style={styles.button}
                       onPress={() => {
+                        navigation.navigate("AccountInfo");
                         setModalVisible(!modalVisible);
                       }}
                     >
@@ -180,7 +210,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    paddingTop: 28,
     paddingBottom: 6,
   },
   description: {

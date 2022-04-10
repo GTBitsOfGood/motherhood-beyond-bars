@@ -2,16 +2,13 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import {
   collection,
   doc,
-  getDoc,
   limit,
   onSnapshot,
   query,
-  setDoc,
   where,
 } from "firebase/firestore";
-import { getMetadata } from "firebase/storage";
 import React, { useEffect, useState } from "react";
-import { auth, db } from "../config/firebase";
+import { db } from "../config/firebase";
 import { Baby } from "../types";
 import { UserContext } from "./User";
 

@@ -1,22 +1,10 @@
 import { View } from "../../components/Themed";
-import {
-  Button,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { RadioButton } from "react-native-paper";
 
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 
@@ -48,8 +36,8 @@ export default function BestContact({
               position="leading"
               value="Phone"
               label="Phone"
-              mode="android"
               color="#304CD1"
+              mode="android"
               labelStyle={{
                 textAlign: "left",
               }}

@@ -14,7 +14,9 @@ import React, { useContext, useState } from "react";
 import { UserContext } from "../../providers/User";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
-// import SelectUSState from 'react-select-us-states';
+import States from "../../components/app/States";
+import { AntDesign } from "@expo/vector-icons";
+import RequiredField from "../../components/app/RequiredField";
 
 export default function EditAddress({
   navigation,
@@ -23,14 +25,18 @@ export default function EditAddress({
   const [address, setAddress] = useState(
     authData?.caregiver?.address as string
   );
+  const [addressEmpty, setAddressEmpty] = useState(false);
   const [apartment, setApartment] = useState(
     authData?.caregiver?.apartment as string
   );
   const [city, setCity] = useState(authData?.caregiver?.city as string);
+  const [cityEmpty, setCityEmpty] = useState(false);
   const [state, setState] = useState(authData?.caregiver?.state as string);
+  const [stateEmpty, setStateEmpty] = useState(false);
   const [zipCode, setZipCode] = useState(
     authData?.caregiver?.zipCode as string
   );
+  const [zipEmpty, setZipEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updateAddress() {
@@ -46,20 +52,30 @@ export default function EditAddress({
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{ paddingLeft: 10, paddingTop: 10 }}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <AntDesign name="left" size={30} color="black" />
+      </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.inner}>
-            <Text style={styles.title}>Edit Account Information</Text>
+            <Text style={styles.title}>Edit Address</Text>
             <Text style={styles.description}>Street Name</Text>
             <TextInput
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, addressEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(address) => {
+                address !== "" && setAddressEmpty(false);
                 setAddress(address);
               }}
               placeholder="Street number and name"
               defaultValue={authData?.caregiver?.address}
             />
+            {addressEmpty && <RequiredField />}
             <Text style={styles.description}>Apartment/Suite (Optional)</Text>
             <TextInput
               autoFocus={true}
@@ -73,37 +89,47 @@ export default function EditAddress({
             <Text style={styles.description}>City</Text>
             <TextInput
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, cityEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(city) => {
+                city !== "" && setCityEmpty(false);
                 setCity(city);
               }}
               defaultValue={authData?.caregiver?.city}
             />
+            {cityEmpty && <RequiredField />}
             <Text style={styles.description}>State</Text>
-            <TextInput
-              autoFocus={true}
-              style={styles.input}
-              onChangeText={(state) => {
-                setState(state);
-              }}
-              defaultValue={authData?.caregiver?.state}
-            />
+            <States state={state} setState={setState}></States>
+            {stateEmpty && <RequiredField />}
             <Text style={styles.description}>Zip Code</Text>
             <TextInput
               keyboardType="numeric"
               autoFocus={true}
-              style={styles.input}
+              style={[styles.input, zipEmpty && { borderColor: "#FF3939" }]}
               onChangeText={(zipCode) => {
+                zipCode !== "" && setZipEmpty(false);
                 setZipCode(zipCode);
               }}
               defaultValue={authData?.caregiver?.zipCode}
             />
+            {zipEmpty && <RequiredField />}
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
-                  await updateAddress();
-                  navigation.navigate("AccountInfo");
+                  if (
+                    address === "" ||
+                    city === "" ||
+                    state === "" ||
+                    zipCode === ""
+                  ) {
+                    address === "" && setAddressEmpty(true);
+                    city === "" && setCityEmpty(true);
+                    state === "" && setStateEmpty(true);
+                    zipCode === "" && setZipEmpty(true);
+                  } else {
+                    await updateAddress();
+                    navigation.navigate("AccountInfo");
+                  }
                 }}
               >
                 <Text style={styles.buttonText}>Save Changes</Text>
@@ -184,7 +210,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
     paddingBottom: 6,
   },

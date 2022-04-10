@@ -12,7 +12,7 @@ import { OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
 export default function HouseholdInfo({

@@ -440,7 +440,8 @@ function SupportNavigator() {
         name="RequestItemsScreen"
         component={RequestItemsScreen}
         options={{
-          header: () => <View></View>,
+          headerShown: true,
+          headerTitle: "",
         }}
       />
     </Support.Navigator>
@@ -479,21 +480,21 @@ function SettingsNavigator() {
         name="EditAccount"
         component={EditAccount}
         options={{
-          headerTitle: () => <View></View>,
+          headerShown: false,
         }}
       />
       <Settings.Screen
         name="EditPassword"
         component={EditPassword}
         options={{
-          headerTitle: () => <View></View>,
+          headerShown: false,
         }}
       />
       <Settings.Screen
         name="EditAddress"
         component={EditAddress}
         options={{
-          headerTitle: () => <View></View>,
+          headerShown: false,
         }}
       />
     </Settings.Navigator>
