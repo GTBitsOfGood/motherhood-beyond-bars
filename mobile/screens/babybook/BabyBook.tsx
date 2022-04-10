@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  ScrollView
 } from "react-native";
 import { Book, OnboardingStackScreenProps } from "../../types";
 import { BookStackScreenProps } from "../../types";
@@ -16,6 +17,7 @@ import { BabyContext } from "../../providers/Baby";
 import { collection, getDocs, limit, orderBy, query, Timestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import ViewImage from "./ViewImage";
+import { lightGreenA700 } from "react-native-paper/lib/typescript/styles/colors";
 
 type Props = OnboardingStackScreenProps<"BabyBook">;
 
@@ -50,7 +52,7 @@ export default function BabyBook({ navigation }: Props) {
     navigation.navigate("ViewImage")
   }
 
-  let picDict = new Map<string, Book[]>();
+  let picDict = new Map<string, Book[][]>();
 
   function findTime(d: Timestamp) {
     var timestemp = new Date( d["seconds"]*1000 );
@@ -64,13 +66,25 @@ export default function BabyBook({ navigation }: Props) {
   function categorizePics() {
     book.forEach((e) => {
         var date = findTime(e.date);
-        if (picDict.get(date) != undefined) {
-          var oldVal = picDict.get(date)
-          oldVal.push(e)
+        var oldVal = picDict.get(date)
+        
+        if (oldVal != undefined) {
+          var end = oldVal[oldVal.length - 1]
+          if (end.length == 4){
+            let a: Book[] = []
+            a.push(e)
+            oldVal.push(a)
+          } else {
+            var last = oldVal.pop()
+            last?.push(e)
+            oldVal.push(last)
+          }
           picDict.set(date, oldVal)
         } else {
-          let arr: Book[] = []
-          arr.push(e)
+          let arr: Book[][] = []
+          let a: Book[] = []
+          a.push(e)
+          arr.push(a)
           picDict.set(date, arr)
         }
     })
@@ -98,6 +112,8 @@ export default function BabyBook({ navigation }: Props) {
     navigation.navigate("SelectPicture");
   };
 
+  var array = Array.from(picDict, ([v,k]) => ({ v, k }));
+
   function body() {
     if (book.length == 0) {
       return (
@@ -115,18 +131,20 @@ export default function BabyBook({ navigation }: Props) {
       return (
         <View>
           <View style={{paddingTop:25}}></View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', width: (book.length * 83.33) + ((book.length - 1)*5), alignSelf: "flex-start"}}>
-            {picDict.forEach((key,val) => 
+          <ScrollView>
+              {array.map((e) => 
               <View>
-                <Text>{val}</Text>
-                {key.map((i) => <TouchableHighlight onPress={() => goToView(i)}>
-                  <Image source={{ uri: i.imageURL }} style={styles.image} />
-                </TouchableHighlight>)}
+                <Text style={{fontWeight: 'bold'}}>{e.v}</Text>
+                  {e.k.map((i) =>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between', alignSelf: "flex-start"}}>
+                    {i.map((a) => 
+                      <TouchableHighlight style={{paddingRight:5}} onPress={() => goToView(a)}>
+                        <Image source={{ uri: a.imageURL }} style={styles.image} />
+                      </TouchableHighlight>)}
+                </View>)}
+                <View style={{padding: 10}}></View>
               </View>)}
-              {/* {book.map((i) => <TouchableHighlight onPress={() => goToView(i)}>
-            <Image source={{ uri: i.imageURL }} style={styles.image} />
-              </TouchableHighlight>)} */}
-          </View>
+            </ScrollView>
         </View>
       )
     }
@@ -156,7 +174,7 @@ export default function BabyBook({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 20,
   },
   title: {
     fontSize: 20,
