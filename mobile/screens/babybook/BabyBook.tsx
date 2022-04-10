@@ -91,6 +91,10 @@ export default function BabyBook({ navigation }: Props) {
       setImage(result.uri);
     }
 
+    if (image != null) {
+      imageFinal = image;
+    }
+
     navigation.navigate("SelectPicture");
   };
 

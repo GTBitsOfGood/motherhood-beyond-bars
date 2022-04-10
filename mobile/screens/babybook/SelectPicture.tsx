@@ -54,6 +54,7 @@ export default function SelectPicture(this: any, { navigation }: Props) {
   //   }
   // };
 
+  console.log(imageFinal);
   
 
   async function uploadPicture() {
@@ -82,7 +83,7 @@ export default function SelectPicture(this: any, { navigation }: Props) {
               // create baby book document
               const bookDoc = doc(babyRef, "book", picName);
               await setDoc(bookDoc, {
-                imageURL: url,
+                imageURL: imageURL,
                 caption: caption,
                 date: Timestamp.now(),
                 caregiverID: caregiver?.uid as string,
