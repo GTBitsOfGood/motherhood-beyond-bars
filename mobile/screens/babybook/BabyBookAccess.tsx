@@ -13,22 +13,14 @@ export default function BabyBookAccess({ navigation }: Props) {
   var baby = useContext(BabyContext);
 
   if (baby != null) {
+    if (baby?.babyBook == null) {
+      navigation.navigate('StartBook')
+    }
     navigation.navigate("BabyBook");
   }
 
   return (
     <View style={styles.container}>
-      {/* <Switch
-        value={isSelected}
-        onChange={() => {
-          setSelection(!isSelected);
-          if (isSelected == false) {
-            navigation.navigate("StartBook");
-          }
-        }}
-      />
-      <Text>Access to Baby Book</Text> */}
-      {/* <Text>Access to Baby Book</Text> */}
       <View style={{ padding: "30%" }}></View>
       <View style={{ padding: 25 }}>
         <Text style={styles.title}>Restricted Access</Text>
