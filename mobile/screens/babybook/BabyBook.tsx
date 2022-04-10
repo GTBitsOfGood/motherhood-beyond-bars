@@ -136,12 +136,15 @@ export default function BabyBook({ navigation }: Props) {
               <View>
                 <Text style={{fontWeight: 'bold'}}>{e.v}</Text>
                   {e.k.map((i) =>
+                  <View>
                   <View style={{flexDirection: 'row', justifyContent: 'space-between', alignSelf: "flex-start"}}>
                     {i.map((a) => 
                       <TouchableHighlight style={{paddingRight:5}} onPress={() => goToView(a)}>
                         <Image source={{ uri: a.imageURL }} style={styles.image} />
                       </TouchableHighlight>)}
-                </View>)}
+                  </View>
+                  <View style={{padding:2.5}}></View>
+                  </View>)}
                 <View style={{padding: 10}}></View>
               </View>)}
             </ScrollView>
