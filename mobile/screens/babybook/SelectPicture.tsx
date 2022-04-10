@@ -10,10 +10,11 @@ import {
   Alert,
   Animated,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageEditor
 } from "react-native";
 import { BookStackScreenProps } from "../../types";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import { doc, Timestamp, setDoc } from "firebase/firestore";
 import { db, storage } from "../../config/firebase";
 import { UserContext } from "../../providers/User";
@@ -35,61 +36,83 @@ export default function SelectPicture(this: any, { navigation }: Props) {
 
   // var display = imageFinal
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [3, 2],
-      quality: 1,
-    });
+  // const pickImage = async () => {
+  //   // No permissions request is necessary for launching the image library
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing: true,
+  //     aspect: [3, 2],
+  //     quality: 1,
+  //   });
 
-    if (!result.cancelled) {
-      setImg(result.uri);
-    }
+  //   if (!result.cancelled) {
+  //     setImg(result.uri);
+  //   }
 
-    if (img != null) {
-      display = img;
-    }
-  };
+  //   if (img != null) {
+  //     display = img;
+  //   }
+  // };
 
-  console.log(imageFinal);
   
 
   async function uploadPicture() {
-    // var imageName = 
-    // var uploadUri = imageFinal;
+      const response = await fetch(imageFinal);
+      const blob = await response.blob();
+
+      console.log(imageFinal);
     
-    
-    // uploadBytesResumable(ref(storage, 'test.png'), imageFinal)
+      const extension = imageFinal.split(".").pop();
+      var picName = baby?.id + '/' + Date.now() + '.' + extension
 
-    // storage
-    //   .ref('teest.png')
-    //   .putFile(imageFinal)
-    //   .then((snapshot) => {
-    //     //You can check the image is now uploaded in the storage bucket
-    //     console.log(`${imageName} has been successfully uploaded.`);
-    //   })
-    //   .catch((e) => console.log('uploading image error => ', e));
-  }
+      const babyRef = doc(db, "babies", baby?.id as string);
+      console.log('babyRef');
+      console.log('picName', picName);
+      
+      
 
-  // async function uploadPicture() {
+      setUploading(true);
+      setTransferred(0);
 
+      uploadBytes(ref(storage, picName), blob).then(async (snapshot) => {
+          getDownloadURL(ref(storage, picName)).then(
+            async (url) => {
+              setImageURL(url);
 
-  //   const [image, setImage] = useState({});
-  //   setImage({
-  //     uri: display,
-  //     name: Date.now(),
-  //     type: 'image/jpg'
-  //   });
-  //   const formData = new FormData();
-  //   if (image && Object.keys(image).length > 0) {
-  //     formData.append('file', image as Blob);
-  //     formData.append('Content-Type', 'image/jpg');
-  //   }
-  //   console.log(formData);
+              // create baby book document
+              const bookDoc = doc(babyRef, "book", picName);
+              await setDoc(bookDoc, {
+                imageURL: url,
+                caption: caption,
+                date: Timestamp.now(),
+                caregiverID: caregiver?.uid as string,
+              });
+            }
+          );
 
-  //   console.log('IMAGE:', image)
+          // alert user finished uploading
+          setUploading(false);
+          Alert.alert(
+            "Image uploaded!",
+            "Your image has been uploaded successfully!"
+          );
+        }
+      );
+      //   getDownloadURL(ref(storage, baby?.id + "/" + picName)).then(
+      //     async (url) => {
+      //       setImageURL(url);
+
+      //       // create baby book document
+      //       const bookDoc = doc(babyRef, "book", picName);
+      //       await setDoc(bookDoc, {
+      //         imageURL: url,
+      //         caption: caption,
+      //         date: Timestamp.now(),
+      //         caregiverID: caregiver?.uid as string,
+      //       });
+      //     }
+      // )});
+    }
     
 
   //   const babyRef = doc(db, "babies", baby?.id as string);
@@ -150,13 +173,13 @@ export default function SelectPicture(this: any, { navigation }: Props) {
     <View style={styles.container}>
       <View style={{height:'80%'}}>
         {imageFinal && <Image key='displayImage' source={{ uri: imageFinal }} style={{ width: 300, height: 450 }} />}
-        <View style={{position: 'absolute', bottom: 15, left: 225}}>
+        {/* <View style={{position: 'absolute', bottom: 15, left: 225}}>
           <TouchableOpacity
             onPress={pickImage}
             style={styles.replace}>
             <Text style={styles.buttonText}>Replace Image</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       <Text style={{fontSize: 20, fontWeight: "bold", paddingBottom: 15}}>Add a Description</Text>
       <TextInput
@@ -217,7 +240,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
-function uri(uri: any) {
-  throw new Error("Function not implemented.");
-}
