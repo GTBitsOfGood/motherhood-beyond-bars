@@ -9,7 +9,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { CollectionReference, Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 
 declare global {
   namespace ReactNavigation {
@@ -30,30 +30,47 @@ export type OnboardingStackScreenProps<
   Screen extends keyof OnboardingParamList
 > = NativeStackScreenProps<OnboardingParamList, Screen>;
 
-export type BookStackScreenProps<
-  Screen extends keyof BookParamList
-> = NativeStackScreenProps<BookParamList, Screen>;
+export type BookStackScreenProps<Screen extends keyof BookParamList> =
+  NativeStackScreenProps<BookParamList, Screen>;
+
+export type SupportStackScreenProps<Screen extends keyof SupportParamList> =
+  NativeStackScreenProps<SupportParamList, Screen>;
 
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
-  // SignWaiver: undefined;
+  TabThree: undefined;
+  TabFour: undefined;
 };
 
 export type OnboardingParamList = {
+  Welcome: undefined;
+  CreateAccount: undefined;
+  CreatePassword: {
+    first: string;
+    last: string;
+    email: string;
+    phone: string;
+  };
+  GetStarted: undefined;
   Login: undefined;
+  RecoverPassword: undefined;
+  HouseholdInfo: undefined;
   Info: undefined;
   SignWaiver: {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
-  BabyBookAccess: undefined;
-  BabyBook: undefined;
-  StartBook: undefined;
-  SelectPicture: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
+};
+
+export type SupportParamList = {
+  ReachOut: undefined;
+  RequestItemsScreen: {
+    backButtonShown: boolean;
+  };
 };
 
 export type BookParamList = {
@@ -61,7 +78,7 @@ export type BookParamList = {
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: undefined;
-}
+};
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<
@@ -70,11 +87,18 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   >;
 
 export interface Caregiver {
-  name: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
   id: string;
+  numAdults: string;
+  numChildren: string;
+  agesOfChildren: string;
   signedWaivers: Waiver[];
   itemsRequested: Item[];
   address: string;
+  apartment?: string;
   city: string;
   state: string;
   zipCode: string;

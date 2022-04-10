@@ -97,7 +97,7 @@ export default function SelectPicture({ navigation }: Props) {
         title="Upload"
         onPress={() => {
           uploadPicture();
-          // navigation.navigate("BabyBook")
+          navigation.navigate("BabyBook")
         }}
       ></Button>
       {uploading && <Text>Uploading...</Text>}
