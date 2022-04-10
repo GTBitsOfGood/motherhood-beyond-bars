@@ -80,10 +80,6 @@ export default function EditAccount({
           if (auth.currentUser && auth.currentUser.email) {
             setEmail(auth.currentUser.email);
           }
-          // wrong old password
-          if (e.code === "auth/wrong-password") {
-            alert("wrong password");
-          }
         });
     }
     updateDoc(caregiverDoc, {
