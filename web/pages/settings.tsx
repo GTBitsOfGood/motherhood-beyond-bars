@@ -3,21 +3,25 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
 
-type SettingsPhone = {
+type PhoneSettings = {
   phoneNumber: string;
 };
 
-function genSettingsTab({ phoneNumber }: SettingsPhone) {
+function genSettingsTab({ phoneNumber }: PhoneSettings) {
   const [phNumber, setPhNumberState] = useState(phoneNumber);
   const [editPhone, setEditPhone] = useState(false);
-  const [password, setPassword] = useState("passwordpasswordpasswordpasswordpasswordpassword");
+  const [password, setPassword] = useState("");
   const [editPassword, setEditPassword] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SettingsPhone>();
+  } = useForm<PhoneSettings>();
+
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   const onPhoneNumberSubmit = handleSubmit(async (data) => {
     const newNumber = data.phoneNumber;
@@ -34,10 +38,25 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
     }
   });
 
-  const onPasswordSubmit = handleSubmit(async (data) => {
-
+  const validateOldPassword = (oldPassword: string) => {
+    if (user && user.email) {
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        oldPassword
+      );
+      return reauthenticateWithCredential(user, credential).then(()=>false).catch(()=>true);
+    }
+    return false;
+  }
+  
+  const onPasswordSubmit = handleSubmit(async () => {
+    if (user) {
+      updatePassword(user, password).then(() => {
+        alert("Password updated");
+      })
+    }
   })
-
+  
   return (
     <div>
       <div className="absolute mt-20 border-t w-[1122px]" />
@@ -52,29 +71,29 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
             {editPhone ? (
               <div className="flex items-center">
                 <input
-              id="phoneInput"
-              className="h-10 appearance-none block ml-4 bg-gray-100 text-gray-700 border rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              defaultValue={phNumber}
-              aria-label="Phone number"
-              {...register("phoneNumber", {
-                pattern:
-                  /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
-                required: true,
-              })}
-            />
-            <button
-              className="h-10 w-[68px] flex-shrink-0 hover:bg-blue-100 border-blue-700 text-base border text-blue-700 ml-4 rounded"
-              type="submit"
-            >
-              Save
-            </button>
-            <button
-              className="h-10 w-20 flex-shrink-0 hover:text-blue-900 text-base text-blue-700"
-              onClick={()=>setEditPhone(false)}
-            >
-              Cancel
-            </button>
+                  id="phoneInput"
+                  className="h-10 appearance-none block ml-4 bg-gray-100 text-gray-700 border rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  defaultValue={phNumber}
+                  aria-label="Phone number"
+                  {...register("phoneNumber", {
+                    pattern:
+                      /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
+                    required: true,
+                  })}
+                />
+                <button
+                  className="h-10 w-[68px] flex-shrink-0 hover:bg-blue-100 border-blue-700 text-base border text-blue-700 ml-4 rounded"
+                  type="submit"
+                >
+                  Save
+                </button>
+                <button
+                  className="h-10 w-20 flex-shrink-0 hover:text-blue-900 text-base text-blue-700"
+                  onClick={()=>setEditPhone(false)}
+                >
+                  Cancel
+                </button>
               </div>
             ) : (
               <div className="flex items-center">
@@ -113,16 +132,29 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
                       className="h-10 ml-[107px] mr-3 appearance-none block bg-gray-100 text-gray-700 border rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white"
                       type="password"
                       aria-label="Current password"
+                      {...register("oldPassword", {
+                        validate: value => validateOldPassword(value) || 'Current password is invalid',
+                        required: true || 'Current password field is required',
+                      })}
                     />
                     <input
                       className="h-10 mr-3 appearance-none block bg-gray-100 text-gray-700 border rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white"
                       type="password"
                       aria-label="New password"
+                      {...register("newPassword", {
+                        minLength: 6 || 'Password must be at least 6 characters',
+                        onChange: e => setPassword(e.target.value),
+                        required: true || 'New password field is required'
+                      })}
                     />
                     <input
                       className="h-10 appearance-none block bg-gray-100 text-gray-700 border rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white"
                       type="password"
                       aria-label="Confirm new password"
+                      {...register("password", {
+                        validate: value => value === password || 'Passwords do not match',
+                        required: true || 'Confirm new password field is required'
+                      })}
                     />
                     <button
                       className="h-10 w-[68px] flex-shrink-0 hover:bg-blue-100 border-blue-700 text-base border text-blue-700 ml-4 rounded"
