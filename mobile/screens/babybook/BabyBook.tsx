@@ -10,6 +10,7 @@ import {
   TouchableHighlight
 } from "react-native";
 import { Book, OnboardingStackScreenProps } from "../../types";
+import { BookStackScreenProps } from "../../types";
 import * as ImagePicker from "expo-image-picker";
 import { BabyContext } from "../../providers/Baby";
 import { collection, getDocs, limit, orderBy, query, Timestamp } from "firebase/firestore";
@@ -90,10 +91,6 @@ export default function BabyBook({ navigation }: Props) {
       setImage(result.uri);
     }
 
-    if (image != null) {
-      imageFinal = image;
-    }
-  
     navigation.navigate("SelectPicture");
   };
 
