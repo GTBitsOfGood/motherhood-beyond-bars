@@ -26,44 +26,44 @@ import * as ImagePicker from "expo-image-picker";
 type Props = BookStackScreenProps<"SelectPicture">;
 
 export default function SelectPicture(this: any, { navigation }: Props) {
+  
   const baby = useContext(BabyContext);
   const caregiver = useContext(UserContext);
   const [caption, setCaption] = useState("");
   const [imageURL, setImageURL] = useState("");
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
-  // const [img, setImg] = useState<string | null>(null);
+  const [img, setImg] = useState<string | null>(null);
 
-  // var display = imageFinal
+  var display = imageFinal
 
-  // const pickImage = async () => {
-  //   // No permissions request is necessary for launching the image library
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
-  //     allowsEditing: true,
-  //     aspect: [3, 2],
-  //     quality: 1,
-  //   });
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [3, 2],
+      quality: 1,
+    });
 
-  //   if (!result.cancelled) {
-  //     setImg(result.uri);
-  //   }
+    if (!result.cancelled) {
+      setImg(result.uri);
+    }
 
-  //   if (img != null) {
-  //     display = img;
-  //   }
-  // };
-
-  console.log(imageFinal);
+    if (img != null) {
+      display = img;
+    }
+  };
+  
   
 
   async function uploadPicture() {
-      const response = await fetch(imageFinal);
+      const response = await fetch(display);
       const blob = await response.blob();
 
-      console.log(imageFinal);
+      console.log(display);
     
-      const extension = imageFinal.split(".").pop();
+      const extension = display.split(".").pop();
       var picName = baby?.id + Date.now() + '.' + extension
 
       const babyRef = doc(db, "babies", baby?.id as string);
@@ -173,14 +173,14 @@ export default function SelectPicture(this: any, { navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={{height:'80%'}}>
-        {imageFinal && <Image key='displayImage' source={{ uri: imageFinal }} style={{ width: 300, height: 450 }} />}
-        {/* <View style={{position: 'absolute', bottom: 15, left: 225}}>
+        {display && <Image source={{ uri: display }} style={{ width: 300, height: 450 }} />}
+        <View style={{position: 'absolute', bottom: 15, left: 225}}>
           <TouchableOpacity
             onPress={pickImage}
             style={styles.replace}>
             <Text style={styles.buttonText}>Replace Image</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
       <Text style={{fontSize: 20, fontWeight: "bold", paddingBottom: 15}}>Add a Description</Text>
       <TextInput
@@ -210,6 +210,7 @@ export default function SelectPicture(this: any, { navigation }: Props) {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
