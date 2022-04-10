@@ -64,7 +64,7 @@ export default function SelectPicture(this: any, { navigation }: Props) {
       console.log(imageFinal);
     
       const extension = imageFinal.split(".").pop();
-      var picName = baby?.id + '/' + Date.now() + '.' + extension
+      var picName = baby?.id + Date.now() + '.' + extension
 
       const babyRef = doc(db, "babies", baby?.id as string);
       console.log('babyRef');
@@ -83,7 +83,7 @@ export default function SelectPicture(this: any, { navigation }: Props) {
               // create baby book document
               const bookDoc = doc(babyRef, "book", picName);
               await setDoc(bookDoc, {
-                imageURL: imageURL,
+                imageURL: url,
                 caption: caption,
                 date: Timestamp.now(),
                 caregiverID: caregiver?.uid as string,
