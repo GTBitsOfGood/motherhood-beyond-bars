@@ -74,7 +74,9 @@ export default function WaiverPage({ waiver }: Props) {
           loading ? "opacity-50" : ""
         }`}
         onClick={async () => {
-          const docRef = doc(db, `settings/waiver/${waiver.id}`);
+          const docRef = doc(db, `app/settings/waivers/${waiver.id}`);
+          // const docRef = doc(db, "settings")
+          console.log(JSON.stringify(docRef));
           setLoading(true);
           await updateDoc(docRef, {
             content: markdown,
@@ -96,7 +98,9 @@ export default function WaiverPage({ waiver }: Props) {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-  const waiverRef = doc(db, "waivers", params?.id as string);
+  const settingsRef = doc(db, "app", "settings");
+  const waiversRef = collection(settingsRef, "waivers");
+  const waiverRef = doc(waiversRef, params?.id as string);
   const waiver = formatDoc<Waiver>(await getDoc(waiverRef));
 
   return {
@@ -107,7 +111,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const waiversRef = collection(db, "waivers");
+  const settingsRef = doc(db, "app", "settings");
+  const waiversRef = collection(settingsRef, "waivers");
   const allWaivers = (await getDocs(waiversRef)).docs.map(
     formatDoc
   ) as Waiver[];

@@ -5,12 +5,8 @@ import { Waiver } from "@lib/types";
 import {
   addDoc,
   collection,
-  getDocs,
-  orderBy,
-  query,
   serverTimestamp,
-  setDoc,
-  Timestamp,
+  doc,
 } from "firebase/firestore";
 import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
@@ -22,13 +18,14 @@ interface Props {
 export default function Waivers({ waivers }: Props) {
   const router = useRouter();
   return (
-    <div className="p-10">
+    <div className="">
       <div className="flex flex-row justify-between">
         <h1 className="font-bold text-2xl my-6">Waivers</h1>
         <button
           className={`p-2 bg-black  transition-colors text-white rounded-md m-4 px-6 `}
           onClick={async () => {
-            const newDoc = await addDoc(collection(db, "waivers"), {
+            const settingsRef = doc(db, "app", "settings");
+            const newDoc = await addDoc(collection(settingsRef, "waivers"), {
               name: "New Waiver",
               content: "*Put the waiver body here*",
               lastUpdated: serverTimestamp(),

@@ -273,8 +273,8 @@ export default function Settings({ phoneNumber, waivers }: PhoneSettings & Props
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const settingsRef = doc(db, "app", "settings");
   const settings = (await getDoc(settingsRef))?.data();
-  
-  const queryRef = query(collection(db, "waivers"), orderBy("order", "asc"));
+
+  const queryRef = query(collection(settingsRef, "waivers"))
   const allWaivers = (await getDocs(queryRef)).docs.map(formatDoc) as Waiver[];
 
   return {
