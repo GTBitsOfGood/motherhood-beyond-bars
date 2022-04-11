@@ -43,10 +43,10 @@ function ItemRequestsTable({ columns, data }: { columns: any[]; data: any[] }) {
               </thead>
               <tbody {...getTableBodyProps()}>
                 {rows.map((row) => {
-                  const [statusCircle, setStatusCircle] = useState(getStatus(row.cells.slice(-1)[0].value));
                   prepareRow(row);
+                  const [statusCircle, setStatusCircle] = useState(getStatus(row.cells.slice(-1)[0].value));
                   return (
-                    <tr className="" {...row.getRowProps()}>
+                    <tr {...row.getRowProps()}>
                       {row.cells.slice(0,-1).map((cell) => {
                         return (
                           <td
@@ -65,7 +65,7 @@ function ItemRequestsTable({ columns, data }: { columns: any[]; data: any[] }) {
                               <div className="pr-3">
                                 <Image src={statusCircle} />
                               </div>
-                              <div id="status">
+                              <div id={"status_" + row.index}>
                                 {row.cells.slice(-1)[0].render("Cell")}
                               </div>
                               <div className="group relative">
@@ -81,7 +81,7 @@ function ItemRequestsTable({ columns, data }: { columns: any[]; data: any[] }) {
                                       <button 
                                         className="flex flex-row block px-3 py-2 hover:bg-gray-100 w-full"
                                         onClick={()=>{
-                                          document.getElementById("status").textContent = "Pending";
+                                          document.getElementById("status_" + row.index).textContent = "Pending";
                                           setStatusCircle(pending)
                                         }}
                                       >
@@ -95,7 +95,7 @@ function ItemRequestsTable({ columns, data }: { columns: any[]; data: any[] }) {
                                       <button 
                                         className="flex flex-row block px-3 py-2 hover:bg-gray-100 w-full"
                                         onClick={()=>{
-                                          document.getElementById("status").textContent = "Fulfilled";
+                                          document.getElementById("status_" + row.index).textContent = "Fulfilled";
                                           setStatusCircle(fulfilled)
                                         }}
                                       >
