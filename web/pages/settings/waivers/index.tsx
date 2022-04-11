@@ -36,7 +36,7 @@ export default function Waivers({ waivers }: Props) {
               order: waivers.length,
             } as Waiver);
 
-            router.push(`/waivers/${newDoc.id}`);
+            router.push(`settings/waivers/${newDoc.id}`);
           }}
         >
           + New
@@ -52,7 +52,7 @@ export default function Waivers({ waivers }: Props) {
             }`}
             key={waiver.id}
             onClick={() => {
-              router.push(`/waivers/${waiver.id}`);
+              router.push(`settings/waivers/${waiver.id}`);
             }}
           >
             <td className=" text-gray-800 text-lg">{waiver.name}</td>
@@ -67,15 +67,15 @@ export default function Waivers({ waivers }: Props) {
   );
 }
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  const queryRef = query(collection(db, "waivers"), orderBy("order", "asc"));
-  const allWaivers = (await getDocs(queryRef)).docs.map(formatDoc) as Waiver[];
+// export const getStaticProps: GetStaticProps<Props> = async () => {
+//   const queryRef = query(collection(db, "waivers"), orderBy("order", "asc"));
+//   const allWaivers = (await getDocs(queryRef)).docs.map(formatDoc) as Waiver[];
 
-  console.log(allWaivers.length);
+//   console.log(allWaivers.length);
 
-  return {
-    props: {
-      waivers: allWaivers,
-    },
-  };
-};
+//   return {
+//     props: {
+//       waivers: allWaivers,
+//     },
+//   };
+// };

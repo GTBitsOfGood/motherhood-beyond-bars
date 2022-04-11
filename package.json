@@ -2,5 +2,7 @@
   "scripts": {
     "build": "cd web && npm run build"
   },
-  "dependencies": {}
+  "dependencies": {
+    "react-tabs": "^4.2.0"
+  }
 }

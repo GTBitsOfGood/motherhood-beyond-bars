@@ -36,8 +36,8 @@ export default function WaiverPage({ waiver }: Props) {
 
   return (
     <div className="p-10">
-      <Link href="/waivers" passHref>
-        <a className="hover:underline" href="/waivers">
+      <Link href="/settings" passHref>
+        <a className="hover:underline" href="/settings">
           Back
         </a>
       </Link>
@@ -74,7 +74,7 @@ export default function WaiverPage({ waiver }: Props) {
           loading ? "opacity-50" : ""
         }`}
         onClick={async () => {
-          const docRef = doc(db, `waivers/${waiver.id}`);
+          const docRef = doc(db, `settings/waiver/${waiver.id}`);
           setLoading(true);
           await updateDoc(docRef, {
             content: markdown,
