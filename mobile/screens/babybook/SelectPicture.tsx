@@ -99,20 +99,6 @@ export default function SelectPicture(this: any, { navigation }: Props) {
           );
         }
       );
-      //   getDownloadURL(ref(storage, baby?.id + "/" + picName)).then(
-      //     async (url) => {
-      //       setImageURL(url);
-
-      //       // create baby book document
-      //       const bookDoc = doc(babyRef, "book", picName);
-      //       await setDoc(bookDoc, {
-      //         imageURL: url,
-      //         caption: caption,
-      //         date: Timestamp.now(),
-      //         caregiverID: caregiver?.uid as string,
-      //       });
-      //     }
-      // )});
     }
     
 
