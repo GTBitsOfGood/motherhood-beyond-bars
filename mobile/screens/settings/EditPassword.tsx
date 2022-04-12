@@ -44,7 +44,7 @@ export default function EditPassword({
             updatePassword(auth.currentUser, newPassword);
             navigation.navigate("AccountInfo");
           } else {
-            alert("passwords do not match");
+            alert("Passwords do not match");
           }
         })
         .catch(function (e) {
