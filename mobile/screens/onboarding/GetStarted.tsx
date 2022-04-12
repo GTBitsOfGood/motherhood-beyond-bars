@@ -1,8 +1,7 @@
 import { View } from "../../components/Themed";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext } from "react";
-import { UserContext } from "../../providers/User";
+import React from "react";
 
 export default function GetStarted({
   navigation,

@@ -19,7 +19,7 @@ export default function ReachOut({
 }: SupportStackScreenProps<"ReachOut">) {
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.textbox}>
           <ReachOutSVG />
           <Text style={styles.title}>Reach out to us!</Text>

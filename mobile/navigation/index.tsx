@@ -39,8 +39,10 @@ import SignWaiver from "../screens/onboarding/SignWaiver";
 import {
   BookParamList,
   OnboardingParamList,
+  ResourcesParamList,
   RootStackParamList,
   RootTabParamList,
+  SettingsParamList,
   SupportParamList,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -68,6 +70,11 @@ import GetStarted from "../screens/onboarding/GetStarted";
 import Login from "../screens/onboarding/Login";
 import RecoverPassword from "../screens/onboarding/RecoverPassword";
 import HouseholdInfo from "../screens/onboarding/HouseholdInfo";
+import AccountInfo from "../screens/settings/AccountInfo";
+import EditAccount from "../screens/settings/EditAccount";
+import EditPassword from "../screens/settings/EditPassword";
+import EditAddress from "../screens/settings/EditAddress";
+import General from "../screens/resources/General";
 
 export default function Navigation({
   colorScheme,
@@ -144,7 +151,7 @@ function RootNavigator() {
           <Stack.Screen
             name="Root"
             component={OnboardingNavigator}
-            options={({ navigation }) => ({
+            options={() => ({
               headerShown: false,
               title: "Welcome",
               headerRight: () =>
@@ -388,48 +395,28 @@ function BookNavigator() {
           name="BabyBookAccess"
           component={BabyBookAccess}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Baby Book Access</Text>
-              </View>
-            ),
+            headerShown: false,
           }}
         />
         <Book.Screen
           name="StartBook"
           component={StartBook}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Start A Baby Book</Text>
-              </View>
-            ),
+            header: () => <View></View>,
           }}
         />
         <Book.Screen
           name="SelectPicture"
           component={SelectPicture}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Picture and Caption</Text>
-              </View>
-            ),
+            header: () => <View></View>,
           }}
         />
         <Book.Screen
           name="BabyBook"
           component={BabyBook}
           options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Baby Book</Text>
-              </View>
-            ),
+            header: () => <View></View>,
           }}
         />
       </>
@@ -454,9 +441,63 @@ function SupportNavigator() {
         component={RequestItemsScreen}
         options={{
           headerShown: true,
+          headerTitle: "",
         }}
       />
     </Support.Navigator>
+  );
+}
+
+const Resources = createNativeStackNavigator<ResourcesParamList>();
+
+function ResourcesNavigator() {
+  return (
+    <Resources.Navigator>
+      <Resources.Screen
+        name="General"
+        component={General}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Resources.Navigator>
+  );
+}
+
+const Settings = createNativeStackNavigator<SettingsParamList>();
+
+function SettingsNavigator() {
+  return (
+    <Settings.Navigator>
+      <Settings.Screen
+        name="AccountInfo"
+        component={AccountInfo}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Settings.Screen
+        name="EditAccount"
+        component={EditAccount}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Settings.Screen
+        name="EditPassword"
+        component={EditPassword}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Settings.Screen
+        name="EditAddress"
+        component={EditAddress}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Settings.Navigator>
   );
 }
 
@@ -474,6 +515,9 @@ function BottomTabNavigator() {
         tabBarActiveTintColor: "#fff",
         tabBarStyle: {
           backgroundColor: "#000000",
+          height: 75,
+          paddingBottom: 15,
+          paddingTop: 15,
         },
         headerBackground: () => <HeaderBackgroundSVG />,
         headerStyle: {
@@ -481,16 +525,7 @@ function BottomTabNavigator() {
           height: 87,
         },
         headerTitleStyle: { color: "#fff" },
-        headerRight: () => (
-          <Button
-            title="Logout"
-            color="white"
-            onPress={() => {
-              console.log("signing out..");
-              signOut(auth);
-            }}
-          />
-        ),
+        tabBarHideOnKeyboard: true,
       }}
     >
       <BottomTab.Screen
@@ -515,7 +550,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabThree"
-        component={BookNavigator}
+        component={ResourcesNavigator}
         options={{
           title: "Resources",
           tabBarIcon: ({ focused }) => (
@@ -525,7 +560,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabFour"
-        component={BookNavigator}
+        component={SettingsNavigator}
         options={{
           title: "Settings",
           tabBarIcon: ({ focused }) => (
@@ -535,14 +570,4 @@ function BottomTabNavigator() {
       />
     </BottomTab.Navigator>
   );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }

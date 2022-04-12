@@ -14,6 +14,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 import Checkbox from "../../components/app/Checkbox";
+import States from "../../components/app/States";
 
 export default function ShippingAddress({
   navigation,
@@ -85,12 +86,7 @@ export default function ShippingAddress({
             ></TextInput>
 
             <Text style={styles.text}>State</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(state) => {
-                setState(state);
-              }}
-            ></TextInput>
+            <States state={state} setState={setState}></States>
 
             <Text style={styles.text}>Zip Code</Text>
             <TextInput

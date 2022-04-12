@@ -1,16 +1,10 @@
 import { View } from "../../components/Themed";
-import { Button, Text, StyleSheet, ScrollView } from "react-native";
+import { Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { RadioButton } from "react-native-paper";
 
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 
@@ -42,6 +36,7 @@ export default function BestContact({
               position="leading"
               value="Phone"
               label="Phone"
+              color="#304CD1"
               mode="android"
               labelStyle={{
                 textAlign: "left",
@@ -51,6 +46,7 @@ export default function BestContact({
               position="leading"
               label="Email"
               value="Email"
+              color="#304CD1"
               mode="android"
               labelStyle={{
                 textAlign: "left",
@@ -60,6 +56,7 @@ export default function BestContact({
               position="leading"
               label="Text"
               value="Text"
+              color="#304CD1"
               mode="android"
               labelStyle={{
                 textAlign: "left",
@@ -67,13 +64,23 @@ export default function BestContact({
             />
           </RadioButton.Group>
 
-          <Button
-            title="Finish"
-            onPress={() => {
-              setBestContact();
-              navigation.navigate("AllDone");
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              paddingTop: 24,
             }}
-          />
+          >
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                setBestContact();
+                navigation.navigate("AllDone");
+              }}
+            >
+              <Text style={styles.buttonText}>Finish</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -89,6 +96,16 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
     justifyContent: "flex-end",
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: "#304CD1",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 5,
   },
   title: {
     fontSize: 20,
@@ -110,5 +127,11 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     width: "50%",
     paddingRight: 5,
+  },
+  buttonText: {
+    color: "#304CD1",
+    padding: 10,
+    fontWeight: "500",
+    fontSize: 16,
   },
 });

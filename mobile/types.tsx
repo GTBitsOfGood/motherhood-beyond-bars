@@ -36,6 +36,12 @@ export type BookStackScreenProps<Screen extends keyof BookParamList> =
 export type SupportStackScreenProps<Screen extends keyof SupportParamList> =
   NativeStackScreenProps<SupportParamList, Screen>;
 
+export type SettingsStackScreenProps<Screen extends keyof SettingsParamList> =
+  NativeStackScreenProps<SettingsParamList, Screen>;
+
+export type ResourcesStackScreenProps<Screen extends keyof ResourcesParamList> =
+  NativeStackScreenProps<ResourcesParamList, Screen>;
+
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
@@ -78,6 +84,17 @@ export type BookParamList = {
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: undefined;
+};
+
+export type SettingsParamList = {
+  AccountInfo: undefined;
+  EditAccount: undefined;
+  EditPassword: undefined;
+  EditAddress: undefined;
+};
+
+export type ResourcesParamList = {
+  General: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =

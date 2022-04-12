@@ -1,5 +1,5 @@
 import { onAuthStateChanged, User } from "firebase/auth";
-import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { Caregiver } from "../types";
@@ -38,6 +38,13 @@ export const UserProvider = ({
             zipCode: "",
             state: "",
             contact: "",
+            firstName: "",
+            lastName: "",
+            phoneNumber: "",
+            email: "",
+            numAdults: "",
+            numChildren: "",
+            agesOfChildren: "",
           } as Caregiver;
 
           try {

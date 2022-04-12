@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
