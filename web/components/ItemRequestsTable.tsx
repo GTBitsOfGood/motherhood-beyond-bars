@@ -1,12 +1,29 @@
 import React from "react";
 import { useTable } from "react-table";
+import Image from "next/image";
+import dots from "../public/dots.png";
+import { ItemRequestStatus } from "pages/item-requests";
 
-function ItemRequestsTable({ columns, data }: { columns: any[]; data: any[] }) {
+function ItemRequestsTable({
+  columns,
+  data,
+  markAsPending,
+  markAsFulfilled,
+}: {
+  columns: any[];
+  data: any[];
+  markAsPending: (row: any) => void;
+  markAsFulfilled: (row: any) => void;
+}) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
     });
+
+  const isFulfilled = (row: any) => {
+    return row.fulfilled == ItemRequestStatus.Fulfilled;
+  };
 
   return (
     <div className="flex flex-col">
@@ -36,14 +53,55 @@ function ItemRequestsTable({ columns, data }: { columns: any[]; data: any[] }) {
                     <tr className="" {...row.getRowProps()}>
                       {row.cells.map((cell) => {
                         return (
-                          <td
-                            className="py-4 px-6 text-base border-t font-normal text-black whitespace-nowrap"
-                            {...cell.getCellProps()}
-                          >
-                            {cell.render("Cell")}
-                          </td>
+                          <>
+                            <td
+                              className="py-4 px-6 text-base border-t font-normal text-black whitespace-nowrap"
+                              {...cell.getCellProps()}
+                            >
+                              {cell.render("Cell")}
+                            </td>
+                          </>
                         );
                       })}
+                      <td className="border-t">
+                        <div className="p-4">
+                          <div className="group relative">
+                            <button>
+                              <Image src={dots} />
+                            </button>
+                            <nav
+                              tabIndex={0}
+                              className="absolute w-[127px] rounded-b bg-white border shadow-xl right-1 mt-1 shadow-slate-200 transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100"
+                            >
+                              <ul className="py-1">
+                                {isFulfilled(row.original) ? (
+                                  <li>
+                                    <div
+                                      onClick={() => {
+                                        markAsPending(row.original);
+                                      }}
+                                      className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                    >
+                                      Mark as pending
+                                    </div>
+                                  </li>
+                                ) : (
+                                  <li>
+                                    <div
+                                      onClick={() => {
+                                        markAsFulfilled(row.original);
+                                      }}
+                                      className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                    >
+                                      Mark as fulfilled
+                                    </div>
+                                  </li>
+                                )}
+                              </ul>
+                            </nav>
+                          </div>
+                        </div>
+                      </td>
                     </tr>
                   );
                 })}

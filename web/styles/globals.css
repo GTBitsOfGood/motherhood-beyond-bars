@@ -6,3 +6,11 @@ td {
   border-spacing: 5px;
   @apply p-5;
 }
+
+.gradient-bg {
+  background: radial-gradient(
+    68.05% 54.44% at 24.4% 30.17%,
+    #edb1cb 0.01%,
+    #4c6af4 79.82%
+  );
+}

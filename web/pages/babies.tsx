@@ -14,13 +14,17 @@ import {
   addDoc,
   serverTimestamp,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
-import AddChildModal from "modals/addChildModal";
+import ChildModal from "modals/addChildModal";
+import { useRouter } from "next/router";
 
 export type Baby = {
+  id: string;
   caretakerName: string;
+  caretakerID: string;
   caretaker: DocumentReference;
   motherName: string;
   birthday: string;
@@ -29,6 +33,7 @@ export type Baby = {
   dob: Timestamp;
   firstName: string;
   lastName: string;
+  hospitalName: string;
 };
 
 function genChildrenAndBabyBooksTab({
@@ -70,12 +75,19 @@ function genChildrenAndBabyBooksTab({
     []
   );
 
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
   const data = React.useMemo(() => getData(), []);
 
   const [addModal, toggleAddModal] = useState(false);
 
   const addNewChild = async (child: Baby) => {
-    const caretakerRef = doc(db, "caregivers", child.caretaker.id);
+    console.log("child", child);
+    const caretakerRef = doc(db, "caregivers", child.caretakerID);
 
     const newBaby = await addDoc(collection(db, "babies"), {
       ...child,
@@ -91,6 +103,25 @@ function genChildrenAndBabyBooksTab({
 
     toggleAddModal(false);
     alert(`${child.firstName} ${child.lastName} has been added!`);
+    refreshData();
+  };
+
+  const editBaby = async (baby: any) => {
+    const babyID = baby.id;
+    delete baby.id;
+    await updateDoc(doc(db, "babies", babyID), baby);
+
+    alert("Baby has been updated!");
+    refreshData();
+  };
+
+  const deleteBaby = async (baby: any) => {
+    const babyID = baby.id;
+
+    await deleteDoc(doc(db, "babies", babyID));
+
+    alert("Baby has been deleted!");
+    refreshData();
   };
 
   return (
@@ -113,14 +144,21 @@ function genChildrenAndBabyBooksTab({
           </div>
         </div>
         <div className="mt-4">
-          <BabiesTable columns={columns} data={data} />
+          <BabiesTable
+            columns={columns}
+            data={data}
+            onEdit={editBaby}
+            onDelete={deleteBaby}
+            caretakers={caregivers}
+          />
         </div>
       </div>
       <Modal
         show={addModal}
         content={
           <div className="h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
-            <AddChildModal
+            <ChildModal
+              header="Add a Child"
               setModal={toggleAddModal}
               onSubmit={addNewChild}
               caretakers={caregivers}
@@ -154,12 +192,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         console.log(`Couldn't get caretaker for ${data.firstName}`);
       }
       return {
+        id: babyDoc.id,
+        firstName: data.firstName,
+        lastName: data.lastName,
         name: data?.firstName + " " + data?.lastName || null,
         caretakerName: caretaker?.firstName + " " + caretaker?.lastName || null,
+        caretakerID: data?.caretaker.id,
         motherName: data?.motherName || null,
         birthday: data?.dob?.toDate().toLocaleDateString("en-us") || null,
+        dob: data?.dob.toDate().toISOString(),
         sex: data?.sex || null,
         babyBook: "/book/" + babyDoc.id,
+        hospitalName: data?.hospitalName,
       };
     })
   );

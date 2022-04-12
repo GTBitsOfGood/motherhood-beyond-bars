@@ -1,22 +1,15 @@
+import { CommunicationType } from "pages/caretakers";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { BiLoaderCircle } from "react-icons/bi";
 import { FaTimes } from "react-icons/fa";
 
-function ChildModal({
+function AddCaretakerModal({
   setModal,
   onSubmit,
-  caretakers,
-  buttonText = "Add a Child",
-  header = "Add a Child",
-  values,
 }: {
   setModal: (modal: boolean) => void;
   onSubmit: (data: any) => void;
-  caretakers: { name: string; id: string }[];
-  buttonText?: string;
-  header?: string;
-  values?: any;
 }) {
   const {
     register,
@@ -24,15 +17,13 @@ function ChildModal({
     formState: { errors, isSubmitting },
   } = useForm();
 
-  console.log(values);
-
   return (
     <>
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
-              <h3 className="text-3xl font-bold">{header}</h3>
+              <h3 className="text-3xl font-bold">Add a Caretaker</h3>
               <button
                 className="bg-transparent border-0 text-black float-right"
                 onClick={() => setModal(false)}
@@ -49,7 +40,6 @@ function ChildModal({
                       type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="First name"
-                      defaultValue={values?.firstName}
                       {...register("firstName", { required: true })}
                     />
                     {errors.firstName && (
@@ -64,7 +54,6 @@ function ChildModal({
                       type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="Last name"
-                      defaultValue={values?.lastName}
                       {...register("lastName", { required: true })}
                     />
                     {errors.lastName && (
@@ -74,77 +63,123 @@ function ChildModal({
                     )}
                   </div>
                   <div className="form-group mb-6">
-                    <label className="text-sm">Date of Birth</label>
+                    <label className="text-sm">Email</label>
                     <input
-                      type="datetime-local"
+                      type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="Date of Birth"
-                      defaultValue={values?.dob && values?.dob.slice(0, -8)}
-                      {...register("dob", { required: true })}
+                      placeholder="Email"
+                      {...register("email", { required: true })}
                     />
-                    {errors.dob && (
+                    {errors.email && (
                       <span className="text-red-500">
                         This field is required
                       </span>
                     )}
                   </div>
                   <div className="form-group mb-6">
-                    <label className="text-sm">Sex</label>
-                    <select
+                    <label className="text-sm">Phone</label>
+                    <input
+                      type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      defaultValue={values?.sex}
-                      {...register("sex", { required: true })}
-                    >
-                      <option value="female">Female</option>
-                      <option value="male">Male</option>
-                    </select>
+                      placeholder="Phone"
+                      {...register("phone", { required: true })}
+                    />
+                    {errors.phone && (
+                      <span className="text-red-500">
+                        This field is required
+                      </span>
+                    )}
                   </div>
+                </div>
+                <div className="grid grid-cols-1 gap-4">
                   <div className="form-group mb-6">
-                    <label className="text-sm">Caretaker</label>
-                    <select
+                    <label className="text-sm">Address</label>
+                    <input
+                      type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      {...register("caretakerID", { required: true })}
-                      defaultValue={values?.caretaker}
-                    >
-                      {caretakers.map((caretaker) => (
-                        <option key={caretaker.id} value={caretaker.id}>
-                          {caretaker.name}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="Address"
+                      {...register("address", { required: true })}
+                    />
+                    {errors.address && (
+                      <span className="text-red-500">
+                        This field is required
+                      </span>
+                    )}
                   </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
                   <div className="form-group mb-6">
-                    <label className="text-sm">Mother Name</label>
+                    <label className="text-sm">Apartment / Suite</label>
                     <input
                       type={"text"}
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="First, Last"
-                      defaultValue={values?.motherName}
-                      {...register("motherName", { required: true })}
+                      placeholder="Apartment / Suite"
+                      {...register("apartment", { required: false })}
                     />
-                    {errors.motherName && (
+                  </div>
+                  <div className="form-group mb-6">
+                    <label className="text-sm">City</label>
+                    <input
+                      type="text"
+                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      placeholder="City"
+                      {...register("city", { required: true })}
+                    />
+                    {errors.city && (
                       <span className="text-red-500">
                         This field is required
                       </span>
                     )}
                   </div>
                   <div className="form-group mb-6">
-                    <label className="text-sm">Hospital of Birth</label>
+                    <label className="text-sm">State</label>
                     <input
-                      type={"text"}
+                      type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="Hospital of Birth"
-                      defaultValue={values?.hospitalName}
-                      {...register("hospitalName", { required: false })}
+                      placeholder="State"
+                      {...register("state", { required: true })}
+                    />
+                    {errors.state && (
+                      <span className="text-red-500">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
+                  <div className="form-group mb-6">
+                    <label className="text-sm">Num of Adults</label>
+                    <input
+                      type="number"
+                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      placeholder="Adults in household"
+                      {...register("numAdults", { required: false })}
                     />
                   </div>
-                  {values && values.id && (
+                  <div className="form-group mb-6">
+                    <label className="text-sm">Num of Children</label>
                     <input
-                      type="hidden"
-                      defaultValue={values.id}
-                      {...register("id")}
+                      type="number"
+                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      placeholder="Dependant children"
+                      {...register("numChildren", { required: false })}
                     />
-                  )}
+                  </div>
+                  <div className="form-group mb-6">
+                    <label className="text-sm">Preferred Communication</label>
+                    <select
+                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      {...register("prefferedCommunication", {
+                        required: false,
+                      })}
+                    >
+                      {(
+                        Object.keys(CommunicationType) as Array<
+                          keyof typeof CommunicationType
+                        >
+                      ).map((key) => {
+                        return <option value={key}>{key}</option>;
+                      })}
+                    </select>
+                  </div>
                 </div>
                 {isSubmitting && (
                   <div className="flex justify-center align-bottom">
@@ -168,7 +203,7 @@ function ChildModal({
                     isSubmitting && "opacity-50 cursor-not-allowed"
                   }`}
                 >
-                  {buttonText}
+                  Add a Caretaker
                 </button>
               </div>
             </form>
@@ -179,4 +214,4 @@ function ChildModal({
   );
 }
 
-export default ChildModal;
+export default AddCaretakerModal;
