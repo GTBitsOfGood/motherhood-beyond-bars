@@ -50,7 +50,7 @@ export default function EditPassword({
         .catch(function (e) {
           // wrong old password
           if (e.code === "auth/wrong-password") {
-            alert("wrong password");
+            alert("Wrong password");
           }
         });
     }
