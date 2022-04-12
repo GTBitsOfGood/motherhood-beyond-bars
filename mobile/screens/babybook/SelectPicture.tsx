@@ -102,59 +102,6 @@ export default function SelectPicture(this: any, { navigation }: Props) {
     }
     
 
-  //   const babyRef = doc(db, "babies", baby?.id as string);
-
-  //   // add timestamp to file name
-  //   // const extension = file.name.split(".").pop();
-  //   // const name = file.name.split(".").slice(0, -1).join(".");
-  //   // const picName = name + Date.now() + "." + extension;
-
-  //   const picName = Date.now() + ".img"
-
-  //   setUploading(true);
-  //   setTransferred(0);
-
-  //   const storageRef = ref(storage, baby?.id + "/" + picName);
-  //   const uploadTask = uploadBytesResumable(storageRef, image as Blob);
-
-  //   uploadTask.on(
-  //     "state_changed",
-  //     (snapshot) => {
-  //       const progress = Math.round(
-  //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-  //       );
-  //       setTransferred(progress);
-  //     },
-  //     (error) => {
-  //       // unsuccessful upload
-  //       console.log(error);
-  //     },
-  //     () => {
-  //       // successful upload
-  //       getDownloadURL(ref(storage, baby?.id + "/" + picName)).then(
-  //         async (url) => {
-  //           setImageURL(url);
-
-  //           // create baby book document
-  //           const bookDoc = doc(babyRef, "book", picName);
-  //           await setDoc(bookDoc, {
-  //             imageURL: url,
-  //             caption: caption,
-  //             date: Timestamp.now(),
-  //             caregiverID: caregiver?.uid as string,
-  //           });
-  //         }
-  //       );
-
-  //       // alert user finished uploading
-  //       setUploading(false);
-  //       Alert.alert(
-  //         "Image uploaded!",
-  //         "Your image has been uploaded successfully!"
-  //       );
-  //     }
-  //   );
-  // }
 
   return (
     <View style={styles.container}>
