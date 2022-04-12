@@ -104,27 +104,27 @@ export default function EditAccount({
               autoFocus={true}
               style={[
                 styles.input,
-                first.length == 0 && { borderColor: "#FF3939" },
+                first.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(first) => {
                 setFirst(first);
               }}
               defaultValue={authData?.caregiver?.firstName}
             />
-            {first.length == 0 && <RequiredField />}
+            {first.length === 0 && <RequiredField />}
             <Text style={styles.description}>Last Name</Text>
             <TextInput
               autoFocus={true}
               style={[
                 styles.input,
-                last.length == 0 && { borderColor: "#FF3939" },
+                last.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(last) => {
                 setLast(last);
               }}
               defaultValue={authData?.caregiver?.lastName}
             />
-            {last.length == 0 && <RequiredField />}
+            {last.length === 0 && <RequiredField />}
             <Text style={styles.description}>Email</Text>
             <TextInput
               placeholder="email"
@@ -134,14 +134,14 @@ export default function EditAccount({
               autoFocus={true}
               style={[
                 styles.input,
-                email.length == 0 && { borderColor: "#FF3939" },
+                email.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(email) => {
                 setEmail(email);
               }}
               defaultValue={authData?.caregiver?.email}
             />
-            {email.length == 0 && <RequiredField />}
+            {email.length === 0 && <RequiredField />}
             {email != (authData?.caregiver?.email as string) && (
               <View>
                 <Text style={[styles.description, { fontSize: 14 }]}>
@@ -150,7 +150,7 @@ export default function EditAccount({
                 <TextInput
                   style={[
                     styles.input,
-                    password.length == 0 && { borderColor: "#FF3939" },
+                    password.length === 0 && { borderColor: "#FF3939" },
                   ]}
                   onChangeText={(password) => {
                     setPassword(password);
@@ -162,21 +162,21 @@ export default function EditAccount({
               </View>
             )}
             {email != (authData?.caregiver?.email as string) &&
-              password.length == 0 && <RequiredField />}
+              password.length === 0 && <RequiredField />}
             <Text style={styles.description}>Phone Number</Text>
             <TextInput
               keyboardType="numeric"
               autoFocus={true}
               style={[
                 styles.input,
-                phone.length == 0 && { borderColor: "#FF3939" },
+                phone.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(phone) => {
                 setPhone(phone);
               }}
               defaultValue={authData?.caregiver?.phoneNumber}
             />
-            {phone.length == 0 && <RequiredField />}
+            {phone.length === 0 && <RequiredField />}
             <View
               style={{
                 flexDirection: "row",

@@ -75,7 +75,7 @@ export default function EditPassword({
               autoFocus={true}
               style={[
                 styles.input,
-                oldPassword.length == 0 && { borderColor: "#FF3939" },
+                oldPassword.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(oldPassword) => {
                 setOldPassword(oldPassword);
@@ -84,13 +84,13 @@ export default function EditPassword({
               secureTextEntry={true}
               placeholder="Type your current password"
             />
-            {oldPassword.length == 0 && <RequiredField />}
+            {oldPassword.length === 0 && <RequiredField />}
             <Text style={styles.description}>New Password</Text>
             <TextInput
               autoFocus={true}
               style={[
                 styles.input,
-                newPassword.length == 0 && { borderColor: "#FF3939" },
+                newPassword.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(newPassword) => {
                 setNewPassword(newPassword);
@@ -99,13 +99,13 @@ export default function EditPassword({
               secureTextEntry={true}
               placeholder="Create a new secure password"
             />
-            {newPassword.length == 0 && <RequiredField />}
+            {newPassword.length === 0 && <RequiredField />}
             <Text style={styles.description}>Confirm New Password</Text>
             <TextInput
               autoFocus={true}
               style={[
                 styles.input,
-                confirmPassword.length == 0 && { borderColor: "#FF3939" },
+                confirmPassword.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(confirmPassword) => {
                 setConfirmPassword(confirmPassword);
@@ -114,7 +114,7 @@ export default function EditPassword({
               secureTextEntry={true}
               placeholder="Confirm your password"
             />
-            {confirmPassword.length == 0 && <RequiredField />}
+            {confirmPassword.length === 0 && <RequiredField />}
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}

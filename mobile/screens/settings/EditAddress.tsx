@@ -65,7 +65,7 @@ export default function EditAddress({
               autoFocus={true}
               style={[
                 styles.input,
-                address.length == 0 && { borderColor: "#FF3939" },
+                address.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(address) => {
                 setAddress(address);
@@ -73,7 +73,7 @@ export default function EditAddress({
               placeholder="Street number and name"
               defaultValue={authData?.caregiver?.address}
             />
-            {address.length == 0 && <RequiredField />}
+            {address.length === 0 && <RequiredField />}
             <Text style={styles.description}>Apartment/Suite (Optional)</Text>
             <TextInput
               autoFocus={true}
@@ -89,31 +89,31 @@ export default function EditAddress({
               autoFocus={true}
               style={[
                 styles.input,
-                city.length == 0 && { borderColor: "#FF3939" },
+                city.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(city) => {
                 setCity(city);
               }}
               defaultValue={authData?.caregiver?.city}
             />
-            {city.length == 0 && <RequiredField />}
+            {city.length === 0 && <RequiredField />}
             <Text style={styles.description}>State</Text>
             <States state={state} setState={setState}></States>
-            {state.length == 0 && <RequiredField />}
+            {state.length === 0 && <RequiredField />}
             <Text style={styles.description}>Zip Code</Text>
             <TextInput
               keyboardType="numeric"
               autoFocus={true}
               style={[
                 styles.input,
-                zipCode.length == 0 && { borderColor: "#FF3939" },
+                zipCode.length === 0 && { borderColor: "#FF3939" },
               ]}
               onChangeText={(zipCode) => {
                 setZipCode(zipCode);
               }}
               defaultValue={authData?.caregiver?.zipCode}
             />
-            {zipCode.length == 0 && <RequiredField />}
+            {zipCode.length === 0 && <RequiredField />}
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
