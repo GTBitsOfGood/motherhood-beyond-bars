@@ -15,7 +15,6 @@ import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 import Checkbox from "../../components/app/Checkbox";
-
 import { SettingsContext } from "../../providers/settings";
 import ThumbsUpSVG from "../../assets/images/thumbsup";
 import ThumbsDownSVG from "../../assets/images/thumbsdown";
@@ -295,10 +294,10 @@ export default function RequestedItems({
                 </View>
               </View>
             </Modal>
-            <View style={modalVisible && styles.overlay} />
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>
+      <View style={modalVisible && styles.overlay} />
     </View>
   );
 }

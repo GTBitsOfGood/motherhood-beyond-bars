@@ -1,7 +1,6 @@
 import {
   StyleSheet,
   TextInput,
-  Switch,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -9,22 +8,14 @@ import {
 } from "react-native";
 import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";
-import { Button } from "react-native";
-import { auth, db } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
 //@ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
-
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  Timestamp,
-  setDoc,
-} from "firebase/firestore";
+import { doc, arrayUnion, Timestamp, setDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
+import Checkbox from "../../components/app/Checkbox";
 
 export default function SignWaiver({
   navigation,
@@ -32,6 +23,8 @@ export default function SignWaiver({
 }: OnboardingStackScreenProps<"SignWaiver">) {
   const authData = useContext(UserContext);
   const [isSelected, setSelection] = useState(false);
+  const [signature, setSignature] = useState("");
+  const [date, setDate] = useState("");
   const [unsigned, setUnsigned] = useState<Waiver[]>(
     route?.params?.unsignedWaivers || []
   );
@@ -70,7 +63,7 @@ export default function SignWaiver({
       );
   }
 
-  return waiver ? (
+  return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -91,21 +84,9 @@ export default function SignWaiver({
                   },
                 }}
               >
-                {waiver.content}
+                {waiver?.content}
               </MarkdownView>
             </ScrollView>
-
-            {/* <View
-              style={[
-                styles.container,
-                {
-                  flexDirection: "row",
-                },
-              ]}
-            >
-              <CheckBox value={isSelected} onValueChange={setSelection} />
-            </View> */}
-
             <View
               style={{
                 flexDirection: "row",
@@ -113,23 +94,29 @@ export default function SignWaiver({
                 paddingTop: 16,
               }}
             >
-              <Switch
-                value={isSelected}
-                onChange={() => {
-                  setSelection(!isSelected);
-                }}
+              <Checkbox
+                onPress={() => setSelection(!isSelected)}
+                checked={isSelected}
               />
-              <Text style={styles.agree}>I agree to the Liability Waiver</Text>
+              <Text style={styles.description}>
+                I agree to the Liability Waiver
+              </Text>
             </View>
             <Text style={styles.description}>Signature</Text>
-            <TextInput style={styles.input} />
+            <TextInput
+              style={styles.input}
+              onChangeText={(signature) => setSignature(signature)}
+            />
             <Text style={styles.description}>Date</Text>
-            <TextInput style={styles.input} />
+            <TextInput
+              style={styles.input}
+              onChangeText={(date) => setDate(date)}
+            />
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if (isSelected) {
+                  if (isSelected && signature.trim() && date.trim()) {
                     setSignedWaivers();
 
                     if (unsigned.length > 0) {
@@ -155,18 +142,6 @@ export default function SignWaiver({
         </TouchableWithoutFeedback>
       </ScrollView>
     </View>
-  ) : (
-    <>
-      <Text>no waivers</Text>
-      <Button
-        title={"Next"}
-        onPress={() => {
-          setSignedWaivers();
-
-          navigation.navigate("RequestItems");
-        }}
-      />
-    </>
   );
 }
 
@@ -179,11 +154,6 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
     justifyContent: "flex-end",
-  },
-  agree: {
-    fontSize: 15,
-    fontWeight: "bold",
-    paddingLeft: 15,
   },
   separator: {
     marginVertical: 30,

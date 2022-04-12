@@ -2,7 +2,6 @@ import { View } from "../../components/Themed";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React from "react";
-import { UserContext } from "../../providers/User";
 import WelcomeSVG from "../../assets/images/welcome";
 import HeartSVG from "../../assets/images/heart";
 
