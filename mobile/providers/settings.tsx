@@ -1,4 +1,4 @@
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, Timestamp } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
 
@@ -6,7 +6,9 @@ type RequestableItems = {
   itemName: string;
   itemDisplayName: string;
   itemDescription: string;
-  maxQuantity?: number;
+  onboarding: Boolean;
+  fulfilled: Boolean;
+  requestedOn: Timestamp;
 };
 
 type AppConfigSettings = {
