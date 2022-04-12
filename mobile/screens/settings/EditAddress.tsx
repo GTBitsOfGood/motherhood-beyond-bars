@@ -25,18 +25,14 @@ export default function EditAddress({
   const [address, setAddress] = useState(
     authData?.caregiver?.address as string
   );
-  const [addressEmpty, setAddressEmpty] = useState(false);
   const [apartment, setApartment] = useState(
     authData?.caregiver?.apartment as string
   );
   const [city, setCity] = useState(authData?.caregiver?.city as string);
-  const [cityEmpty, setCityEmpty] = useState(false);
   const [state, setState] = useState(authData?.caregiver?.state as string);
-  const [stateEmpty, setStateEmpty] = useState(false);
   const [zipCode, setZipCode] = useState(
     authData?.caregiver?.zipCode as string
   );
-  const [zipEmpty, setZipEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updateAddress() {
@@ -67,15 +63,17 @@ export default function EditAddress({
             <Text style={styles.description}>Street Name</Text>
             <TextInput
               autoFocus={true}
-              style={[styles.input, addressEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                address.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(address) => {
-                address !== "" && setAddressEmpty(false);
                 setAddress(address);
               }}
               placeholder="Street number and name"
               defaultValue={authData?.caregiver?.address}
             />
-            {addressEmpty && <RequiredField />}
+            {address.length == 0 && <RequiredField />}
             <Text style={styles.description}>Apartment/Suite (Optional)</Text>
             <TextInput
               autoFocus={true}
@@ -89,44 +87,45 @@ export default function EditAddress({
             <Text style={styles.description}>City</Text>
             <TextInput
               autoFocus={true}
-              style={[styles.input, cityEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                city.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(city) => {
-                city !== "" && setCityEmpty(false);
                 setCity(city);
               }}
               defaultValue={authData?.caregiver?.city}
             />
-            {cityEmpty && <RequiredField />}
+            {city.length == 0 && <RequiredField />}
             <Text style={styles.description}>State</Text>
             <States state={state} setState={setState}></States>
-            {stateEmpty && <RequiredField />}
+            {state.length == 0 && <RequiredField />}
             <Text style={styles.description}>Zip Code</Text>
             <TextInput
               keyboardType="numeric"
               autoFocus={true}
-              style={[styles.input, zipEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                zipCode.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(zipCode) => {
-                zipCode !== "" && setZipEmpty(false);
                 setZipCode(zipCode);
               }}
               defaultValue={authData?.caregiver?.zipCode}
             />
-            {zipEmpty && <RequiredField />}
+            {zipCode.length == 0 && <RequiredField />}
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
                   if (
-                    address === "" ||
-                    city === "" ||
-                    state === "" ||
-                    zipCode === ""
+                    !(
+                      address === "" ||
+                      city === "" ||
+                      state === "" ||
+                      zipCode === ""
+                    )
                   ) {
-                    address === "" && setAddressEmpty(true);
-                    city === "" && setCityEmpty(true);
-                    state === "" && setStateEmpty(true);
-                    zipCode === "" && setZipEmpty(true);
-                  } else {
                     await updateAddress();
                     navigation.navigate("AccountInfo");
                   }

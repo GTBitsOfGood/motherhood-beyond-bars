@@ -26,11 +26,8 @@ export default function EditPassword({
 }: SettingsStackScreenProps<"EditPassword">) {
   const authData = useContext(UserContext);
   const [oldPassword, setOldPassword] = useState("");
-  const [oldEmpty, setOldEmpty] = useState(false);
   const [newPassword, setNewPassword] = useState("");
-  const [newEmpty, setNewEmpty] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmEmpty, setConfirmEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updatePass() {
@@ -76,55 +73,59 @@ export default function EditPassword({
             <Text style={styles.description}>Old Password</Text>
             <TextInput
               autoFocus={true}
-              style={[styles.input, oldEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                oldPassword.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(oldPassword) => {
-                oldPassword !== "" && setOldEmpty(false);
                 setOldPassword(oldPassword);
               }}
               autoCompleteType="password"
               secureTextEntry={true}
               placeholder="Type your current password"
             />
-            {oldEmpty && <RequiredField />}
+            {oldPassword.length == 0 && <RequiredField />}
             <Text style={styles.description}>New Password</Text>
             <TextInput
               autoFocus={true}
-              style={[styles.input, newEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                newPassword.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(newPassword) => {
-                newPassword !== "" && setNewEmpty(false);
                 setNewPassword(newPassword);
               }}
               autoCompleteType="password"
               secureTextEntry={true}
               placeholder="Create a new secure password"
             />
-            {newEmpty && <RequiredField />}
+            {newPassword.length == 0 && <RequiredField />}
             <Text style={styles.description}>Confirm New Password</Text>
             <TextInput
               autoFocus={true}
-              style={[styles.input, confirmEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                confirmPassword.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(confirmPassword) => {
-                confirmPassword !== "" && setConfirmEmpty(false);
                 setConfirmPassword(confirmPassword);
               }}
               autoCompleteType="password"
               secureTextEntry={true}
               placeholder="Confirm your password"
             />
-            {confirmEmpty && <RequiredField />}
+            {confirmPassword.length == 0 && <RequiredField />}
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
                   if (
-                    oldPassword === "" ||
-                    newPassword === "" ||
-                    confirmPassword === ""
+                    !(
+                      oldPassword === "" ||
+                      newPassword === "" ||
+                      confirmPassword === ""
+                    )
                   ) {
-                    oldPassword === "" && setOldEmpty(true);
-                    newPassword === "" && setNewEmpty(true);
-                    confirmPassword === "" && setConfirmEmpty(true);
-                  } else {
                     updatePass();
                     navigation.navigate("AccountInfo");
                   }

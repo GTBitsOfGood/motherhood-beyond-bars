@@ -45,17 +45,12 @@ export default function EditAccount({
 }: SettingsStackScreenProps<"EditAccount">) {
   const authData = useContext(UserContext);
   const [first, setFirst] = useState(authData?.caregiver?.firstName as string);
-  const [firstEmpty, setFirstEmpty] = useState(false);
   const [last, setLast] = useState(authData?.caregiver?.lastName as string);
-  const [lastEmpty, setLastEmpty] = useState(false);
   const [email, setEmail] = useState(authData?.caregiver?.email as string);
-  const [emailEmpty, setEmailEmpty] = useState(false);
   const [password, setPassword] = useState("");
-  const [passwordEmpty, setPasswordEmpty] = useState(false);
   const [phone, setPhone] = useState(
     authData?.caregiver?.phoneNumber as string
   );
-  const [phoneEmpty, setPhoneEmpty] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   async function updateCaregiverInfo() {
@@ -72,15 +67,15 @@ export default function EditAccount({
             if (email != (authData?.caregiver?.email as string)) {
               updateEmail(auth.currentUser, email);
             }
-            navigation.navigate("AccountInfo");
           }
         })
         .catch(function (e) {
-          alert(e);
+          // alert(e);
           if (auth.currentUser && auth.currentUser.email) {
             setEmail(auth.currentUser.email);
           }
         });
+      navigation.navigate("AccountInfo");
     }
     updateDoc(caregiverDoc, {
       firstName: first,
@@ -107,25 +102,29 @@ export default function EditAccount({
             <Text style={styles.description}>First Name</Text>
             <TextInput
               autoFocus={true}
-              style={[styles.input, firstEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                first.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(first) => {
-                first !== "" && setFirstEmpty(false);
                 setFirst(first);
               }}
               defaultValue={authData?.caregiver?.firstName}
             />
-            {firstEmpty && <RequiredField />}
+            {first.length == 0 && <RequiredField />}
             <Text style={styles.description}>Last Name</Text>
             <TextInput
               autoFocus={true}
-              style={[styles.input, lastEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                last.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(last) => {
-                last !== "" && setLastEmpty(false);
                 setLast(last);
               }}
               defaultValue={authData?.caregiver?.lastName}
             />
-            {lastEmpty && <RequiredField />}
+            {last.length == 0 && <RequiredField />}
             <Text style={styles.description}>Email</Text>
             <TextInput
               placeholder="email"
@@ -133,14 +132,16 @@ export default function EditAccount({
               keyboardType="email-address"
               autoCapitalize="none"
               autoFocus={true}
-              style={[styles.input, emailEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                email.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(email) => {
-                email !== "" && setEmailEmpty(false) && setPasswordEmpty(false);
                 setEmail(email);
               }}
               defaultValue={authData?.caregiver?.email}
             />
-            {emailEmpty && <RequiredField />}
+            {email.length == 0 && <RequiredField />}
             {email != (authData?.caregiver?.email as string) && (
               <View>
                 <Text style={[styles.description, { fontSize: 14 }]}>
@@ -149,10 +150,9 @@ export default function EditAccount({
                 <TextInput
                   style={[
                     styles.input,
-                    passwordEmpty && { borderColor: "#FF3939" },
+                    password.length == 0 && { borderColor: "#FF3939" },
                   ]}
                   onChangeText={(password) => {
-                    password !== "" && setPasswordEmpty(false);
                     setPassword(password);
                   }}
                   autoCompleteType="password"
@@ -162,19 +162,21 @@ export default function EditAccount({
               </View>
             )}
             {email != (authData?.caregiver?.email as string) &&
-              passwordEmpty && <RequiredField />}
+              password.length == 0 && <RequiredField />}
             <Text style={styles.description}>Phone Number</Text>
             <TextInput
               keyboardType="numeric"
               autoFocus={true}
-              style={[styles.input, phoneEmpty && { borderColor: "#FF3939" }]}
+              style={[
+                styles.input,
+                phone.length == 0 && { borderColor: "#FF3939" },
+              ]}
               onChangeText={(phone) => {
-                phone !== "" && setPhoneEmpty(false);
                 setPhone(phone);
               }}
               defaultValue={authData?.caregiver?.phoneNumber}
             />
-            {phoneEmpty && <RequiredField />}
+            {phone.length == 0 && <RequiredField />}
             <View
               style={{
                 flexDirection: "row",
@@ -195,21 +197,15 @@ export default function EditAccount({
                 style={styles.button}
                 onPress={async () => {
                   if (
-                    first === "" ||
-                    last === "" ||
-                    email === "" ||
-                    phone === "" ||
-                    (email != (authData?.caregiver?.email as string) &&
-                      password === "")
+                    !(
+                      first === "" ||
+                      last === "" ||
+                      email === "" ||
+                      phone === "" ||
+                      (email != (authData?.caregiver?.email as string) &&
+                        password === "")
+                    )
                   ) {
-                    first === "" && setFirstEmpty(true);
-                    last === "" && setLastEmpty(true);
-                    email === "" && setEmailEmpty(true);
-                    phone === "" && setPhoneEmpty(true);
-                    email != (authData?.caregiver?.email as string) &&
-                      password === "" &&
-                      setPasswordEmpty(true);
-                  } else {
                     if (
                       email != (authData?.caregiver?.email as string) &&
                       !(await isUniqueEmail(email))
