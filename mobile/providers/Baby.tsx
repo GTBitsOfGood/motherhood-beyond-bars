@@ -27,8 +27,6 @@ export const BabyProvider = ({
   const [baby, setBaby] = useState<Baby | null>(null);
 
   useEffect(() => {
-    console.log('userid', userContext?.uid);
-    
 
     let unsubscribe: (() => void) | null = null;
     async function getData() {
