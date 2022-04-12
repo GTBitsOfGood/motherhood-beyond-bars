@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import AddCaretakerModal from "modals/addCaretakerModal";
 import { GetServerSideProps } from "next";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
@@ -45,10 +45,6 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
   const columns = useMemo(
     () => [
       {
-        Header: "",
-        accessor: "_",
-      },
-      {
         Header: "Name",
         accessor: "name",
       },
@@ -76,6 +72,12 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
 
   const [addModal, toggleAddModal] = useState(false);
 
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
   const addNewCaretaker = async (caretaker: any) => {
     await addDoc(collection(db, "caregivers"), {
       ...caretaker,
@@ -85,13 +87,14 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
     toggleAddModal(false);
     alert(`Caretaker successfully added!`);
 
-    router.replace(router.asPath);
+    refreshData();
   };
 
   const deleteCaretaker = async (caretaker: Caretaker) => {
     await deleteDoc(doc(db, "caregivers", caretaker.id));
     setCaretakers(caretakers.filter((c) => c.id !== caretaker.id));
     alert("Caretaker deleted");
+    refreshData();
   };
 
   return (
@@ -148,7 +151,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
     const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
     if (match) {
-      var intlCode = match[1] ? "+1 " : "";
+      const intlCode = match[1] ? "+1 " : "";
       return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
     }
     return null;
@@ -165,7 +168,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       registeredDate: data.createdAt
         ? data.createdAt.toDate().toLocaleDateString()
         : null,
-      assigned: !!data.baby,
+      assigned: child ? true : false,
       address: `${data.address}, ${
         data.apartment ? `${data.apartment}, ` : ""
       }${data.city}, ${data.state}`,

@@ -31,6 +31,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
               <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
+                    <th></th>
                     {headerGroup.headers.map((column) => (
                       <th
                         scope="col"

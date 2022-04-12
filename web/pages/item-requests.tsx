@@ -1,15 +1,24 @@
 import React from "react";
 import ItemRequestsTable from "@components/ItemRequestsTable";
 import { GetServerSideProps } from "next";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@lib/firebase";
+import { useRouter } from "next/router";
 
-enum ItemRequestStatus {
+export enum ItemRequestStatus {
   Pending = "Pending",
   Fulfilled = "Fulfilled",
 }
 
 type RequestItem = {
+  id: string;
   name: string;
   requestedOn: string;
   requestedBy: string;
@@ -51,6 +60,34 @@ function genItemRequestsTab({ itemRequests }: { itemRequests: RequestItem[] }) {
 
   const data = React.useMemo(() => getData(), []);
 
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
+  const markAsFulfilled = async (item: any) => {
+    const itemRef = doc(db, "app", "requestItems", "requests", item.id);
+
+    await updateDoc(itemRef, {
+      fulfilled: true,
+    });
+
+    alert(`${item.displayName} has been marked as fulfilled!`);
+    refreshData();
+  };
+
+  const markAsPending = async (item: any) => {
+    const itemRef = doc(db, "app", "requestItems", "requests", item.id);
+
+    await updateDoc(itemRef, {
+      fulfilled: false,
+    });
+
+    alert(`${item.displayName} has been marked as pending!`);
+    refreshData();
+  };
+
   return (
     <div>
       <div className="absolute mt-20 border-t w-full" />
@@ -59,7 +96,12 @@ function genItemRequestsTab({ itemRequests }: { itemRequests: RequestItem[] }) {
           <h1 className="text-2xl mb-5 font-bold">Item Requests</h1>
         </div>
         <div>
-          <ItemRequestsTable columns={columns} data={data} />
+          <ItemRequestsTable
+            columns={columns}
+            data={data}
+            markAsPending={markAsPending}
+            markAsFulfilled={markAsFulfilled}
+          />
         </div>
       </div>
     </div>
@@ -69,14 +111,18 @@ function genItemRequestsTab({ itemRequests }: { itemRequests: RequestItem[] }) {
 export default genItemRequestsTab;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const itemsRef = doc(db, "app", "requestItems");
-  let itemRequests = (await getDoc(itemsRef))?.data();
+  const itemsRef = query(collection(db, "app", "requestItems", "requests"));
+  const items = (await getDocs(itemsRef))?.docs.map((doc) => ({
+    data: doc.data(),
+    id: doc.id,
+  }));
 
-  itemRequests = await Promise.all(
-    itemRequests?.requests.map(async (request: any) => {
+  const itemRequests = await Promise.all(
+    items?.map(async ({ data: request, id }) => {
       const user = (await getDoc(request.requestedBy))?.data() as RequestItem;
       return {
         ...request,
+        id,
         requestedBy: user.name,
         requestedOn: request.requestedOn.toDate().toDateString(),
         fulfilled: request.fulfilled

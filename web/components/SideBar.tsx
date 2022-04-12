@@ -4,8 +4,12 @@ import admin_portal_gradient from "../public/admin_portal_gradient.png";
 import left_heart from "../public/left_heart.png";
 import right_heart from "../public/right_heart.png";
 import NavBar from "./navBar";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 function SideBar(props: any) {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col justify-between sm:relative bg-black shadow md:h-full hidden sm:flex">
       <div className="w-[318px] flex-col justify-start ">
@@ -23,20 +27,29 @@ function SideBar(props: any) {
             Admin Portal
           </h1>
         </span>
-        <ul className="px-[31px] py-[36px] static">
+        <div className="pt-4">
           {props.items.map((item: any, idx: number) => (
-            <a key={idx} href={item.route}>
-              <li className="flex w-full justify-between text-gray-600 hover:text-gray-500 cursor-pointer items-center mb-6">
-                <div className="flex items-center">
-                  <Image src={item.icon} />
-                  <span className="text-base font-semibold text-white hover:text-slate-400 ml-4">
-                    {item.name}
-                  </span>
-                </div>
-              </li>
-            </a>
+            <ul
+              key={idx}
+              className={`px-8 py-2 flex-col justify-center items-center ${
+                item.route == router.pathname ? "bg-gray-500" : ""
+              }`}
+            >
+              <div className="my-auto" key={idx}>
+                <Link key={idx} href={item.route}>
+                  <li className="flex w-full justify-between text-gray-600 hover:text-gray-500 cursor-pointer items-center mb-6">
+                    <div className="flex items-center">
+                      <Image src={item.icon} />
+                      <span className="text-base font-semibold text-white hover:text-slate-400 ml-4">
+                        {item.name}
+                      </span>
+                    </div>
+                  </li>
+                </Link>
+              </div>
+            </ul>
           ))}
-        </ul>
+        </div>
       </div>
       <div className="text-white">
         <NavBar />

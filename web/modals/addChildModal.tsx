@@ -3,14 +3,20 @@ import { useForm } from "react-hook-form";
 import { BiLoaderCircle } from "react-icons/bi";
 import { FaTimes } from "react-icons/fa";
 
-function AddChildModal({
+function ChildModal({
   setModal,
   onSubmit,
   caretakers,
+  buttonText = "Add a Child",
+  header = "Add a Child",
+  values,
 }: {
   setModal: (modal: boolean) => void;
   onSubmit: (data: any) => void;
   caretakers: { name: string; id: string }[];
+  buttonText?: string;
+  header?: string;
+  values?: any;
 }) {
   const {
     register,
@@ -18,13 +24,15 @@ function AddChildModal({
     formState: { errors, isSubmitting },
   } = useForm();
 
+  console.log(values);
+
   return (
     <>
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
-              <h3 className="text-3xl font-bold">Add a Child</h3>
+              <h3 className="text-3xl font-bold">{header}</h3>
               <button
                 className="bg-transparent border-0 text-black float-right"
                 onClick={() => setModal(false)}
@@ -41,6 +49,7 @@ function AddChildModal({
                       type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="First name"
+                      defaultValue={values?.firstName}
                       {...register("firstName", { required: true })}
                     />
                     {errors.firstName && (
@@ -55,6 +64,7 @@ function AddChildModal({
                       type="text"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="Last name"
+                      defaultValue={values?.lastName}
                       {...register("lastName", { required: true })}
                     />
                     {errors.lastName && (
@@ -69,6 +79,7 @@ function AddChildModal({
                       type="datetime-local"
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="Date of Birth"
+                      defaultValue={values?.dob && values?.dob.slice(0, -8)}
                       {...register("dob", { required: true })}
                     />
                     {errors.dob && (
@@ -81,6 +92,7 @@ function AddChildModal({
                     <label className="text-sm">Sex</label>
                     <select
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      defaultValue={values?.sex}
                       {...register("sex", { required: true })}
                     >
                       <option value="female">Female</option>
@@ -91,7 +103,8 @@ function AddChildModal({
                     <label className="text-sm">Caretaker</label>
                     <select
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      {...register("caretaker", { required: true })}
+                      {...register("caretakerID", { required: true })}
+                      defaultValue={values?.caretaker}
                     >
                       {caretakers.map((caretaker) => (
                         <option key={caretaker.id} value={caretaker.id}>
@@ -106,6 +119,7 @@ function AddChildModal({
                       type={"text"}
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="First, Last"
+                      defaultValue={values?.motherName}
                       {...register("motherName", { required: true })}
                     />
                     {errors.motherName && (
@@ -120,9 +134,17 @@ function AddChildModal({
                       type={"text"}
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                       placeholder="Hospital of Birth"
+                      defaultValue={values?.hospitalName}
                       {...register("hospitalName", { required: false })}
                     />
                   </div>
+                  {values && values.id && (
+                    <input
+                      type="hidden"
+                      defaultValue={values.id}
+                      {...register("id")}
+                    />
+                  )}
                 </div>
                 {isSubmitting && (
                   <div className="flex justify-center align-bottom">
@@ -146,7 +168,7 @@ function AddChildModal({
                     isSubmitting && "opacity-50 cursor-not-allowed"
                   }`}
                 >
-                  Add a Child
+                  {buttonText}
                 </button>
               </div>
             </form>
@@ -157,4 +179,4 @@ function AddChildModal({
   );
 }
 
-export default AddChildModal;
+export default ChildModal;

@@ -1,8 +1,11 @@
+import ButtonWithIcon from "@components/buttonWithIcon";
 import { db } from "@lib/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { GetServerSideProps } from "next";
+import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { BsFillPencilFill } from "react-icons/bs";
 
 type SettingsPhone = {
   phoneNumber: string;
@@ -70,6 +73,12 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
             </button>
           </div>
         </form>
+
+        <div className="my-10">
+          <Link href="/waivers">
+            <ButtonWithIcon text="Waivers" icon={<BsFillPencilFill />} />
+          </Link>
+        </div>
       </div>
     </div>
   );
