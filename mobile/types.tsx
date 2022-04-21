@@ -67,6 +67,11 @@ export type OnboardingParamList = {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
+  BabyBookAccess: undefined;
+  BabyBook: undefined;
+  StartBook: undefined;
+  SelectPicture: undefined;
+  ViewImage: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
@@ -84,6 +89,7 @@ export type BookParamList = {
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: undefined;
+  ViewImage: undefined;
 };
 
 export type SettingsParamList = {
@@ -123,10 +129,13 @@ export interface Caregiver {
 }
 
 export interface Baby {
-  name: string;
+  firstName: string;
+  lastName: string;
   id: string;
   caregiverEmail: string;
   caregiverID: string;
+  dob: string;
+  babyBook: string;
 }
 
 export interface Book {

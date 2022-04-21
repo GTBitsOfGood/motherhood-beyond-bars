@@ -70,6 +70,7 @@ import GetStarted from "../screens/onboarding/GetStarted";
 import Login from "../screens/onboarding/Login";
 import RecoverPassword from "../screens/onboarding/RecoverPassword";
 import HouseholdInfo from "../screens/onboarding/HouseholdInfo";
+import ViewImage from "../screens/babybook/ViewImage";
 import AccountInfo from "../screens/settings/AccountInfo";
 import EditAccount from "../screens/settings/EditAccount";
 import EditPassword from "../screens/settings/EditPassword";
@@ -410,6 +411,18 @@ function BookNavigator() {
           component={SelectPicture}
           options={{
             header: () => <View></View>,
+          }}
+        />
+        <Book.Screen
+          name="ViewImage"
+          component={ViewImage}
+          options={{
+            headerTitle: () => (
+              // add progress bar/circles and styling here
+              <View>
+                <Text>Picture and Caption</Text>
+              </View>
+            ),
           }}
         />
         <Book.Screen
