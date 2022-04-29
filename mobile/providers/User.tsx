@@ -4,11 +4,13 @@ import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { Caregiver } from "../types";
 
+// Only choose certain fields from user
 export type UserContextType =
   | (Pick<User, "email" | "displayName" | "emailVerified" | "uid"> & {
       caregiver?: Caregiver;
     })
   | null;
+
 export const UserContext = React.createContext<UserContextType>(null);
 
 export const UserProvider = ({
