@@ -37,7 +37,7 @@ function SideBar(props: any) {
             >
               <div className="my-auto" key={idx}>
                 <Link key={idx} href={item.route}>
-                  <li className="flex w-full justify-between text-gray-600 hover:text-gray-500 cursor-pointer items-center mb-6">
+                  <li className="flex h-full w-full justify-between text-gray-600 hover:text-gray-500 cursor-pointer items-center py-3">
                     <div className="flex items-center">
                       <Image src={item.icon} />
                       <span className="text-base font-semibold text-white hover:text-slate-400 ml-4">
