@@ -2,7 +2,7 @@ import React from "react";
 import { useTable } from "react-table";
 import { HiOutlineTrash } from "react-icons/hi";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import Tooltip from "./toopTip";
+import Tooltip from "./ToolTip";
 import Link from "next/link";
 
 function CaretakerTable({ columns, data, onDelete }: any) {
