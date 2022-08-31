@@ -19,7 +19,8 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   async function onChange(user: User | null) {
     if (user) {
-      const tokenId = await user.getIdTokenResult();
+      const tokenId = await user.getIdTokenResult(true);
+
       setAdmin(Boolean(tokenId.claims.admin));
     } else {
       setAdmin(null);

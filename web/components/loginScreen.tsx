@@ -58,7 +58,6 @@ function LoginScreen() {
           <div className="w-1/2">
             <div className="flex h-screen">
               <div className="m-auto w-full">
-                {console.log(userAdmin)}
                 {userAdmin === false && (
                   <div className="flex flex-row items-center justify-center m-10">
                     <ErrorAlert
@@ -79,34 +78,30 @@ function LoginScreen() {
                     />
                   </div>
                 )}
-                <div className="text-black font-opensans text-2xl font-bold text-center">
+                <div className="font-opensans text-2xl font-bold text-center mb-8">
                   Log In
                 </div>
-                <br />
-                <br />
                 <form onSubmit={handleSubmit(loginWithCredentials)}>
                   <div className="flex flex-col justify-center items-center">
                     <div>
-                      <div className="text-black font-opensans text-base">
+                      <div className="font-opensans text-base">
                         Username or Email
                       </div>
                       <input
                         {...register("email", { required: true })}
-                        className="text-black font-opensans text-base w-80 bg-gray-100 border-1 border-gray-300 p-2"
+                        className="font-opensans text-base w-80 bg-gray-100 border-1 border-gray-300 p-2"
                         type="text"
                       />
                     </div>
                     <br />
                     <br />
                     <div>
-                      <div className="text-black font-opensans text-base">
-                        Password
-                      </div>
+                      <div className="font-opensans text-base">Password</div>
                       <input
                         {...register("password", {
                           required: true,
                         })}
-                        className="block text-black font-opensans text-base w-80 bg-gray-100 border-1 border-gray-300 p-2"
+                        className="block font-opensans text-base w-80 bg-gray-100 border-1 border-gray-300 p-2"
                         type="password"
                       />
                       <div className="block text-sm float-right text-blue-600 cursor-pointer p-2">
