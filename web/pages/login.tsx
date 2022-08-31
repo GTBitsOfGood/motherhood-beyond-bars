@@ -1,4 +1,4 @@
-import LoginScreen from "@components/loginScreen";
+import LoginScreen from "@components/LoginScreen";
 import { UserContext } from "@lib/contexts/userContext";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";

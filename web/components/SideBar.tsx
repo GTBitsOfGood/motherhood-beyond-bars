@@ -3,7 +3,7 @@ import Image from "next/image";
 import admin_portal_gradient from "../public/admin_portal_gradient.png";
 import left_heart from "../public/left_heart.png";
 import right_heart from "../public/right_heart.png";
-import NavBar from "./navBar";
+import NavBar from "./NavBar";
 import Link from "next/link";
 import { useRouter } from "next/router";
 

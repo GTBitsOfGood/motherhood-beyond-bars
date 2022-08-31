@@ -16,8 +16,8 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import ButtonWithIcon from "@components/buttonWithIcon";
-import Modal from "@components/modal";
+import ButtonWithIcon from "@components/ButtonWithIcon";
+import Modal from "@components/Modal";
 import ChildModal from "modals/addChildModal";
 import { useRouter } from "next/router";
 

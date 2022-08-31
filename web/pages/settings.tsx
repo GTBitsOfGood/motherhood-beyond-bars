@@ -1,4 +1,4 @@
-import ButtonWithIcon from "@components/buttonWithIcon";
+import ButtonWithIcon from "@components/ButtonWithIcon";
 import { db } from "@lib/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { GetServerSideProps } from "next";

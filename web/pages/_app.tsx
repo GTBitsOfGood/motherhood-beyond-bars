@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import NavBar from "@components/navBar";
+import NavBar from "@components/NavBar";
 import NextNProgress from "nextjs-progressbar";
 import SideBar from "@components/SideBar";
 import SideBarItems from "@lib/SideBarItems";
