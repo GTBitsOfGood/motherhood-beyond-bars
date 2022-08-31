@@ -191,6 +191,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       } catch (e) {
         console.log(`Couldn't get caretaker for ${data.firstName}`);
       }
+
+      const dobDate = new Timestamp(
+        data.dob.seconds,
+        data.dob.nanoseconds
+      ).toDate();
+
       return {
         id: babyDoc.id,
         firstName: data.firstName,
@@ -199,8 +205,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         caretakerName: caretaker?.firstName + " " + caretaker?.lastName || null,
         caretakerID: data?.caretaker.id,
         motherName: data?.motherName || null,
-        birthday: data?.dob?.toDate().toLocaleDateString("en-us") || null,
-        dob: data?.dob.toDate().toISOString(),
+        birthday: dobDate?.toLocaleDateString("en-us") || null,
         sex: data?.sex || null,
         babyBook: "/book/" + babyDoc.id,
         hospitalName: data?.hospitalName,
