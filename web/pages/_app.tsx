@@ -1,6 +1,5 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import NavBar from "@components/NavBar";
 import NextNProgress from "nextjs-progressbar";
 import SideBar from "@components/SideBar";
 import SideBarItems from "@lib/SideBarItems";
@@ -13,7 +12,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserProvider>
       <div>
-        {/* <NavBar /> */}
         <div className="flex flex-no-wrap h-screen">
           {!router.asPath.includes("/book") && <SideBar items={SideBarItems} />}
           <NextNProgress />
