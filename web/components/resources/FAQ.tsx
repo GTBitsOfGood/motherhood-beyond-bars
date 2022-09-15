@@ -1,11 +1,43 @@
-import React from "react";
+import React, {useState} from "react";
 import { BiTrashAlt } from "react-icons/bi";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import InputContainer from './components/input-container.component.jsx';
+import ItemsContainer from './components/items-container.component.jsx';
+
+// const inputArr = [
+//   {
+//     type: "text",
+//     id: 1,
+//     value: ""
+//   }
+// ]
+const [arr, setArr] = useState([]);
+
+function addForm() {
+  // setArr(arr.concat(FaqQuestionAnswer()));
+  // setArr(e => {
+  //       return [
+  //     ...e, 
+  //   ]
+  // })
+}
 
 export default function FAQ() {
   return (
     <div>
-      {/* FAQ section here! */}
+      <FaqQuestionAnswer/>
+      <div>
+        <InputContainer>
+        </InputContainer>
+      </div>
+      <button type="submit" onClick={(FaqQuestionAnswer)}>+ Add a question</button>
+    </div>
+  );
+}
+
+function FaqQuestionAnswer() {
+  return (
+    <div>
       <br>
       </br>
       <form action="/send-data-here" method="post">
@@ -36,6 +68,7 @@ export default function FAQ() {
           type="text" id="answer" name="answer" required />
         <br></br>
         <button type="submit">Save Changes</button>
+        <br></br>
       </form>
     </div>
   );
