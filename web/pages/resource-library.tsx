@@ -21,7 +21,7 @@ type Link = {
   url: string;
 };
 
-function ResourceLibraryPage(props) {
+function ResourceLibraryPage() {
   const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
 
   const sections = [
@@ -31,7 +31,7 @@ function ResourceLibraryPage(props) {
     },
     {
       title: 'Links',
-      component: <Links links={props.links} />,
+      component: <Links/>,
     },
     {
       title: 'Research',
@@ -66,23 +66,23 @@ function ResourceLibraryPage(props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const itemsRef = query(collection(db, 'links'));
-  const linkDocs = await getDocs(itemsRef);
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const itemsRef = query(collection(db, 'links'));
+//   const linkDocs = await getDocs(itemsRef);
 
-  const links: Link[] = [];
+//   const links: Link[] = [];
 
-  linkDocs.forEach(async (doc) => {
-    const data = doc.data();
-    links.push({
-      id: doc.id,
-      title: data.title,
-      description: data.description,
-      url: data.url,
-    });
-  });
+//   linkDocs.forEach(async (doc) => {
+//     const data = doc.data();
+//     links.push({
+//       id: doc.id,
+//       title: data.title,
+//       description: data.description,
+//       url: data.url,
+//     });
+//   });
 
-  return { props: { links } };
-};
+//   return { props: { links } };
+// };
 
 export default ResourceLibraryPage;
