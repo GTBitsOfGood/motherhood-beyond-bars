@@ -29,72 +29,91 @@ export default function FAQ() {
   }
 
   return (
-    <div>
-      {faqs.map((faq, i) => <FaqQuestionAnswer faq={faq} setQuestion={(value) => {
-        setFaqs(faqs.map((_, i2) => {
-          return i2 === i ? { ...faq, question: value } : _
-        }))
-      }}
-        setAnswer={(value) => {
+    <div className="w-full">
+      <div style={{ overflowY: "scroll", overflow: "hidden", position: "relative", zIndex: 8 }}>
+        {faqs.map((faq, i) => <FaqQuestionAnswer faq={faq} setQuestion={(value) => {
           setFaqs(faqs.map((_, i2) => {
-            return i2 === i ? { ...faq, answer: value } : _
+            return i2 === i ? { ...faq, question: value } : _
           }))
-        }} />)}
-      <button type="submit" onClick={() => {
-        setFaqs([...faqs, { question: '', answer: '' }])
-      }}>+ Add a question</button>
-      <br>
-      </br>
-      <button type="submit" onClick={saveChanges}>Save Changes</button>
+        }}
+          setAnswer={(value) => {
+            setFaqs(faqs.map((_, i2) => {
+              return i2 === i ? { ...faq, answer: value } : _
+            }))
+          }} />)}
+      </div>
+      <div className="border-gray-300 p-4"
+        style={{ position: "sticky", zIndex: 1, borderTopWidth: 1 }}>
+        <div className="flex flex-row justify-between w-3/4">
+          <div className="text-blue-600">
+            <button type="submit"
+              style={{ fontWeight: "500" }}
+              onClick={() => {
+                setFaqs([...faqs, { question: '', answer: '' }])
+              }}
+            >+ Add a question</button>
+          </div>
+          <div className="text-blue-600 flex flex-justify-content-end">
+            <button type="submit"
+              className="rounded py-2 px-2 border-blue-600"
+              style={{ fontWeight: "500", borderWidth: 2, padding: 7 }}
+              onClick={saveChanges}>Save Changes</button>
+          </div>
+        </div>
+      </div>
     </div >
   );
 
   function FaqQuestionAnswer(props) {
     return (
-      <div>
+      <div className="w-full">
         <br>
         </br>
-        <form >
-          {/* Q, A, and icons */}
-          <div>
-            {/* Q and A */}
-            <div>
-              {/* Q and text area*/}
-              <div>
-                <label htmlFor="question">Q</label>
-                <input className="font-opensans text-base w-80 bg-light-gray-300 border-1 border-light-gray-700 p-2"
-                  placeholder="Question" name="question" value={props.faq.question}
-                  onChange={(e) => props.setQuestion(e.target.value)} required />
-              </div>
-              {/* A and text area */}
-              <div>
-                <label htmlFor="answer">A</label>
-                <input className="font-opensans text-base w-80 bg-light-gray-100 border-1 border-light-gray-700 p-2"
-                  type="textarea" placeholder="Answer" name="answer" value={props.faq.answer}
-                  onChange={(e) => props.setAnswer(e.target.value)} required />
-              </div>
+        {/* Q, A, and icons */}
+        <div className="flex flex-row w-full"
+        // style={{ width: "800" }}
+        >
+          {/* Q and A */}
+          <div className="flex flex-col w-3/4">
+            {/* Q and text area*/}
+            <div className="flex flex-row">
+              <label htmlFor="question" className=" p-1 font-semibold">Q</label>
+              <input className="focus:outline-0 min-h-[10px] bg-gray-50 font-opensans text-base w-80 border-1 rounded py-2 px-2 border-gray-300 p-2"
+                placeholder="Question" name="question"
+                style={{ width: "95%", borderWidth: 1, marginBottom: 20 }}
+                value={props.faq.question}
+                onChange={(e) => props.setQuestion(e.target.value)} required />
             </div>
-            <ol className="arrows">
-              <li>
-                <button type="button">
-                  <RiArrowUpSLine />
-                </button>
-              </li>
-              <li>
-                <button type="button">
-                  <RiArrowDownSLine />
-                </button>
-              </li>
-              <li>
-                <button type="button">
-                  <BiTrashAlt />
-                </button>
-              </li>
-            </ol>
+            {/* A and text area */}
+            <div className="flex flex-row">
+              <label htmlFor="answer" className="flex flex-justify-content-center font-semibold p-1">A</label>
+              <textarea className="focus:outline-0 min-h-[10px] font-opensans text-base w-80 bg-gray-50 border-1 rounded py-2 px-2 border-gray-300 p-2"
+                placeholder="Answer" name="answer"
+                style={{ width: "95%", borderWidth: 1, marginBottom: 20 }}
+                value={props.faq.answer}
+                onChange={(e) => props.setAnswer(e.target.value)} required />
+            </div>
           </div>
-          <br></br>
-        </form>
-      </div>
+          <ol className="arrows">
+            <li>
+              <button type="button">
+                <RiArrowUpSLine className="fill-gray-300" />
+              </button>
+            </li>
+            <li>
+              <button type="button">
+                <RiArrowDownSLine className="fill-gray-300" />
+              </button>
+            </li>
+            <li>
+              <button type="button">
+                <BiTrashAlt className="fill-gray-300" />
+              </button>
+            </li>
+          </ol>
+        </div>
+        <br></br>
+      </div >
     );
   }
 }
