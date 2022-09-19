@@ -3,6 +3,7 @@ import { BiTrashAlt } from "react-icons/bi";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@lib/firebase";
+import { getStaticProps } from "pages/waivers";
 
 
 export default function FAQ() {
