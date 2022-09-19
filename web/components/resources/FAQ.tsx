@@ -9,24 +9,6 @@ import { getStaticProps } from "pages/waivers";
 export default function FAQ() {
   const [faqs, setFaqs] = useState([{ question: '', answer: '' }]);
 
-  useEffect(() => {
-    let ignore = false;
-    getDoc(doc(db, "resources/faq")).then((doc) => {
-      if (!ignore) {
-        setFaqs(doc?.data()?.faqs);
-      }
-    });
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  async function saveChanges() {
-    const qa = doc(db, "resources", "faq");
-    await updateDoc(qa, {
-      faqs: faqs
-    });
-  }
 
   return (
     <div className="w-full">
@@ -65,9 +47,36 @@ export default function FAQ() {
     </div >
   );
 
-  function FaqQuestionAnswer(props) {
+  function FaqQuestionAnswer() {
+    const [question, setQuestion] = useState('');
+    const [answer, setAnswer] = useState('');
+    const [qas, setQAS] = useState([question, answer]);
+
+    useEffect(() => {
+      let ignore = false;
+      getDoc(doc(db, "resources/faq")).then((doc) => {
+        if (!ignore) {
+          setQuestion(doc?.data()?.question);
+          setAnswer(doc?.data()?.answer);
+        }
+      });
+      return () => {
+        ignore = true;
+      };
+    }, []);
+
+    async function setQA() {
+      const qa = doc(db, "resources", "faq");
+      setDoc(qa, {
+        qa: { question, answer },
+        question: question,
+        answer: answer
+      });
+    }
+
+
     return (
-      <div className="w-full">
+      <div>
         <br>
         </br>
         <div className="flex flex-row w-full"
@@ -89,6 +98,23 @@ export default function FAQ() {
                 value={props.faq.answer}
                 onChange={(e) => props.setAnswer(e.target.value)} required />
             </div>
+            <ol className="arrows">
+              <li>
+                <button type="button">
+                  <RiArrowUpSLine />
+                </button>
+              </li>
+              <li>
+                <button type="button">
+                  <RiArrowDownSLine />
+                </button>
+              </li>
+              <li>
+                <button type="button">
+                  <BiTrashAlt />
+                </button>
+              </li>
+            </ol>
           </div>
           <ol className="arrows">
             <li>
