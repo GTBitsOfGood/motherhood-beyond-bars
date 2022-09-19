@@ -30,7 +30,8 @@ export default function FAQ() {
 
   return (
     <div className="w-full">
-      <div style={{ overflowY: "scroll", overflow: "hidden", position: "relative", zIndex: 8 }}>
+      <div className="h-full"
+        style={{ overflowY: "scroll", overflow: "hidden", height: "100%", zIndex: 8 }}>
         {faqs.map((faq, i) => <FaqQuestionAnswer faq={faq} setQuestion={(value) => {
           setFaqs(faqs.map((_, i2) => {
             return i2 === i ? { ...faq, question: value } : _
@@ -42,12 +43,12 @@ export default function FAQ() {
             }))
           }} />)}
       </div>
-      <div className="border-gray-300 p-4"
-        style={{ position: "sticky", zIndex: 1, borderTopWidth: 1 }}>
+      <div className="bg-white border-gray-300 p-4"
+        style={{ position: "sticky", bottom: "0", zIndex: 1, borderTopWidth: 1 }}>
         <div className="flex flex-row justify-between w-3/4">
           <div className="text-blue-600">
             <button type="submit"
-              style={{ fontWeight: "500" }}
+              style={{ fontWeight: "500", padding: 7 }}
               onClick={() => {
                 setFaqs([...faqs, { question: '', answer: '' }])
               }}
@@ -69,13 +70,9 @@ export default function FAQ() {
       <div className="w-full">
         <br>
         </br>
-        {/* Q, A, and icons */}
         <div className="flex flex-row w-full"
-        // style={{ width: "800" }}
         >
-          {/* Q and A */}
           <div className="flex flex-col w-3/4">
-            {/* Q and text area*/}
             <div className="flex flex-row">
               <label htmlFor="question" className=" p-1 font-semibold">Q</label>
               <input className="focus:outline-0 min-h-[10px] bg-gray-50 font-opensans text-base w-80 border-1 rounded py-2 px-2 border-gray-300 p-2"
@@ -84,7 +81,6 @@ export default function FAQ() {
                 value={props.faq.question}
                 onChange={(e) => props.setQuestion(e.target.value)} required />
             </div>
-            {/* A and text area */}
             <div className="flex flex-row">
               <label htmlFor="answer" className="flex flex-justify-content-center font-semibold p-1">A</label>
               <textarea className="focus:outline-0 min-h-[10px] font-opensans text-base w-80 bg-gray-50 border-1 rounded py-2 px-2 border-gray-300 p-2"
@@ -112,7 +108,6 @@ export default function FAQ() {
             </li>
           </ol>
         </div>
-        <br></br>
       </div >
     );
   }
