@@ -21,7 +21,6 @@ export default function Links(props: {
   const [links, setLinks] = useState<Link[]>();
   const [userChanges, setUserChanges] = useState<Link[]>();
   const router = useRouter();
-  // const [changesMade, setChangesMade] = useState<boolean>(false);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'resources', 'links'), (doc) => {
