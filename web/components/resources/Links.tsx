@@ -1,10 +1,11 @@
-import { db } from "@lib/firebase";
-import { doc, updateDoc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import UpChevron from "@components/Icons/UpChevron";
-import DownChevron from "@components/Icons/DownChevron";
-import TrashCan from "@components/Icons/TrashCan";
-import { AiFillWarning } from "react-icons/ai";
+import { db } from '@lib/firebase';
+import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import UpChevron from '@components/Icons/UpChevron';
+import DownChevron from '@components/Icons/DownChevron';
+import TrashCan from '@components/Icons/TrashCan';
+import { AiFillWarning } from 'react-icons/ai';
+import { useRouter } from 'next/router';
 
 type Link = {
   title: string;
@@ -13,24 +14,47 @@ type Link = {
   error?: boolean;
 };
 
-export default function Links() {
+export default function Links(props: {
+  getChangesMade: () => boolean;
+  setChangesMade: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [links, setLinks] = useState<Link[]>();
   const [userChanges, setUserChanges] = useState<Link[]>();
-  const [changesMade, setChangesMade] = useState<boolean>(false);
+  const router = useRouter();
+  // const [changesMade, setChangesMade] = useState<boolean>(false);
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "resources", "links"), (doc) => {
+    const unsub = onSnapshot(doc(db, 'resources', 'links'), (doc) => {
       setLinks(doc.data()?.links);
       setUserChanges(doc.data()?.links);
     });
   }, []);
 
   useEffect(() => {
-    setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(links));
+    props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(links));
+
+    const warningText =
+      'You have unsaved changes - are you sure you wish to leave this page?';
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!props.getChangesMade()) return;
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+    const handleBrowseAway = () => {
+      if (!props.getChangesMade) return;
+      if (window.confirm(warningText)) return;
+      throw 'routeChange aborted.';
+    };
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
+    };
   }, [userChanges]);
 
   const updateLinks = async (newLinks: any) => {
-    await updateDoc(doc(db, "resources", "links"), { links: newLinks });
+    await updateDoc(doc(db, 'resources', 'links'), { links: newLinks });
   };
 
   const moveLink = (rank: number, shift: number) => {
@@ -47,9 +71,9 @@ export default function Links() {
     if (userChanges) {
       var tempLinks = userChanges;
       tempLinks.push({
-        title: "",
-        description: "",
-        url: "",
+        title: '',
+        description: '',
+        url: '',
       });
       setUserChanges([...tempLinks]);
     }
@@ -67,7 +91,7 @@ export default function Links() {
     if (userChanges) {
       var tempLinks = userChanges;
       for (var i = 0; i < tempLinks.length; i++) {
-        if (tempLinks[i].url == "") {
+        if (tempLinks[i].url == '') {
           tempLinks[i].error = true;
           setUserChanges([...tempLinks]);
           return;
@@ -123,8 +147,8 @@ export default function Links() {
                     <input
                       className={
                         link.error
-                          ? "w-full bg-[#FAFBFC] border-[#FF3939] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-                          : "w-full bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                          ? 'w-full bg-[#FAFBFC] border-[#FF3939] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]'
+                          : 'w-full bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]'
                       }
                       value={link.url}
                       onChange={(e) => {
@@ -190,9 +214,9 @@ export default function Links() {
           </div>
           <div
             className={
-              changesMade
-                ? "py-2 px-3 rounded bg-[#304CD1] text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
-                : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
+              props.getChangesMade()
+                ? 'py-2 px-3 rounded bg-[#304CD1] text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer'
+                : 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer'
             }
             onClick={saveChanges}
           >

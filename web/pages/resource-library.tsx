@@ -23,6 +23,7 @@ type Link = {
 
 function ResourceLibraryPage() {
   const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
+  const [changesMade, setChangesMade] = useState<boolean>(false);
 
   const sections = [
     {
@@ -31,7 +32,12 @@ function ResourceLibraryPage() {
     },
     {
       title: 'Links',
-      component: <Links/>,
+      component: (
+        <Links
+          getChangesMade={() => changesMade}
+          setChangesMade={setChangesMade}
+        />
+      ),
     },
     {
       title: 'Research',
@@ -54,7 +60,17 @@ function ResourceLibraryPage() {
                   ? 'bg-blue-700 text-white'
                   : 'bg-gray-100 text-gray-400'
               }`}
-              onClick={() => setSelectedSectionIndex(i)}
+              onClick={() => {
+                if (changesMade) {
+                  const confirmed = confirm(
+                    'You have unsaved changes - are you sure you wish to leave this page?'
+                  );
+                  if (confirmed) setSelectedSectionIndex(i);
+                  setChangesMade(false);
+                } else {
+                  setSelectedSectionIndex(i);
+                }
+              }}
             >
               {section.title}
             </button>
