@@ -1,25 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
-import { FAQ, Links, Research } from '../components';
-import { db } from '@lib/firebase';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { GetServerSideProps } from 'next';
-
-type Link = {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-};
+import React from "react";
+import { useState } from "react";
+import { FAQ, Links, Research } from "../components";
 
 function ResourceLibraryPage() {
   const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
@@ -27,11 +8,11 @@ function ResourceLibraryPage() {
 
   const sections = [
     {
-      title: 'FAQ',
+      title: "FAQ",
       component: <FAQ />,
     },
     {
-      title: 'Links',
+      title: "Links",
       component: (
         <Links
           getChangesMade={() => changesMade}
@@ -40,30 +21,30 @@ function ResourceLibraryPage() {
       ),
     },
     {
-      title: 'Research',
+      title: "Research",
       component: <Research />,
     },
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col overflow-y-scroll">
       <div className="flex flex-row items-center py-6 border-b w-full px-10">
         <h1 className="text-2xl font-bold w-full">Resource Library</h1>
       </div>
-      <section className="px-10">
-        <div className="border-b flex gap-x-1 mt-8 w-full">
+      <section className="flex flex-col flex-grow relative">
+        <div className="border-b flex gap-x-1 mt-8 w-full px-10">
           {/* Segmented Control */}
           {sections.map((section, i) => (
             <button
               className={`py-4 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
                 selectedSectionIndex === i
-                  ? 'bg-blue-700 text-white'
-                  : 'bg-gray-100 text-gray-400'
+                  ? "bg-blue-700 text-white"
+                  : "bg-gray-100 text-gray-400"
               }`}
               onClick={() => {
                 if (changesMade) {
                   const confirmed = confirm(
-                    'You have unsaved changes - are you sure you wish to leave this page?'
+                    "You have unsaved changes - are you sure you wish to leave this page?"
                   );
                   if (confirmed) {
                     setSelectedSectionIndex(i);
