@@ -101,6 +101,9 @@ export type SettingsParamList = {
 
 export type ResourcesParamList = {
   General: undefined;
+  FAQ: undefined;
+  Links: undefined;
+  Research: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
