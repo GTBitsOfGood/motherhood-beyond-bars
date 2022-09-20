@@ -65,8 +65,10 @@ function ResourceLibraryPage() {
                   const confirmed = confirm(
                     'You have unsaved changes - are you sure you wish to leave this page?'
                   );
-                  if (confirmed) setSelectedSectionIndex(i);
-                  setChangesMade(false);
+                  if (confirmed) {
+                    setSelectedSectionIndex(i);
+                    setChangesMade(false);
+                  }
                 } else {
                   setSelectedSectionIndex(i);
                 }
