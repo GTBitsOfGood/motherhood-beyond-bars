@@ -207,7 +207,7 @@ export default function Links(props: {
           })}
         </div>
       </div>
-      <div className="absolute bottom-0 w-full bg-white border-t-[1px] px-10 py-4">
+      <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4">
         <div className="flex items-center justify-between">
           <div
             className="text-[#304CD1] font-semibold hover:cursor-pointer"
