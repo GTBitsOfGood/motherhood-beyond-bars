@@ -23,7 +23,7 @@ function Research() {
       ignore = true;
     };
   }, []);
-  async function setInfo() {
+  function setInfo() {
     const researchDoc = doc(db, "resources", "research");
     setDoc(researchDoc, {
       markdown,
