@@ -56,7 +56,6 @@ function Research() {
                 }}
                 delete={() => {
                   setUrls(urls.filter((_, i) => i !== index));
-                  console.log(urls);
                 }}
               />
             );
