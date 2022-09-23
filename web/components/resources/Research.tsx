@@ -69,7 +69,6 @@ function Research() {
           className="text-md mt-5 mb-5 font-bold text-blue-500 cursor-pointer"
           onClick={() => {
             setUrls([...urls, ""]);
-            console.log(urls);
           }}
         >
           + Add a link
