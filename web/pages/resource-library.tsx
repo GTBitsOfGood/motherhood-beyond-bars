@@ -1,6 +1,6 @@
-import React from "react";
-import { useState } from "react";
-import { FAQ, Links, Research } from "../components";
+import React from 'react';
+import { useState } from 'react';
+import { FAQ, Links, Research } from '../components';
 
 function ResourceLibraryPage() {
   const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
@@ -8,11 +8,11 @@ function ResourceLibraryPage() {
 
   const sections = [
     {
-      title: "FAQ",
+      title: 'FAQ',
       component: <FAQ />,
     },
     {
-      title: "Links",
+      title: 'Links',
       component: (
         <Links
           getChangesMade={() => changesMade}
@@ -21,7 +21,7 @@ function ResourceLibraryPage() {
       ),
     },
     {
-      title: "Research",
+      title: 'Research',
       component: <Research />,
     },
   ];
@@ -38,13 +38,13 @@ function ResourceLibraryPage() {
             <button
               className={`py-4 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
                 selectedSectionIndex === i
-                  ? "bg-blue-700 text-white"
-                  : "bg-gray-100 text-gray-400"
+                  ? 'bg-blue-700 text-white'
+                  : 'bg-gray-100 text-gray-400'
               }`}
               onClick={() => {
                 if (changesMade) {
                   const confirmed = confirm(
-                    "You have unsaved changes - are you sure you wish to leave this page?"
+                    'You have unsaved changes - are you sure you wish to leave this page?'
                   );
                   if (confirmed) {
                     setSelectedSectionIndex(i);
