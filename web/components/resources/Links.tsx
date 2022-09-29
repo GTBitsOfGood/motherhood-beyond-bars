@@ -1,6 +1,6 @@
 import { db } from "@lib/firebase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import UpChevron from "@components/Icons/UpChevron";
 import DownChevron from "@components/Icons/DownChevron";
 import TrashCan from "@components/Icons/TrashCan";
@@ -16,7 +16,7 @@ type Link = {
 
 export default function Links(props: {
   getChangesMade: () => boolean;
-  setChangesMade: React.Dispatch<React.SetStateAction<boolean>>;
+  setChangesMade: Dispatch<SetStateAction<boolean>>;
 }) {
   const [links, setLinks] = useState<Link[]>();
   const [userChanges, setUserChanges] = useState<Link[]>();

@@ -11,14 +11,17 @@ const mdParser = new MarkdownIt();
 function Research() {
   const [markdown, setMarkdown] = useState("");
   const [urls, setUrls] = useState([""]);
+
   useEffect(() => {
     let ignore = false;
+
     getDoc(doc(db, "resources/research")).then((doc) => {
       if (!ignore) {
         setMarkdown(doc?.data()?.markdown);
         setUrls(doc?.data()?.url);
       }
     });
+
     return () => {
       ignore = true;
     };
