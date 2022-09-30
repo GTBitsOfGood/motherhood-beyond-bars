@@ -35,7 +35,7 @@ function Research() {
   }
   return (
     <div>
-      <div className="pt-6 flex h-full flex-col justify-left">
+      <div className="pt-6 flex h-full flex-col justify-left pl-10">
         <div className="grid grid-rows-1 grid-cols-10 gap-4 pb-6">
           <h2 className="text-md mb-5 font-bold col-span-1">Description</h2>
           <div className="col-span-8">
@@ -49,7 +49,7 @@ function Research() {
             />
           </div>
         </div>
-        <div>
+        <div className="pb-6 flex h-full flex-col justify-left">
           {urls.map((url, index) => {
             return (
               <ResearchURL
@@ -68,7 +68,7 @@ function Research() {
       <div className="absolute border-t w-full" />
       <div className="grid grid-rows-1 grid-cols-7 gap-4">
         <h2
-          className="text-md mt-5 mb-5 font-bold text-blue-500 cursor-pointer"
+          className="text-md mt-5 mb-5 font-bold text-blue-500 cursor-pointer pl-6"
           onClick={() => {
             setUrls([...urls, ""]);
           }}

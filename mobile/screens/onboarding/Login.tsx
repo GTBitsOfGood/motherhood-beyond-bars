@@ -85,7 +85,7 @@ export default function Login({
                 paddingTop: 155.5,
               }}
             >
-              <Text style={{ fontSize: 14 }}>Already have an account? </Text>
+              <Text style={{ fontSize: 14 }}>Don't have an account? </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("CreateAccount")}
               >
