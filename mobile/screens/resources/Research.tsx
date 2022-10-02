@@ -27,7 +27,7 @@ export default function Research({
   }, []);
 
   return (
-    description != '' ?
+    description.length > 0 ?
       <View style={{ height: '100%', flexDirection: "column", padding: 20 }}>
         {/* <Button
           title="Back"
