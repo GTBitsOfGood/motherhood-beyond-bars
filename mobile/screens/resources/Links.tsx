@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import { stringLength } from "@firebase/util";
+import Construction from "../../assets/images/construction";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -46,10 +46,14 @@ export default function Links({
   // ];
 
   const [data, setData] = useState([{ title: "", description: "", url: "" }]);
+  const [noLinks, setNoLinks] = useState(false);
 
   useEffect(() => {
     getDoc(doc(db, "resources/links")).then((doc) => {
       setData(doc?.data()?.links);
+      if (doc?.data()?.links.length == 0) {
+        setNoLinks(true);
+      }
     });
   }, []);
 
@@ -63,43 +67,55 @@ export default function Links({
       >
         <AntDesign name="left" size={30} color="black" />
       </TouchableOpacity>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View style={styles.inner}>
-            <View>
-              <Text style={styles.title}>Links</Text>
-              {data.map((item) => (
-                <View>
-                  {item.title !== "" && (
-                    <Text style={styles.subtitle} key={item.title}>
-                      {item.title}
-                    </Text>
-                  )}
-                  {item.description !== "" && (
-                    <Text style={styles.description} key={item.description}>
-                      {item.description}
-                    </Text>
-                  )}
-                  {item.url !== "" && (
-                    <TouchableOpacity onPress={() => openLink(item.url)}>
-                      <Text style={styles.link} key={item.url}>
-                        {item.url}
+
+      {!noLinks && (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={styles.inner}>
+              <View>
+                <Text style={styles.title}>Links</Text>
+                {data.map((item) => (
+                  <View key={item.title}>
+                    {item.title !== "" && item.title !== undefined && (
+                      <Text style={styles.subtitle} key={item.title}>
+                        {item.title}
                       </Text>
-                    </TouchableOpacity>
-                  )}
-                  <View
-                    style={{
-                      borderBottomColor: "black",
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                      marginBottom: 18,
-                    }}
-                  />
-                </View>
-              ))}
+                    )}
+                    {item.description !== "" && item.description !== undefined && (
+                      <Text style={styles.description} key={item.description}>
+                        {item.description}
+                      </Text>
+                    )}
+                    {item.url !== "" && item.url !== undefined && (
+                      <TouchableOpacity onPress={() => openLink(item.url)}>
+                        <Text style={styles.link} key={item.url}>
+                          {item.url}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                    <View
+                      style={{
+                        borderBottomColor: "black",
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                        marginBottom: 18,
+                      }}
+                    />
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </ScrollView>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      )}
+      {noLinks && (
+        <View style={styles.construction}>
+          <Construction />
+          <Text style={styles.constructiontitle}>Coming Soon!</Text>
+          <Text style={styles.constructionsubtitle}>
+            At the time, we haven't added any resources here. Check back soon!
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -133,5 +149,21 @@ const styles = StyleSheet.create({
     color: "#304CD1",
     paddingBottom: 18,
     fontWeight: "bold",
+  },
+  construction: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  constructiontitle: {
+    fontSize: 18,
+    color: "#666666",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  constructionsubtitle: {
+    fontSize: 16,
+    color: "#666666",
+    textAlign: "center",
   },
 });
