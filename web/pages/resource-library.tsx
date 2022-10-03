@@ -9,7 +9,12 @@ function ResourceLibraryPage() {
   const sections = [
     {
       title: 'FAQ',
-      component: <FAQ />,
+      component: (
+        <FAQ
+          getChangesMade={() => changesMade}
+          setChangesMade={setChangesMade}
+        />
+      ),
     },
     {
       title: 'Links',
