@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { doc, setDoc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
+import { doc, updateDoc, onSnapshot } from "firebase/firestore";
 import UpChevron from "@components/Icons/UpChevron";
 import DownChevron from "@components/Icons/DownChevron";
 import TrashCan from "@components/Icons/TrashCan";
@@ -21,9 +21,9 @@ export default function FAQ(props: {
   const [userChanges, setUserChanges] = useState<FAQEntry[]>([]);
   const router = useRouter();
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "resources", "faqs"), (doc) => {
-      setFaqs(doc.data()?.links);
-      setUserChanges(doc.data()?.links || []);
+    const unsub = onSnapshot(doc(db, "resources", "faq"), (doc) => {
+      setFaqs(doc.data()?.faqs || []);
+      setUserChanges(doc.data()?.faqs || []);
     });
 
     return unsub;
@@ -84,7 +84,7 @@ export default function FAQ(props: {
   };
 
   const updateFaqs = async (newFaqs: any) => {
-    await updateDoc(doc(db, "resources", "faqs"), { faqs: newFaqs });
+    await updateDoc(doc(db, "resources", "faq"), { faqs: newFaqs });
   };
 
   const saveChanges = () => {
@@ -110,7 +110,12 @@ export default function FAQ(props: {
               <div className="flex w-full py-5" key={index}>
                 <div className="flex flex-col w-5/6">
                   <div className="flex pt-2">
-                    <div className="text-base font-semibold w-1/5 py-2">Q</div>
+                    <label
+                      htmlFor={`faq-question-${index}`}
+                      className="text-base font-semibold w-1/5 py-2"
+                    >
+                      Question
+                    </label>
 
                     <div className="flex flex-col w-4/5">
                       <input
@@ -120,14 +125,15 @@ export default function FAQ(props: {
                             : " border-[#D9D9D9] border-[1px]"
                         } w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
                         value={faq.question}
+                        id={`faq-question-${index}`}
                         onChange={(e) => {
                           const tempFaqs = userChanges;
                           tempFaqs[index].question = e.target.value;
                           delete tempFaqs[index].error;
                           setUserChanges([...tempFaqs]);
                         }}
-                        placeholder="https://example.com"
-                      ></input>
+                        placeholder="What's the answer to the life, universe, and everything?"
+                      />
                       {faq.error ? (
                         <div className="text-sm text-[#FF3939] flex align-middle">
                           <span>
@@ -141,9 +147,12 @@ export default function FAQ(props: {
                     </div>
                   </div>
                   <div className="flex pt-2">
-                    <div className="text-base font-semibold w-1/5 py-2">
+                    <label
+                      htmlFor={`faq-answer-${index}`}
+                      className="text-base font-semibold w-1/5 py-2"
+                    >
                       Answer
-                    </div>
+                    </label>
                     <div className="flex flex-col w-4/5">
                       <input
                         className={`${
@@ -152,13 +161,14 @@ export default function FAQ(props: {
                             : " border-[#D9D9D9] border-[1px]"
                         } w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
                         value={faq.answer}
+                        id={`faq-answer-${index}`}
                         onChange={(e) => {
                           const tempFaqs = userChanges;
                           tempFaqs[index].answer = e.target.value;
                           delete tempFaqs[index].error;
                           setUserChanges([...tempFaqs]);
                         }}
-                        placeholder="https://example.com"
+                        placeholder="42"
                       ></input>
                       {faq.error ? (
                         <div className="text-sm text-[#FF3939] flex align-middle">
@@ -206,7 +216,7 @@ export default function FAQ(props: {
           })}
         </div>
       </div>
-      <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4">
+      <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4 max-w-[calc(100vw-318px)]">
         <div className="flex items-center justify-between">
           <div
             className="text-[#304CD1] font-semibold hover:cursor-pointer"
@@ -214,16 +224,17 @@ export default function FAQ(props: {
           >
             + Add a question
           </div>
-          <div
-            className={
-              props.getChangesMade()
-                ? "py-2 px-3 rounded bg-[#304CD1] text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
-                : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
-            }
+          <button
+            className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
+              ${
+                props.getChangesMade()
+                  ? "bg-[#304CD1] text-[#ffffff]"
+                  : "border-[#304CD1] text-[#304CD1]"
+              }`}
             onClick={saveChanges}
           >
             Save changes
-          </div>
+          </button>
         </div>
       </div>
     </>
