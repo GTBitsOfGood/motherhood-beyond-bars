@@ -10,25 +10,23 @@ import { useRouter } from "next/router";
 type FAQEntry = {
   question: string;
   answer: string;
-  error? : boolean;
+  error?: boolean;
 };
-
 
 export default function FAQ(props: {
   getChangesMade: () => boolean;
   setChangesMade: Dispatch<SetStateAction<boolean>>;
 }) {
   const [faqs, setFaqs] = useState<FAQEntry[]>();
-  const [userChanges, setUserChanges] = useState<FAQEntry[]>();
+  const [userChanges, setUserChanges] = useState<FAQEntry[]>([]);
   const router = useRouter();
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "resources", "faqs"), (doc) => {
       setFaqs(doc.data()?.links);
-      setUserChanges(doc.data()?.links);
+      setUserChanges(doc.data()?.links || []);
     });
 
     return unsub;
-  
   }, []);
 
   useEffect(() => {
@@ -53,70 +51,68 @@ export default function FAQ(props: {
       router.events.off("routeChangeStart", handleBrowseAway);
     };
   }, [userChanges]);
-  
 
-  
-const moveFAQ = (rank: number, shift: number) => {
-  if (userChanges && rank + shift >= 0 && rank + shift < userChanges.length) {
-    const tempFaqs = userChanges;
-    const tempFaq = tempFaqs[rank];
-    tempFaqs[rank] = tempFaqs[rank + shift];
-    tempFaqs[rank + shift] = tempFaq;
-    setUserChanges([...tempFaqs]);
-  }
-};
+  const moveFAQ = (rank: number, shift: number) => {
+    if (userChanges && rank + shift >= 0 && rank + shift < userChanges.length) {
+      const tempFaqs = userChanges;
+      const tempFaq = tempFaqs[rank];
+      tempFaqs[rank] = tempFaqs[rank + shift];
+      tempFaqs[rank + shift] = tempFaq;
+      setUserChanges([...tempFaqs]);
+    }
+  };
 
-const deleteTempFAQ = (rank: number) => {
-  if (userChanges) {
-    const tempFaqs = userChanges;
-    tempFaqs.splice(rank, 1);
-    setUserChanges([...tempFaqs]);
-  }
-};
+  const deleteTempFAQ = (rank: number) => {
+    if (userChanges) {
+      const tempFaqs = userChanges;
+      tempFaqs.splice(rank, 1);
+      setUserChanges([...tempFaqs]);
+    }
+  };
 
-const createTempFAQ = () => {
-  if (userChanges) {
-    const tempFaqs = userChanges;
-    tempFaqs.push({
-      question: "",
-      answer: "",
-    });
-    setUserChanges([...tempFaqs]);
-  }
-};
+  const createTempFAQ = () => {
+    if (userChanges) {
+      const tempFaqs = userChanges;
+      setUserChanges([
+        {
+          question: "",
+          answer: "",
+        },
+        ...tempFaqs,
+      ]);
+    }
+  };
 
-const updateFaqs = async (newFaqs: any) => {
-  await updateDoc(doc(db, "resources", "faqs"), { faqs: newFaqs });
-};
+  const updateFaqs = async (newFaqs: any) => {
+    await updateDoc(doc(db, "resources", "faqs"), { faqs: newFaqs });
+  };
 
-const saveChanges = () => {
-  if (userChanges) {
-    const tempFaqs = userChanges;
-    for (let i = 0; i < tempFaqs.length; i++) {
-      if (tempFaqs[i].answer == "" || tempFaqs[i].question == "") {
-        tempFaqs[i].error = true;
-        setUserChanges([...tempFaqs]);
-        return;
+  const saveChanges = () => {
+    if (userChanges) {
+      const tempFaqs = userChanges;
+      for (let i = 0; i < tempFaqs.length; i++) {
+        if (tempFaqs[i].answer == "" || tempFaqs[i].question == "") {
+          tempFaqs[i].error = true;
+          setUserChanges([...tempFaqs]);
+          return;
+        }
       }
     }
-  }
-  updateFaqs(userChanges);
-};
+    updateFaqs(userChanges);
+  };
 
-return (
-  <>
-    <div className="w-full h-full pb-20  px-10">
-      <div className="flex flex-col w-3/4">
-        {userChanges?.map((faq, index) => {
-          return (
-            <div className="flex w-full py-5" key={index}>
-              <div className="flex flex-col w-5/6">
-                <div className="flex pt-2">
-                  <div className="text-base font-semibold w-1/5 py-2">
-                    Q
-                  </div>
+  return (
+    <>
+      <div className="w-full h-full pb-20  px-10">
+        <div className="flex flex-col w-3/4">
+          {userChanges?.map((faq, index) => {
+            return (
+              <div className="flex w-full py-5" key={index}>
+                <div className="flex flex-col w-5/6">
+                  <div className="flex pt-2">
+                    <div className="text-base font-semibold w-1/5 py-2">Q</div>
 
-                  <div className="flex flex-col w-4/5">
+                    <div className="flex flex-col w-4/5">
                       <input
                         className={`${
                           faq.error
@@ -143,12 +139,12 @@ return (
                         <></>
                       )}
                     </div>
-                </div>
-                <div className="flex pt-2">
-                  <div className="text-base font-semibold w-1/5 py-2">
-                    Answer
                   </div>
-                  <div className="flex flex-col w-4/5">
+                  <div className="flex pt-2">
+                    <div className="text-base font-semibold w-1/5 py-2">
+                      Answer
+                    </div>
+                    <div className="flex flex-col w-4/5">
                       <input
                         className={`${
                           faq.error
@@ -175,61 +171,61 @@ return (
                         <></>
                       )}
                     </div>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col w-1/6 px-4 py-1 gap-y-2 pt-2">
-                <div className="flex flex-col gap-y-4">
-                  <div
-                    className="hover:cursor-pointer"
-                    onClick={() => {
-                      moveFAQ(index, -1);
-                    }}
-                  >
-                    <UpChevron className="fill-[#BFBFBF]"></UpChevron>
+                <div className="flex flex-col w-1/6 px-4 py-1 gap-y-2 pt-2">
+                  <div className="flex flex-col gap-y-4">
+                    <div
+                      className="hover:cursor-pointer"
+                      onClick={() => {
+                        moveFAQ(index, -1);
+                      }}
+                    >
+                      <UpChevron className="fill-[#BFBFBF]"></UpChevron>
+                    </div>
+                    <div
+                      className="hover:cursor-pointer"
+                      onClick={() => {
+                        moveFAQ(index, 1);
+                      }}
+                    >
+                      <DownChevron className="fill-[#BFBFBF]"></DownChevron>
+                    </div>
                   </div>
                   <div
                     className="hover:cursor-pointer"
                     onClick={() => {
-                      moveFAQ(index, 1);
+                      deleteTempFAQ(index);
                     }}
                   >
-                    <DownChevron className="fill-[#BFBFBF]"></DownChevron>
+                    <TrashCan className="fill-[#BFBFBF]"></TrashCan>
                   </div>
                 </div>
-                <div
-                  className="hover:cursor-pointer"
-                  onClick={() => {
-                    deleteTempFAQ(index);
-                  }}
-                >
-                  <TrashCan className="fill-[#BFBFBF]"></TrashCan>
-                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-    <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4">
-      <div className="flex items-center justify-between">
-        <div
-          className="text-[#304CD1] font-semibold hover:cursor-pointer"
-          onClick={createTempFAQ}
-        >
-          + Add a link
-        </div>
-        <div
-          className={
-            props.getChangesMade()
-              ? "py-2 px-3 rounded bg-[#304CD1] text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
-              : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
-          }
-          onClick={saveChanges}
-        >
-          Save changes
+            );
+          })}
         </div>
       </div>
-    </div>
-  </>
-);
+      <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4">
+        <div className="flex items-center justify-between">
+          <div
+            className="text-[#304CD1] font-semibold hover:cursor-pointer"
+            onClick={createTempFAQ}
+          >
+            + Add a question
+          </div>
+          <div
+            className={
+              props.getChangesMade()
+                ? "py-2 px-3 rounded bg-[#304CD1] text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
+                : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
+            }
+            onClick={saveChanges}
+          >
+            Save changes
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
