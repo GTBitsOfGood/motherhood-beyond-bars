@@ -228,8 +228,8 @@ export default function FAQ(props: {
             className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
               ${
                 props.getChangesMade()
-                  ? 'bg-[#304CD1] text-[#ffffff]'
-                  : 'border-[#304CD1] text-[#304CD1]'
+                  ? 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer'
+                  : 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer'
               }`}
             onClick={saveChanges}
           >

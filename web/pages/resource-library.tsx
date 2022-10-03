@@ -27,7 +27,12 @@ function ResourceLibraryPage() {
     },
     {
       title: 'Research',
-      component: <Research />,
+      component: (
+        <Research
+          getChangesMade={() => changesMade}
+          setChangesMade={setChangesMade}
+        />
+      ),
     },
   ];
 

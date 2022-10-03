@@ -104,7 +104,7 @@ export default function Links(props: {
 
   return (
     <div>
-      <div className="w-full h-full pb-20  px-10 relative">
+      <div className="w-3/4 h-full pb-20  px-10 relative">
         <div className="fixed bottom-0 right-0 left-[318px] bg-white border-t-[1px] px-10 py-4">
           <div className="flex items-center justify-between ">
             <div
@@ -125,7 +125,7 @@ export default function Links(props: {
             </div>
           </div>
         </div>
-        <div className="flex flex-col w-3/4">
+        <div className="flex flex-col w-full">
           {userChanges?.map((link, index) => {
             return (
               <div className="flex w-full py-5" key={index}>
