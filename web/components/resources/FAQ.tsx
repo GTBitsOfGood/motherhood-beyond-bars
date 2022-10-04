@@ -170,15 +170,13 @@ export default function FAQ(props: {
                         }}
                         placeholder="42"
                       ></input>
-                      {faq.error ? (
+                      {faq.error && (
                         <div className="text-sm text-[#FF3939] flex align-middle">
                           <span>
                             <AiFillWarning className="fill-[#FF3939]"></AiFillWarning>
                           </span>
                           This field is required
                         </div>
-                      ) : (
-                        <></>
                       )}
                     </div>
                   </div>
