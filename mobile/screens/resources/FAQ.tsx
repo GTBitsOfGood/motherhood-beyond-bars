@@ -58,10 +58,8 @@ export default function FAQ({ navigation }: ResourcesStackScreenProps<"FAQ">) {
                       />
                     </View>
                   </TouchableOpacity>
-                  {index === expanded ? (
+                  {index === expanded && (
                     <Text style={styles.answerText}>{faq.answer}</Text>
-                  ) : (
-                    <></>
                   )}
                 </View>
               );
