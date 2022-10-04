@@ -1,27 +1,44 @@
-import React, { Dispatch } from "react";
-import trash from "../../public/trashcan.png";
-import Image from "next/image";
-type PropTypes = { url: string; setUrl: Dispatch<string>; delete: () => void };
+import React, { Dispatch } from 'react';
+import TrashCan from '@components/Icons/TrashCan';
+type PropTypes = {
+  url: string;
+  setUrl: Dispatch<string>;
+  delete: () => void;
+  index: number;
+};
 function ResearchURL(props: PropTypes) {
   return (
-    <div className="pb-6 flex h-full flex-col justify-left">
-      <div className="grid grid-rows-1 grid-cols-10 gap-4">
-        <h2 className="text-md pt-2 font-bold col-span-1">URL</h2>
-        <div className="col-span-8">
-          <input
-            value={props.url}
-            onChange={(e) => {
-              props.setUrl(e.currentTarget.value);
-            }}
-            type="text"
-            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-            placeholder="https://example.com"
-          />
+    <div className="flex w-full py-5">
+      <div className="flex flex-col w-5/6">
+        <div className="flex pt-2">
+          <label
+            htmlFor={`faq-question-${props.index}`}
+            className="text-base font-semibold w-1/5 py-2"
+          >
+            Question
+          </label>
+
+          <div className="flex flex-col w-4/5">
+            <input
+              className={`border-[#D9D9D9] border-[1px] w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
+              value={props.url}
+              id={`faq-question-${props.index}`}
+              onChange={(e) => {
+                props.setUrl(e.currentTarget.value);
+              }}
+              placeholder="What's the answer to the life, universe, and everything?"
+            />
+          </div>
         </div>
-        <span className="col-span-1 pt-2">
-          <Image className="static px-10" src={trash} onClick={props.delete} />
-        </span>
       </div>
+      <div className="flex flex-col w-1/6 px-4 py-1 gap-y-2 pt-2">
+        <div className="hover:cursor-pointer" onClick={props.delete}>
+          <TrashCan className="fill-[#BFBFBF]"></TrashCan>
+        </div>
+      </div>
+      <span className="col-span-1 pt-2">
+        <Image className="static px-10" src={trash} onClick={props.delete} />
+      </span>
     </div>
   );
 }
