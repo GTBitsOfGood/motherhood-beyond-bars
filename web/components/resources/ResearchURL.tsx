@@ -1,5 +1,7 @@
-import React, { Dispatch } from 'react';
-import TrashCan from '@components/Icons/TrashCan';
+import React, { Dispatch } from "react";
+import trash from "../../public/trashcan.png";
+import TrashCan from "@components/Icons/TrashCan";
+import Image from "next/image";
 type PropTypes = {
   url: string;
   setUrl: Dispatch<string>;
