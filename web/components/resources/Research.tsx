@@ -73,32 +73,22 @@ function Research(props: {
     console.log('reached here');
   }
   return (
-    <>
-      <div className="w-full h-full pb-20  px-10">
-        <div className="flex flex-col w-full">
-          <div className="flex w-full py-5">
-            <div className="flex flex-col w-5/6">
-              <div className="flex pt-2">
-                <label
-                  htmlFor="description"
-                  className="text-base font-semibold w-1/5 py-2"
-                >
-                  Description
-                </label>
-
-                <div className="flex flex-col w-4/5">
-                  <MdEditor
-                    style={{ maxHeight: 600, minHeight: 300 }}
-                    value={markdown}
-                    renderHTML={(text) => mdParser.render(text)}
-                    onChange={({ text }) => {
-                      setMarkdown(text);
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
+    <div>
+      <div className="pt-6 flex h-full flex-col justify-left pl-10">
+        <div className="grid grid-rows-1 grid-cols-10 gap-4 pb-6">
+          <h2 className="text-md mb-5 font-bold col-span-1">Description</h2>
+          <div className="col-span-8">
+            <MdEditor
+              style={{ height: 300 }}
+              value={markdown}
+              renderHTML={(text) => mdParser.render(text)}
+              onChange={({ text }) => {
+                setMarkdown(text);
+              }}
+            />
           </div>
+        </div>
+        <div className="pb-6 flex h-full flex-col justify-left">
           {urls.map((url, index) => {
             return (
               <ResearchURL
@@ -115,16 +105,17 @@ function Research(props: {
           })}
         </div>
       </div>
-      <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4 max-w-[calc(100vw-318px)]">
-        <div className="flex items-center justify-between">
-          <div
-            className="text-[#304CD1] font-semibold hover:cursor-pointer"
-            onClick={() => {
-              setUrls([...urls, '']);
-            }}
-          >
-            + Add a link
-          </div>
+      <div className="absolute border-t w-full" />
+      <div className="grid grid-rows-1 grid-cols-7 gap-4">
+        <h2
+          className="text-md mt-5 mb-5 font-bold text-blue-500 cursor-pointer pl-6"
+          onClick={() => {
+            setUrls([...urls, ""]);
+          }}
+        >
+          + Add a link
+        </h2>
+        <div className="pt-3 col-start-7">
           <button
             className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
             ${

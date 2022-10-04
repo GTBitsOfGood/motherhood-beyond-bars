@@ -36,6 +36,9 @@ function ResearchURL(props: PropTypes) {
           <TrashCan className="fill-[#BFBFBF]"></TrashCan>
         </div>
       </div>
+      <span className="col-span-1 pt-2">
+        <Image className="static px-10" src={trash} onClick={props.delete} />
+      </span>
     </div>
   );
 }
