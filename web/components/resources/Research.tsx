@@ -1,22 +1,58 @@
-import React, { useEffect, useState } from "react";
-import ResearchURL from "./ResearchURL";
-import MdEditor from "react-markdown-editor-lite";
-import MarkdownIt from "markdown-it";
-import "react-markdown-editor-lite/lib/index.css";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "@lib/firebase";
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import ResearchURL from './ResearchURL';
+import MdEditor from 'react-markdown-editor-lite';
+import MarkdownIt from 'markdown-it';
+import 'react-markdown-editor-lite/lib/index.css';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '@lib/firebase';
+import { useRouter } from 'next/router';
 
 const mdParser = new MarkdownIt();
 
-function Research() {
-  const [markdown, setMarkdown] = useState("");
-  const [urls, setUrls] = useState([""]);
+function Research(props: {
+  getChangesMade: () => boolean;
+  setChangesMade: Dispatch<SetStateAction<boolean>>;
+}) {
+  const [initialMarkdown, setInitialMarkdown] = useState('');
+  const [initialUrls, setInitialUrls] = useState(['']);
+
+  const [markdown, setMarkdown] = useState('');
+  const [urls, setUrls] = useState(['']);
+  const router = useRouter();
+
+  useEffect(() => {
+    props.setChangesMade(
+      JSON.stringify(urls) !== JSON.stringify(initialUrls) ||
+        markdown !== initialMarkdown
+    );
+
+    const warningText =
+      'You have unsaved changes - are you sure you wish to leave this page?';
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!props.getChangesMade()) return;
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+    const handleBrowseAway = () => {
+      if (!props.getChangesMade) return;
+      if (window.confirm(warningText)) return;
+      throw 'routeChange aborted.';
+    };
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
+    };
+  }, [markdown, urls, initialMarkdown, initialUrls]);
 
   useEffect(() => {
     let ignore = false;
 
-    getDoc(doc(db, "resources/research")).then((doc) => {
+    getDoc(doc(db, 'resources/research')).then((doc) => {
       if (!ignore) {
+        setInitialMarkdown(doc?.data()?.markdown);
+        setInitialUrls(doc?.data()?.url);
         setMarkdown(doc?.data()?.markdown);
         setUrls(doc?.data()?.url);
       }
@@ -27,29 +63,42 @@ function Research() {
     };
   }, []);
   function setInfo() {
-    const researchDoc = doc(db, "resources", "research");
+    const researchDoc = doc(db, 'resources', 'research');
     setDoc(researchDoc, {
       markdown,
       url: urls,
     });
+    setInitialMarkdown(markdown);
+    setInitialUrls(urls);
+    console.log('reached here');
   }
   return (
-    <div>
-      <div className="pt-6 flex h-full flex-col justify-left px-6">
-        <div className="grid grid-rows-1 grid-cols-10 gap-4 pb-6">
-          <h2 className="text-md mb-5 font-bold col-span-1">Description</h2>
-          <div className="col-span-8">
-            <MdEditor
-              style={{ height: 300 }}
-              value={markdown}
-              renderHTML={(text) => mdParser.render(text)}
-              onChange={({ text }) => {
-                setMarkdown(text);
-              }}
-            />
+    <>
+      <div className="w-full h-full pb-20  px-10">
+        <div className="flex flex-col w-full">
+          <div className="flex w-full py-5">
+            <div className="flex flex-col w-5/6">
+              <div className="flex pt-2">
+                <label
+                  htmlFor="description"
+                  className="text-base font-semibold w-1/5 py-2"
+                >
+                  Description
+                </label>
+
+                <div className="flex flex-col w-4/5">
+                  <MdEditor
+                    style={{ maxHeight: 600, minHeight: 300 }}
+                    value={markdown}
+                    renderHTML={(text) => mdParser.render(text)}
+                    onChange={({ text }) => {
+                      setMarkdown(text);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div>
           {urls.map((url, index) => {
             return (
               <ResearchURL
@@ -60,32 +109,36 @@ function Research() {
                 delete={() => {
                   setUrls(urls.filter((_, i) => i !== index));
                 }}
+                index={index}
               />
             );
           })}
         </div>
       </div>
-      <div className="absolute border-t w-full" />
-      <div className="grid grid-rows-1 grid-cols-7 gap-4 px-6">
-        <h2
-          className="text-md mt-5 mb-5 font-bold text-blue-500 cursor-pointer"
-          onClick={() => {
-            setUrls([...urls, ""]);
-          }}
-        >
-          + Add a link
-        </h2>
-        <div className="pt-3 col-start-7">
+      <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4 max-w-[calc(100vw-318px)]">
+        <div className="flex items-center justify-between">
+          <div
+            className="text-[#304CD1] font-semibold hover:cursor-pointer"
+            onClick={() => {
+              setUrls([...urls, '']);
+            }}
+          >
+            + Add a link
+          </div>
           <button
-            className="flex-shrink-0 bg-white-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-2 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
-            type="submit"
+            className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
+            ${
+              props.getChangesMade()
+                ? 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer'
+                : 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer'
+            }`}
             onClick={setInfo}
           >
-            Save Changes
+            Save changes
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

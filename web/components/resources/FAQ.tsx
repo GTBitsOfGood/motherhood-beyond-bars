@@ -1,11 +1,11 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { doc, updateDoc, onSnapshot } from "firebase/firestore";
-import UpChevron from "@components/Icons/UpChevron";
-import DownChevron from "@components/Icons/DownChevron";
-import TrashCan from "@components/Icons/TrashCan";
-import { db } from "@lib/firebase";
-import { AiFillWarning } from "react-icons/ai";
-import { useRouter } from "next/router";
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
+import UpChevron from '@components/Icons/UpChevron';
+import DownChevron from '@components/Icons/DownChevron';
+import TrashCan from '@components/Icons/TrashCan';
+import { db } from '@lib/firebase';
+import { AiFillWarning } from 'react-icons/ai';
+import { useRouter } from 'next/router';
 
 type FAQEntry = {
   question: string;
@@ -21,7 +21,7 @@ export default function FAQ(props: {
   const [userChanges, setUserChanges] = useState<FAQEntry[]>([]);
   const router = useRouter();
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "resources", "faq"), (doc) => {
+    const unsub = onSnapshot(doc(db, 'resources', 'faq'), (doc) => {
       setFaqs(doc.data()?.faqs || []);
       setUserChanges(doc.data()?.faqs || []);
     });
@@ -33,7 +33,7 @@ export default function FAQ(props: {
     props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(faqs));
 
     const warningText =
-      "You have unsaved changes - are you sure you wish to leave this page?";
+      'You have unsaved changes - are you sure you wish to leave this page?';
     const handleWindowClose = (e: BeforeUnloadEvent) => {
       if (!props.getChangesMade()) return;
       e.preventDefault();
@@ -42,13 +42,13 @@ export default function FAQ(props: {
     const handleBrowseAway = () => {
       if (!props.getChangesMade) return;
       if (window.confirm(warningText)) return;
-      throw "routeChange aborted.";
+      throw 'routeChange aborted.';
     };
-    window.addEventListener("beforeunload", handleWindowClose);
-    router.events.on("routeChangeStart", handleBrowseAway);
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
     return () => {
-      window.removeEventListener("beforeunload", handleWindowClose);
-      router.events.off("routeChangeStart", handleBrowseAway);
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
     };
   }, [userChanges]);
 
@@ -75,8 +75,8 @@ export default function FAQ(props: {
       const tempFaqs = userChanges;
       setUserChanges([
         {
-          question: "",
-          answer: "",
+          question: '',
+          answer: '',
         },
         ...tempFaqs,
       ]);
@@ -84,14 +84,14 @@ export default function FAQ(props: {
   };
 
   const updateFaqs = async (newFaqs: any) => {
-    await updateDoc(doc(db, "resources", "faq"), { faqs: newFaqs });
+    await updateDoc(doc(db, 'resources', 'faq'), { faqs: newFaqs });
   };
 
   const saveChanges = () => {
     if (userChanges) {
       const tempFaqs = userChanges;
       for (let i = 0; i < tempFaqs.length; i++) {
-        if (tempFaqs[i].answer == "" || tempFaqs[i].question == "") {
+        if (tempFaqs[i].answer == '' || tempFaqs[i].question == '') {
           tempFaqs[i].error = true;
           setUserChanges([...tempFaqs]);
           return;
@@ -121,8 +121,8 @@ export default function FAQ(props: {
                       <input
                         className={`${
                           faq.error
-                            ? " border-[#FF3939] border-[1px]"
-                            : " border-[#D9D9D9] border-[1px]"
+                            ? ' border-[#FF3939] border-[1px]'
+                            : ' border-[#D9D9D9] border-[1px]'
                         } w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
                         value={faq.question}
                         id={`faq-question-${index}`}
@@ -157,8 +157,8 @@ export default function FAQ(props: {
                       <input
                         className={`${
                           faq.error
-                            ? " border-[#FF3939] border-[1px]"
-                            : " border-[#D9D9D9] border-[1px]"
+                            ? ' border-[#FF3939] border-[1px]'
+                            : ' border-[#D9D9D9] border-[1px]'
                         } w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
                         value={faq.answer}
                         id={`faq-answer-${index}`}
@@ -170,15 +170,13 @@ export default function FAQ(props: {
                         }}
                         placeholder="42"
                       ></input>
-                      {faq.error ? (
+                      {faq.error && (
                         <div className="text-sm text-[#FF3939] flex align-middle">
                           <span>
                             <AiFillWarning className="fill-[#FF3939]"></AiFillWarning>
                           </span>
                           This field is required
                         </div>
-                      ) : (
-                        <></>
                       )}
                     </div>
                   </div>
@@ -228,8 +226,8 @@ export default function FAQ(props: {
             className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
               ${
                 props.getChangesMade()
-                  ? "bg-[#304CD1] text-[#ffffff]"
-                  : "border-[#304CD1] text-[#304CD1]"
+                  ? 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer'
+                  : 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer'
               }`}
             onClick={saveChanges}
           >

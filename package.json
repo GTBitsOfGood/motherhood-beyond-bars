@@ -2,5 +2,7 @@
   "scripts": {
     "build": "cd web && npm run build"
   },
-  "dependencies": {}
+  "dependencies": {
+    "next": "^12.3.0"
+  }
 }
