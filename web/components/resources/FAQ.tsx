@@ -31,25 +31,6 @@ export default function FAQ(props: {
 
   useEffect(() => {
     props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(faqs));
-
-    const warningText =
-      'You have unsaved changes - are you sure you wish to leave this page?';
-    const handleWindowClose = (e: BeforeUnloadEvent) => {
-      if (!props.getChangesMade()) return;
-      e.preventDefault();
-      return (e.returnValue = warningText);
-    };
-    const handleBrowseAway = () => {
-      if (!props.getChangesMade) return;
-      if (window.confirm(warningText)) return;
-      throw 'routeChange aborted.';
-    };
-    window.addEventListener('beforeunload', handleWindowClose);
-    router.events.on('routeChangeStart', handleBrowseAway);
-    return () => {
-      window.removeEventListener('beforeunload', handleWindowClose);
-      router.events.off('routeChangeStart', handleBrowseAway);
-    };
   }, [userChanges]);
 
   const moveFAQ = (rank: number, shift: number) => {
