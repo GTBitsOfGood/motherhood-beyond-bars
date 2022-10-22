@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Linking, StyleSheet, Pressable, Image } from "react-native";
+import {
+  View,
+  Text,
+  Linking,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { ResourcesStackScreenProps } from "../../types";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import ConstructionSVG from "../../assets/images/construction";
+import { AntDesign } from "@expo/vector-icons";
+
+type URL = {
+  title: string;
+  url: string;
+  id: string;
+};
 
 export default function Research({
   navigation,
 }: ResourcesStackScreenProps<"Research">) {
   const [description, setDescription] = useState("");
-  const [link, setLink] = useState("");
-  let linkCount = link.length;
+  const [link, setLink] = useState<URL[]>();
 
   useEffect(() => {
     let ignore = false;
@@ -27,92 +40,146 @@ export default function Research({
   }, []);
 
   return (
-    description.length > 0 ?
-      <View style={{ height: '100%', flexDirection: "column", padding: 20 }}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 24, fontWeight: "bold", fontFamily: "Open Sans", paddingBottom: 15 }}>Research</Text>
-          <Text style={{ fontSize: 16, fontFamily: "Open Sans" }}>
-            General Description:
-          </Text>
-          <Text style={{ fontSize: 16, fontFamily: "Open Sans", paddingBottom: 15 }}>
-            {description}
-          </Text>
-          <Text style={{ fontSize: 16, fontFamily: "Open Sans", paddingBottom: 15 }}>
-            If you are interested in helping aid our research, chect out
-            <Text style={{ color: '#304CD1' }}
-              onPress={() => Linking.openURL(link[0].toString())}> {link[0]} </Text>
-            or click the button below to direct you to our research page.
-          </Text>
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={{ paddingLeft: 10, paddingTop: 10 }}
+        onPress={() => {
+          navigation.navigate("General");
+        }}
+      >
+        <AntDesign name="left" size={30} color="black" />
+      </TouchableOpacity>
+      {description.length > 0 ? (
+        <View
+          style={{
+            height: "100%",
+            flexDirection: "column",
+            padding: 20,
+          }}
+        >
+          <View style={styles.contentContainer}>
+            <Text
+              style={{ fontSize: 24, fontWeight: "bold", paddingBottom: 15 }}
+            >
+              Research
+            </Text>
+            <Text style={{ fontSize: 16 }}>General Description:</Text>
+
+            <Text style={{ fontSize: 16, paddingBottom: 15 }}>
+              {description}
+            </Text>
+            <Text style={{ fontSize: 16 }}>
+              If you are interested in helping aid our research, check out
+            </Text>
+            <Text
+              style={{ fontSize: 16, color: "#304CD1" }}
+              onPress={() =>
+                Linking.openURL("https://www.motherhoodbeyond.org/")
+              }
+            >
+              motherhoodbeyond.org
+            </Text>
+            <Text style={{ fontSize: 16, paddingBottom: 15 }}>
+              or click the button below to direct you to our research page.
+            </Text>
+          </View>
+          <View style={styles.footer}>
+            {link?.map((url, index) => {
+              if (url.title.length > 0 && url.url.length > 0) {
+                return (
+                  <Pressable
+                    onPress={() => {
+                      Linking.openURL(url.url);
+                    }}
+                    style={styles.button}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: "#304CD1",
+                      }}
+                    >
+                      {url.title}
+                    </Text>
+                  </Pressable>
+                );
+              }
+            })}
+          </View>
         </View>
-        {linkCount === 1 ?
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 30,
+          }}
+        >
           <View>
-            <Pressable
-              onPress={() => {
-                Linking.openURL(link[0].toString())
-              }}
+            <View
               style={{
-                alignSelf: "flex-end", alignItems: 'center', justifyContent: 'center', borderRadius: 4,
-                borderWidth: 1, borderColor: '#304CD1', width: 327, height: 45
+                position: "relative",
+                width: 160,
+                height: 160,
+                borderRadius: 80,
+                backgroundColor: "#E5E5E5",
+              }}
+            />
+            <ConstructionSVG
+              style={{
+                flex: 1,
+                position: "absolute",
+                alignSelf: "center",
+                margin: 30,
+              }}
+            />
+          </View>
+          <View>
+            <Text
+              style={{
+                color: "#666666",
+                fontSize: 18,
+                fontWeight: "bold",
+                textAlign: "center",
+                paddingBottom: 10,
+                paddingTop: 25,
               }}
             >
-              <Text style={{ fontSize: 16, color: '#304CD1' }}>
-                Be a part of our research!
-              </Text>
-            </Pressable>
-          </View> :
-          <View style={{ flexDirection: 'column', height: '25%' }}>
-            <View style={{ paddingBottom: 25 }}>
-              <Pressable
-                onPress={() => {
-                  Linking.openURL(link[1].toString())
-                }}
-                style={{
-                  alignSelf: "flex-end", alignItems: 'center', justifyContent: 'center', borderRadius: 4,
-                  borderWidth: 1, borderColor: '#304CD1', width: 327, height: 45
-                }}
-              >
-                <Text style={{ fontSize: 16, color: '#304CD1' }}>
-                  Click for more info
-                </Text>
-              </Pressable>
-            </View>
-            <View>
-              <Pressable
-                onPress={() => {
-                  Linking.openURL(link[0].toString())
-                }}
-                style={{
-                  alignSelf: "flex-end", alignItems: 'center', justifyContent: 'center', borderRadius: 4,
-                  borderWidth: 1, borderColor: '#304CD1', width: 327, height: 45
-                }}
-              >
-                <Text style={{ fontSize: 16, color: '#304CD1' }}>
-                  Be a part of our research!
-                </Text>
-              </Pressable>
-            </View>
+              Coming Soon!
+            </Text>
+            <Text
+              style={{ color: "#666666", fontSize: 16, textAlign: "center" }}
+            >
+              At the time, we haven't added any resources here. Check back soon!
+            </Text>
           </View>
-        }
-      </View > :
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 30 }}>
-        <View>
-          <View style={{
-            position: 'relative',
-            width: 160,
-            height: 160,
-            borderRadius: 80,
-            backgroundColor: '#E5E5E5',
-          }} />
-          <ConstructionSVG style={{ flex: 1, position: 'absolute', alignSelf: 'center', margin: 30 }} />
         </View>
-        <View>
-          <Text style={{ color: '#666666', fontFamily: "Open Sans", fontSize: 18, fontWeight: 'bold', textAlign: 'center', paddingBottom: 10, paddingTop: 25 }}>
-            Coming Soon!
-          </Text>
-          <Text style={{ color: '#666666', fontFamily: "Open Sans", fontSize: 16, textAlign: 'center' }}>
-            At the time, we haven't added any resources here. Check back soon!
-          </Text>
-        </View>
-      </View>
+      )}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  button: {
+    alignSelf: "flex-end",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#304CD1",
+    width: "100%",
+    height: 45,
+    marginTop: 10,
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  footer: {
+    marginBottom: 50,
+  },
+});

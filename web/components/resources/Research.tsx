@@ -11,6 +11,7 @@ const mdParser = new MarkdownIt();
 type URL = {
   title: string;
   url: string;
+  id: string;
 };
 
 function Research(props: {
@@ -97,7 +98,7 @@ function Research(props: {
           <div className="flex flex-col w-full">
             {urls?.map((url, index) => {
               return (
-                <div className="flex w-full py-5">
+                <div key={index} className="flex w-full py-5">
                   <div className="flex flex-col w-full">
                     <div className="flex pt-2">
                       <div className="text-base font-semibold w-1/5 py-2">
@@ -108,7 +109,7 @@ function Research(props: {
                         placeholder="Title"
                         value={url.title}
                         onChange={(e) => {
-                          const newUrls = urls;
+                          const newUrls = [...urls];
                           newUrls[index].title = e.target.value;
                           setUrls(newUrls);
                         }}
@@ -123,7 +124,7 @@ function Research(props: {
                         placeholder="https://example.com"
                         value={url.url}
                         onChange={(e) => {
-                          const newUrls = urls;
+                          const newUrls = [...urls];
                           newUrls[index].url = e.target.value;
                           setUrls(newUrls);
                         }}
