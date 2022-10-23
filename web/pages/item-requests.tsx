@@ -1,5 +1,5 @@
-import React from "react";
-import ItemRequestsTable from "@components/ItemRequestsTable";
+import React, { useState, useEffect } from "react";
+import ItemRequestsTable from "@components/itemRequestsTable/ItemRequestsTable";
 import { GetServerSideProps } from "next";
 import {
   collection,
@@ -8,133 +8,147 @@ import {
   getDocs,
   query,
   updateDoc,
+  onSnapshot,
+  where,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "@lib/firebase";
-import { useRouter } from "next/router";
 
-export enum ItemRequestStatus {
-  Pending = "Pending",
-  Fulfilled = "Fulfilled",
-}
-
-type RequestItem = {
+type RowData = {
   id: string;
   name: string;
-  requestedOn: string;
-  requestedBy: string;
-  displayName: string;
-  fulfilled: ItemRequestStatus;
-  quantity: number;
 };
 
-function genItemRequestsTab({ itemRequests }: { itemRequests: RequestItem[] }) {
-  const getData = () => {
-    return itemRequests;
-  };
+function genItemRequestsTab() {
+  const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
+  const [data, setData] = useState<any>([]);
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Name",
-        accessor: "requestedBy",
-      },
-      {
-        Header: "Items Requested",
-        accessor: "displayName",
-      },
-      {
-        Header: "Requested On",
-        accessor: "requestedOn",
-      },
-      {
-        Header: "Quantity",
-        accessor: "quantity",
-      },
-      {
-        Header: "Status",
-        accessor: "fulfilled",
-      },
-    ],
-    []
-  );
+  useEffect(() => {
+    const q = query(collection(db, "caregivers"));
 
-  const data = React.useMemo(() => getData(), []);
-
-  const router = useRouter();
-
-  const refreshData = () => {
-    router.replace(router.asPath);
-  };
-
-  const markAsFulfilled = async (item: any) => {
-    const itemRef = doc(db, "app", "requestItems", "requests", item.id);
-
-    await updateDoc(itemRef, {
-      fulfilled: true,
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tempData: any = [];
+      querySnapshot.forEach((doc) => {
+        const temp = { ...doc.data(), id: doc.id };
+        tempData.push(temp);
+        console.log(tempData.length);
+      });
+      setData([...tempData]);
     });
 
-    alert(`${item.displayName} has been marked as fulfilled!`);
-    refreshData();
+    return unsubscribe;
+  }, []);
+
+  const columns = [
+    {
+      Header: "",
+    },
+    {
+      Header: "Name",
+    },
+    {
+      Header: "Items Requested",
+    },
+    {
+      Header: "Created",
+    },
+    {
+      Header: "Updated",
+    },
+    {
+      Header: "Status",
+    },
+  ];
+
+  const changeStatus = async (caregiverId: any, status: string) => {
+    // TODO : change status of given caregiverId
   };
 
-  const markAsPending = async (item: any) => {
-    const itemRef = doc(db, "app", "requestItems", "requests", item.id);
-
-    await updateDoc(itemRef, {
-      fulfilled: false,
-    });
-
-    alert(`${item.displayName} has been marked as pending!`);
-    refreshData();
-  };
+  const sections = [
+    {
+      title: "All",
+      component: (
+        <ItemRequestsTable
+          columns={columns}
+          data={data
+            .filter((x: any) => x.itemsRequested.status == "Pending")
+            .concat(data.filter((x : any) => x.itemsRequested.status == "Approved"))
+            .concat(data.filter((x : any) => x.itemsRequested.status == "Completed"))}
+          changeStatus={changeStatus}
+        />
+      ),
+    },
+    {
+      title: "Pending",
+      component: (
+        <ItemRequestsTable
+          columns={columns}
+          data={data.filter((x: any) => x.itemsRequested.status == "Pending")}
+          changeStatus={changeStatus}
+        />
+      ),
+    },
+    {
+      title: "Approved",
+      component: (
+        <ItemRequestsTable
+          columns={columns}
+          data={data.filter((x : any) => x.itemsRequested.status == "Approved")}
+          changeStatus={changeStatus}
+        />
+      ),
+    },
+    {
+      title: "Completed",
+      component: (
+        <ItemRequestsTable
+          columns={columns}
+          data={data.filter((x : any) => x.itemsRequested.status == "Completed")}
+          changeStatus={changeStatus}
+        />
+      ),
+    },
+    {
+      title: "Deleted",
+      component: (
+        <ItemRequestsTable
+          columns={columns}
+          data={data}
+          changeStatus={changeStatus}
+        />
+      ),
+    },
+  ];
 
   return (
-    <div>
-      <div className="absolute mt-20 border-t w-full" />
-      <div className="pt-6 px-8 flex h-full flex-col justify-left">
-        <div className="flex flex-row">
-          <h1 className="text-2xl mb-5 font-bold">Item Requests</h1>
-        </div>
-        <div>
-          <ItemRequestsTable
-            columns={columns}
-            data={data}
-            markAsPending={markAsPending}
-            markAsFulfilled={markAsFulfilled}
-          />
-        </div>
+    <div className="w-full flex flex-col overflow-y-scroll">
+      <div className="flex flex-row items-center py-6 border-b w-full px-10">
+        <h1 className="text-2xl font-bold w-full">Resource Library</h1>
       </div>
+      <section className="flex flex-col flex-grow relative px-10">
+        <div className="border-b flex gap-x-1 mt-8 w-full">
+          {/* Segmented Control */}
+          {sections.map((section, i) => (
+            <button
+              className={`py-4 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
+                selectedSectionIndex === i
+                  ? "bg-blue-700 text-white"
+                  : "bg-gray-100 text-gray-400"
+              }`}
+              onClick={() => {
+                setSelectedSectionIndex(i);
+              }}
+            >
+              {section.title}
+            </button>
+          ))}
+        </div>
+        <div className="w-full">
+          {data.length != 0 ? sections[selectedSectionIndex].component : <></>}
+        </div>
+      </section>
     </div>
   );
 }
 
 export default genItemRequestsTab;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const itemsRef = query(collection(db, "app", "requestItems", "requests"));
-  const items = (await getDocs(itemsRef))?.docs.map((doc) => ({
-    data: doc.data(),
-    id: doc.id,
-  }));
-
-  const itemRequests = await Promise.all(
-    items?.map(async ({ data: request, id }) => {
-      const user = (await getDoc(request.requestedBy))?.data() as RequestItem;
-      return {
-        ...request,
-        id,
-        requestedBy: user.name,
-        requestedOn: request.requestedOn.toDate().toDateString(),
-        fulfilled: request.fulfilled
-          ? ItemRequestStatus.Fulfilled
-          : ItemRequestStatus.Pending,
-      };
-    })
-  );
-
-  return {
-    props: {
-      itemRequests,
-    },
-  };
-};
