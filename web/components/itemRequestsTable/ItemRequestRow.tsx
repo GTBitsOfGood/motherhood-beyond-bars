@@ -22,9 +22,6 @@ export default function ItemRequestRow({
     Completed: "#13B461",
   };
 
-  useEffect(() => {
-  });
-
   function getDateString(time: Timestamp) {
     return `${time.toDate().getMonth() + 1}/${time.toDate().getDate()}/${time
       .toDate()
