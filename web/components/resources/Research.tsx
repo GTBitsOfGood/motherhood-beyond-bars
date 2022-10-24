@@ -51,6 +51,8 @@ function Research(props: {
     });
     setInitialMarkdown(markdown);
     setInitialUrls(urls);
+
+    if (props.getChangesMade()) alert('Saved changes!');
   }
   return (
     <div>

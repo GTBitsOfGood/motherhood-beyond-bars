@@ -81,6 +81,8 @@ export default function Links(props: {
       }
     }
     updateLinks(userChanges);
+
+    if (props.getChangesMade()) alert('Saved changes!');
   };
 
   return (

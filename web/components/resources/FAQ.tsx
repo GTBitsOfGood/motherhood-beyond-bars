@@ -80,6 +80,8 @@ export default function FAQ(props: {
       }
     }
     updateFaqs(userChanges);
+
+    if (props.getChangesMade()) alert('Saved changes!');
   };
 
   return (
