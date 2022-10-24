@@ -6,12 +6,15 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { ResourcesStackScreenProps } from "../../types";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import ConstructionSVG from "../../assets/images/construction";
 import { AntDesign } from "@expo/vector-icons";
+//@ts-ignore
+import { MarkdownView } from "react-native-markdown-view";
 
 type URL = {
   title: string;
@@ -57,32 +60,34 @@ export default function Research({
             padding: 20,
           }}
         >
-          <View style={styles.contentContainer}>
-            <Text
-              style={{ fontSize: 24, fontWeight: "bold", paddingBottom: 15 }}
-            >
-              Research
-            </Text>
-            <Text style={{ fontSize: 16 }}>General Description:</Text>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.contentContainer}>
+              <Text
+                style={{ fontSize: 24, fontWeight: "bold", paddingBottom: 15 }}
+              >
+                Research
+              </Text>
+              <Text style={{ fontSize: 16 }}>General Description:</Text>
 
-            <Text style={{ fontSize: 16, paddingBottom: 15 }}>
-              {description}
-            </Text>
-            <Text style={{ fontSize: 16 }}>
-              If you are interested in helping aid our research, check out
-            </Text>
-            <Text
-              style={{ fontSize: 16, color: "#304CD1" }}
-              onPress={() =>
-                Linking.openURL("https://www.motherhoodbeyond.org/")
-              }
-            >
-              motherhoodbeyond.org
-            </Text>
-            <Text style={{ fontSize: 16, paddingBottom: 15 }}>
-              or click the button below to direct you to our research page.
-            </Text>
-          </View>
+              <MarkdownView style={{ fontSize: 16, paddingBottom: 15 }}>
+                {description}
+              </MarkdownView>
+              <Text style={{ fontSize: 16 }}>
+                If you are interested in helping aid our research, check out
+              </Text>
+              <Text
+                style={{ fontSize: 16, color: "#304CD1" }}
+                onPress={() =>
+                  Linking.openURL("https://www.motherhoodbeyond.org/")
+                }
+              >
+                motherhoodbeyond.org
+              </Text>
+              <Text style={{ fontSize: 16, paddingBottom: 15 }}>
+                or click the button below to direct you to our research page.
+              </Text>
+            </View>
+          </ScrollView>
           <View style={styles.footer}>
             {link?.map((url, index) => {
               if (url.title.length > 0 && url.url.length > 0) {
