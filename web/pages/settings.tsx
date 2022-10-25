@@ -1,50 +1,84 @@
-import ButtonWithIcon from "@components/ButtonWithIcon";
-import { db } from "@lib/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { GetServerSideProps } from "next";
-import Link from "next/link";
+// import ButtonWithIcon from "@components/ButtonWithIcon";
+// import { db } from "@lib/firebase";
+// import { doc, getDoc, updateDoc } from "firebase/firestore";
+// import { GetServerSideProps } from "next";
+// import Link from "next/link";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { BsFillPencilFill } from "react-icons/bs";
+// import { useForm } from "react-hook-form";
+// import { BsFillPencilFill } from "react-icons/bs";
+import Account from "@components/settings/Account";
+import LiabilityWaver from "@components/settings/LiabilityWaver";
 
-type SettingsPhone = {
-  phoneNumber: string;
-};
+// type SettingsPhone = {
+//   phoneNumber: string;
+// };
 
-function genSettingsTab({ phoneNumber }: SettingsPhone) {
-  const [phNumber, setPhNumberState] = useState(phoneNumber);
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<SettingsPhone>();
+function genSettingsTab() {
+  //{ phoneNumber }: SettingsPhone) {
+  //const [phNumber, setPhNumberState] = useState(phoneNumber);
+  //const [settingsPage, setSettingsPage] = use
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   setValue,
+  //   formState: { errors },
+  // } = useForm<SettingsPhone>();
 
-  const onSubmit = handleSubmit(async (data) => {
-    const newNumber = data.phoneNumber;
+  // const onSubmit = handleSubmit(async (data) => {
+  //   const newNumber = data.phoneNumber;
 
-    const settingsRef = doc(db, "app", "settings");
+  //   const settingsRef = doc(db, "app", "settings");
 
-    await updateDoc(settingsRef, {
-      contact: {
-        phone: newNumber,
-      },
-    });
+  //   await updateDoc(settingsRef, {
+  //     contact: {
+  //       phone: newNumber,
+  //     },
+  //   });
 
-    alert("Phone number updated");
-    setPhNumberState(newNumber);
-    setValue("phoneNumber", "");
-  });
+  //   alert("Phone number updated");
+  //   setPhNumberState(newNumber);
+  //   setValue("phoneNumber", "");
+  // })
+
+  const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
+
+  const sections = [
+    {
+      title: "Account",
+      component: <Account />,
+    },
+    {
+      title: "Liability Waver",
+      component: <LiabilityWaver />,
+    },
+  ];
 
   return (
-    <div>
-      <div className="absolute mt-20 border-t w-full" />
-      <div className="pt-6 px-8 flex h-full flex-col justify-left">
-        <h1 className="text-2xl mb-5 font-bold">Settings</h1>
-        <h2 className="text-md mt-5 mb-5 font-bold">
+    <div className="w-full">
+      <div className="flex flex-row items-center py-6 border-b w-full px-10">
+        <h1 className="text-2xl font-bold w-full">Settings</h1>
+        {/* <h2 className="text-md mt-5 mb-5 font-bold">
           Current Phone Number: {phNumber}
-        </h2>
-        <h2 className="text-md mb-5 font-bold">Update Phone Number</h2>
+        </h2> */}
+      </div>
+      <section className="px-10">
+        <div className="border-b flex gap-x-1 mt-8 w-full">
+          {sections.map((section, i) => (
+            <button
+              className={`py-4 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
+                selectedSectionIndex === i
+                  ? "bg-blue-700 text-white"
+                  : "bg-gray-100 text-gray-400"
+              }`}
+              onClick={() => setSelectedSectionIndex(i)}
+            >
+              {section.title}
+            </button>
+          ))}
+        </div>
+        <>{sections[selectedSectionIndex].component}</>
+      </section>
+      {/* <h2 className="text-md mb-5 font-bold">Update Phone Number</h2>
         <form className="w-full max-w-sm" onSubmit={onSubmit}>
           <div className="flex items-center border-b py-2">
             <input
@@ -78,21 +112,20 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
           <Link href="/waivers">
             <ButtonWithIcon text="Waivers" icon={<BsFillPencilFill />} />
           </Link>
-        </div>
-      </div>
+        </div> */}
     </div>
   );
 }
 
 export default genSettingsTab;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const settingsRef = doc(db, "app", "settings");
-  const settings = (await getDoc(settingsRef))?.data();
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const settingsRef = doc(db, "app", "settings");
+//   const settings = (await getDoc(settingsRef))?.data();
 
-  return {
-    props: {
-      phoneNumber: settings?.contact.phone,
-    },
-  };
-};
+//   return {
+//     props: {
+//       phoneNumber: settings?.contact.phone,
+//     },
+//   };
+// };
