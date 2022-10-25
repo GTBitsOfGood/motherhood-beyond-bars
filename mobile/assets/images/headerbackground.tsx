@@ -3,7 +3,7 @@ import Svg, { Path, Defs, RadialGradient, Stop } from "react-native-svg"
 
 const SvgComponent = (props: any) => (
   <Svg
-    viewBox="0 0 376 87"
+    viewBox="0 0 370 87"
     preserveAspectRatio="none"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

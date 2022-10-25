@@ -205,7 +205,7 @@ export default function BabyBook({ navigation }: Props) {
         Birthday: {month}/{date}/{year}
       </Text>
       {body()}
-      <View style={{ position: "absolute", bottom: 15, left: 300 }}>
+      <View style={{ position: "absolute", bottom: 15, left: 260 }}>
         <TouchableOpacity onPress={pickImage} style={styles.roundButton1}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     height: 75,
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    padding: 5,
     borderRadius: 100,
     backgroundColor: "#304CD1",
   },
