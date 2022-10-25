@@ -7,6 +7,7 @@ import { doc, updateDoc, onSnapshot } from "firebase/firestore";
 import ArrowDown from "../../assets/images/arrowDown";
 import Construction from "../../assets/images/construction";
 import { useState, useEffect } from "react";
+import { AntDesign } from "@expo/vector-icons";
 
 type FAQ = {
   question: string;
@@ -35,48 +36,58 @@ export default function FAQ({ navigation }: ResourcesStackScreenProps<"FAQ">) {
 
   return (
     <View style={styles.container}>
-      {faqs && faqs.length != 0 ? (
-        <>
-          <Text style={styles.FAQText}>FAQ</Text>
-          <View style={styles.cardsContainer}>
-            {faqs.map((faq: FAQ, index: number) => {
-              return (
-                <View style={styles.questionCard}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setExpandedVal(index);
-                    }}
-                  >
-                    <View style={styles.cardHeading}>
-                      <Text style={styles.questionText}>{faq.question}</Text>
-                      <ArrowDown
-                        style={
-                          index === expanded
-                            ? styles.upsideDownArrow
-                            : styles.arrow
-                        }
-                      />
-                    </View>
-                  </TouchableOpacity>
-                  {index === expanded && (
-                    <Text style={styles.answerText}>{faq.answer}</Text>
-                  )}
-                </View>
-              );
-            })}
+      <TouchableOpacity
+        style={{ paddingLeft: 10, paddingTop: 10 }}
+        onPress={() => {
+          navigation.navigate("General");
+        }}
+      >
+        <AntDesign name="left" size={30} color="black" />
+      </TouchableOpacity>
+      <View style={{ padding: 20 }}>
+        {faqs && faqs.length != 0 ? (
+          <>
+            <Text style={styles.FAQText}>FAQ</Text>
+            <View style={styles.cardsContainer}>
+              {faqs.map((faq: FAQ, index: number) => {
+                return (
+                  <View style={styles.questionCard}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setExpandedVal(index);
+                      }}
+                    >
+                      <View style={styles.cardHeading}>
+                        <Text style={styles.questionText}>{faq.question}</Text>
+                        <ArrowDown
+                          style={
+                            index === expanded
+                              ? styles.upsideDownArrow
+                              : styles.arrow
+                          }
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    {index === expanded && (
+                      <Text style={styles.answerText}>{faq.answer}</Text>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
+          </>
+        ) : (
+          <View style={styles.constructionContainer}>
+            <View style={styles.constructionIconConatainer}>
+              <Construction />
+            </View>
+            <Text style={styles.comingSoonText}>Coming Soon!</Text>
+            <Text style={styles.checkBackText}>
+              At the time, we haven't added any resources here. Check back soon!
+            </Text>
           </View>
-        </>
-      ) : (
-        <View style={styles.constructionContainer}>
-          <View style={styles.constructionIconConatainer}>
-            <Construction />
-          </View>
-          <Text style={styles.comingSoonText}>Coming Soon!</Text>
-          <Text style={styles.checkBackText}>
-            At the time, we haven't added any resources here. Check back soon!
-          </Text>
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 }
@@ -85,7 +96,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    padding: 20,
   },
   questionCard: {
     backgroundColor: "#FFFFFF",

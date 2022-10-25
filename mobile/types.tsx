@@ -120,7 +120,6 @@ export interface Caregiver {
   id: string;
   numAdults: string;
   numChildren: string;
-  agesOfChildren: string;
   signedWaivers: Waiver[];
   itemsRequested: Item[];
   address: string;

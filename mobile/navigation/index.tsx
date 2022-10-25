@@ -105,7 +105,6 @@ const validateAuthData = (authData: UserContextType) => {
     authData.caregiver?.email &&
     authData.caregiver?.numAdults &&
     authData.caregiver?.numChildren &&
-    authData.caregiver?.agesOfChildren &&
     authData.caregiver?.signedWaivers &&
     authData.caregiver?.address &&
     authData.caregiver?.city &&
