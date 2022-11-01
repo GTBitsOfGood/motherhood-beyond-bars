@@ -108,13 +108,13 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
               {caregivers?.length + " People"}
             </h2>
           </div>
-          <div>
+          {/* <div>
             <ButtonWithIcon
               icon={<FaPlus />}
               text="Add a caretaker"
               onClick={() => toggleAddModal(true)}
             />
-          </div>
+          </div> */}
         </div>
         <div className="mt-4">
           <CaretakerTable

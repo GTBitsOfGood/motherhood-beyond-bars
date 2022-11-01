@@ -6,7 +6,6 @@ import { FaTimes } from "react-icons/fa";
 function ChildModal({
   setModal,
   onSubmit,
-  caretakers,
   buttonText = "Add a Child",
   header = "Add a Child",
   values,
@@ -29,9 +28,9 @@ function ChildModal({
   return (
     <>
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-auto my-6 mx-auto max-w-3xl">
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-            <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
+        <div className="relative my-6 mx-auto max-w-3xl">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none ">
+            <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
               <h3 className="text-3xl font-bold">{header}</h3>
               <button
                 className="bg-transparent border-0 text-black float-right"
@@ -41,15 +40,13 @@ function ChildModal({
               </button>
             </div>
             <form onSubmit={handleSubmit((data) => onSubmit(data))}>
-              <div className="block p-6 rounded-lg shadow-lg bg-white max-w-md">
+              <div className="block p-6 rounded-lg shadow-lg w-109">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="form-group mb-6">
-                    <label className="text-sm">First Name</label>
+                    <p>First Name</p>
                     <input
-                      type="text"
-                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="First name"
-                      defaultValue={values?.firstName}
+                      // type="text"
+                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       {...register("firstName", { required: true })}
                     />
                     {errors.firstName && (
@@ -59,11 +56,10 @@ function ChildModal({
                     )}
                   </div>
                   <div className="form-group mb-6">
-                    <label className="text-sm">Last Name</label>
+                    <p>Last Name</p>
                     <input
                       type="text"
-                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="Last name"
+                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       defaultValue={values?.lastName}
                       {...register("lastName", { required: true })}
                     />
@@ -74,11 +70,11 @@ function ChildModal({
                     )}
                   </div>
                   <div className="form-group mb-6">
-                    <label className="text-sm">Date of Birth</label>
+                    <p>Date of Birth</p>
                     <input
-                      type="datetime-local"
-                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="Date of Birth"
+                      // type="datetime-local"
+                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      placeholder="MM/DD/YY"
                       defaultValue={values?.dob && values?.dob.slice(0, -8)}
                       {...register("dob", { required: true })}
                     />
@@ -89,17 +85,18 @@ function ChildModal({
                     )}
                   </div>
                   <div className="form-group mb-6">
-                    <label className="text-sm">Sex</label>
+                    <p>Sex</p>
                     <select
-                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      defaultValue={values?.sex}
+                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      placeholder="Select"
                       {...register("sex", { required: true })}
                     >
+                      <option value="" selected>Select</option>
                       <option value="female">Female</option>
                       <option value="male">Male</option>
                     </select>
                   </div>
-                  <div className="form-group mb-6">
+                  {/* <div className="form-group mb-6">
                     <label className="text-sm">Caretaker</label>
                     <select
                       className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
@@ -112,13 +109,13 @@ function ChildModal({
                         </option>
                       ))}
                     </select>
-                  </div>
+                  </div> */}
                   <div className="form-group mb-6">
-                    <label className="text-sm">Mother Name</label>
+                    <p>Mother Name</p>
                     <input
                       type={"text"}
-                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="First, Last"
+                      className="w-20 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      placeholder="Full Name"
                       defaultValue={values?.motherName}
                       {...register("motherName", { required: true })}
                     />
@@ -128,7 +125,7 @@ function ChildModal({
                       </span>
                     )}
                   </div>
-                  <div className="form-group mb-6">
+                  {/* <div className="form-group mb-6">
                     <label className="text-sm">Hospital of Birth</label>
                     <input
                       type={"text"}
@@ -137,7 +134,7 @@ function ChildModal({
                       defaultValue={values?.hospitalName}
                       {...register("hospitalName", { required: false })}
                     />
-                  </div>
+                  </div> */}
                   {values && values.id && (
                     <input
                       type="hidden"
