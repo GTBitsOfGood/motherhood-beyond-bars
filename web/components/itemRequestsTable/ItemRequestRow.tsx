@@ -139,7 +139,7 @@ export default function ItemRequestRow({
             >
               <Ellipse color={status[row.itemsRequested.status]}></Ellipse>
               <div>{row.itemsRequested.status}</div>
-              <DownChevron></DownChevron>
+              <DownChevron />
             </div>
             <div
               className={`${
