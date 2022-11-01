@@ -108,7 +108,6 @@ function genItemRequestsTab() {
 
   const changeStatus = async (status: string) => {
     for (const id of selectedRows) {
-      console.log(id);
       let row = data.find((x: Caregiver) => x.id == id);
       if (row) {
         row = {
