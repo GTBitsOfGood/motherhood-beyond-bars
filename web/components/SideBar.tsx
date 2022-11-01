@@ -20,7 +20,7 @@ function SideBar(props: any) {
     const q = query(collection(db, "caregivers"));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      var tempData: any = [];
+      let tempData: any = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         tempData.push(data);
