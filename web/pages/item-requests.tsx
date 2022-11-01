@@ -1,38 +1,84 @@
 import React, { useState, useEffect } from "react";
 import ItemRequestsTable from "@components/itemRequestsTable/ItemRequestsTable";
 import { GetServerSideProps } from "next";
+import Ellipse from "@components/Icons/Ellipse";
+import DownChevron from "@components/Icons/DownChevron";
+import Line31 from "@components/Icons/Line31";
+import TrashCan from "@components/Icons/TrashCan";
 import {
   collection,
   doc,
-  getDoc,
-  getDocs,
   query,
-  updateDoc,
   onSnapshot,
-  where,
+  setDoc,
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@lib/firebase";
 
-type RowData = {
+export interface Caregiver {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
   id: string;
+  numAdults: string;
+  numChildren: string;
+  agesOfChildren: string;
+  signedWaivers: Waiver[];
+  itemsRequested: ItemRequest;
+  address: string;
+  apartment?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  contact: string;
+}
+
+export interface Waiver {
+  content: string;
+  id: string;
+  description: string;
+  lastUpdated: string;
   name: string;
-};
+}
+
+export interface Item {
+  name: string;
+  gender?: string;
+}
+
+export interface ItemRequest {
+  created: Timestamp;
+  updated: Timestamp;
+  status: string;
+  items: Item[];
+}
 
 function genItemRequestsTab() {
-  const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
-  const [data, setData] = useState<any>([]);
+  const [selectedSectionIndex, setSelectedSectionIndex] = useState<number>(0);
+  const [data, setData] = useState<Caregiver[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [statusExpanded, setStatusExpanded] = useState<boolean>(false);
+
+  const status: { [index: string]: string } = {
+    Pending: "#FD8033",
+    Approved: "#FFBE4C",
+    Completed: "#13B461",
+  };
 
   useEffect(() => {
     const q = query(collection(db, "caregivers"));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const tempData: any = [];
+      var tempData: any = [];
       querySnapshot.forEach((doc) => {
-        const temp = { ...doc.data(), id: doc.id };
+        const data = doc.data();
+        const temp = { ...data, id: doc.id };
         tempData.push(temp);
-        console.log(tempData.length);
       });
+      tempData = tempData.filter(
+        (x: Caregiver) => x.itemsRequested && x.itemsRequested.items
+      );
       setData([...tempData]);
     });
 
@@ -60,9 +106,31 @@ function genItemRequestsTab() {
     },
   ];
 
-  const changeStatus = async (caregiverId: any, status: string) => {
-    // TODO : change status of given caregiverId
+  const changeStatus = async (status: string) => {
+    for (const id of selectedRows) {
+      console.log(id);
+      let row = data.find((x: Caregiver) => x.id == id);
+      if (row) {
+        row = {
+          ...row,
+          itemsRequested: { ...row.itemsRequested, status: status },
+        };
+        updateCaregiver(id, row);
+      }
+    }
   };
+
+  function updateCaregiver(id: string, row: Caregiver) {
+    setDoc(doc(db, "caregivers", id), row);
+  }
+
+  function compareCreated(c1: Caregiver, c2: Caregiver) {
+    return c1.itemsRequested.created > c2.itemsRequested.created
+      ? 1
+      : c1.itemsRequested.created < c2.itemsRequested.created
+      ? -1
+      : 0;
+  }
 
   const sections = [
     {
@@ -71,10 +139,22 @@ function genItemRequestsTab() {
         <ItemRequestsTable
           columns={columns}
           data={data
-            .filter((x: any) => x.itemsRequested.status == "Pending")
-            .concat(data.filter((x : any) => x.itemsRequested.status == "Approved"))
-            .concat(data.filter((x : any) => x.itemsRequested.status == "Completed"))}
-          changeStatus={changeStatus}
+            .filter((x: Caregiver) => x.itemsRequested.status == "Pending")
+            .sort((c1: Caregiver, c2: Caregiver) => compareCreated(c1, c2))
+            .concat(
+              data
+                .filter((x: Caregiver) => x.itemsRequested.status == "Approved")
+                .sort((c1: Caregiver, c2: Caregiver) => compareCreated(c1, c2))
+            )
+            .concat(
+              data
+                .filter(
+                  (x: Caregiver) => x.itemsRequested.status == "Completed"
+                )
+                .sort((c1: Caregiver, c2: Caregiver) => compareCreated(c1, c2))
+            )}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
         />
       ),
     },
@@ -83,8 +163,11 @@ function genItemRequestsTab() {
       component: (
         <ItemRequestsTable
           columns={columns}
-          data={data.filter((x: any) => x.itemsRequested.status == "Pending")}
-          changeStatus={changeStatus}
+          data={data
+            .filter((x: Caregiver) => x.itemsRequested.status == "Pending")
+            .sort((c1: Caregiver, c2: Caregiver) => compareCreated(c1, c2))}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
         />
       ),
     },
@@ -93,8 +176,11 @@ function genItemRequestsTab() {
       component: (
         <ItemRequestsTable
           columns={columns}
-          data={data.filter((x : any) => x.itemsRequested.status == "Approved")}
-          changeStatus={changeStatus}
+          data={data
+            .filter((x: Caregiver) => x.itemsRequested.status == "Approved")
+            .sort((c1: Caregiver, c2: Caregiver) => compareCreated(c1, c2))}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
         />
       ),
     },
@@ -103,8 +189,11 @@ function genItemRequestsTab() {
       component: (
         <ItemRequestsTable
           columns={columns}
-          data={data.filter((x : any) => x.itemsRequested.status == "Completed")}
-          changeStatus={changeStatus}
+          data={data
+            .filter((x: Caregiver) => x.itemsRequested.status == "Completed")
+            .sort((c1: Caregiver, c2: Caregiver) => compareCreated(c1, c2))}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
         />
       ),
     },
@@ -113,8 +202,11 @@ function genItemRequestsTab() {
       component: (
         <ItemRequestsTable
           columns={columns}
-          data={data}
-          changeStatus={changeStatus}
+          data={data
+            .filter((x: Caregiver) => x.itemsRequested.status == "Deleted")
+            .sort((c1: Caregiver, c2: Caregiver) => compareCreated(c1, c2))}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
         />
       ),
     },
@@ -126,25 +218,77 @@ function genItemRequestsTab() {
         <h1 className="text-2xl font-bold w-full">Resource Library</h1>
       </div>
       <section className="flex flex-col flex-grow relative px-10">
-        <div className="border-b flex gap-x-1 mt-8 w-full">
+        <div className="border-b flex gap-x-1 mt-8 w-full justify-between">
           {/* Segmented Control */}
-          {sections.map((section, i) => (
-            <button
-              className={`py-4 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
-                selectedSectionIndex === i
-                  ? "bg-blue-700 text-white"
-                  : "bg-gray-100 text-gray-400"
-              }`}
-              onClick={() => {
-                setSelectedSectionIndex(i);
-              }}
-            >
-              {section.title}
-            </button>
-          ))}
+          <div className="flex gap-x-1">
+            {sections.map((section, i) => (
+              <button
+                className={`py-3 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
+                  selectedSectionIndex === i
+                    ? "bg-blue-700 text-white"
+                    : "bg-gray-100 text-gray-400"
+                }`}
+                onClick={() => {
+                  setSelectedSectionIndex(i);
+                }}
+                key={section.title}
+              >
+                {section.title}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-col items-center relative z-10">
+            <div className="flex items-center gap-x-5">
+              <div className="text-[#666666]">Mark as</div>
+              <div className="w-[200px]">
+                <div
+                  className="flex items-center gap-x-2 cursor-pointer relative z-1 border-[#D9D9D9] border-[1px] py-2 px-2 bg-[#FAFBFC] rounded w-full justify-between"
+                  onClick={() => {
+                    setStatusExpanded(!statusExpanded);
+                  }}
+                >
+                  <div className="text-[#8C8C8C]">Status</div>
+                  <DownChevron></DownChevron>
+                </div>
+                <div
+                  className={`${
+                    statusExpanded == true ? "flex" : "hidden"
+                  } shadow-md flex-col font-normal bg-white absolute w-[200px] py-2`}
+                >
+                  {Object.keys(status).map((stat: string) => {
+                    return (
+                      <div
+                        className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10"
+                        key={stat}
+                        onClick={() => {
+                          changeStatus(stat);
+                          setStatusExpanded(false);
+                          setSelectedRows([]);
+                        }}
+                      >
+                        <Ellipse color={status[stat]}></Ellipse>
+                        <div>{stat}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <Line31 />
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  changeStatus("Deleted");
+                  setStatusExpanded(false);
+                  setSelectedRows([]);
+                }}
+              >
+                <TrashCan />
+              </div>
+            </div>
+          </div>
         </div>
         <div className="w-full">
-          {data.length != 0 ? sections[selectedSectionIndex].component : <></>}
+          {data ? sections[selectedSectionIndex].component : <></>}
         </div>
       </section>
     </div>

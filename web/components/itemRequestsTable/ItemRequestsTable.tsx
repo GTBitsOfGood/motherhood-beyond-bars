@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import ItemRequestRow from "./ItemRequestRow";
+import { Caregiver } from "pages/item-requests";
 
 function ItemRequestsTable({
   columns,
   data,
-  changeStatus,
+  selectedRows,
+  setSelectedRows
 }: {
   columns: any[];
-  data: any[];
-  changeStatus: (row: any, status: string) => void;
+  data: Caregiver[];
+  selectedRows : string[]
+  setSelectedRows: any
 }) {
-
-  useEffect(() => {
-    console.log(data)
-    console.log('yea')
-  })
 
   return (
     <div className="flex flex-col w-full">
@@ -25,6 +23,7 @@ function ItemRequestsTable({
               <th
                 scope="col"
                 className="px-6 pt-4 text-base font-normal tracking-wider text-left text-slate-500"
+                key={column.Header}
               >
                 {column.Header}
               </th>
@@ -32,12 +31,14 @@ function ItemRequestsTable({
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => {
+          {data.map((row, index) => {
             return (
               <ItemRequestRow
                 row={row}
-                changeStatus={changeStatus}
-                key={row.name}
+                key={row.id}
+                index={index}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
               ></ItemRequestRow>
             );
           })}

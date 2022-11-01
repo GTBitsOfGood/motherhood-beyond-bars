@@ -1,17 +1,21 @@
 import Ellipse from "@components/Icons/Ellipse";
 import DownChevron from "@components/Icons/DownChevron";
 import RightChevronBlue from "@components/Icons/RightChevronBlue";
-import { useState, useEffect } from "react";
-import { Timestamp, collection, setDoc, doc } from "firebase/firestore";
-import { update, ref, getDatabase, set } from 'firebase/database'
+import { useState } from "react";
+import { Timestamp, setDoc, doc } from "firebase/firestore";
 import { db } from "@lib/firebase";
+import { Caregiver, Item } from "pages/item-requests";
 
 export default function ItemRequestRow({
   row,
-  changeStatus,
+  index,
+  selectedRows,
+  setSelectedRows,
 }: {
-  row: any;
-  changeStatus: any;
+  row: Caregiver;
+  index: number;
+  selectedRows: string[];
+  setSelectedRows: any;
 }) {
   const [rowExpanded, setRowExpanded] = useState(false);
   const [statusExpanded, setStatusExpanded] = useState(false);
@@ -22,6 +26,25 @@ export default function ItemRequestRow({
     Completed: "#13B461",
   };
 
+  const dropDownData = [
+    {
+      header: "ADDRESS",
+      value: row.address,
+    },
+    {
+      header: "CONTACT",
+      value: `${row.email ?? ""}, ${row.phoneNumber ?? ""}`,
+    },
+    {
+      header: "CHILDREN NAMES",
+      value: "",
+    },
+    {
+      header: "CARETAKER COMMENTS",
+      value: "",
+    },
+  ];
+
   function getDateString(time: Timestamp) {
     return `${time.toDate().getMonth() + 1}/${time.toDate().getDate()}/${time
       .toDate()
@@ -30,9 +53,19 @@ export default function ItemRequestRow({
       .slice(-2)}`;
   }
 
-  function updateCaregiver(row : any) {
-    console.log(row)
-    setDoc(doc(db, "caregivers", row.id), row)
+  function updateCaregiver(row: Caregiver) {
+    setDoc(doc(db, "caregivers", row.id), row);
+  }
+
+  function generateColor(target: string) {
+    let sum = 0;
+    for (let i = 0; i < target.length; i++) {
+      sum += (i + 1) * target.charCodeAt(i);
+    }
+
+    sum = sum % 360;
+    console.log(`hsl(${sum}deg 100% 100%)`);
+    return `hsla(${sum}deg 100% 50% / 40%)`;
   }
 
   return (
@@ -40,24 +73,53 @@ export default function ItemRequestRow({
       <tr
         className={`border-t ${
           row.itemsRequested.status == "Pending" ? "font-bold" : ""
+        } ${
+          selectedRows.includes(row.id)
+            ? "border-l-2 border-l-[#304CD1] bg-[#304CD10D]"
+            : ""
         }`}
       >
-        <td className={`py-2`}>
-          <div
-            className={`${rowExpanded ? "rotate-90" : ""} cursor-pointer`}
-            onClick={() => {
-              setRowExpanded(!rowExpanded);
-            }}
-          >
-            <RightChevronBlue></RightChevronBlue>
+        <td className="py-2">
+          <div className="flex gap-x-2 ">
+            <div
+              className={`${rowExpanded ? "rotate-90" : ""} cursor-pointer`}
+              onClick={() => {
+                setRowExpanded(!rowExpanded);
+              }}
+            >
+              <RightChevronBlue></RightChevronBlue>
+            </div>
+            <input
+              type="checkbox"
+              className="cursor-pointer"
+              checked={selectedRows.includes(row.id)}
+              onChange={() => {
+                const tempSelected = selectedRows;
+                tempSelected.includes(row.id)
+                  ? tempSelected.splice(tempSelected.indexOf(row.id), 1)
+                  : tempSelected.push(row.id);
+
+                setSelectedRows([...tempSelected]);
+              }}
+            ></input>
           </div>
         </td>
         <td className={`py-2 text-base text-black whitespace-nowrap`}>
           {row.firstName + " " + row.lastName}
         </td>
         <td className="py-2 px-6 text-base font-normal text-black whitespace-nowrap flex flex-wrap gap-3">
-          {row.itemsRequested.items.map((item: any) => {
-            return <div className="p-2 bg-cyan-200 rounded">{item.name}</div>;
+          {row.itemsRequested.items.map((item: Item, index: number) => {
+            return (
+              <div
+                className={`p-2 rounded`}
+                style={{
+                  backgroundColor: generateColor(item.name),
+                }}
+                key={index}
+              >
+                {item.name}
+              </div>
+            );
           })}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
@@ -90,9 +152,9 @@ export default function ItemRequestRow({
                     className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10"
                     key={stat}
                     onClick={() => {
-                      row.itemsRequested.status = stat
-                      updateCaregiver(row)
-                      setStatusExpanded(false)
+                      row.itemsRequested.status = stat;
+                      updateCaregiver(row);
+                      setStatusExpanded(false);
                     }}
                   >
                     <Ellipse color={status[stat]}></Ellipse>
@@ -100,7 +162,14 @@ export default function ItemRequestRow({
                   </div>
                 );
               })}
-              <div className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10 text-[#EB3B3B] border-t">
+              <div
+                className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10 text-[#EB3B3B] border-t"
+                onClick={() => {
+                  row.itemsRequested.status = "Deleted";
+                  updateCaregiver(row);
+                  setStatusExpanded(false);
+                }}
+              >
                 Delete Request
               </div>
             </div>
@@ -109,8 +178,17 @@ export default function ItemRequestRow({
       </tr>
       <tr className={`${!rowExpanded ? "hidden" : ""}`}>
         <td colSpan={6} className="py-3">
-          <div className="bg-[#FAFBFC] border-[#D9D9D9] border-[1px] px-20">
-            ok
+          <div className="bg-[#FAFBFC] border-[#D9D9D9] border-[1px] px-10 py-6 gap-y-4 flex flex-col">
+            {dropDownData.map((data) => {
+              return (
+                <div className="flex" key={data.header}>
+                  <div className="w-[20%] text-[#666666] text-[14px] tracking-[0.02em]">
+                    {data.header}
+                  </div>
+                  <div>{data.value}</div>
+                </div>
+              );
+            })}
           </div>
         </td>
       </tr>
