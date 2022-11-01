@@ -70,7 +70,7 @@ function genItemRequestsTab() {
     const q = query(collection(db, "caregivers"));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      var tempData: any = [];
+      let tempData: any = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         const temp = { ...data, id: doc.id };
