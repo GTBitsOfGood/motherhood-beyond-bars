@@ -106,7 +106,9 @@ export default function ShippingAddress({
                   setSave(!save);
                 }}
               />
-              <Text style={{ paddingLeft: 5 }}>
+              <Text onPress={() => {
+                setSave(!save);
+              }} style={{ paddingLeft: 5 }}>
                 Save address for future deliveries
               </Text>
             </View>

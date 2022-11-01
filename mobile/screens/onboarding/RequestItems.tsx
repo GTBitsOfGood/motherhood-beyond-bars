@@ -146,7 +146,7 @@ export default function RequestedItems({
                         checked={itemsCount[idx]}
                       />
                     )}
-                    <Text style={styles.itemHeader}>
+                    <Text onPress={() => toggleItem(idx)} style={styles.itemHeader}>
                       {item.itemDisplayName}
                     </Text>
                   </View>
@@ -196,7 +196,7 @@ export default function RequestedItems({
                   onPress={() => toggleItem(length - 1)}
                   checked={itemsCount[length - 1]}
                 />
-                <Text style={styles.itemHeader}>Other</Text>
+                <Text onPress={() => toggleItem(length - 1)} style={styles.itemHeader}>Other</Text>
               </View>
               <TextInput
                 style={[styles.input, styles.otherInput]}
