@@ -98,7 +98,7 @@ export default function SignWaiver({
                 onPress={() => setSelection(!isSelected)}
                 checked={isSelected}
               />
-              <Text style={styles.description}>
+              <Text onPress={() => setSelection(!isSelected)} style={styles.description}>
                 I agree to the Liability Waiver
               </Text>
             </View>
