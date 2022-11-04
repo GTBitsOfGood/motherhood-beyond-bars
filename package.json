@@ -3,6 +3,7 @@
     "build": "cd web && npm run build"
   },
   "dependencies": {
+    "net": "^1.0.2",
     "next": "^12.3.0"
   }
 }

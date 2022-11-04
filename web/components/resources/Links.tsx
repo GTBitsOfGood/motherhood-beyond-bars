@@ -1,11 +1,23 @@
-import { db } from '@lib/firebase';
-import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import UpChevron from '@components/Icons/UpChevron';
-import DownChevron from '@components/Icons/DownChevron';
-import TrashCan from '@components/Icons/TrashCan';
-import { AiFillWarning } from 'react-icons/ai';
-import { useRouter } from 'next/router';
+import { db } from "@lib/firebase";
+import {
+  doc,
+  updateDoc,
+  onSnapshot,
+  QueryDocumentSnapshot,
+} from "firebase/firestore";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
+import UpChevron from "@components/Icons/UpChevron";
+import DownChevron from "@components/Icons/DownChevron";
+import TrashCan from "@components/Icons/TrashCan";
+import { AiFillWarning } from "react-icons/ai";
+import { useRouter } from "next/router";
+import { Change } from "firebase-functions";
 
 type Link = {
   title: string;
@@ -23,7 +35,7 @@ export default function Links(props: {
   const router = useRouter();
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'resources', 'links'), (doc) => {
+    const unsub = onSnapshot(doc(db, "resources", "links"), (doc) => {
       setLinks(doc.data()?.links);
       setUserChanges(doc.data()?.links);
     });
@@ -35,7 +47,7 @@ export default function Links(props: {
     props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(links));
 
     const warningText =
-      'You have unsaved changes - are you sure you wish to leave this page?';
+      "You have unsaved changes - are you sure you wish to leave this page?";
     const handleWindowClose = (e: BeforeUnloadEvent) => {
       if (!props.getChangesMade()) return;
       e.preventDefault();
@@ -44,18 +56,18 @@ export default function Links(props: {
     const handleBrowseAway = () => {
       if (!props.getChangesMade) return;
       if (window.confirm(warningText)) return;
-      throw 'routeChange aborted.';
+      throw "routeChange aborted.";
     };
-    window.addEventListener('beforeunload', handleWindowClose);
-    router.events.on('routeChangeStart', handleBrowseAway);
+    window.addEventListener("beforeunload", handleWindowClose);
+    router.events.on("routeChangeStart", handleBrowseAway);
     return () => {
-      window.removeEventListener('beforeunload', handleWindowClose);
-      router.events.off('routeChangeStart', handleBrowseAway);
+      window.removeEventListener("beforeunload", handleWindowClose);
+      router.events.off("routeChangeStart", handleBrowseAway);
     };
   }, [userChanges]);
 
   const updateLinks = async (newLinks: any) => {
-    await updateDoc(doc(db, 'resources', 'links'), { links: newLinks });
+    await updateDoc(doc(db, "resources", "links"), { links: newLinks });
   };
 
   const moveLink = (rank: number, shift: number) => {
@@ -72,9 +84,9 @@ export default function Links(props: {
     if (userChanges) {
       const tempLinks = userChanges;
       tempLinks.push({
-        title: '',
-        description: '',
-        url: '',
+        title: "",
+        description: "",
+        url: "",
       });
       setUserChanges([...tempLinks]);
     }
@@ -92,7 +104,7 @@ export default function Links(props: {
     if (userChanges) {
       const tempLinks = userChanges;
       for (let i = 0; i < tempLinks.length; i++) {
-        if (tempLinks[i].url == '') {
+        if (tempLinks[i].url == "") {
           tempLinks[i].error = true;
           setUserChanges([...tempLinks]);
           return;
@@ -100,6 +112,32 @@ export default function Links(props: {
       }
     }
     updateLinks(userChanges);
+  };
+
+  const onUpdate = async (
+    change: Change<QueryDocumentSnapshot>,
+    link: Link
+  ) => {
+    // retrieve the previous and current value
+    const before = change.before.data();
+    const after = change.after.data();
+
+    // only update if name has changed to prevent infinite loops
+    if (before.name === after.name) {
+      return null;
+    }
+
+    // get open graph data
+    const og = require("open-graph");
+    const data = await og(link.url);
+
+    // set the data in docs
+    await updateDoc(change.after.ref, {
+      title: data.title,
+      description: data.description,
+      image: data.image,
+      url: data.url,
+    });
   };
 
   return (
@@ -116,8 +154,8 @@ export default function Links(props: {
             <div
               className={
                 props.getChangesMade()
-                  ? 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer'
-                  : 'py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer'
+                  ? "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
+                  : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
               }
               onClick={saveChanges}
             >
@@ -169,8 +207,8 @@ export default function Links(props: {
                       <input
                         className={`${
                           link.error
-                            ? ' border-[#FF3939] border-[1px]'
-                            : ' border-[#D9D9D9] border-[1px]'
+                            ? " border-[#FF3939] border-[1px]"
+                            : " border-[#D9D9D9] border-[1px]"
                         } w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
                         value={link.url}
                         onChange={(e) => {
