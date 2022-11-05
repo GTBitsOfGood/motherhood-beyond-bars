@@ -1,10 +1,5 @@
 import { db } from "@lib/firebase";
-import {
-  doc,
-  updateDoc,
-  onSnapshot,
-  QueryDocumentSnapshot,
-} from "firebase/firestore";
+import { doc, updateDoc, onSnapshot } from "firebase/firestore";
 import React, {
   ChangeEvent,
   Dispatch,
@@ -17,7 +12,6 @@ import DownChevron from "@components/Icons/DownChevron";
 import TrashCan from "@components/Icons/TrashCan";
 import { AiFillWarning } from "react-icons/ai";
 import { useRouter } from "next/router";
-import { Change } from "firebase-functions";
 
 type Link = {
   title: string;
@@ -112,32 +106,6 @@ export default function Links(props: {
       }
     }
     updateLinks(userChanges);
-  };
-
-  const onUpdate = async (
-    change: Change<QueryDocumentSnapshot>,
-    link: Link
-  ) => {
-    // retrieve the previous and current value
-    const before = change.before.data();
-    const after = change.after.data();
-
-    // only update if name has changed to prevent infinite loops
-    if (before.name === after.name) {
-      return null;
-    }
-
-    // get open graph data
-    const og = require("open-graph");
-    const data = await og(link.url);
-
-    // set the data in docs
-    await updateDoc(change.after.ref, {
-      title: data.title,
-      description: data.description,
-      image: data.image,
-      url: data.url,
-    });
   };
 
   return (

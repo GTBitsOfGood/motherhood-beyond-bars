@@ -6,15 +6,16 @@ import {
   View,
   StyleSheet,
   Text,
-  Button,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
   Linking,
   TouchableOpacity,
 } from "react-native";
 import { db } from "../../config/firebase";
 import { ResourcesStackScreenProps } from "../../types";
+import { StopCircleSharp } from "@mui/icons-material";
 
 export default function Links({
   navigation,
@@ -30,22 +31,14 @@ export default function Links({
     Linking.openURL(url);
   };
 
-  // const data = [
-  //   {
-  //     description:
-  //       "We're a young and inspired team that leverages technical knowledge to turn ideas into creative and efficient digital solutions.",
-  //     title: "OSEDEA | Digital Efficiency & Creativity",
-  //     url: "http://osedea.com",
-  //   },
-  //   {
-  //     description:
-  //       "We're a young and inspired team that leverages technical knowledge to turn ideas into creative and efficient digital solutions.",
-  //     title: "OSEDEA | Digital Efficiency & Creativity",
-  //     url: "http://osedea.com",
-  //   },
-  // ];
-
-  const [data, setData] = useState([{ title: "", description: "", url: "" }]);
+  const [data, setData] = useState([
+    {
+      title: "",
+      description: "",
+      url: "",
+      imageURL: "",
+    },
+  ]);
   const [noLinks, setNoLinks] = useState(false);
 
   useEffect(() => {
@@ -76,23 +69,40 @@ export default function Links({
                 <Text style={styles.title}>Links</Text>
                 {data.map((item) => (
                   <View key={item.title}>
-                    {item.title !== "" && item.title !== undefined && (
-                      <Text style={styles.subtitle} key={item.title}>
-                        {item.title}
-                      </Text>
-                    )}
-                    {item.description !== "" && item.description !== undefined && (
-                      <Text style={styles.description} key={item.description}>
-                        {item.description}
-                      </Text>
-                    )}
-                    {item.url !== "" && item.url !== undefined && (
-                      <TouchableOpacity onPress={() => openLink(item.url)}>
-                        <Text style={styles.link} key={item.url}>
-                          {item.url}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
+                    <View style={styles.innerContainer}>
+                      <View style={styles.text}>
+                        {item.title !== "" && item.title !== undefined && (
+                          <Text style={styles.subtitle} key={item.title}>
+                            {item.title}
+                          </Text>
+                        )}
+                        {item.description !== "" &&
+                          item.description !== undefined && (
+                            <Text
+                              style={styles.description}
+                              key={item.description}
+                            >
+                              {item.description}
+                            </Text>
+                          )}
+                        {item.url !== "" && item.url !== undefined && (
+                          <TouchableOpacity onPress={() => openLink(item.url)}>
+                            <Text style={styles.link} key={item.url}>
+                              {item.url}
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                      {item.imageURL !== "" && item.imageURL !== undefined && (
+                        <Image
+                          style={styles.image}
+                          key={item.imageURL}
+                          source={{
+                            uri: item.imageURL,
+                          }}
+                        />
+                      )}
+                    </View>
                     <View
                       style={{
                         borderBottomColor: "black",
@@ -150,6 +160,10 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     fontWeight: "bold",
   },
+  image: {
+    width: "25%",
+    height: 100,
+  },
   construction: {
     flex: 1,
     justifyContent: "center",
@@ -165,5 +179,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#666666",
     textAlign: "center",
+  },
+  innerContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+  },
+  text: {
+    width: "75%",
   },
 });
