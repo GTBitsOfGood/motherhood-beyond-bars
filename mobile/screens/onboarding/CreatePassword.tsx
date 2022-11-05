@@ -10,7 +10,11 @@ import {
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  PhoneAuthProvider,
+  linkWithCredential,
+} from "firebase/auth";
 import { auth, db } from "../../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -70,6 +74,17 @@ export default function CreatePassword({
                     )
                       .then((userCredential) => {
                         setCaregiverInfo(userCredential);
+                        const credential = PhoneAuthProvider.credential(
+                          route?.params?.phone,
+                          password
+                        );
+                        linkWithCredential(userCredential.user, credential)
+                          .then((res) => {
+                            console.log(res);
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
                       })
                       .catch((error) => {
                         console.log(`account creation error: ${error}`);
