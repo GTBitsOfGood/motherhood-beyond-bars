@@ -18,7 +18,13 @@ import { Baby } from 'pages/babies';
 import { useState } from 'react';
 import { decrypt } from '../../lib/encryption';
 
-export default function BabyBook({ babyId, babyBook, totImages, baby }: Props) {
+export default function BabyBook({
+  babyBook,
+  totImages,
+  baby,
+  content,
+  iv,
+}: Props) {
   const [isPictureSelected, setIsPictureSelected] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<BabyImage>();
   const [currIndexes, setCurrIndexes] = useState({ i: -1, j: -1, k: -1 });
@@ -64,7 +70,8 @@ export default function BabyBook({ babyId, babyBook, totImages, baby }: Props) {
         number={totImages}
         name={baby.name}
         motherName={baby.mother}
-        babyId={babyId!}
+        content={content}
+        iv={iv}
       />
       <div className='relative flex grow-0 overflow-hidden'>
         <SideBar babyBook={babyBook} />
@@ -83,13 +90,14 @@ export default function BabyBook({ babyId, babyBook, totImages, baby }: Props) {
 }
 
 interface Props {
-  babyId?: string;
   babyBook: BabyBookYear[];
   totImages: number;
   baby: {
     name: string;
     mother: string;
   };
+  content: string;
+  iv: string;
 }
 
 export interface BabyBookYear {
@@ -127,13 +135,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     babyBook: [] as BabyBookYear[],
     totImages: 0,
     baby: { name: '', mother: '' },
+    content: '',
+    iv: '',
   };
   if (!params || !params.babyId || !query.iv) return { props };
-  params.babyId = decrypt({
+  props.content = params?.babyId as string;
+  props.iv = query.iv as string;
+  const babyId = decrypt({
     content: params?.babyId as string,
     iv: query.iv as string,
   });
-  const babyRef = doc(db, 'babies', params?.babyId as string);
+
+  const babyRef = doc(db, 'babies', babyId as string);
   const baby = await getDoc(babyRef);
   const babyData = baby.data() as Baby;
   props.baby = {
@@ -141,7 +154,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     mother: babyData.motherName,
   };
   const babyBookRef = doQuery(
-    collection(db, `babies/${params.babyId}/book`),
+    collection(db, `babies/${babyId}/book`),
     orderBy('date', 'desc')
   );
   const babyBookDocs = await getDocs(babyBookRef);

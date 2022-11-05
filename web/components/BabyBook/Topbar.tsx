@@ -2,18 +2,21 @@ import DownloadIcon from '@components/Icons/DownloadIcon';
 import ImageIcon from '@components/Icons/ImageIcon';
 import LinkIcon from '@components/Icons/LinkIcon';
 import PersonIcon from '@components/Icons/PersonIcon';
+import { GetServerSideProps } from 'next';
 import Image from 'next/image';
+import { stringify } from 'querystring';
 import { useState } from 'react';
 import admin_portal_gradient from '../../public/admin_portal_gradient.png';
 import left_heart from '../../public/left_heart.png';
 import right_heart from '../../public/right_heart.png';
 
-const TopBar = ({ number, motherName, name, babyId }: Props) => {
+const TopBar = ({ number, motherName, name, content, iv }: Props) => {
   const [copiedConfirmation, setCopiedConfirmation] = useState(false);
 
   const downloadAlbum = async () => {
     const a = document.createElement('a');
-    a.href = `/api/download-album?babyId=${babyId}`;
+    a.href = `/api/download-album?content=${content}&iv=${iv}`;
+    console.log(a.href);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -83,7 +86,8 @@ interface Props {
   number: number;
   motherName: string;
   name: string;
-  babyId: string;
+  content: string;
+  iv: string;
 }
 
 export default TopBar;

@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { decrypt } from '@lib/encryption';
 import { db } from '@lib/firebase';
 import {
   collection,
@@ -25,17 +26,24 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!req.query.babyId) {
-    res.status(200).json({ message: 'baby ID required.' });
+  if (!req.query.content || !req.query.iv) {
+    res.status(200).json({ message: 'baby ID and iv required.' });
   } else {
-    const babyBookRef = query(
-      collection(db, `babies/${req.query.babyId}/book`)
-    );
+    const babyId = decrypt({
+      content: req.query.content as string,
+      iv: req.query.iv as string,
+    });
+
+    const babyBookRef = query(collection(db, `babies/${babyId}/book`));
     const babyBookDocs = await getDocs(babyBookRef);
-    const babyBooks = babyBookDocs.docs.map((doc) => ({
-      id: v4(),
-      ...(doc.data() as RawBabyImage),
-    }));
+    const babyBooks = babyBookDocs.docs.map((doc) => {
+      const data = doc.data();
+
+      return {
+        id: data.caption !== '' ? data.caption : v4(),
+        ...(data as RawBabyImage),
+      };
+    });
 
     const responses = await Promise.all(
       babyBooks.map((babyBook) =>
