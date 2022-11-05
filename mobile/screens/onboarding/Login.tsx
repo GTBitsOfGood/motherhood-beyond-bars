@@ -8,16 +8,62 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-import { OnboardingStackScreenProps } from "../../types";
-import React, { useState } from "react";
+import { OnboardingStackScreenProps, Waiver } from "../../types";
+import React, { useEffect, useState, useContext } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/firebase";
+import { collection, doc, Firestore, getDoc, getDocs, query, QuerySnapshot, Timestamp } from "firebase/firestore";
+import { db } from "../../config/firebase";
+import { UserContext } from "../../providers/User";
+import { getWaivers } from "../../lib/getWaivers";
+
 
 export default function Login({
   navigation,
 }: OnboardingStackScreenProps<"Login">) {
+  const authData = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [waivers, setWaivers] = useState<Waiver[]>();
+  const [lastSigned, setLastSigned] = useState<Waiver[]>();
+
+  useEffect(() => {
+    //LEFT OFF: Get timestamp from user signedwaivers
+    //
+    let ignore = false;
+
+    async function setWaiver() {
+      const waivers = await getWaivers();
+      setWaivers(waivers);
+    }
+    setWaiver();
+
+    function setSignedWaiver() {
+      const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+      console.log(caregiverDoc);
+      // const signedWaivers = getDoc(caregiverDoc,)
+      // setLastSigned(signedWaiver);
+    }
+    setSignedWaiver();
+
+    return () => {
+      ignore = true;
+    };
+
+  }, []);
+
+  function checkWaiverUpdate() {
+    if (waivers != undefined && lastSigned != undefined) {
+      for (let i = 0; i < waivers?.length; i++) {
+        if (waivers[i].lastUpdated) {
+
+        }
+      }
+    }
+  }
+
+
+
 
   return (
     <View style={styles.container}>
