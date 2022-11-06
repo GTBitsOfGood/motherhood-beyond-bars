@@ -19,9 +19,9 @@ const isUniqueEmail = async (email: string) =>
       query(collection(db, "caregivers"), where("email", "==", email))
     )
   ).empty;
-const isValidEmail = (email: string) =>
+export const isValidEmail = (email: string) =>
   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-const isValidPhoneNumber = (phone: string) =>
+export const isValidPhoneNumber = (phone: string) =>
   /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(phone);
 
 export default function CreateAccount({
@@ -79,6 +79,17 @@ export default function CreateAccount({
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
+                  // if (continueRef?.current) {
+                  //   const applicationVerifier = new RecaptchaVerifier(continueRef?.current, {
+                  //     'size': 'invisible',
+                  //     'callback': (response : any) => {
+                  //       // reCAPTCHA solved, allow signInWithPhoneNumber.
+                  //       console.log(response)
+                  //     }
+                  //   },auth)
+
+                  //   provider.verifyPhoneNumber(route?.params?.phone, applicationVerifier)
+                  // }
                   if (!(await isUniqueEmail(email))) {
                     alert("Email already in use. Try logging in instead.");
                   } else if (!isValidEmail(email)) {
