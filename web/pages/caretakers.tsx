@@ -1,6 +1,6 @@
-import ButtonWithIcon from "@components/ButtonWithIcon";
+import ButtonWithIcon from "@components/buttonWithIcon";
 import CaretakerTable from "@components/CaretakerTable";
-import Modal from "@components/Modal";
+import Modal from "@components/modal";
 import { db } from "@lib/firebase";
 import {
   addDoc,

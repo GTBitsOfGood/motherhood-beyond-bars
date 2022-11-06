@@ -17,15 +17,14 @@ const updateLinks = functions.firestore
 
     // get open graph data
     const og = require("open-graph");
-    const data = await og(before.url);
-    console.log(data);
+    const data = before.url !== null ? await og(before.url) : null;
 
     // set the data in docs
     return change.after.ref.update({
-      title: data.title,
-      description: data.description,
-      imageURL: data.image.url,
-      url: data.url,
+      title: after.title == null ? data?.title : after.title,
+      description: after.description == null ? data?.description : after.description,
+      imageURL: after.imageURL == null ? data?.image.url : after.imageURL,
+      url: after.url == null ? data?.url : after.url,
     });
   });
 
