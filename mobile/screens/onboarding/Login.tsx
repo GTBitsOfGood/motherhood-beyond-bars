@@ -11,7 +11,9 @@ import {
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
+import { collection, query, where, getDocs, limit } from "firebase/firestore";
+import { isValidEmail, isValidPhoneNumber } from "./CreateAccount";
 
 export default function Login({
   navigation,
@@ -62,17 +64,54 @@ export default function Login({
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
-                  await signInWithEmailAndPassword(
-                    auth,
-                    email.trim(),
-                    password
-                  ).catch((error) => {
-                    if (error.code === "auth/user-not-found") {
+
+                  if (!password) {
+                    alert("Please enter a password.")
+                    return;
+                  }
+
+                  if (isValidEmail(email.trim())) {
+                    await signInWithEmailAndPassword(
+                      auth,
+                      email.trim(),
+                      password
+                    ).catch((error) => {
+                      if (error.code === "auth/user-not-found") {
+                        alert("User not found, try creating an account first.");
+                      } else if (error.code === "auth/wrong-password") {
+                        alert("Incorrect password.");
+                      }
+                    });
+                  } else if (isValidPhoneNumber(email.trim())) {
+                    const docs : any = await getDocs(
+                      query(
+                        collection(db, "caregivers"), where("phoneNumber", "==", email), limit(1)
+                      )
+                    )
+                    let temp = "";
+                    await docs.forEach((doc : any) => {
+                      temp = doc.data().email
+                    })
+
+                    if (temp === "") {
                       alert("User not found, try creating an account first.");
-                    } else if (error.code === "auth/wrong-password") {
-                      alert("Incorrect password.");
+                      return;
                     }
-                  });
+
+                    await signInWithEmailAndPassword(
+                      auth,
+                      temp,
+                      password
+                    ).catch((error) => {
+                      if (error.code === "auth/user-not-found") {
+                        alert("User not found, try creating an account first.");
+                      } else if (error.code === "auth/wrong-password") {
+                        alert("Incorrect password.");
+                      }
+                    });
+                  } else {
+                    alert("Please enter a valid phone number or email.")
+                  }
                 }}
               >
                 <Text style={styles.buttonText}>Log in</Text>

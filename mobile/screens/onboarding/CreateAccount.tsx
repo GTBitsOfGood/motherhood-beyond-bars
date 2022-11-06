@@ -9,9 +9,10 @@ import {
   ScrollView,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
+import { PhoneAuthProvider, RecaptchaVerifier } from "firebase/auth";
 
 const isUniqueEmail = async (email: string) =>
   (
@@ -19,18 +20,24 @@ const isUniqueEmail = async (email: string) =>
       query(collection(db, "caregivers"), where("email", "==", email))
     )
   ).empty;
-const isValidEmail = (email: string) =>
+export const isValidEmail = (email: string) =>
   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-const isValidPhoneNumber = (phone: string) =>
+export const isValidPhoneNumber = (phone: string) =>
   /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(phone);
 
 export default function CreateAccount({
   navigation,
+  route
 }: OnboardingStackScreenProps<"CreateAccount">) {
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  // const continueRef = useRef(null)
+
+  // const provider = new PhoneAuthProvider(auth);
+  
 
   return (
     <View style={styles.container}>
@@ -78,6 +85,7 @@ export default function CreateAccount({
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
+                // ref={continueRef}
                 onPress={async () => {
                   if (!(await isUniqueEmail(email))) {
                     alert("Email already in use. Try logging in instead.");
@@ -86,6 +94,19 @@ export default function CreateAccount({
                   } else if (!isValidPhoneNumber(phone)) {
                     alert("Invalid phone number");
                   } else {
+                    // if (continueRef?.current) {
+                    //   const applicationVerifier = new RecaptchaVerifier(continueRef?.current, {
+                    //     'size': 'invisible',
+                    //     'callback': (response : any) => {
+                    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
+                    //       console.log(response)
+                    //     }
+                    //   },auth)
+  
+                    //   provider.verifyPhoneNumber(route?.params?.phone, applicationVerifier)
+                    // }
+                    
+
                     navigation.navigate("CreatePassword", {
                       first: first,
                       last: last,

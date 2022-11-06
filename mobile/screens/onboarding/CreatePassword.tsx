@@ -74,17 +74,19 @@ export default function CreatePassword({
                     )
                       .then((userCredential) => {
                         setCaregiverInfo(userCredential);
-                        const credential = PhoneAuthProvider.credential(
-                          route?.params?.phone,
-                          password
-                        );
-                        linkWithCredential(userCredential.user, credential)
-                          .then((res) => {
-                            console.log(res);
-                          })
-                          .catch((err) => {
-                            console.log(err);
-                          });
+                        // const credential = PhoneAuthProvider.credential(
+                        //   route?.params?.phone,
+                        //   password
+                        // );
+                        // if (auth.currentUser) {
+                        //   linkWithCredential(auth.currentUser, credential)
+                        //     .then((res) => {
+                        //       console.log(res);
+                        //     })
+                        //     .catch((err) => {
+                        //       console.log(err);
+                        //     });
+                        // }
                       })
                       .catch((error) => {
                         console.log(`account creation error: ${error}`);

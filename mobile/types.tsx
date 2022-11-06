@@ -52,6 +52,12 @@ export type RootTabParamList = {
 export type OnboardingParamList = {
   Welcome: undefined;
   CreateAccount: undefined;
+  VerifyPhone: {
+    first: string;
+    last: string;
+    email: string;
+    phone: string;
+  }
   CreatePassword: {
     first: string;
     last: string;

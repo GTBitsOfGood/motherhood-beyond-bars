@@ -65,6 +65,7 @@ import RequestItemsScreen from "../screens/support/RequestItemsScreen";
 import ReachOut from "../screens/support/ReachOut";
 import Welcome from "../screens/onboarding/Welcome";
 import CreateAccount from "../screens/onboarding/CreateAccount";
+// import VerifyPhone from "../screens/onboarding/VerifyPhone";
 import CreatePassword from "../screens/onboarding/CreatePassword";
 import GetStarted from "../screens/onboarding/GetStarted";
 import Login from "../screens/onboarding/Login";
@@ -321,6 +322,15 @@ function OnboardingNavigator() {
               header: () => <LoginHeader />,
             }}
           />
+          {/* <Onboarding.Screen
+            name="VerifyPhone"
+            component={VerifyPhone}
+            options={({ navigation }) => ({
+              header: () => (
+                <LoginHeader />
+              ),
+            })}
+          /> */}
           <Onboarding.Screen
             name="CreatePassword"
             component={CreatePassword}
