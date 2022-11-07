@@ -3,8 +3,10 @@ import * as functions from "firebase-functions";
 import { Change } from "firebase-functions";
 
 const updateLinks = functions.firestore
-  .document('resources/links/{linkId}')
+  .document('resources/links')
   .onUpdate(async (change: Change<QueryDocumentSnapshot>, context) => {
+
+    console.log("function ran");
 
     // retrieve the previous and current value
     const before = change.before.data();

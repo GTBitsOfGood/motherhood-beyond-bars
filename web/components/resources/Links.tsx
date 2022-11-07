@@ -1,12 +1,6 @@
 import { db } from "@lib/firebase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
-import React, {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import UpChevron from "@components/Icons/UpChevron";
 import DownChevron from "@components/Icons/DownChevron";
 import TrashCan from "@components/Icons/TrashCan";
