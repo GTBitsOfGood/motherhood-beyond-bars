@@ -4,7 +4,6 @@ import og from "fetch-opengraph";
 const updateLinks = functions.firestore
   .document("resources/links")
   .onUpdate(async (change: any, context) => {
-    console.log("function ran");
 
     // retrieve the previous and current value
     const before = change.before.data();
@@ -22,7 +21,6 @@ const updateLinks = functions.firestore
 
     // get open graph data
     const promises = changed.map((link: any) => {
-      // TODO: validate the URL
       return og.fetch(link.url).catch((err: any) => {
         return false;
       });
