@@ -37,8 +37,8 @@ const updateLinks = functions.firestore
       console.log(ogData);
       after.links[index] = {
         ...after.links[index],
-        title: after.links[index].title ?? ogData.title,
-        description: after.links[index].description ?? ogData.description,
+        title: after.links[index].title || ogData.title,
+        description: after.links[index].description || ogData.description,
         image: ogData.image,
       }
     });
