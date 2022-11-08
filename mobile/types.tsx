@@ -122,7 +122,7 @@ export interface Caregiver {
   numChildren: string;
   agesOfChildren: string;
   signedWaivers: Waiver[];
-  itemsRequested: Item[];
+  itemsRequested: ItemRequest;
   address: string;
   apartment?: string;
   city: string;
@@ -158,8 +158,12 @@ export interface Waiver {
 
 export interface Item {
   name: string;
-  fulfilled: Boolean;
-  requestedOn: Timestamp;
   gender?: string;
-  size?: number;
+}
+
+export interface ItemRequest {
+  created: Timestamp,
+  updated: Timestamp,
+  status : string,
+  items: Item[]
 }
