@@ -203,7 +203,7 @@ function AddCaretakerModal({
                     isSubmitting && "opacity-50 cursor-not-allowed"
                   }`}
                 >
-                  Add a Caretaker
+                  <span className="-translate-y-1">+</span> Add
                 </button>
               </div>
             </form>
