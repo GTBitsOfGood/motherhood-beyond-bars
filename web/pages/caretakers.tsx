@@ -56,10 +56,10 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
         Header: "Phone",
         accessor: "phone",
       },
-      {
-        Header: "Assigned to Child?",
-        accessor: "assigned",
-      },
+      // {
+      //   Header: "Assigned to Child?",
+      //   accessor: "assigned",
+      // },
     ],
     []
   );
