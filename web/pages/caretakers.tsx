@@ -98,8 +98,8 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
   };
 
   return (
-    <div>
-      <div className="absolute mt-20 border-t w-full" />
+    <div className="max-h-screen overflow-auto">
+      <div className="absolute mt-20 border-t w-full " />
       <div className="pt-6 px-8 flex h-full flex-col justify-left">
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
