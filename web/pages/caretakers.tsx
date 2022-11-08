@@ -123,12 +123,15 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
       <Modal
         show={addModal}
         content={
-          <div className="h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
-            <AddCaretakerModal
-              setModal={toggleAddModal}
-              onSubmit={addNewCaretaker}
-            />
-          </div>
+          <>
+            <div className="absolute h-screen w-screen inset-0 bg-black/50 z-50"></div>
+            <div className="h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
+              <AddCaretakerModal
+                setModal={toggleAddModal}
+                onSubmit={addNewCaretaker}
+              />
+            </div>
+          </>
         }
       />
     </div>

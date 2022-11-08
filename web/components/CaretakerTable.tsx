@@ -122,10 +122,13 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                                     const val = data[(metadata as any)[key]];
                                     return val ? (
                                       <>
-                                        <div className="uppercase text-gray-600 font-semibold text-sm">
+                                        <div
+                                          key={key}
+                                          className="uppercase text-gray-600 font-semibold text-sm"
+                                        >
                                           {key}
                                         </div>
-                                        <div className="col-span-2">
+                                        <div key={key} className="col-span-2">
                                           {key === "Liability Waiver" ? (
                                             <Link href={`/waivers/${val}`}>
                                               <a className="text-sm text-blue-400">
