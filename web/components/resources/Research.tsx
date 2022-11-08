@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import ResearchURL from "./ResearchURL";
 import MdEditor from "react-markdown-editor-lite";
 import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
@@ -9,15 +8,21 @@ import { useRouter } from "next/router";
 
 const mdParser = new MarkdownIt();
 
+type URL = {
+  title: string;
+  url: string;
+  id: string;
+};
+
 function Research(props: {
   getChangesMade: () => boolean;
   setChangesMade: Dispatch<SetStateAction<boolean>>;
 }) {
   const [initialMarkdown, setInitialMarkdown] = useState("");
-  const [initialUrls, setInitialUrls] = useState([""]);
+  const [initialUrls, setInitialUrls] = useState<URL[]>();
 
   const [markdown, setMarkdown] = useState("");
-  const [urls, setUrls] = useState([""]);
+  const [urls, setUrls] = useState<URL[]>();
   const router = useRouter();
 
   useEffect(() => {
@@ -70,63 +75,83 @@ function Research(props: {
     });
     setInitialMarkdown(markdown);
     setInitialUrls(urls);
-    console.log("reached here");
   }
   return (
     <div>
-      <div className="pt-6 flex h-full flex-col justify-left pl-10">
-        <div className="grid grid-rows-1 grid-cols-10 gap-4 pb-6">
-          <h2 className="text-md mb-5 font-bold col-span-1">Description</h2>
-          <div className="col-span-8">
-            <MdEditor
-              style={{ height: 300 }}
-              value={markdown}
-              renderHTML={(text) => mdParser.render(text)}
-              onChange={({ text }) => {
-                setMarkdown(text);
-              }}
-            />
+      <div className="w-3/4 h-full pb-20  px-10 relative">
+        <div className="flex flex-col w-full">
+          <div className="flex pt-2">
+            <div className="text-base font-semibold w-1/5 py-2">
+              Description
+            </div>
+            <div className="w-4/5">
+              <MdEditor
+                style={{ height: 300 }}
+                value={markdown}
+                renderHTML={(text) => mdParser.render(text)}
+                onChange={({ text }) => {
+                  setMarkdown(text);
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col w-full">
+            {urls?.map((url, index) => {
+              return (
+                <div key={index} className="flex w-full py-5">
+                  <div className="flex flex-col w-full">
+                    <div className="flex pt-2">
+                      <div className="text-base font-semibold w-1/5 py-2">
+                        Title
+                      </div>
+                      <input
+                        className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                        placeholder="Title"
+                        value={url.title}
+                        onChange={(e) => {
+                          const newUrls = [...urls];
+                          newUrls[index].title = e.target.value;
+                          setUrls(newUrls);
+                        }}
+                      ></input>
+                    </div>
+                    <div className="flex pt-2">
+                      <div className="text-base font-semibold w-1/5 py-2">
+                        URL
+                      </div>
+                      <input
+                        className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                        placeholder="https://example.com"
+                        value={url.url}
+                        onChange={(e) => {
+                          const newUrls = [...urls];
+                          newUrls[index].url = e.target.value;
+                          setUrls(newUrls);
+                        }}
+                      ></input>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
-        <div className="pb-6 flex h-full flex-col justify-left">
-          {urls.map((url, index) => {
-            return (
-              <ResearchURL
-                url={url}
-                setUrl={(url) => {
-                  setUrls(urls.map((old, i) => (i === index ? url : old)));
-                }}
-                delete={() => {
-                  setUrls(urls.filter((_, i) => i !== index));
-                }}
-                index={index}
-              />
-            );
-          })}
-        </div>
-      </div>
-      <div className="absolute border-t w-full" />
-      <div className="grid grid-rows-1 grid-cols-7 gap-4">
-        <h2
-          className="text-md mt-5 mb-5 font-bold text-blue-500 cursor-pointer pl-6"
-          onClick={() => {
-            setUrls([...urls, ""]);
-          }}
-        >
-          + Add a link
-        </h2>
-        <div className="pt-3 col-start-7">
-          <button
-            className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
+
+        <div className="fixed bottom-0 right-0 left-[318px] bg-white border-t-[1px] px-10 py-4">
+          <div className="flex items-right justify-between">
+            <div className="text-[#304CD1] font-semibold hover:cursor-pointer" />
+            <div
+              className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
             ${
               props.getChangesMade()
                 ? "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
                 : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
             }`}
-            onClick={setInfo}
-          >
-            Save changes
-          </button>
+              onClick={setInfo}
+            >
+              Save changes
+            </div>
+          </div>
         </div>
       </div>
     </div>
