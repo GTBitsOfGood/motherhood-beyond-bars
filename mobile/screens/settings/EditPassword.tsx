@@ -127,7 +127,6 @@ export default function EditPassword({
                     )
                   ) {
                     updatePass();
-                    navigation.navigate("AccountInfo");
                   }
                 }}
               >
