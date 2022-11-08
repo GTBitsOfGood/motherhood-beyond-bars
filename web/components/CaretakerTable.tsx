@@ -1,9 +1,9 @@
-import React from "react";
-import { useTable } from "react-table";
-import { HiOutlineTrash } from "react-icons/hi";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import Tooltip from "./ToolTip";
-import Link from "next/link";
+import React from 'react';
+import { useTable } from 'react-table';
+import { HiOutlineTrash } from 'react-icons/hi';
+import { RiArrowDropDownLine } from 'react-icons/ri';
+import Tooltip from './ToolTip';
+import Link from 'next/link';
 
 function CaretakerTable({ columns, data, onDelete }: any) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -15,11 +15,11 @@ function CaretakerTable({ columns, data, onDelete }: any) {
   const [open, setOpen] = React.useState(Array(data.length).fill(false));
 
   const metadata = {
-    Address: "address",
-    "Pref. Communication": "prefferedCommunication",
-    "Child Name": "childName",
-    "Household Info": "houseHoldInfo",
-    "Liability Waiver": "liabilityWaiver",
+    Address: 'address',
+    'Pref. Communication': 'prefferedCommunication',
+    'Child Name': 'childName',
+    'Household Info': 'houseHoldInfo',
+    'Liability Waiver': 'liabilityWaiver',
   };
 
   return (
@@ -38,7 +38,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                         className="py-3 px-6 text-base font-normal tracking-wider text-left text-slate-500 text-center"
                         {...column.getHeaderProps()}
                       >
-                        {column.render("Header")}
+                        {column.render('Header')}
                       </th>
                     ))}
                   </tr>
@@ -60,7 +60,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                               });
                             }}
                             className={`text-2xl duration-300 cursor-pointer ${
-                              open[i] && "rotate-180"
+                              open[i] && 'rotate-180'
                             }`}
                           />
                         </td>
@@ -71,7 +71,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                                 className="py-4 px-6 text-base border-t font-normal text-black whitespace-nowrap"
                                 {...cell.getCellProps()}
                               >
-                                {cell.column.id === "assigned" ? (
+                                {cell.column.id === 'assigned' ? (
                                   cell.value ? (
                                     <div className="text-xs bg-blue-200 text-center rounded-md p-2">
                                       Assigned
@@ -82,7 +82,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                                     </div>
                                   )
                                 ) : (
-                                  cell.render("Cell")
+                                  cell.render('Cell')
                                 )}
                               </td>
                             </>
@@ -94,7 +94,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                               className="pr-2 pt-1 cursor-pointer"
                               onClick={() => {
                                 confirm(
-                                  "Are you sure you want to delete this caretaker?"
+                                  'Are you sure you want to delete this caretaker?'
                                 ) && onDelete(row.original);
                               }}
                             >
@@ -122,7 +122,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                                         <div className="uppercase text-gray-600 font-semibold text-sm">
                                           {key}
                                         </div>
-                                        {key === "Liability Waiver" ? (
+                                        {key === 'Liability Waiver' ? (
                                           <Link href={`/waivers/${val}`}>
                                             <a className="text-sm text-blue-400">
                                               Link

@@ -23,32 +23,12 @@ function Research(props: {
 
   const [markdown, setMarkdown] = useState("");
   const [urls, setUrls] = useState<URL[]>();
-  const router = useRouter();
 
   useEffect(() => {
     props.setChangesMade(
       JSON.stringify(urls) !== JSON.stringify(initialUrls) ||
         markdown !== initialMarkdown
     );
-
-    const warningText =
-      "You have unsaved changes - are you sure you wish to leave this page?";
-    const handleWindowClose = (e: BeforeUnloadEvent) => {
-      if (!props.getChangesMade()) return;
-      e.preventDefault();
-      return (e.returnValue = warningText);
-    };
-    const handleBrowseAway = () => {
-      if (!props.getChangesMade) return;
-      if (window.confirm(warningText)) return;
-      throw "routeChange aborted.";
-    };
-    window.addEventListener("beforeunload", handleWindowClose);
-    router.events.on("routeChangeStart", handleBrowseAway);
-    return () => {
-      window.removeEventListener("beforeunload", handleWindowClose);
-      router.events.off("routeChangeStart", handleBrowseAway);
-    };
   }, [markdown, urls, initialMarkdown, initialUrls]);
 
   useEffect(() => {
