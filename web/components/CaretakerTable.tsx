@@ -35,7 +35,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                     {headerGroup.headers.map((column) => (
                       <th
                         scope="col"
-                        className="py-3 px-6 text-base font-normal tracking-wider text-left text-slate-500 text-center"
+                        className="py-3 px-6 text-base font-normal tracking-wider text-slate-500 text-center"
                         {...column.getHeaderProps()}
                       >
                         {column.render("Header")}
@@ -120,7 +120,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                                   {Object.keys(metadata).map((key) => {
                                     const data: any = row.original;
                                     const val = data[(metadata as any)[key]];
-                                    return (
+                                    return val ? (
                                       <>
                                         <div className="uppercase text-gray-600 font-semibold text-sm">
                                           {key}
@@ -137,7 +137,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                                           )}
                                         </div>
                                       </>
-                                    );
+                                    ) : null;
                                   })}
                                 </div>
                               </div>

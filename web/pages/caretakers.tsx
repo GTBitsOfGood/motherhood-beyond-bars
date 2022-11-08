@@ -169,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         data.apartment ? `${data.apartment}, ` : ""
       }${data.city}, ${data.state}`,
       prefferedCommunication: data.prefferedCommunication || "N/A",
-      childName: child?.firstName + " " + child?.lastName,
+      childName: child ? child.firstName + " " + child.lastName : null,
       houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,
       liabilityWaiver: data.signedWaivers?.at(-1).id || null,
     });
