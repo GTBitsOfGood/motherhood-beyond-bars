@@ -13,7 +13,7 @@ import { Timestamp } from "firebase/firestore";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
 

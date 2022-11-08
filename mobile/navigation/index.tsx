@@ -79,6 +79,7 @@ import General from "../screens/resources/General";
 import FAQ from "../screens/resources/FAQ";
 import Research from "../screens/resources/Research";
 import Links from "../screens/resources/Links";
+import { ArrowLeft } from "@mui/icons-material";
 
 export default function Navigation({
   colorScheme,
@@ -94,6 +95,8 @@ export default function Navigation({
     </NavigationContainer>
   );
 }
+
+let updatedWaiver = true;
 
 const validateAuthData = (authData: UserContextType) => {
   // Determine if a user is ready to see the app yet, or if they still need to be onboarded
@@ -546,7 +549,43 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   return (
-    <BottomTab.Navigator
+    updatedWaiver ? <Onboarding.Navigator
+      initialRouteName="SignWaiver"
+      screenOptions={{
+        tabBarActiveTintColor: "#fff",
+        tabBarStyle: {
+          backgroundColor: "#000000",
+          height: 75,
+          paddingBottom: 15,
+          paddingTop: 15,
+        },
+        headerBackground: () => <HeaderBackgroundSVG />,
+        headerStyle: {
+          backgroundColor: "transparent",
+          height: 87,
+        },
+        headerTitleStyle: { color: "#fff" },
+        tabBarHideOnKeyboard: true,
+      }}
+    >
+      <Onboarding.Screen
+        name="SignWaiver"
+        component={SignWaiver}
+        options={{
+          headerStyle: {
+            backgroundColor: "#EBEDF8",
+          },
+          title: "",
+          headerLeft: () => (
+            <View>
+              <ArrowLeft>
+
+              </ArrowLeft>
+            </View>
+          ),
+        }}
+      />
+    </Onboarding.Navigator> : <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: "#fff",

@@ -24,46 +24,6 @@ export default function Login({
   const authData = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [waivers, setWaivers] = useState<Waiver[]>();
-  const [lastSigned, setLastSigned] = useState<Waiver[]>();
-
-  useEffect(() => {
-    //LEFT OFF: Get timestamp from user signedwaivers
-    //
-    let ignore = false;
-
-    async function setWaiver() {
-      const waivers = await getWaivers();
-      setWaivers(waivers);
-    }
-    setWaiver();
-
-    function setSignedWaiver() {
-      const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-      console.log(caregiverDoc);
-      // const signedWaivers = getDoc(caregiverDoc,)
-      // setLastSigned(signedWaiver);
-    }
-    setSignedWaiver();
-
-    return () => {
-      ignore = true;
-    };
-
-  }, []);
-
-  function checkWaiverUpdate() {
-    if (waivers != undefined && lastSigned != undefined) {
-      for (let i = 0; i < waivers?.length; i++) {
-        if (waivers[i].lastUpdated) {
-
-        }
-      }
-    }
-  }
-
-
-
 
   return (
     <View style={styles.container}>

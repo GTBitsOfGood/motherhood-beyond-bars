@@ -7,16 +7,71 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-import { SettingsStackScreenProps } from "../../types";
-import React, { useContext } from "react";
+import { SettingsStackScreenProps, Waiver } from "../../types";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../providers/User";
-import { auth } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
 import { signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { getWaivers } from "../../lib/getWaivers";
 
 export default function AccountInfo({
   navigation,
 }: SettingsStackScreenProps<"AccountInfo">) {
   const authData = useContext(UserContext);
+
+  const [waivers, setWaivers] = useState<Waiver[]>();
+  const [signedWaivers, setSignedWaivers] = useState();
+  const [resignWaivers, setResignWaivers] = useState<Waiver[]>();
+  const [rw, srw] = useState("");
+
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function findWaiver() {
+      const waivers = await getWaivers();
+      setWaivers(waivers);
+      // setResignWaivers(waivers);
+    }
+    findWaiver();
+    srw("");
+
+    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+    if (caregiverDoc != undefined) {
+      getDoc(caregiverDoc).then((doc) => {
+        if (!ignore) {
+          const data = doc?.data()?.signedWaivers;
+          setSignedWaivers(doc?.data()?.signedWaivers);
+        }
+      });
+    }
+    return () => {
+      ignore = true;
+    };
+
+  }, []);
+
+  function checkWaiverUpdate() {
+    if (waivers != undefined && signedWaivers != undefined) {
+      for (let i = 0; i < waivers?.length; i++) {
+        if (waivers[i].lastUpdated > signedWaivers[i].timestamp) {
+          console.log("TRUE!!!!");
+          srw(waivers[i].id);
+          //LEFT OFF: Adding updated waiver to list. Try adding id instead of waiver!!
+          // Try adding prop to index.tsx to be boolean for switching intitail navigator on line 550?
+          // resignWaivers?.push(waivers[i]);
+          // setResignWaivers([...resignWaivers as any[], waivers[i]]);
+          console.log(resignWaivers)
+        } else {
+          console.log("FALSE!!!!")
+        }
+      }
+    }
+  }
+  // console.log(resignWaivers)
+
+
 
   return (
     <View style={styles.container}>
@@ -96,6 +151,7 @@ export default function AccountInfo({
             >
               <TouchableOpacity
                 onPress={() => {
+                  checkWaiverUpdate();
                   signOut(auth);
                 }}
               >
