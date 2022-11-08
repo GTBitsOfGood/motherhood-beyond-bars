@@ -14,21 +14,22 @@ function ResearchURL(props: PropTypes) {
       <div className="flex flex-col w-5/6">
         <div className="flex pt-2">
           <label
-            htmlFor={`faq-question-${props.index}`}
+            htmlFor={`url-link-${props.index}`}
             className="text-base font-semibold w-1/5 py-2"
           >
-            Question
+            Link
           </label>
 
           <div className="flex flex-col w-4/5">
             <input
               className={`border-[#D9D9D9] border-[1px] w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
+              type="url"
               value={props.url}
-              id={`faq-question-${props.index}`}
+              id={`url-link-${props.index}`}
               onChange={(e) => {
                 props.setUrl(e.currentTarget.value);
               }}
-              placeholder="What's the answer to the life, universe, and everything?"
+              placeholder="Enter link here..."
             />
           </div>
         </div>
@@ -38,9 +39,6 @@ function ResearchURL(props: PropTypes) {
           <TrashCan className="fill-[#BFBFBF]"></TrashCan>
         </div>
       </div>
-      <span className="col-span-1 pt-2">
-        <Image className="static px-10" src={trash} onClick={props.delete} />
-      </span>
     </div>
   );
 }
