@@ -23,7 +23,6 @@ function Research(props: {
 
   const [markdown, setMarkdown] = useState("");
   const [urls, setUrls] = useState<URL[]>();
-  const router = useRouter();
 
   useEffect(() => {
     props.setChangesMade(
