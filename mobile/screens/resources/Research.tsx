@@ -97,6 +97,7 @@ export default function Research({
                       Linking.openURL(url.url);
                     }}
                     style={styles.button}
+                    key={url.url}
                   >
                     <Text
                       style={{
