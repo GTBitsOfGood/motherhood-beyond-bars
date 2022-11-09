@@ -23,9 +23,6 @@ import { useRouter } from "next/router";
 
 export type Baby = {
   id: string;
-  caretakerName: string;
-  caretakerID: string;
-  caretaker: DocumentReference;
   motherName: string;
   birthday: string;
   sex: string;
@@ -33,7 +30,6 @@ export type Baby = {
   dob: Timestamp;
   firstName: string;
   lastName: string;
-  hospitalName: string;
 };
 
 function genChildrenAndBabyBooksTab({
@@ -87,18 +83,12 @@ function genChildrenAndBabyBooksTab({
 
   const addNewChild = async (child: Baby) => {
     console.log("child", child);
-    const caretakerRef = doc(db, "caregivers", child.caretakerID);
 
     const newBaby = await addDoc(collection(db, "babies"), {
       ...child,
       dob: child.dob,
       createdAt: serverTimestamp(),
-      caretaker: caretakerRef,
       babyBookEntries: [],
-    });
-
-    await updateDoc(caretakerRef, {
-      baby: newBaby,
     });
 
     toggleAddModal(false);
@@ -183,14 +173,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         firstName: string;
         lastName: string;
       } = { firstName: "No Caregiver Assigned", lastName: "" };
-      try {
-        caretaker = (await getDoc(data?.caretaker))?.data() as {
-          firstName: string;
-          lastName: string;
-        };
-      } catch (e) {
-        console.log(`Couldn't get caretaker for ${data.firstName}`);
-      }
 
       const dobDate = new Timestamp(
         data.dob.seconds,
@@ -202,13 +184,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         firstName: data.firstName,
         lastName: data.lastName,
         name: data?.firstName + " " + data?.lastName || null,
-        caretakerName: caretaker?.firstName + " " + caretaker?.lastName || null,
-        caretakerID: data?.caretaker.id,
         motherName: data?.motherName || null,
         birthday: dobDate?.toLocaleDateString("en-us") || null,
         sex: data?.sex || null,
         babyBook: "/book/" + babyDoc.id,
-        hospitalName: data?.hospitalName,
       };
     })
   );

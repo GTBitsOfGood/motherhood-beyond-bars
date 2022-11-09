@@ -12,7 +12,6 @@ import {
   query,
   serverTimestamp,
 } from "firebase/firestore";
-import AddCaretakerModal from "modals/addCaretakerModal";
 import { GetServerSideProps } from "next";
 import router, { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
@@ -56,34 +55,17 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
         Header: "Phone",
         accessor: "phone",
       },
-      // {
-      //   Header: "Assigned to Child?",
-      //   accessor: "assigned",
-      // },
     ],
     []
   );
 
   const data = React.useMemo(() => caregivers, [caregivers]);
 
-  const [addModal, toggleAddModal] = useState(false);
 
   const router = useRouter();
 
   const refreshData = () => {
     router.replace(router.asPath);
-  };
-
-  const addNewCaretaker = async (caretaker: any) => {
-    await addDoc(collection(db, "caregivers"), {
-      ...caretaker,
-      createdAt: serverTimestamp(),
-    });
-
-    toggleAddModal(false);
-    alert(`Caretaker successfully added!`);
-
-    refreshData();
   };
 
   const deleteCaretaker = async (caretaker: Caretaker) => {
@@ -104,13 +86,6 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
               {caregivers?.length + " People"}
             </h2>
           </div>
-          {/* <div>
-            <ButtonWithIcon
-              icon={<FaPlus />}
-              text="Add a caretaker"
-              onClick={() => toggleAddModal(true)}
-            />
-          </div> */}
         </div>
         <div className="mt-4 overflow-auto w-full">
           <CaretakerTable
@@ -120,20 +95,6 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
           />
         </div>
       </div>
-      <Modal
-        show={addModal}
-        content={
-          <>
-            <div className="absolute h-screen w-screen inset-0 bg-black/50 z-50"></div>
-            <div className="h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
-              <AddCaretakerModal
-                setModal={toggleAddModal}
-                onSubmit={addNewCaretaker}
-              />
-            </div>
-          </>
-        }
-      />
     </div>
   );
 }
