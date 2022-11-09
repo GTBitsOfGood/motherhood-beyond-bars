@@ -43,7 +43,7 @@ function ChildModal({
             <form onSubmit={handleSubmit((data) => onSubmit(data))}>
               <div className="block p-6 rounded-lg shadow-lg  max-w-md">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="form-group mr-3 mb-5">
+                  <div className="form-group mr-3 mb-3">
                     <p>First Name</p>
                     <input
                       className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
@@ -56,7 +56,7 @@ function ChildModal({
                       </span>
                     )}
                   </div>
-                  <div className="form-group mb-6">
+                  <div className="form-group mb-3">
                     <p>Last Name</p>
                     <input
                       type="text"
@@ -70,7 +70,7 @@ function ChildModal({
                       </span>
                     )}
                   </div>
-                  <div className="form-group mb-5 mr-5">
+                  <div className="form-group mb-3 mr-5">
                     <p>Date of Birth</p>
                     <input
                       className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
@@ -84,7 +84,7 @@ function ChildModal({
                       </span>
                     )}
                   </div>
-                  <div className="form-group mb-6">
+                  <div className="form-group mb-3">
                     <p>Sex</p>
                     <select
                       className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
@@ -95,7 +95,7 @@ function ChildModal({
                       <option value="male">Male</option>
                     </select>
                   </div>
-                  <div className="form-group mb-6 w-full col-span-2">
+                  <div className="form-group mb-3 w-full col-span-2">
                     <p>Mother Name</p>
                     <input
                       type={"text"}

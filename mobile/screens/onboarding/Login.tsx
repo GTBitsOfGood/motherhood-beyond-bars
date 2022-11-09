@@ -67,10 +67,14 @@ export default function Login({
                     email.trim(),
                     password
                   ).catch((error) => {
-                    if (error.code === "auth/user-not-found") {
+                    if (error.code === "auth/invalid-email") {
+                      alert("Invalid email address.");
+                    } else if (error.code === "auth/user-not-found") {
                       alert("User not found, try creating an account first.");
                     } else if (error.code === "auth/wrong-password") {
                       alert("Incorrect password.");
+                    } else {
+                      alert("Something went wrong. Please try again later.");
                     }
                   });
                 }}
@@ -85,7 +89,7 @@ export default function Login({
                 paddingTop: 155.5,
               }}
             >
-              <Text style={{ fontSize: 14 }}>Already have an account? </Text>
+              <Text style={{ fontSize: 14 }}>Don't have an account? </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("CreateAccount")}
               >

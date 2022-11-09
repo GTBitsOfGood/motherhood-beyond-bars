@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import admin_portal_gradient from "../public/admin_portal_gradient.png";
 import left_heart from "../public/left_heart.png";
@@ -7,8 +7,36 @@ import SignOutButton from "./SignOutButton";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { collection, query, onSnapshot } from "firebase/firestore";
+import { db } from "@lib/firebase";
+
+import { Caregiver } from "pages/item-requests";
+
 function SideBar(props: any) {
   const router = useRouter();
+  const [pendingCount, setPendingCount] = useState();
+
+  useEffect(() => {
+    const q = query(collection(db, "caregivers"));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let tempData: any = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        tempData.push(data);
+      });
+      tempData = tempData.filter(
+        (x: Caregiver) => x.itemsRequested && x.itemsRequested.items
+      );
+
+      tempData = tempData.filter(
+        (x: Caregiver) => x.itemsRequested.status == "Pending"
+      );
+      setPendingCount(tempData.length);
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <div className="flex flex-col justify-between sm:relative bg-black shadow md:h-full hidden sm:flex">
@@ -43,6 +71,11 @@ function SideBar(props: any) {
                       <span className="text-base font-semibold text-white hover:text-slate-400 ml-4">
                         {item.name}
                       </span>
+                      {item.name == "Item Requests" ? (
+                        <span className="px-2 bg-[#FF7171] text-white ml-2 rounded">
+                          {pendingCount} pending
+                        </span>
+                      ) : null}
                     </div>
                   </li>
                 </Link>
