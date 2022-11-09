@@ -6,6 +6,7 @@ import { FaTimes } from "react-icons/fa";
 function ChildModal({
   setModal,
   onSubmit,
+  caretakers,
   buttonText = "Add a Child",
   header = "Add a Child",
   values,
@@ -28,10 +29,10 @@ function ChildModal({
   return (
     <>
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative my-6 mx-auto max-w-3xl">
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none ">
-            <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
-              <h3 className="text-3xl font-bold">{header}</h3>
+        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+            <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
+              <h3 className="text-2xl font-bold">{header}</h3>
               <button
                 className="bg-transparent border-0 text-black float-right"
                 onClick={() => setModal(false)}
@@ -40,13 +41,13 @@ function ChildModal({
               </button>
             </div>
             <form onSubmit={handleSubmit((data) => onSubmit(data))}>
-              <div className="block p-6 rounded-lg shadow-lg w-109">
+              <div className="block p-6 rounded-lg shadow-lg  max-w-md">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="form-group mb-6">
+                  <div className="form-group mr-3 mb-5">
                     <p>First Name</p>
                     <input
-                      // type="text"
-                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      defaultValue={values?.firstName}
                       {...register("firstName", { required: true })}
                     />
                     {errors.firstName && (
@@ -59,7 +60,7 @@ function ChildModal({
                     <p>Last Name</p>
                     <input
                       type="text"
-                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       defaultValue={values?.lastName}
                       {...register("lastName", { required: true })}
                     />
@@ -69,11 +70,10 @@ function ChildModal({
                       </span>
                     )}
                   </div>
-                  <div className="form-group mb-6">
+                  <div className="form-group mb-5 mr-5">
                     <p>Date of Birth</p>
                     <input
-                      // type="datetime-local"
-                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       placeholder="MM/DD/YY"
                       defaultValue={values?.dob && values?.dob.slice(0, -8)}
                       {...register("dob", { required: true })}
@@ -87,34 +87,19 @@ function ChildModal({
                   <div className="form-group mb-6">
                     <p>Sex</p>
                     <select
-                      className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-                      placeholder="Select"
+                      className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       {...register("sex", { required: true })}
                     >
-                      <option value="" selected>Select</option>
+                      <option value="select">Select</option>
                       <option value="female">Female</option>
                       <option value="male">Male</option>
                     </select>
                   </div>
-                  {/* <div className="form-group mb-6">
-                    <label className="text-sm">Caretaker</label>
-                    <select
-                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      {...register("caretakerID", { required: true })}
-                      defaultValue={values?.caretaker}
-                    >
-                      {caretakers.map((caretaker) => (
-                        <option key={caretaker.id} value={caretaker.id}>
-                          {caretaker.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div> */}
-                  <div className="form-group mb-6">
+                  <div className="form-group mb-6 w-full col-span-2">
                     <p>Mother Name</p>
                     <input
                       type={"text"}
-                      className="w-20 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       placeholder="Full Name"
                       defaultValue={values?.motherName}
                       {...register("motherName", { required: true })}
@@ -125,16 +110,23 @@ function ChildModal({
                       </span>
                     )}
                   </div>
-                  {/* <div className="form-group mb-6">
-                    <label className="text-sm">Hospital of Birth</label>
-                    <input
-                      type={"text"}
-                      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-2 border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                      placeholder="Hospital of Birth"
-                      defaultValue={values?.hospitalName}
-                      {...register("hospitalName", { required: false })}
-                    />
-                  </div> */}
+                  <div className="form-group flex justify-end w-full col-span-2 mt-5">
+                    <button
+                      className="px-4 py-2 rounded-md text-md text-blue-700 font-semibold"
+                      onClick={() => setModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      disabled={isSubmitting}
+                      type="submit"
+                      className={`"bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" ${
+                        isSubmitting && "opacity-50 cursor-not-allowed"
+                      }`}
+                    >
+                      Add child
+                    </button>
+                  </div>
                   {values && values.id && (
                     <input
                       type="hidden"
@@ -149,24 +141,6 @@ function ChildModal({
                     <BiLoaderCircle className="animate-spin" />
                   </div>
                 )}
-              </div>
-
-              <div className="flex items-end w-full p-5 border-b border-solid border-gray-300 rounded-t ">
-                <button
-                  className="px-4 py-2 rounded-md text-md text-red-500 font-semibold"
-                  onClick={() => setModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  disabled={isSubmitting}
-                  type="submit"
-                  className={`px-7 py-2 ml-2 rounded-md text-md text-black font-semibold ${
-                    isSubmitting && "opacity-50 cursor-not-allowed"
-                  }`}
-                >
-                  {buttonText}
-                </button>
               </div>
             </form>
           </div>
