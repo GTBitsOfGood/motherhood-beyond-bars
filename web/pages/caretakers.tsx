@@ -56,14 +56,10 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
         Header: "Phone",
         accessor: "phone",
       },
-      {
-        Header: "Date Registered",
-        accessor: "registeredDate",
-      },
-      {
-        Header: "Assigned to Child?",
-        accessor: "assigned",
-      },
+      // {
+      //   Header: "Assigned to Child?",
+      //   accessor: "assigned",
+      // },
     ],
     []
   );
@@ -98,8 +94,8 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
   };
 
   return (
-    <div>
-      <div className="absolute mt-20 border-t w-full" />
+    <div className="max-h-screen overflow-auto w-full">
+      <div className="absolute mt-20 border-t w-full " />
       <div className="pt-6 px-8 flex h-full flex-col justify-left">
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
@@ -116,7 +112,7 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
             />
           </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 overflow-auto w-full">
           <CaretakerTable
             columns={columns}
             data={data}
@@ -127,12 +123,15 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
       <Modal
         show={addModal}
         content={
-          <div className="h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
-            <AddCaretakerModal
-              setModal={toggleAddModal}
-              onSubmit={addNewCaretaker}
-            />
-          </div>
+          <>
+            <div className="absolute h-screen w-screen inset-0 bg-black/50 z-50"></div>
+            <div className="h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
+              <AddCaretakerModal
+                setModal={toggleAddModal}
+                onSubmit={addNewCaretaker}
+              />
+            </div>
+          </>
         }
       />
     </div>
@@ -173,7 +172,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         data.apartment ? `${data.apartment}, ` : ""
       }${data.city}, ${data.state}`,
       prefferedCommunication: data.prefferedCommunication || "N/A",
-      childName: child?.firstName + " " + child?.lastName,
+      childName: child ? child.firstName + " " + child.lastName : null,
       houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,
       liabilityWaiver: data.signedWaivers?.at(-1).id || null,
     });

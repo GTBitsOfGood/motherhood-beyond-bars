@@ -74,8 +74,12 @@ export default function BestContact({
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                setBestContact();
-                navigation.navigate("AllDone");
+                if (contact.length > 0) {
+                  setBestContact();
+                  navigation.navigate("AllDone");
+                } else {
+                  alert("Please select an option.");
+                }
               }}
             >
               <Text style={styles.buttonText}>Finish</Text>

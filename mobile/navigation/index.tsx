@@ -76,6 +76,9 @@ import EditAccount from "../screens/settings/EditAccount";
 import EditPassword from "../screens/settings/EditPassword";
 import EditAddress from "../screens/settings/EditAddress";
 import General from "../screens/resources/General";
+import FAQ from "../screens/resources/FAQ";
+import Research from "../screens/resources/Research";
+import Links from "../screens/resources/Links";
 
 export default function Navigation({
   colorScheme,
@@ -102,7 +105,6 @@ const validateAuthData = (authData: UserContextType) => {
     authData.caregiver?.email &&
     authData.caregiver?.numAdults &&
     authData.caregiver?.numChildren &&
-    authData.caregiver?.agesOfChildren &&
     authData.caregiver?.signedWaivers &&
     authData.caregiver?.address &&
     authData.caregiver?.city &&
@@ -469,6 +471,27 @@ function ResourcesNavigator() {
       <Resources.Screen
         name="General"
         component={General}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Resources.Screen
+        name="FAQ"
+        component={FAQ}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Resources.Screen
+        name="Links"
+        component={Links}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Resources.Screen
+        name="Research"
+        component={Research}
         options={{
           headerShown: false,
         }}

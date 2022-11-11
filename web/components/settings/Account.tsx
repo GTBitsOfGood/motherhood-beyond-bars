@@ -2,6 +2,9 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { doc, updateDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "@lib/firebase";
+import { getAuth, onAuthStateChanged} from "firebase/auth"
+
+
 
 type AccountEntry = {
   confirmNewPassword: string;
@@ -20,6 +23,8 @@ export default function Account() {
   const [showPhoneNumberForm, setShowPhoneNumberForm] = useState(false);
   const [userChanges, setUserChanges] = useState<AccountEntry[]>([]);
   const router = useRouter();
+
+  const auth = getAuth();
 
   //   useEffect(() => {
   //     const unsub = onSnapshot(doc(db, "settings", "account"), (doc) => {

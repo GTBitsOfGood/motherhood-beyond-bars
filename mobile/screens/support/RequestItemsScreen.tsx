@@ -14,6 +14,7 @@ import { SupportStackScreenProps } from "../../types";
 import { SettingsContext } from "../../providers/settings";
 import { arrayUnion, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
+import { ItemRequest } from "../../types";
 import Checkbox from "../../components/app/Checkbox";
 
 type Props = SupportStackScreenProps<"RequestItemsScreen">;
@@ -48,38 +49,42 @@ export default function SupportScreen({ navigation }: Props) {
         ?.filter((_, index) => itemsCount[index])
         .map((item) => {
           return {
-            ...item,
-            itemQuantity: 1,
-            fulfilled: false,
-            requestedOn: Timestamp.now(),
+            name : item.itemDisplayName
           };
         }) || [];
 
-    if (otherItems) {
-      itemsRequested?.push({
-        itemName: "other",
-        itemDisplayName: otherItems,
-        itemQuantity: 1,
-        itemDescription: "",
-        onboarding: false,
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
-      });
+    // if (otherItems) {
+    //   itemsRequested?.push({
+    //     itemName: "other",
+    //     itemDisplayName: otherItems,
+    //     itemQuantity: 1,
+    //     itemDescription: "",
+    //     onboarding: false,
+    //     fulfilled: false,
+    //     requestedOn: Timestamp.now(),
+    //   });
+    // }
+
+    // if (additionalComments) {
+    //   itemsRequested?.push({
+    //     itemName: "additionalComments",
+    //     itemDisplayName: additionalComments,
+    //     itemQuantity: 1,
+    //     itemDescription: "",
+    //     onboarding: false,
+    //     fulfilled: false,
+    //     requestedOn: Timestamp.now(),
+    //   });
+    // }
+
+    const req : ItemRequest = {
+        created : Timestamp.now(),
+        updated : Timestamp.now(),
+        status: "Pending",
+        items: itemsRequested
     }
 
-    if (additionalComments) {
-      itemsRequested?.push({
-        itemName: "additionalComments",
-        itemDisplayName: additionalComments,
-        itemQuantity: 1,
-        itemDescription: "",
-        onboarding: false,
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
-      });
-    }
-
-    updateDoc(caregiverDoc, { itemsRequested: arrayUnion(...itemsRequested) });
+    updateDoc(caregiverDoc, { itemsRequested:req});
   };
 
   return (

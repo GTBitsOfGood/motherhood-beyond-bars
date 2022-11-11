@@ -2,21 +2,35 @@ import DownloadIcon from "@components/Icons/DownloadIcon";
 import ImageIcon from "@components/Icons/ImageIcon";
 import LinkIcon from "@components/Icons/LinkIcon";
 import PersonIcon from "@components/Icons/PersonIcon";
-import Image from "next/image"
+import Image from "next/image";
+import { useState } from "react";
 import admin_portal_gradient from "../../public/admin_portal_gradient.png";
 import left_heart from "../../public/left_heart.png";
 import right_heart from "../../public/right_heart.png";
 
 const TopBar = ({ number, motherName, name }: Props) => {
+  const [copiedConfirmation, setCopiedConfirmation] = useState(false);
+
   const copyLink = () => {
-    navigator.clipboard.writeText(window.location.origin + window.location.pathname)
-  }
+    navigator.clipboard.writeText(
+      window.location.origin + window.location.pathname
+    );
+    setCopiedConfirmation(true);
+    setTimeout(() => {
+      setCopiedConfirmation(false);
+    }, 2000);
+  };
+
   return (
     <div className="flex justify-between w-full shadow-lg">
       <div className="flex items-center">
         <div className="w-[164px] h-[81px] overflow-hidden">
           <div className="relative right-12">
-            <Image className="relative" layout="fixed" src={admin_portal_gradient} />
+            <Image
+              className="relative"
+              layout="fixed"
+              src={admin_portal_gradient}
+            />
           </div>
         </div>
         <span className="absolute top-[26px] left-[67px]">
@@ -36,23 +50,33 @@ const TopBar = ({ number, motherName, name }: Props) => {
         </div>
       </div>
       <div className="flex items-center font-semibold text-highlight">
-        <div className="rounded px-4 py-2 border border-highlight mx-2 flex items-center cursor-pointer">
+        <button
+          className="rounded px-4 py-2 border border-highlight mx-2 flex items-center cursor-pointer"
+          onClick={() => {
+            alert("Not implemented!");
+          }}
+        >
           <DownloadIcon />
           <p className="ml-2">Download album</p>
-        </div>
-        <div className="rounded px-4 py-2 border border-highlight mx-2 flex items-center cursor-pointer" onClick={copyLink}>
+        </button>
+        <button
+          className="rounded px-4 py-2 border border-highlight mx-2 flex items-center cursor-pointer"
+          onClick={copyLink}
+        >
           <LinkIcon />
-          <p className="ml-2">Copy album link</p>
-        </div>
+          <p className="ml-2">
+            {copiedConfirmation ? "Copied!" : "Copy album link"}
+          </p>
+        </button>
       </div>
     </div>
-  )
+  );
+};
+
+interface Props {
+  number: number;
+  motherName: string;
+  name: string;
 }
 
-interface Props{
-  number: number,
-  motherName: string,
-  name: string
-}
-
-export default TopBar
+export default TopBar;

@@ -11,7 +11,7 @@ function ButtonWithIcon({
 }) {
   return (
     <button
-      className=" text-indigo-600 bg-white border-2 border-indigo-600 p-2 rounded flex"
+      className="z-40 text-indigo-600 bg-white border-2 border-indigo-600 p-2 rounded flex"
       onClick={onClick}
     >
       <span className="mt-1 mr-2">{icon}</span>

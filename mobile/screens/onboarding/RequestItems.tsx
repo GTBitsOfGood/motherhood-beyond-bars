@@ -10,8 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useState } from "react";
-import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  Timestamp,
+  setDoc,
+} from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 import Checkbox from "../../components/app/Checkbox";
@@ -40,6 +46,12 @@ export default function RequestedItems({
     newItemsCount[index] = !newItemsCount[index];
     setItemsCount(newItemsCount);
   };
+
+  useEffect(() => {
+    // reset itemsRequested if user goes through onboarding again
+    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+    setDoc(caregiverDoc, { itemsRequested: [] }, { merge: true });
+  }, []);
 
   const requestItems = async (wantCarSeat: Boolean) => {
     if (length === 0) {

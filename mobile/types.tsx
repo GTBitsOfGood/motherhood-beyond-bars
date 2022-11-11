@@ -101,6 +101,9 @@ export type SettingsParamList = {
 
 export type ResourcesParamList = {
   General: undefined;
+  FAQ: undefined;
+  Links: undefined;
+  Research: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -117,9 +120,8 @@ export interface Caregiver {
   id: string;
   numAdults: string;
   numChildren: string;
-  agesOfChildren: string;
   signedWaivers: Waiver[];
-  itemsRequested: Item[];
+  itemsRequested: ItemRequest;
   address: string;
   apartment?: string;
   city: string;
@@ -155,8 +157,12 @@ export interface Waiver {
 
 export interface Item {
   name: string;
-  fulfilled: Boolean;
-  requestedOn: Timestamp;
   gender?: string;
-  size?: number;
+}
+
+export interface ItemRequest {
+  created: Timestamp,
+  updated: Timestamp,
+  status : string,
+  items: Item[]
 }

@@ -46,7 +46,6 @@ export const UserProvider = ({
             email: "",
             numAdults: "",
             numChildren: "",
-            agesOfChildren: "",
           } as Caregiver;
 
           try {

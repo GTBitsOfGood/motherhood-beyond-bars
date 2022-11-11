@@ -21,7 +21,6 @@ export default function HouseholdInfo({
   const authData = useContext(UserContext);
   const [adults, setAdults] = useState("");
   const [children, setChildren] = useState("");
-  const [ages, setAges] = useState("");
   const [completed, setCompleted] = useState(false);
 
   async function setHousehold() {
@@ -32,14 +31,13 @@ export default function HouseholdInfo({
       {
         numAdults: adults,
         numChildren: children,
-        agesOfChildren: ages,
       },
       { merge: true }
     );
   }
 
   useEffect(() => {
-    if (adults !== "" && children !== "" && ages !== "") {
+    if (adults !== "" && children !== "") {
       setCompleted(true);
     } else {
       setCompleted(false);
@@ -68,14 +66,6 @@ export default function HouseholdInfo({
                 setChildren(children);
               }}
             />
-            <Text style={styles.description}>Ages of Children</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(ages) => {
-                setAges(ages);
-              }}
-              placeholder="ex. 3, 8, 11"
-            />
             <View style={{ paddingTop: 36 }}>
               {!completed && (
                 <TouchableOpacity
@@ -94,6 +84,18 @@ export default function HouseholdInfo({
                     navigation.push("SignWaiver", {
                       unsignedWaivers: await getWaivers(),
                     });
+                    // reset signed waivers to empty array if user navigates back to this screen
+                    // prevents same waiver from being added to database twice
+                    const caregiverDoc = doc(
+                      db,
+                      "caregivers",
+                      authData?.uid as string
+                    );
+                    setDoc(
+                      caregiverDoc,
+                      { signedWaivers: [] },
+                      { merge: true }
+                    );
                   }}
                 >
                   <Text style={styles.buttonText}>Next</Text>

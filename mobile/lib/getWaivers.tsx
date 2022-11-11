@@ -12,5 +12,6 @@ export async function getWaivers() {
         id: doc.id,
       } as Waiver)
   );
+
   return waivers;
 }
