@@ -26,11 +26,16 @@ function ChildModal({
 
   console.log(values);
 
+  const curr = new Date();
+  curr.setDate(curr.getDate());
+  const defaultDate = curr.toLocaleDateString();
+
+
   return (
     <>
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          <div className="border-0  rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
               <h3 className="text-2xl font-bold">{header}</h3>
               <button
@@ -75,14 +80,15 @@ function ChildModal({
                     <input
                       className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       placeholder="MM/DD/YY"
+                      // defaultValue={defaultDate}
                       defaultValue={values?.dob && values?.dob.slice(0, -8)}
-                      {...register("dob", { required: true })}
+                      {...register("dob", { required: false })}
                     />
-                    {errors.dob && (
+                    {/* {errors.dob && (
                       <span className="text-red-500">
                         This field is required
                       </span>
-                    )}
+                    )} */}
                   </div>
                   <div className="form-group mb-3">
                     <p>Sex</p>

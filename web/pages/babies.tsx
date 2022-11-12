@@ -27,7 +27,7 @@ export type Baby = {
   birthday: string;
   sex: string;
   babyBook: string;
-  dob: Timestamp;
+  dob?: Timestamp | null;
   firstName: string;
   lastName: string;
 };
