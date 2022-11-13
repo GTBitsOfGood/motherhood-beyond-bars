@@ -191,16 +191,16 @@ export default function BabyBook({ navigation }: Props) {
     }
   }
 
-  var date = babyContext?.dob.substring(8, 10);
-  var month = babyContext?.dob.substring(5, 7);
-  var year = babyContext?.dob.substring(0, 4);
+  var date = babyContext?.dob?.substring(8, 10);
+  var month = babyContext?.dob?.substring(5, 7);
+  var year = babyContext?.dob?.substring(0, 4);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
         {babyContext?.firstName} {babyContext?.lastName}'s Album
       </Text>
-      {month === month && date === date && year === year && (
+      {month !== null && date !== null && year !== null && (
         <Text>
           Birthday: {month}/{date}/{year}
         </Text>
