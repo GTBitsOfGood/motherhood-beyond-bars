@@ -31,6 +31,7 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 
 import ModalScreen from "../screens/ModalScreen";
@@ -79,7 +80,11 @@ import General from "../screens/resources/General";
 import FAQ from "../screens/resources/FAQ";
 import Research from "../screens/resources/Research";
 import Links from "../screens/resources/Links";
-import { ArrowLeft } from "@mui/icons-material";
+import ArrowLeft from "../assets/images/arrowLeft";
+import { waiverUpdate } from "../screens/settings/AccountInfo";
+
+// let updatedWaiver = false;
+// let updatedWaiverSigned = false;
 
 export default function Navigation({
   colorScheme,
@@ -96,7 +101,6 @@ export default function Navigation({
   );
 }
 
-let updatedWaiver = true;
 
 const validateAuthData = (authData: UserContextType) => {
   // Determine if a user is ready to see the app yet, or if they still need to be onboarded
@@ -306,6 +310,11 @@ function OnboardingNavigator() {
           <Onboarding.Screen
             name="AllDone"
             component={AllDone}
+            options={{ headerShown: false }}
+          />
+          <Onboarding.Screen
+            name="AccountInfo"
+            component={AccountInfo}
             options={{ headerShown: false }}
           />
         </>
@@ -548,26 +557,9 @@ function SettingsNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
+  console.log("INDEX: " + waiverUpdate)
   return (
-    updatedWaiver ? <Onboarding.Navigator
-      initialRouteName="SignWaiver"
-      screenOptions={{
-        tabBarActiveTintColor: "#fff",
-        tabBarStyle: {
-          backgroundColor: "#000000",
-          height: 75,
-          paddingBottom: 15,
-          paddingTop: 15,
-        },
-        headerBackground: () => <HeaderBackgroundSVG />,
-        headerStyle: {
-          backgroundColor: "transparent",
-          height: 87,
-        },
-        headerTitleStyle: { color: "#fff" },
-        tabBarHideOnKeyboard: true,
-      }}
-    >
+    waiverUpdate ? <Onboarding.Navigator>
       <Onboarding.Screen
         name="SignWaiver"
         component={SignWaiver}
@@ -577,15 +569,22 @@ function BottomTabNavigator() {
           },
           title: "",
           headerLeft: () => (
-            <View>
-              <ArrowLeft>
-
-              </ArrowLeft>
-            </View>
-          ),
+            <TouchableOpacity onPress={() => {
+              signOut(auth);
+            }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <ArrowLeft style={{ strokeWidth: "3" }}></ArrowLeft>
+                <Text style={{ color: "#304CD1" }}>Back</Text>
+              </View>
+            </TouchableOpacity>),
         }}
       />
-    </Onboarding.Navigator> : <BottomTab.Navigator
+      <Onboarding.Screen
+        name="AllDone"
+        component={AllDone}
+        options={{ headerShown: false }}
+      />
+    </Onboarding.Navigator > : <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: "#fff",

@@ -14,6 +14,13 @@ import { auth, db } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { getWaivers } from "../../lib/getWaivers";
+import { waiverSigned } from "../onboarding/SignWaiver";
+
+export var waiverUpdate = false;
+
+if (waiverSigned) {
+  waiverUpdate = false;
+}
 
 export default function AccountInfo({
   navigation,
@@ -23,7 +30,6 @@ export default function AccountInfo({
   const [waivers, setWaivers] = useState<Waiver[]>();
   const [signedWaivers, setSignedWaivers] = useState();
   const [resignWaivers, setResignWaivers] = useState<Waiver[]>();
-  const [rw, srw] = useState("");
 
 
   useEffect(() => {
@@ -32,10 +38,8 @@ export default function AccountInfo({
     async function findWaiver() {
       const waivers = await getWaivers();
       setWaivers(waivers);
-      // setResignWaivers(waivers);
     }
     findWaiver();
-    srw("");
 
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     if (caregiverDoc != undefined) {
@@ -56,20 +60,14 @@ export default function AccountInfo({
     if (waivers != undefined && signedWaivers != undefined) {
       for (let i = 0; i < waivers?.length; i++) {
         if (waivers[i].lastUpdated > signedWaivers[i].timestamp) {
-          console.log("TRUE!!!!");
-          srw(waivers[i].id);
-          //LEFT OFF: Adding updated waiver to list. Try adding id instead of waiver!!
-          // Try adding prop to index.tsx to be boolean for switching intitail navigator on line 550?
-          // resignWaivers?.push(waivers[i]);
-          // setResignWaivers([...resignWaivers as any[], waivers[i]]);
-          console.log(resignWaivers)
+          waiverUpdate = true;
+          console.log("Waiver " + i + " has been updated!" + waiverUpdate)
         } else {
-          console.log("FALSE!!!!")
+          console.log("Waiver " + i + " hasn't been updated" + waiverUpdate)
         }
       }
     }
   }
-  // console.log(resignWaivers)
 
 
 

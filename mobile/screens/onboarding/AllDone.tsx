@@ -36,6 +36,7 @@ export default function AllDone({
             style={[styles.button, { width: 350 }]}
             onPress={() => {
               //  navigate to app
+              navigation.navigate("AccountInfo")
             }}
           >
             <Text style={styles.buttonText}>Close</Text>

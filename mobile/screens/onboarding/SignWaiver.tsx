@@ -12,10 +12,13 @@ import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
 //@ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
-import { doc, arrayUnion, Timestamp, setDoc } from "firebase/firestore";
+import { doc, arrayUnion, Timestamp, setDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
+import { waiverUpdate } from "../settings/AccountInfo";
+
+export var waiverSigned = false;
 
 export default function SignWaiver({
   navigation,
@@ -49,6 +52,7 @@ export default function SignWaiver({
 
   async function setSignedWaivers() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+    // console.log("SET WAIVER")
 
     waiver &&
       setDoc(
@@ -62,6 +66,35 @@ export default function SignWaiver({
         { merge: true }
       );
   }
+
+  async function updateSignedWaivers() {
+    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+    console.log("UPDATE WAIVER")
+
+    waiver &&
+      setDoc(
+        caregiverDoc,
+        {
+          signedWaivers: arrayRemove({
+            id: waiver.id,
+            timestamp: Timestamp.now(),
+          }),
+        },
+        { merge: true }
+      );
+    waiver &&
+      setDoc(
+        caregiverDoc,
+        {
+          signedWaivers: arrayUnion({
+            id: waiver.id,
+            timestamp: Timestamp.now(),
+          }),
+        },
+        { merge: true }
+      );
+  }
+
 
   return (
     <View style={styles.container}>
@@ -117,8 +150,13 @@ export default function SignWaiver({
                 style={styles.button}
                 onPress={() => {
                   if (isSelected && signature.trim() && date.trim()) {
-                    setSignedWaivers();
+                    // setSignedWaivers();
 
+                    if (waiverUpdate) {
+                      updateSignedWaivers();
+                    } else {
+                      setSignedWaivers();
+                    }
                     if (unsigned.length > 0) {
                       const newWaivers = Array.from(unsigned);
                       newWaivers.shift();
@@ -126,7 +164,12 @@ export default function SignWaiver({
                         unsignedWaivers: newWaivers,
                       });
                     } else {
-                      navigation.navigate("RequestItems");
+                      if (!waiverUpdate) {
+                        navigation.navigate("RequestItems");
+                      } else {
+                        waiverSigned = true;
+                        navigation.navigate("AllDone")
+                      }
                     }
                   } else {
                     alert(
