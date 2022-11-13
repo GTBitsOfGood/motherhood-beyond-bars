@@ -66,7 +66,7 @@ export default function ItemRequestRow({
     }
 
     sum = sum % 360;
-    return `hsla(${sum}deg 100% 50% / 40%)`;
+    return `hsla(${sum}deg 100% 70% / 40%)`;
   }
 
   return (
