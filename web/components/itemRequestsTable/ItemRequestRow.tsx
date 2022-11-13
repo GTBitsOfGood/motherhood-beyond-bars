@@ -41,7 +41,9 @@ export default function ItemRequestRow({
     },
     {
       header: "CARETAKER COMMENTS",
-      value: "",
+      value: row.itemsRequested.additionalComments
+        ? row.itemsRequested.additionalComments.join(", ")
+        : "",
     },
   ];
 

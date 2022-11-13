@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
-import { OnboardingStackScreenProps } from "../../types";
+import { Item, OnboardingStackScreenProps } from "../../types";
 import React, { useContext, useEffect, useState } from "react";
 import {
   doc,
@@ -24,6 +24,7 @@ import Checkbox from "../../components/app/Checkbox";
 import { SettingsContext } from "../../providers/settings";
 import ThumbsUpSVG from "../../assets/images/thumbsup";
 import ThumbsDownSVG from "../../assets/images/thumbsdown";
+import { ItemRequest } from "../../types";
 
 export default function RequestedItems({
   navigation,
@@ -60,7 +61,9 @@ export default function RequestedItems({
 
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
 
-    const itemsRequested =
+    let itemsRequested: Item[];
+
+    itemsRequested =
       settings.items
         ?.filter((_, index) => itemsCount[index])
         .map((item) => {
@@ -69,71 +72,42 @@ export default function RequestedItems({
           }
           if (item.itemName === "clothing") {
             return {
-              ...item,
-              itemQuantity: 1,
-              fulfilled: false,
+              name: item.itemDisplayName,
               gender: gender,
-              size: size,
-              requestedOn: Timestamp.now(),
+              size: size.toString(),
             };
           } else {
             return {
-              ...item,
-              itemQuantity: 1,
-              fulfilled: false,
-              requestedOn: Timestamp.now(),
+              name: item.itemDisplayName,
             };
           }
         }) || [];
 
     if (wantCarSeat) {
       itemsRequested?.push({
-        itemName: "carSeat",
-        itemDisplayName: "Car Seat",
-        itemQuantity: 1,
-        itemDescription: "A necessity for transporting the baby",
-        onboarding: true,
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
+        name: "Car Seat",
       });
     }
 
     itemsRequested?.push({
-      itemName: "beginBox",
-      itemDisplayName: "Begin Box",
-      itemQuantity: 1,
-      itemDescription:
-        "Clothing, blankets, bottles, pacifiers, bathing supplies, diapers, wipes, diaper cream, formula, burp cloths, and toys!",
-      onboarding: true,
-      fulfilled: false,
-      requestedOn: Timestamp.now(),
+      name: "Begin Box",
     });
 
     if (otherItems) {
       itemsRequested?.push({
-        itemName: "Other",
-        itemDisplayName: otherItems,
-        itemQuantity: 1,
-        itemDescription: "",
-        onboarding: true,
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
+        name: "Other",
       });
     }
 
-    if (additionalComments) {
-      itemsRequested?.push({
-        itemName: "Additional Comments",
-        itemDisplayName: additionalComments,
-        itemQuantity: 1,
-        itemDescription: "",
-        onboarding: true,
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
-      });
-    }
+    const req: ItemRequest = {
+      created: Timestamp.now(),
+      updated: Timestamp.now(),
+      additionalComments: [`Additional Requests/Comments: ${additionalComments}`, `Gender for clothes: ${gender}`, `Size for clothes: ${size}`, `Other items: ${otherItems}`],
+      status: "Pending",
+      items: itemsRequested,
+    };
 
-    updateDoc(caregiverDoc, { itemsRequested: arrayUnion(...itemsRequested) });
+    updateDoc(caregiverDoc, { itemsRequested: req });
   };
 
   return (

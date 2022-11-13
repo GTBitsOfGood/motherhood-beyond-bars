@@ -39,6 +39,7 @@ export default function SignWaiver({
     // get name of user to verify signature
     getDoc(doc(db, "caregivers", authData?.uid as string)).then((doc) => {
       setName(doc.data()?.firstName + " " + doc.data()?.lastName);
+      console.log(doc.data()?.firstName + " " + doc.data()?.lastName)
     });
 
     if (
@@ -121,7 +122,7 @@ export default function SignWaiver({
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if (isSelected && signature === name && date.trim()) {
+                  if (isSelected && signature.trim() === name.trim() && date.trim()) {
                     setSignedWaivers();
 
                     if (unsigned.length > 0) {
@@ -134,7 +135,7 @@ export default function SignWaiver({
                       navigation.navigate("RequestItems");
                     }
                   } else {
-                    if (signature !== name) {
+                    if (signature.trim() !== name.trim()) {
                       alert("Please sign with your first and last name.");
                     } else {
                       alert(

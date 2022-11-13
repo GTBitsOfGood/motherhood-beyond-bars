@@ -87,10 +87,10 @@ export default function CreateAccount({
                     alert("Invalid phone number");
                   } else {
                     navigation.navigate("CreatePassword", {
-                      first: first,
-                      last: last,
-                      email: email,
-                      phone: phone,
+                      first: first.trim(),
+                      last: last.trim(),
+                      email: email.trim(),
+                      phone: phone.trim(),
                     });
                   }
                 }}
