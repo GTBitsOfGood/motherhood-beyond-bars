@@ -191,19 +191,20 @@ export default function BabyBook({ navigation }: Props) {
     }
   }
 
-  var timestemp = new Date(babyContext?.dob["seconds"] * 1000);
-  var date = timestemp.getDate();
-  var month = timestemp.getMonth() + 1;
-  var year = timestemp.getFullYear();
+  var date = babyContext?.dob.substring(8, 10);
+  var month = babyContext?.dob.substring(5, 7);
+  var year = babyContext?.dob.substring(0, 4);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
         {babyContext?.firstName} {babyContext?.lastName}'s Album
       </Text>
-      <Text>
-        Birthday: {month}/{date}/{year}
-      </Text>
+      {month === month && date === date && year === year && (
+        <Text>
+          Birthday: {month}/{date}/{year}
+        </Text>
+      )}
       {body()}
       <View style={{ position: "absolute", bottom: 15, left: 300 }}>
         <TouchableOpacity onPress={pickImage} style={styles.roundButton1}>

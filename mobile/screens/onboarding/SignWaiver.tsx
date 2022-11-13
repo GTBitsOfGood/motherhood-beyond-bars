@@ -121,7 +121,11 @@ export default function SignWaiver({
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if (isSelected && signature === name && date.trim()) {
+                  if (
+                    isSelected &&
+                    signature.toLowerCase() === name.toLowerCase() &&
+                    date.trim()
+                  ) {
                     setSignedWaivers();
 
                     if (unsigned.length > 0) {
@@ -134,7 +138,7 @@ export default function SignWaiver({
                       navigation.navigate("RequestItems");
                     }
                   } else {
-                    if (signature !== name) {
+                    if (signature.toLowerCase() !== name.toLowerCase()) {
                       alert("Please sign with your first and last name.");
                     } else {
                       alert(
