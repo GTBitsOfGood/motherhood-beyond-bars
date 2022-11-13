@@ -139,7 +139,9 @@ export default function SignWaiver({
                     }
                   } else {
                     if (signature.toLowerCase() !== name.toLowerCase()) {
-                      alert("Please sign with your first and last name.");
+                      alert(
+                        "Please sign with your first and last name: " + name
+                      );
                     } else {
                       alert(
                         "You must agree to the liability waiver before continuing."

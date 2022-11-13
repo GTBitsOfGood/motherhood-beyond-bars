@@ -218,7 +218,18 @@ export default function RequestedItems({
               <TouchableOpacity
                 style={[styles.button, { width: 350 }]}
                 onPress={() => {
-                  setModalVisible(!modalVisible);
+                  if (
+                    itemsCount[
+                      settings.items?.findIndex(
+                        (item) => item.itemName === "carSeat"
+                      ) as number
+                    ]
+                  ) {
+                    requestItems();
+                    navigation.navigate("ShippingAddress");
+                  } else {
+                    setModalVisible(!modalVisible);
+                  }
                 }}
               >
                 <Text style={styles.buttonText}>Request</Text>
