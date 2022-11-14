@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { doc, updateDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "@lib/firebase";
-import { getAuth, onAuthStateChanged} from "firebase/auth"
+import { getAuth, onAuthStateChanged, updatePassword} from "firebase/auth"
 
 
 
@@ -12,12 +12,14 @@ type AccountEntry = {
   newPassword: string;
   phoneNumber: string;
 };
-export default function Account() {
-  //     props: {
-  //   getChangesMade: () => boolean;
-  //   setChangesMade: Dispatch<SetStateAction<boolean>>;
-  // }
+export default function Account(props : {
+  getChangesMade: () => boolean;
+  setChangesMade: Dispatch<SetStateAction<boolean>>;
+}) {
+  
+  
   const [accounts, setAccounts] = useState<AccountEntry[]>([]);
+  const [password, setPassword] = useState("");
   const [phoneNum, setPhoneNum] = useState("(404)-404-4040");
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showPhoneNumberForm, setShowPhoneNumberForm] = useState(false);
@@ -25,38 +27,39 @@ export default function Account() {
   const router = useRouter();
 
   const auth = getAuth();
+  const user = auth.currentUser;
 
-  //   useEffect(() => {
-  //     const unsub = onSnapshot(doc(db, "settings", "account"), (doc) => {
-  //       setAccounts(doc.data()?.accounts || []);
-  //       setUserChanges(doc.data()?.accounts || []);
-  //     });
+    useEffect(() => {
+      const unsub = onSnapshot(doc(db, "settings", "account"), (doc) => {
+        setAccounts(doc.data()?.accounts || []);
+        setUserChanges(doc.data()?.accounts || []);
+      });
 
-  //     return unsub;
-  //   }, []);
+      return unsub;
+    }, []);
 
-  //   useEffect(() => {
-  //     // props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(accounts));
+    useEffect(() => {
+      // props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(accounts));
 
-  //     const warningText =
-  //       "You have unsaved changes - are you sure you wish to leave this page?";
-  //     const handleWindowClose = (e: BeforeUnloadEvent) => {
-  //       if (!props.getChangesMade()) return;
-  //       e.preventDefault();
-  //       return (e.returnValue = warningText);
-  //     };
-  //     const handleBrowseAway = () => {
-  //     //   if (!props.getChangesMade) return;
-  //       if (window.confirm(warningText)) return;
-  //       throw "routeChange aborted.";
-  //     };
-  //     window.addEventListener("beforeunload", handleWindowClose);
-  //     router.events.on("routeChangeStart", handleBrowseAway);
-  //     return () => {
-  //       window.removeEventListener("beforeunload", handleWindowClose);
-  //       router.events.off("routeChangeStart", handleBrowseAway);
-  //     };
-  //   }, [userChanges]);
+      const warningText =
+        "You have unsaved changes - are you sure you wish to leave this page?";
+      const handleWindowClose = (e: BeforeUnloadEvent) => {
+        if (!props.getChangesMade()) return;
+        e.preventDefault();
+        return (e.returnValue = warningText);
+      };
+      const handleBrowseAway = () => {
+      //   if (!props.getChangesMade) return;
+        if (window.confirm(warningText)) return;
+        throw "routeChange aborted.";
+      };
+      window.addEventListener("beforeunload", handleWindowClose);
+      router.events.on("routeChangeStart", handleBrowseAway);
+      return () => {
+        window.removeEventListener("beforeunload", handleWindowClose);
+        router.events.off("routeChangeStart", handleBrowseAway);
+      };
+    }, [userChanges]);
 
   const hidePasswordButton = () => {
     setShowPasswordForm(true);
@@ -75,6 +78,23 @@ export default function Account() {
     const accountDoc = doc(db, "settings", "account");
     setDoc(accountDoc, {});
   }
+
+  const changePassword =  (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  }
+
+  updatePassword(user, password).then(() => {
+    if (!user) {
+      return;
+    }
+    // Update successful.
+  }).catch((error) => {
+    alert("invalid password");
+    // An error ocurred
+    // ...
+  });
+  
+  
 
   //   const PhoneNumForm = (
   //     <div className="flex items-end" >
@@ -118,18 +138,15 @@ export default function Account() {
             className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
             style={{ width: "218px" }}
             // value={account.confirmNewPassword}
-            // onChange={(e) => {
-            //   const newAccounts = accounts;
-            //   newAccounts[index].confirmNewPassword = e.target.value;
-            //   setAccounts(newAccounts);
-            // }}
-          />
+            onChange={changePassword}>
+            </input>
         </div>
 
         <div className="flex items-end">
           <button
             className="flex-shrink-0 bg-white-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-2 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
             type="submit"
+            onClick={updatePassword}
           >
             Save
           </button>
