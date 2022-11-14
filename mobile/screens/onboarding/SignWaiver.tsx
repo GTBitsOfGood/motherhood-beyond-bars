@@ -72,18 +72,7 @@ export default function SignWaiver({
     console.log("UPDATE WAIVER")
 
     waiver &&
-      setDoc(
-        caregiverDoc,
-        {
-          signedWaivers: arrayRemove({
-            id: waiver.id,
-            timestamp: Timestamp.now(),
-          }),
-        },
-        { merge: true }
-      );
-    waiver &&
-      setDoc(
+      updateDoc(
         caregiverDoc,
         {
           signedWaivers: arrayUnion({
@@ -91,7 +80,6 @@ export default function SignWaiver({
             timestamp: Timestamp.now(),
           }),
         },
-        { merge: true }
       );
   }
 

@@ -75,7 +75,7 @@ export type OnboardingParamList = {
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
-  AccountInfo: undefined;
+  // AccountInfo: undefined;
 };
 
 export type SupportParamList = {

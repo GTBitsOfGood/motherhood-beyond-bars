@@ -312,11 +312,11 @@ function OnboardingNavigator() {
             component={AllDone}
             options={{ headerShown: false }}
           />
-          <Onboarding.Screen
+          {/* <Onboarding.Screen
             name="AccountInfo"
             component={AccountInfo}
             options={{ headerShown: false }}
-          />
+          /> */}
         </>
       ) : (
         <>
