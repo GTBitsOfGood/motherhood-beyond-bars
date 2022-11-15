@@ -6,7 +6,7 @@ export default class MyDocument extends Document {
       <Html>
         <Head />
         <body>
-          <div id="modals" style={{ zIndex: 100 }} />
+          <div id="modals" className="absolute" style={{ zIndex: 100 }} />
           <Main />
           <NextScript />
         </body>

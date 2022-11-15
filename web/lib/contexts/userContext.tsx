@@ -29,7 +29,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(onChange);
-    return () => unsubscribe();
+    return () => unsubscribe?.();
   }, []);
 
   return (

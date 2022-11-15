@@ -79,6 +79,8 @@ import General from "../screens/resources/General";
 import FAQ from "../screens/resources/FAQ";
 import Research from "../screens/resources/Research";
 import Links from "../screens/resources/Links";
+import { BabyContext } from "../providers/Baby";
+import { BabyBookProvider, useBabyBook } from "../providers/BabyBook";
 
 export default function Navigation({
   colorScheme,
@@ -105,7 +107,6 @@ const validateAuthData = (authData: UserContextType) => {
     authData.caregiver?.email &&
     authData.caregiver?.numAdults &&
     authData.caregiver?.numChildren &&
-    authData.caregiver?.agesOfChildren &&
     authData.caregiver?.signedWaivers &&
     authData.caregiver?.address &&
     authData.caregiver?.city &&
@@ -124,7 +125,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const authData = useContext(UserContext);
-  const { contact } = useContext(SettingsContext);
+  const { contact } = useContext(SettingsContext) ?? { context: null };
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
@@ -392,49 +393,60 @@ function OnboardingNavigator() {
 const Book = createNativeStackNavigator<BookParamList>();
 
 function BookNavigator() {
+  const babyContext = useContext(BabyContext);
+  const babyBookContext = useBabyBook();
+
   return (
     <Book.Navigator>
       <>
-        <Book.Screen
-          name="BabyBookAccess"
-          component={BabyBookAccess}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Book.Screen
-          name="StartBook"
-          component={StartBook}
-          options={{
-            header: () => <View></View>,
-          }}
-        />
-        <Book.Screen
-          name="SelectPicture"
-          component={SelectPicture}
-          options={{
-            header: () => <View></View>,
-          }}
-        />
-        <Book.Screen
-          name="ViewImage"
-          component={ViewImage}
-          options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Picture and Caption</Text>
-              </View>
-            ),
-          }}
-        />
-        <Book.Screen
-          name="BabyBook"
-          component={BabyBook}
-          options={{
-            header: () => <View></View>,
-          }}
-        />
+        {!babyContext?.id ? (
+          <Book.Screen
+            name="BabyBookAccess"
+            component={BabyBookAccess}
+            options={{
+              headerShown: false,
+            }}
+          />
+        ) : (
+          <>
+            {babyBookContext?.length === 0 ? (
+              <Book.Screen
+                name="StartBook"
+                component={StartBook}
+                options={{
+                  header: () => <View></View>,
+                }}
+              />
+            ) : (
+              <Book.Screen
+                name="BabyBook"
+                component={BabyBook}
+                options={{
+                  header: () => <View></View>,
+                }}
+              />
+            )}
+            <Book.Screen
+              name="SelectPicture"
+              component={SelectPicture}
+              options={{
+                header: () => <View></View>,
+              }}
+            />
+            <Book.Screen
+              name="ViewImage"
+              component={ViewImage}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
+                  </View>
+                ),
+              }}
+            />
+          </>
+        )}
       </>
     </Book.Navigator>
   );
