@@ -30,7 +30,7 @@ export default function Account(props: {
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "app", "settings"), (doc) => {
       setPhoneNum(doc.data()?.contact.phone);
-      setContact(doc.data()?.contact)
+      setContact(doc.data()?.contact);
     });
 
     return unsub;
@@ -99,7 +99,7 @@ export default function Account(props: {
               <input
                 className="w-1/5 ml-3.5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                 onChange={(e) => {
-                  setPhoneNum(e.target.value)
+                  setPhoneNum(e.target.value);
                 }}
                 value={phoneNum}
               ></input>
@@ -111,8 +111,8 @@ export default function Account(props: {
                   e.preventDefault();
                   const temp = contact;
                   temp.phone = phoneNum;
-                  updateDoc(doc(db, 'app', 'settings'), {contact : temp})
-                  alert("Succesfully updated phone number!")
+                  updateDoc(doc(db, "app", "settings"), { contact: temp });
+                  alert("Succesfully updated phone number!");
                   setShowPhoneNumberForm(false);
                 }}
               >
@@ -188,6 +188,10 @@ export default function Account(props: {
                     onClick={(e) => {
                       e.preventDefault();
                       if (!user) {
+                        return;
+                      }
+                      if (password !== confirmPassword) {
+                        alert("Passwords don't match!");
                         return;
                       }
                       updatePassword(user, password)
