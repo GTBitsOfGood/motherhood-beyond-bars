@@ -17,7 +17,6 @@ import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
 import { waiverUpdate } from "../settings/AccountInfo";
-import { RootTabParamList } from "../../types";
 
 export var waiverSigned = false;
 
@@ -36,7 +35,6 @@ export default function SignWaiver({
     route.params?.unsignedWaivers?.[0] || null
   );
   const [prevSignedWaivers, setPrevSignedWaivers] = useState();
-
 
 
   useEffect(() => {
@@ -63,7 +61,6 @@ export default function SignWaiver({
 
   async function setSignedWaivers() {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-    // console.log("SET WAIVER")
 
     waiver &&
       setDoc(
@@ -165,7 +162,7 @@ export default function SignWaiver({
                         navigation.navigate("RequestItems");
                       } else {
                         waiverSigned = true;
-                        navigation.navigate("AllDone")
+                        navigation.navigate("BabyBookAccess")
                       }
                     }
                   } else {

@@ -15,7 +15,6 @@ import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { getWaivers } from "../../lib/getWaivers";
 import { waiverSigned } from "../onboarding/SignWaiver";
-import updatedWaivers from "../onboarding/SignWaiver";
 
 export var waiverUpdate = false;
 

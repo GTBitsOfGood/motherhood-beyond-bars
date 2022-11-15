@@ -83,7 +83,7 @@ import Links from "../screens/resources/Links";
 import ArrowLeft from "../assets/images/arrowLeft";
 import { waiverUpdate } from "../screens/settings/AccountInfo";
 
-// let updatedWaiver = false;
+let updatedWaiver = waiverUpdate;
 // let updatedWaiverSigned = false;
 
 export default function Navigation({
@@ -132,7 +132,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const authData = useContext(UserContext);
   const { contact } = useContext(SettingsContext);
-
+  // updatedWaiver = !updatedWaiver;
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
   return (
@@ -143,7 +143,21 @@ function RootNavigator() {
     >
       <Stack.Navigator>
         {validateAuthData(authData) ? (
-          <>
+          updatedWaiver ? <>
+            <Stack.Screen
+              name="Root"
+              component={UpdatedWaiverNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="NotFound"
+              component={NotFoundScreen}
+              options={{ title: "Oops!" }}
+            />
+            <Stack.Group screenOptions={{ presentation: "modal" }}>
+              <Stack.Screen name="Modal" component={ModalScreen} />
+            </Stack.Group>
+          </> : <>
             <Stack.Screen
               name="Root"
               component={BottomTabNavigator}
@@ -188,6 +202,39 @@ function RootNavigator() {
       </Stack.Navigator>
     </KeyboardAvoidingView>
   );
+}
+
+const updateWaiver = createNativeStackNavigator<OnboardingParamList>();
+
+function UpdatedWaiverNavigator() {
+  return <updateWaiver.Navigator
+    initialRouteName="SignWaiver"
+  >
+    <Onboarding.Screen
+      name="SignWaiver"
+      component={SignWaiver}
+      options={{
+        headerStyle: {
+          backgroundColor: "#EBEDF8",
+        },
+        title: "",
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => {
+            signOut(auth);
+          }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <ArrowLeft style={{ strokeWidth: "3" }}></ArrowLeft>
+              <Text style={{ color: "#304CD1" }}>Back</Text>
+            </View>
+          </TouchableOpacity>),
+      }}
+    />
+    <Onboarding.Screen
+      name="BabyBookAccess"
+      component={BottomTabNavigator}
+      options={{ headerShown: false }}
+    />
+  </updateWaiver.Navigator>
 }
 
 const Onboarding = createNativeStackNavigator<OnboardingParamList>();
@@ -554,43 +601,7 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 function BottomTabNavigator() {
   console.log("INDEX: " + waiverUpdate)
   return (
-    waiverUpdate ? <Onboarding.Navigator>
-      <Onboarding.Screen
-        name="SignWaiver"
-        component={SignWaiver}
-        options={{
-          headerStyle: {
-            backgroundColor: "#EBEDF8",
-          },
-          title: "",
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => {
-              signOut(auth);
-            }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <ArrowLeft style={{ strokeWidth: "3" }}></ArrowLeft>
-                <Text style={{ color: "#304CD1" }}>Back</Text>
-              </View>
-            </TouchableOpacity>),
-        }}
-      />
-      {/* <Onboarding.Screen
-        name="AllDone"
-        component={AllDone}
-        options={{ headerShown: false }}
-      /> */}
-      <BottomTab.Screen
-        name="TabOne"
-        component={BookNavigator}
-        options={{
-          title: "Baby Book",
-          tabBarIcon: ({ focused }) => (
-            <BabyBookSVG color={focused ? "#fff" : "#B2B2B2"} />
-          ),
-        }}
-      />
-
-    </Onboarding.Navigator > : <BottomTab.Navigator
+    <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: "#fff",
