@@ -24,7 +24,6 @@ export const BabyProvider = ({
   const [baby, setBaby] = useState<Baby | null>(null);
 
   useEffect(() => {
-
     let unsubscribe: (() => void) | null = null;
     async function getData() {
       // Get baby id
@@ -38,7 +37,7 @@ export const BabyProvider = ({
       unsubscribe = onSnapshot(ref, (snapshot) => {
         if (snapshot.docs.length === 0) {
           console.log("No baby found");
-          
+
           setBaby(null);
           return;
         }
@@ -55,7 +54,7 @@ export const BabyProvider = ({
     getData();
     return () => {
       // unsubscribe if it exists
-      unsubscribe && unsubscribe();
+      unsubscribe?.();
     };
   }, [userContext]);
 

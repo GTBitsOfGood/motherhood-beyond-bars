@@ -26,6 +26,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { useBabyBook } from "../../providers/BabyBook";
 
 type Props = BookStackScreenProps<"BabyBook">;
 
@@ -33,28 +34,8 @@ export var imageFinal: string;
 export var view: Book;
 
 export default function BabyBook({ navigation }: Props) {
-  const [book, setBook] = useState<Book[]>([]);
-
   const babyContext = useContext(BabyContext);
-  useEffect(() => {
-    let unsubscribe;
-    async function fetchBook() {
-      if (babyContext != null) {
-        const queryRef = query(
-          collection(db, "babies", babyContext.id, "book"),
-          orderBy("date", "desc"),
-          limit(10)
-        );
-        unsubscribe = onSnapshot(queryRef, (snapshot) => {
-          const books = snapshot.docs.map((doc) => {
-            return { ...doc.data(), id: doc.id } as unknown as Book;
-          });
-          setBook(books);
-        });
-      }
-    }
-    fetchBook();
-  }, []);
+  const babyBook = useBabyBook();
 
   function goToView(i: Book) {
     view = i;
@@ -86,7 +67,7 @@ export default function BabyBook({ navigation }: Props) {
   }
 
   function categorizePics() {
-    book.forEach((e) => {
+    babyBook.forEach((e) => {
       const date = findTime(e.date);
       const oldVal = picDict.get(date);
 
@@ -136,7 +117,7 @@ export default function BabyBook({ navigation }: Props) {
   }));
 
   const Body =
-    book.length == 0 ? (
+    babyBook.length == 0 ? (
       <View>
         <View style={{ padding: "30%" }}></View>
         <View style={{ padding: 15 }}>

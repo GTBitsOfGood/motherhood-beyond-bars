@@ -80,6 +80,7 @@ import FAQ from "../screens/resources/FAQ";
 import Research from "../screens/resources/Research";
 import Links from "../screens/resources/Links";
 import { BabyContext } from "../providers/Baby";
+import { BabyBookProvider } from "../providers/BabyBook";
 
 export default function Navigation({
   colorScheme,
