@@ -11,4 +11,4 @@ export const items = functions.https.onRequest(requestItemApp);
 export { validateSigninRequest } from "./auth";
 
 // Firestore Functions
-export { sendEmailOnRequest } from "./firestore";
+export { sendEmailOnRequest, updateLinks } from "./firestore";
