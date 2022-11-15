@@ -80,12 +80,6 @@ export default function RequestedItems({
           }
         }) || [];
 
-    if (wantCarSeat) {
-      itemsRequested?.push({
-        name: "Car Seat",
-      });
-    }
-
     itemsRequested?.push({
       name: "Begin Box",
     });
