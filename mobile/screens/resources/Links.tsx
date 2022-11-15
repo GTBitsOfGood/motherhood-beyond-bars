@@ -36,7 +36,7 @@ export default function Links({
       title: "",
       description: "",
       url: "",
-      imageURL: "",
+      image: "",
     },
   ]);
   const [noLinks, setNoLinks] = useState(false);
@@ -93,12 +93,12 @@ export default function Links({
                           </TouchableOpacity>
                         )}
                       </View>
-                      {item.imageURL !== "" && item.imageURL !== undefined && (
+                      {item.image !== "" && item.image && (
                         <Image
                           style={styles.image}
-                          key={item.imageURL}
+                          key={item.image}
                           source={{
-                            uri: item.imageURL,
+                            uri: item.image,
                           }}
                         />
                       )}
