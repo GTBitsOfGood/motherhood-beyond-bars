@@ -15,8 +15,10 @@ import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { getWaivers } from "../../lib/getWaivers";
 import { waiverSigned } from "../onboarding/SignWaiver";
+import updatedWaivers from "../onboarding/SignWaiver";
 
 export var waiverUpdate = false;
+export var prevSignedWaivers = undefined;
 
 if (waiverSigned) {
   waiverUpdate = false;
@@ -29,7 +31,8 @@ export default function AccountInfo({
 
   const [waivers, setWaivers] = useState<Waiver[]>();
   const [signedWaivers, setSignedWaivers] = useState();
-  const [resignWaivers, setResignWaivers] = useState<Waiver[]>();
+
+  prevSignedWaivers = signedWaivers;
 
 
   useEffect(() => {
@@ -45,9 +48,12 @@ export default function AccountInfo({
     if (caregiverDoc != undefined) {
       getDoc(caregiverDoc).then((doc) => {
         if (!ignore) {
-          const data = doc?.data()?.signedWaivers;
+          // const data = doc?.data()?.signedWaivers;
           setSignedWaivers(doc?.data()?.signedWaivers);
         }
+        // console.log("PREV WAIVER: " + prevSignedWaivers);
+        console.log("WAIVER: " + signedWaivers);
+
       });
     }
     return () => {
@@ -61,12 +67,14 @@ export default function AccountInfo({
       for (let i = 0; i < waivers?.length; i++) {
         if (waivers[i].lastUpdated > signedWaivers[i].timestamp) {
           waiverUpdate = true;
+          // prevSignedWaivers = updatedWaivers;
           console.log("Waiver " + i + " has been updated!" + waiverUpdate)
         } else {
           console.log("Waiver " + i + " hasn't been updated" + waiverUpdate)
         }
       }
     }
+    // prevSignedWaivers = signedWaivers;
   }
 
 

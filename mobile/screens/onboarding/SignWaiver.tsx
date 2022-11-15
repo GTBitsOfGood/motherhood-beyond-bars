@@ -12,11 +12,11 @@ import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
 //@ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
-import { doc, arrayUnion, Timestamp, setDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import { doc, arrayUnion, Timestamp, setDoc, updateDoc, arrayRemove, getDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
-import { waiverUpdate } from "../settings/AccountInfo";
+import { prevSignedWaivers, waiverUpdate } from "../settings/AccountInfo";
 
 export var waiverSigned = false;
 
@@ -34,6 +34,8 @@ export default function SignWaiver({
   const [waiver, setWaiver] = useState<Waiver | null>(
     route.params?.unsignedWaivers?.[0] || null
   );
+
+  var prevWaivers = prevSignedWaivers;
 
   useEffect(() => {
     if (
@@ -71,16 +73,14 @@ export default function SignWaiver({
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     console.log("UPDATE WAIVER")
 
-    waiver &&
-      updateDoc(
-        caregiverDoc,
-        {
-          signedWaivers: arrayUnion({
-            id: waiver.id,
-            timestamp: Timestamp.now(),
-          }),
-        },
-      );
+    waiver && prevWaivers &&
+      updateDoc(caregiverDoc, {
+        signedWaivers: prevWaivers.map((w: { id: string; }) => w.id === waiver.id ? { ...w, timestamp: Timestamp.now() } : w)
+      });
+
+    // if (waiver && prevWaivers) {
+    //   prevWaivers = prevWaivers.map((w: { id: string; }) => w.id === waiver.id ? { ...w, timestamp: Timestamp.now() } : w);
+    // }
   }
 
 
