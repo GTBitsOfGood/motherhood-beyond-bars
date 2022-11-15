@@ -11,11 +11,10 @@ import {
 import { OnboardingStackScreenProps } from "../../types";
 import React, { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../../config/firebase";
-
-const isValidEmail = (email: string) =>
-  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-const isValidPhone = (phone: string) => /^[0]?[789]\d{9}$/;
+import { isValidEmail, isValidPhoneNumber } from "./CreateAccount";
+import { auth, db } from "../../config/firebase";
+import { collection, query, where, getDocs, limit } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function RecoverPassword({
   navigation,
@@ -36,16 +35,8 @@ export default function RecoverPassword({
   };
 
   const resetPassword = (input: string) => {
-    if (isValidEmail(input)) {
-      setType("email");
-      sendEmail(input);
-    } else if (isValidPhone(input)) {
-      setType("phone");
-      // need to implement phone number verification
-      console.log("this is a phone number");
-    } else {
-      alert("Not a valid phone number or email.");
-    }
+    setType("email");
+    sendEmail(input);
   };
 
   return (
@@ -82,15 +73,38 @@ export default function RecoverPassword({
                 <View style={{ paddingTop: 12 }}>
                   <TouchableOpacity
                     style={styles.button}
-                    onPress={() => {
-                      resetPassword(input);
+                    onPress={async () => {
+                      console.log(input.trim());
+                      if (isValidEmail(input.trim())) {
+                        resetPassword(input.trim());
+                      } else if (isValidPhoneNumber(input.trim())) {
+                        console.log("ok");
+                        const docs: any = await getDocs(
+                          query(
+                            collection(db, "caregivers"),
+                            where("phoneNumber", "==", input.trim()),
+                            limit(1)
+                          )
+                        );
+                        let temp = "";
+                        await docs.forEach((doc: any) => {
+                          temp = doc.data().email;
+                        });
+
+                        if (temp === "") {
+                          alert(
+                            "User not found, try creating an account first."
+                          );
+                          return;
+                        }
+
+                        resetPassword(temp);
+                      } else {
+                        alert("Please enter a valid phone number or email.");
+                      }
                     }}
                   >
-                    {type === "phone" ? (
-                      <Text style={styles.buttonText}>Resend text</Text>
-                    ) : (
-                      <Text style={styles.buttonText}>Resend email</Text>
-                    )}
+                    <Text style={styles.buttonText}>Resend email</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -112,7 +126,33 @@ export default function RecoverPassword({
                   <TouchableOpacity
                     style={styles.button}
                     onPress={async () => {
-                      resetPassword(input);
+                      if (isValidEmail(input.trim())) {
+                        resetPassword(input.trim());
+                      } else if (isValidPhoneNumber(input.trim())) {
+                        console.log("ok");
+                        const docs: any = await getDocs(
+                          query(
+                            collection(db, "caregivers"),
+                            where("phoneNumber", "==", input.trim()),
+                            limit(1)
+                          )
+                        );
+                        let temp = "";
+                        await docs.forEach((doc: any) => {
+                          temp = doc.data().email;
+                        });
+
+                        if (temp === "") {
+                          alert(
+                            "User not found, try creating an account first."
+                          );
+                          return;
+                        }
+
+                        resetPassword(temp);
+                      } else {
+                        alert("Please enter a valid phone number or email.");
+                      }
                     }}
                   >
                     <Text style={styles.buttonText}>Submit</Text>

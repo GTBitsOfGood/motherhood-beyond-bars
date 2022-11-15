@@ -19,9 +19,9 @@ const isUniqueEmail = async (email: string) =>
       query(collection(db, "caregivers"), where("email", "==", email))
     )
   ).empty;
-const isValidEmail = (email: string) =>
+export const isValidEmail = (email: string) =>
   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-const isValidPhoneNumber = (phone: string) =>
+export const isValidPhoneNumber = (phone: string) =>
   /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(phone);
 
 export default function CreateAccount({
