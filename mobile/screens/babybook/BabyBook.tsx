@@ -131,38 +131,36 @@ export default function BabyBook({ navigation }: Props) {
     ) : (
       <View>
         <View style={{ paddingTop: 25 }}></View>
-        <ScrollView>
-          {picsByMonth.map((month, i) => (
-            <View key={month.month}>
-              <Text style={{ fontWeight: "bold" }}>{month.month}</Text>
-              {month.picsInMonth.map((picInMonth) => (
-                <View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignSelf: "flex-start",
-                    }}
-                  >
-                    {picInMonth.map((a) => (
-                      <TouchableHighlight
-                        style={{ paddingRight: 5 }}
-                        onPress={() => goToView(a)}
-                      >
-                        <Image
-                          source={{ uri: a.imageURL }}
-                          style={styles.image}
-                        />
-                      </TouchableHighlight>
-                    ))}
-                  </View>
-                  <View style={{ padding: 2.5 }}></View>
+        {picsByMonth.map((month, i) => (
+          <View key={month.month}>
+            <Text style={{ fontWeight: "bold" }}>{month.month}</Text>
+            {month.picsInMonth.map((picInMonth) => (
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  {picInMonth.map((a) => (
+                    <TouchableHighlight
+                      style={{ paddingRight: 5 }}
+                      onPress={() => goToView(a)}
+                    >
+                      <Image
+                        source={{ uri: a.imageURL }}
+                        style={styles.image}
+                      />
+                    </TouchableHighlight>
+                  ))}
                 </View>
-              ))}
-              <View style={{ padding: 10 }}></View>
-            </View>
-          ))}
-        </ScrollView>
+                <View style={{ padding: 2.5 }}></View>
+              </View>
+            ))}
+            <View style={{ padding: 10 }}></View>
+          </View>
+        ))}
       </View>
     );
 
@@ -181,7 +179,7 @@ export default function BabyBook({ navigation }: Props) {
           Birthday: {month}/{date}/{year}
         </Text>
       )}
-      {Body}
+      <ScrollView>{Body}</ScrollView>
       <View style={{ position: "absolute", bottom: 15, left: 300 }}>
         <TouchableOpacity onPress={pickImage} style={styles.roundButton1}>
           <Text style={styles.buttonText}>+</Text>

@@ -8,6 +8,9 @@ import {
   Alert,
   Image,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
 } from "react-native";
 import { BookStackScreenProps } from "../../types";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -83,43 +86,62 @@ export default function SelectPicture(this: any, { navigation, route }: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={{ height: "80%" }}>
-        {img && (
-          <Image source={{ uri: img }} style={{ width: 300, height: 450 }} />
-        )}
-        <View style={{ position: "absolute", bottom: 15, left: 225 }}>
-          <TouchableOpacity onPress={pickImage} style={styles.replace}>
-            <Text style={styles.buttonText}>Replace Image</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <Text style={{ fontSize: 20, fontWeight: "bold", paddingBottom: 15 }}>
-        Add a Description
-      </Text>
-      <TextInput
-        placeholder="How the baby is doing, what s/he did today, etc."
-        placeholderTextColor="#666666"
-        onChangeText={(caption) => {
-          setCaption(caption);
-        }}
-      ></TextInput>
-      <Button
-        title="Upload"
-        onPress={() => {
-          uploadPicture();
-          navigation.navigate("BabyBook");
-        }}
-      ></Button>
-      {uploading && <Text>Uploading...</Text>}
-      {uploading ? (
-        <ProgressBar
-          progress={transferred}
-          color={Colors.blue800}
-        ></ProgressBar>
-      ) : (
-        <View></View>
-      )}
-      {uploading && <Text>{transferred}%</Text>}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.inner}>
+            <View style={{ paddingLeft: 30, paddingRight: 30 }}>
+              {img && (
+                <Image
+                  source={{ uri: img }}
+                  style={{ width: "100%", height: 450 }}
+                />
+              )}
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: "2%",
+                  left: "64%",
+                  backgroundColor: "transparent",
+                }}
+              >
+                <TouchableOpacity onPress={pickImage} style={styles.replace}>
+                  <Text style={styles.replaceText}>Replace Image</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <Text style={styles.title}>Add a Description</Text>
+            <TextInput
+              style={styles.input}
+              multiline={true} // adding these two lines prevents auto-scrolling when keyboard appears
+              numberOfLines={4} // and this line
+              placeholder="How the baby is doing, what s/he did today, etc."
+              placeholderTextColor="#666666"
+              onChangeText={(caption) => {
+                setCaption(caption);
+              }}
+            ></TextInput>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                uploadPicture();
+                navigation.navigate("BabyBook");
+              }}
+            >
+              <Text style={styles.buttonText}>Upload</Text>
+            </TouchableOpacity>
+            {uploading && <Text>Uploading...</Text>}
+            {uploading ? (
+              <ProgressBar
+                progress={transferred}
+                color={Colors.blue800}
+              ></ProgressBar>
+            ) : (
+              <View></View>
+            )}
+            {uploading && <Text>{transferred}%</Text>}
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     </View>
   );
 }
@@ -127,18 +149,34 @@ export default function SelectPicture(this: any, { navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    backgroundColor: "white",
+  },
+  inner: {
+    padding: 20,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   title: {
+    paddingTop: 15,
     fontSize: 20,
     fontWeight: "bold",
-    paddingBottom: 15,
-    textAlign: "center",
   },
   thumbnail: {
     width: "100%",
     height: "100%",
     resizeMode: "contain",
+  },
+  input: {
+    marginTop: 10,
+    backgroundColor: "#f5f5f5",
+    height: 100,
+    borderColor: "lightgray",
+    borderWidth: 0.5,
+    width: "100%",
+    paddingLeft: 5,
+    paddingTop: 5,
+    textAlignVertical: "top",
+    borderRadius: 5,
   },
   replace: {
     width: 125,
@@ -147,10 +185,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     borderRadius: 100,
+    overflow: "hidden",
     backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
-  buttonText: {
+  replaceText: {
     color: "white",
     fontSize: 14,
+  },
+  button: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: "#304CD1",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+  },
+  buttonText: {
+    padding: 10,
+    fontWeight: "500",
+    fontSize: 16,
+    color: "#304CD1",
   },
 });

@@ -437,12 +437,7 @@ function BookNavigator() {
               name="ViewImage"
               component={ViewImage}
               options={{
-                headerTitle: () => (
-                  // add progress bar/circles and styling here
-                  <View>
-                    <Text>Picture and Caption</Text>
-                  </View>
-                ),
+                headerTitle: () => <View></View>,
               }}
             />
           </>
