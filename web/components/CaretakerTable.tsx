@@ -25,9 +25,9 @@ function CaretakerTable({ columns, data, onDelete }: any) {
   return (
     <div className="flex flex-col">
       <div className="sm:-mx-6 lg:-mx-8">
-        <div className="inline-block sm:px-6 lg:px-8">
+        <div className="inline-block sm:px-6 lg:px-8 w-full">
           <div>
-            <table {...getTableProps()}>
+            <table {...getTableProps()} className="w-full">
               <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
@@ -35,7 +35,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                     {headerGroup.headers.map((column) => (
                       <th
                         scope="col"
-                        className="py-3 px-6 text-base font-normal tracking-wider text-left text-slate-500 text-center"
+                        className="py-3 px-6 text-base font-normal tracking-wider text-slate-500 text-center"
                         {...column.getHeaderProps()}
                       >
                         {column.render("Header")}
@@ -49,16 +49,19 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                   prepareRow(row);
                   return (
                     <>
-                      <tr className="" {...row.getRowProps()}>
+                      <tr
+                        onClick={() => {
+                          setOpen((prevOpen) => {
+                            const newOpen = [...prevOpen];
+                            newOpen[i] = !newOpen[i];
+                            return newOpen;
+                          });
+                        }}
+                        className="cursor-pointer"
+                        {...row.getRowProps()}
+                      >
                         <td className="border-t">
                           <RiArrowDropDownLine
-                            onClick={() => {
-                              setOpen((prevOpen) => {
-                                const newOpen = [...prevOpen];
-                                newOpen[i] = !newOpen[i];
-                                return newOpen;
-                              });
-                            }}
                             className={`text-2xl duration-300 cursor-pointer ${
                               open[i] && "rotate-180"
                             }`}
@@ -113,26 +116,31 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                           >
                             <div>
                               <div className="m-2 bg-gray-200 p-4 self-center mx-auto w-full">
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-3 gap-2">
                                   {Object.keys(metadata).map((key) => {
                                     const data: any = row.original;
                                     const val = data[(metadata as any)[key]];
-                                    return (
+                                    return val ? (
                                       <>
-                                        <div className="uppercase text-gray-600 font-semibold text-sm">
+                                        <div
+                                          key={key}
+                                          className="uppercase text-gray-600 font-semibold text-sm"
+                                        >
                                           {key}
                                         </div>
-                                        {key === "Liability Waiver" ? (
-                                          <Link href={`/waivers/${val}`}>
-                                            <a className="text-sm text-blue-400">
-                                              Link
-                                            </a>
-                                          </Link>
-                                        ) : (
-                                          <div className="text-sm">{val}</div>
-                                        )}
+                                        <div key={key} className="col-span-2">
+                                          {key === "Liability Waiver" ? (
+                                            <Link href={`/waivers/${val}`}>
+                                              <a className="text-sm text-blue-400">
+                                                Link
+                                              </a>
+                                            </Link>
+                                          ) : (
+                                            <div className="text-sm">{val}</div>
+                                          )}
+                                        </div>
                                       </>
-                                    );
+                                    ) : null;
                                   })}
                                 </div>
                               </div>

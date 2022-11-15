@@ -12,7 +12,7 @@ import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
 //@ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
-import { doc, arrayUnion, Timestamp, setDoc } from "firebase/firestore";
+import { doc, arrayUnion, Timestamp, setDoc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
@@ -24,6 +24,7 @@ export default function SignWaiver({
   const authData = useContext(UserContext);
   const [isSelected, setSelection] = useState(false);
   const [signature, setSignature] = useState("");
+  const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [unsigned, setUnsigned] = useState<Waiver[]>(
     route?.params?.unsignedWaivers || []
@@ -33,6 +34,13 @@ export default function SignWaiver({
   );
 
   useEffect(() => {
+    // automatically set date to today's date
+    setDate(new Date().toLocaleDateString());
+    // get name of user to verify signature
+    getDoc(doc(db, "caregivers", authData?.uid as string)).then((doc) => {
+      setName(doc.data()?.firstName + " " + doc.data()?.lastName);
+    });
+
     if (
       route?.params?.unsignedWaivers === undefined ||
       route?.params?.unsignedWaivers === null
@@ -108,15 +116,16 @@ export default function SignWaiver({
               onChangeText={(signature) => setSignature(signature)}
             />
             <Text style={styles.description}>Date</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(date) => setDate(date)}
-            />
+            <TextInput style={styles.input} value={date} editable={false} />
             <View style={{ paddingTop: 36 }}>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if (isSelected && signature.trim() && date.trim()) {
+                  if (
+                    isSelected &&
+                    signature.toLowerCase() === name.toLowerCase() &&
+                    date.trim()
+                  ) {
                     setSignedWaivers();
 
                     if (unsigned.length > 0) {
@@ -129,9 +138,15 @@ export default function SignWaiver({
                       navigation.navigate("RequestItems");
                     }
                   } else {
-                    alert(
-                      "You must agree to the liability waiver before continuing."
-                    );
+                    if (signature.toLowerCase() !== name.toLowerCase()) {
+                      alert(
+                        "Please sign with your first and last name: " + name
+                      );
+                    } else {
+                      alert(
+                        "You must agree to the liability waiver before continuing."
+                      );
+                    }
                   }
                 }}
               >

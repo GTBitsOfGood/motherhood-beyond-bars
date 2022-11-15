@@ -23,12 +23,12 @@ function AddCaretakerModal({
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
-              <h3 className="text-3xl font-bold">Add a Caretaker</h3>
+              <h3 className="text-3xl font-bold p-4">Add a Caretaker</h3>
               <button
-                className="bg-transparent border-0 text-black float-right"
+                className="bg-transparent border-0 text-black float-right mr-3"
                 onClick={() => setModal(false)}
               >
-                <FaTimes onClick={() => setModal(false)} />
+                &times;
               </button>
             </div>
             <form onSubmit={handleSubmit((data) => onSubmit(data))}>
@@ -203,7 +203,7 @@ function AddCaretakerModal({
                     isSubmitting && "opacity-50 cursor-not-allowed"
                   }`}
                 >
-                  Add a Caretaker
+                  <span className="-translate-y-1">+</span> Add
                 </button>
               </div>
             </form>

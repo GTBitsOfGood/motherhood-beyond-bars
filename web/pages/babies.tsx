@@ -87,8 +87,7 @@ function genChildrenAndBabyBooksTab({
   const [addModal, toggleAddModal] = useState(false);
 
   const addNewChild = async (child: Baby) => {
-    console.log('child', child);
-    const caretakerRef = doc(db, 'caregivers', child.caretakerID);
+    const caretakerRef = doc(db, "caregivers", child.caretakerID);
 
     const newBaby = await addDoc(collection(db, 'babies'), {
       ...child,
@@ -204,7 +203,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         id: babyDoc.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        name: data?.firstName + ' ' + data?.lastName || null,
+        name: data?.firstName ?? "" + ' ' + data?.lastName ?? "",
         caretakerName: caretaker?.firstName + ' ' + caretaker?.lastName || null,
         caretakerID: data?.caretaker.id,
         motherName: data?.motherName || null,

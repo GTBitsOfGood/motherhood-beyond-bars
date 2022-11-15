@@ -1,10 +1,34 @@
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { FAQ, Links, Research } from '../components';
 
 function ResourceLibraryPage() {
   const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
   const [changesMade, setChangesMade] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const warningText =
+      'You have unsaved changes - are you sure you wish to leave this page?';
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!changesMade) return;
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+    const handleBrowseAway = () => {
+      if (!changesMade) return;
+      if (window.confirm(warningText)) return;
+      throw 'routeChange aborted.';
+    };
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleBrowseAway);
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleBrowseAway);
+    };
+  }, [changesMade]);
 
   const sections = [
     {
