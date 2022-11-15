@@ -86,7 +86,6 @@ function genChildrenAndBabyBooksTab({
   const [addModal, toggleAddModal] = useState(false);
 
   const addNewChild = async (child: Baby) => {
-    console.log("child", child);
     const caretakerRef = doc(db, "caregivers", child.caretakerID);
 
     const newBaby = await addDoc(collection(db, "babies"), {

@@ -6,6 +6,7 @@ import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import { UserProvider, BabyProvider } from "./providers";
+import { BabyBookProvider } from "./providers/BabyBook";
 import { SettingsProvider } from "./providers/settings";
 
 export default function App() {
@@ -19,10 +20,12 @@ export default function App() {
       <SafeAreaProvider>
         <UserProvider>
           <BabyProvider>
-          <SettingsProvider>
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar />
-          </SettingsProvider>
+            <BabyBookProvider>
+              <SettingsProvider>
+                <Navigation colorScheme={colorScheme} />
+                <StatusBar />
+              </SettingsProvider>
+            </BabyBookProvider>
           </BabyProvider>
         </UserProvider>
       </SafeAreaProvider>

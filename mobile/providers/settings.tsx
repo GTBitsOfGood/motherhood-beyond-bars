@@ -42,7 +42,7 @@ export const SettingsProvider = ({
     });
 
     return () => {
-      unsubscribe();
+      unsubscribe?.();
     };
   }, []);
 

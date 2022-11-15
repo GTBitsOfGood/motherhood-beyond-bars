@@ -8,7 +8,11 @@ import {
   TouchableHighlight,
   ScrollView,
 } from "react-native";
-import { Book, OnboardingStackScreenProps } from "../../types";
+import {
+  Book,
+  BookStackScreenProps,
+  OnboardingStackScreenProps,
+} from "../../types";
 
 import * as ImagePicker from "expo-image-picker";
 import { BabyContext } from "../../providers/Baby";
@@ -22,36 +26,16 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { useBabyBook } from "../../providers/BabyBook";
 
-type Props = OnboardingStackScreenProps<"BabyBook">;
+type Props = BookStackScreenProps<"BabyBook">;
 
 export var imageFinal: string;
 export var view: Book;
 
 export default function BabyBook({ navigation }: Props) {
-  const [image, setImage] = useState<string | null>(null);
-  const [book, setBook] = useState<Book[]>([]);
-
   const babyContext = useContext(BabyContext);
-  useEffect(() => {
-    let unsubscribe;
-    async function fetchBook() {
-      if (babyContext != null) {
-        const queryRef = query(
-          collection(db, "babies", babyContext.id, "book"),
-          orderBy("date", "desc"),
-          limit(10)
-        );
-        unsubscribe = onSnapshot(queryRef, (snapshot) => {
-          const books = snapshot.docs.map((doc) => {
-            return { ...doc.data(), id: doc.id } as unknown as Book;
-          });
-          setBook(books);
-        });
-      }
-    }
-    fetchBook();
-  }, []);
+  const babyBook = useBabyBook();
 
   function goToView(i: Book) {
     view = i;
@@ -83,7 +67,7 @@ export default function BabyBook({ navigation }: Props) {
   }
 
   function categorizePics() {
-    book.forEach((e) => {
+    babyBook.forEach((e) => {
       const date = findTime(e.date);
       const oldVal = picDict.get(date);
 
@@ -121,80 +105,71 @@ export default function BabyBook({ navigation }: Props) {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      navigation.navigate("SelectPicture", {
+        image: result.uri,
+      });
     }
-
-    if (image != null) {
-      imageFinal = image;
-    }
-
-    navigation.navigate("SelectPicture");
   };
 
-  const array = Array.from(picDict, ([month, picsInMonth]) => ({
+  const picsByMonth = Array.from(picDict, ([month, picsInMonth]) => ({
     month,
     picsInMonth,
   }));
 
-  function body() {
-    if (book.length == 0) {
-      return (
-        <View>
-          <View style={{ padding: "30%" }}></View>
-          <View style={{ padding: 15 }}>
-            <Text style={styles.center}>No Photos Yet</Text>
-            <Text style={{ textAlign: "center" }}>
-              Get started by tapping this button to add a photo of{" "}
-              {babyContext?.firstName}!
-            </Text>
-          </View>
+  const Body =
+    babyBook.length == 0 ? (
+      <View>
+        <View style={{ padding: "30%" }}></View>
+        <View style={{ padding: 15 }}>
+          <Text style={styles.center}>No Photos Yet</Text>
+          <Text style={{ textAlign: "center" }}>
+            Get started by tapping this button to add a photo of{" "}
+            {babyContext?.firstName}!
+          </Text>
         </View>
-      );
-    } else {
-      return (
-        <View>
-          <View style={{ paddingTop: 25 }}></View>
-          <ScrollView>
-            {array.map((e, i) => (
-              <View key={i}>
-                <Text style={{ fontWeight: "bold" }}>{e.month}</Text>
-                {e.picsInMonth.map((i) => (
-                  <View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignSelf: "flex-start",
-                      }}
-                    >
-                      {i.map((a) => (
-                        <TouchableHighlight
-                          style={{ paddingRight: 5 }}
-                          onPress={() => goToView(a)}
-                        >
-                          <Image
-                            source={{ uri: a.imageURL }}
-                            style={styles.image}
-                          />
-                        </TouchableHighlight>
-                      ))}
-                    </View>
-                    <View style={{ padding: 2.5 }}></View>
+      </View>
+    ) : (
+      <View>
+        <View style={{ paddingTop: 25 }}></View>
+        <ScrollView>
+          {picsByMonth.map((month, i) => (
+            <View key={month.month}>
+              <Text style={{ fontWeight: "bold" }}>{month.month}</Text>
+              {month.picsInMonth.map((picInMonth) => (
+                <View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignSelf: "flex-start",
+                    }}
+                  >
+                    {picInMonth.map((a) => (
+                      <TouchableHighlight
+                        style={{ paddingRight: 5 }}
+                        onPress={() => goToView(a)}
+                      >
+                        <Image
+                          source={{ uri: a.imageURL }}
+                          style={styles.image}
+                        />
+                      </TouchableHighlight>
+                    ))}
                   </View>
-                ))}
-                <View style={{ padding: 10 }}></View>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-      );
-    }
-  }
+                  <View style={{ padding: 2.5 }}></View>
+                </View>
+              ))}
+              <View style={{ padding: 10 }}></View>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+    );
+  const timestamp = babyContext?.dob && new Date(babyContext.dob);
+  const date = timestamp && timestamp.getDate();
+  const month = timestamp && timestamp.getMonth() + 1;
+  const year = timestamp && timestamp.getFullYear();
 
-  var timestamp = babyContext?.dob && new Date(babyContext.dob);
-  var date = timestamp && timestamp.getDate();
-  var month = timestamp && timestamp.getMonth() + 1;
-  var year = timestamp && timestamp.getFullYear();
 
   return (
     <View style={styles.container}>
@@ -206,7 +181,7 @@ export default function BabyBook({ navigation }: Props) {
           Birthday: {month}/{date}/{year}
         </Text>
       )}
-      {body()}
+      {Body}
       <View style={{ position: "absolute", bottom: 15, left: 300 }}>
         <TouchableOpacity onPress={pickImage} style={styles.roundButton1}>
           <Text style={styles.buttonText}>+</Text>
