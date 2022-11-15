@@ -1,4 +1,4 @@
-import LoginScreen from "@components/LoginScreen";
+import LoginScreen from "@components/loginScreen";
 import { UserContext } from "@lib/contexts/userContext";
 import React, { useContext } from "react";
 
