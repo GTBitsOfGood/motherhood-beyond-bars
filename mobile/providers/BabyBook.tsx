@@ -37,7 +37,6 @@ export const BabyBookProvider = ({
 
           setBook(books);
         });
-        console.log("here");
       }
     }
     fetchBook();
