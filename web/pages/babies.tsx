@@ -1,35 +1,40 @@
-import React, { useState } from "react";
 import BabiesTable from "@components/BabiesTable";
-import { GetServerSideProps } from "next";
-import { db } from "@lib/firebase";
-import { FaPlus } from "react-icons/fa";
-import {
-  collection,
-  query,
-  getDocs,
-  getDoc,
-  Timestamp,
-  DocumentReference,
-  doc,
-  addDoc,
-  serverTimestamp,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
 import ButtonWithIcon from "@components/ButtonWithIcon";
 import Modal from "@components/Modal";
+import { db } from "@lib/firebase";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { GetServerSideProps } from "next";
+import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { encrypt } from "../lib/encryption";
 import ChildModal from "modals/addChildModal";
 import { useRouter } from "next/router";
 
 export type Baby = {
   id: string;
+  caretakerName: string;
+  caretakerID: string;
+  caretaker: DocumentReference;
   motherName: string;
   birthday: string;
   sex: string;
   babyBook: string;
-  dob?: Timestamp | null;
+  dob: Timestamp;
   firstName: string;
   lastName: string;
+  hospitalName: string;
 };
 
 function genChildrenAndBabyBooksTab({
@@ -82,13 +87,18 @@ function genChildrenAndBabyBooksTab({
   const [addModal, toggleAddModal] = useState(false);
 
   const addNewChild = async (child: Baby) => {
-    console.log("child", child);
+    const caretakerRef = doc(db, "caregivers", child.caretakerID);
 
     const newBaby = await addDoc(collection(db, "babies"), {
       ...child,
       dob: child.dob,
       createdAt: serverTimestamp(),
+      caretaker: caretakerRef,
       babyBookEntries: [],
+    });
+
+    await updateDoc(caretakerRef, {
+      baby: newBaby,
     });
 
     toggleAddModal(false);
@@ -147,7 +157,7 @@ function genChildrenAndBabyBooksTab({
         show={addModal}
         content={
           <div className="h-screen flex flex-col items-center justify-center overflow-hidden">
-            <ChildModal 
+            <ChildModal
               header="Add a Child"
               setModal={toggleAddModal}
               onSubmit={addNewChild}
@@ -169,25 +179,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const babies = await Promise.all(
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
-      let caretaker: {
-        firstName: string;
-        lastName: string;
-      } = { firstName: "No Caregiver Assigned", lastName: "" };
 
       const dobDate = new Timestamp(
         data.dob.seconds,
         data.dob.nanoseconds
       ).toDate();
 
+      const { iv, content } = encrypt(babyDoc.id);
+
       return {
         id: babyDoc.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        name: data?.firstName + " " + data?.lastName || null,
+        name: data?.firstName ?? "" + " " + data?.lastName ?? "",
         motherName: data?.motherName || null,
         birthday: dobDate?.toLocaleDateString("en-us") || null,
         sex: data?.sex || null,
-        babyBook: "/book/" + babyDoc.id,
+        babyBook: `/book/${content}?iv=${iv}`,
       };
     })
   );

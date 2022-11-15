@@ -2,10 +2,29 @@ import { View } from "../../components/Themed";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
 import React from "react";
+import { useState, useEffect } from "react";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../../config/firebase";
+
+interface contact {
+  email: string,
+  phone: string
+}
 
 export default function GetStarted({
   navigation,
 }: OnboardingStackScreenProps<"GetStarted">) {
+  const [contact, setContact] = useState<contact>();
+  useEffect(() => {
+    const docRef = doc(db, "app", "settings");
+    getDoc(docRef).then((snapshot) => {
+      const data = snapshot.data();
+      if (data) {
+        setContact(data.contact);
+      }
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Let's get started</Text>
@@ -16,8 +35,8 @@ export default function GetStarted({
       <Text style={styles.description}>
         Before we get started, we'll need to collect some information to best
         meet your needs. If you have any questions, please email us at{" "}
-        <Text style={{ fontWeight: "bold" }}>info@motherhoodbeyond.org</Text> or
-        call us at <Text style={{ fontWeight: "bold" }}>678-404-1397</Text>.
+        <Text style={{ fontWeight: "bold" }}>{contact?.email}</Text> or
+        call us at <Text style={{ fontWeight: "bold" }}>{contact?.phone}</Text>.
       </Text>
 
       <View style={{ paddingTop: 36 }}>

@@ -39,6 +39,7 @@ export default function SignWaiver({
     // get name of user to verify signature
     getDoc(doc(db, "caregivers", authData?.uid as string)).then((doc) => {
       setName(doc.data()?.firstName + " " + doc.data()?.lastName);
+      console.log(doc.data()?.firstName + " " + doc.data()?.lastName);
     });
 
     if (
@@ -121,7 +122,12 @@ export default function SignWaiver({
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if (isSelected && signature === name && date.trim()) {
+                  if (
+                    isSelected &&
+                    signature.toLowerCase().trim() ===
+                      name.toLowerCase().trim() &&
+                    date.trim()
+                  ) {
                     setSignedWaivers();
 
                     if (unsigned.length > 0) {

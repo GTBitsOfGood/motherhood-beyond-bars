@@ -24,13 +24,6 @@ function ChildModal({
     formState: { errors, isSubmitting },
   } = useForm();
 
-  console.log(values);
-
-  const curr = new Date();
-  curr.setDate(curr.getDate());
-  const defaultDate = curr.toLocaleDateString();
-
-
   return (
     <>
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
