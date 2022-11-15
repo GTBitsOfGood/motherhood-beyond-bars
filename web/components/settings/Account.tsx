@@ -2,9 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { doc, updateDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "@lib/firebase";
-import { getAuth, onAuthStateChanged, updatePassword} from "firebase/auth"
-
-
+import { getAuth, onAuthStateChanged, updatePassword } from "firebase/auth";
 
 type AccountEntry = {
   confirmNewPassword: string;
@@ -12,12 +10,10 @@ type AccountEntry = {
   newPassword: string;
   phoneNumber: string;
 };
-export default function Account(props : {
+export default function Account(props: {
   getChangesMade: () => boolean;
   setChangesMade: Dispatch<SetStateAction<boolean>>;
 }) {
-  
-  
   const [accounts, setAccounts] = useState<AccountEntry[]>([]);
   const [password, setPassword] = useState("");
   const [phoneNum, setPhoneNum] = useState("(404)-404-4040");
@@ -29,37 +25,37 @@ export default function Account(props : {
   const auth = getAuth();
   const user = auth.currentUser;
 
-    useEffect(() => {
-      const unsub = onSnapshot(doc(db, "settings", "account"), (doc) => {
-        setAccounts(doc.data()?.accounts || []);
-        setUserChanges(doc.data()?.accounts || []);
-      });
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "settings", "account"), (doc) => {
+      setAccounts(doc.data()?.accounts || []);
+      setUserChanges(doc.data()?.accounts || []);
+    });
 
-      return unsub;
-    }, []);
+    return unsub;
+  }, []);
 
-    useEffect(() => {
-      // props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(accounts));
+  useEffect(() => {
+    // props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(accounts));
 
-      const warningText =
-        "You have unsaved changes - are you sure you wish to leave this page?";
-      const handleWindowClose = (e: BeforeUnloadEvent) => {
-        if (!props.getChangesMade()) return;
-        e.preventDefault();
-        return (e.returnValue = warningText);
-      };
-      const handleBrowseAway = () => {
+    const warningText =
+      "You have unsaved changes - are you sure you wish to leave this page?";
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!props.getChangesMade()) return;
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+    const handleBrowseAway = () => {
       //   if (!props.getChangesMade) return;
-        if (window.confirm(warningText)) return;
-        throw "routeChange aborted.";
-      };
-      window.addEventListener("beforeunload", handleWindowClose);
-      router.events.on("routeChangeStart", handleBrowseAway);
-      return () => {
-        window.removeEventListener("beforeunload", handleWindowClose);
-        router.events.off("routeChangeStart", handleBrowseAway);
-      };
-    }, [userChanges]);
+      if (window.confirm(warningText)) return;
+      throw "routeChange aborted.";
+    };
+    window.addEventListener("beforeunload", handleWindowClose);
+    router.events.on("routeChangeStart", handleBrowseAway);
+    return () => {
+      window.removeEventListener("beforeunload", handleWindowClose);
+      router.events.off("routeChangeStart", handleBrowseAway);
+    };
+  }, [userChanges]);
 
   const hidePasswordButton = () => {
     setShowPasswordForm(true);
@@ -69,9 +65,11 @@ export default function Account(props : {
     setShowPhoneNumberForm(true);
   };
 
-  const changePhoneNum = (e) => {
-    setPhoneNum(e.target.value);
-    console.log("value is", phoneNum);
+  const changePhoneNum = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e) {
+      setPhoneNum(e.target.value);
+      console.log("value is", phoneNum);
+    }
   };
 
   function saveChanges() {
@@ -79,39 +77,26 @@ export default function Account(props : {
     setDoc(accountDoc, {});
   }
 
-  const changePassword =  (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
+  };
 
-  updatePassword(user, password).then(() => {
+  const savePassword = () => {
     if (!user) {
       return;
     }
-    // Update successful.
-  }).catch((error) => {
-    alert("invalid password");
-    // An error ocurred
-    // ...
-  });
-  
-  
-
-  //   const PhoneNumForm = (
-  //     <div className="flex items-end" >
-  //         <button
-  //           className="flex-shrink-0 bg-white-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-2 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
-  //           type="submit"
-  //         >
-  //           Save
-  //         </button>
-  //         <button
-  //           className="flex-shrink-0 bg-white-500 hover:bg-blue-700 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
-  //           type="submit"
-  //         >
-  //           Cancel
-  //         </button>
-  //         </div>
-  //   );
+    updatePassword(user, password)
+      .then(() => {
+        // Update successful.
+        alert("password successfully updated")
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("invalid password");
+        // An error ocurred
+        // ...
+      });
+  };
 
   const PasswordForm = (
     // accounts?.map((account, index) => {
@@ -138,15 +123,15 @@ export default function Account(props : {
             className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
             style={{ width: "218px" }}
             // value={account.confirmNewPassword}
-            onChange={changePassword}>
-            </input>
+            onChange={changePassword}
+          ></input>
         </div>
 
         <div className="flex items-end">
           <button
             className="flex-shrink-0 bg-white-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-2 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
             type="submit"
-            onClick={updatePassword}
+            onClick={savePassword}
           >
             Save
           </button>
@@ -192,7 +177,7 @@ export default function Account(props : {
             <>
               <input
                 className="w-1/5 ml-3.5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-                //onChange={changePhoneNum}
+                onChange={changePhoneNum}
               ></input>
 
               <button
@@ -204,7 +189,6 @@ export default function Account(props : {
               <button
                 className="flex-shrink-0 bg-white-500 hover:bg-blue-700 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
                 type="submit"
-                onClick={changePhoneNum}
               >
                 Cancel
               </button>
