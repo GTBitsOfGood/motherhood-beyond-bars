@@ -16,7 +16,9 @@ export default function Account(props: {
 }) {
   const [accounts, setAccounts] = useState<AccountEntry[]>([]);
   const [password, setPassword] = useState("");
-  const [phoneNum, setPhoneNum] = useState("(404)-404-4040");
+  const [contact, setContact] = useState<any>({});
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNum, setPhoneNum] = useState("");
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showPhoneNumberForm, setShowPhoneNumberForm] = useState(false);
   const [userChanges, setUserChanges] = useState<AccountEntry[]>([]);
@@ -26,9 +28,9 @@ export default function Account(props: {
   const user = auth.currentUser;
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "settings", "account"), (doc) => {
-      setAccounts(doc.data()?.accounts || []);
-      setUserChanges(doc.data()?.accounts || []);
+    const unsub = onSnapshot(doc(db, "app", "settings"), (doc) => {
+      setPhoneNum(doc.data()?.contact.phone);
+      setContact(doc.data()?.contact)
     });
 
     return unsub;
@@ -65,87 +67,6 @@ export default function Account(props: {
     setShowPhoneNumberForm(true);
   };
 
-  const changePhoneNum = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e) {
-      setPhoneNum(e.target.value);
-      console.log("value is", phoneNum);
-    }
-  };
-
-  function saveChanges() {
-    const accountDoc = doc(db, "settings", "account");
-    setDoc(accountDoc, {});
-  }
-
-  const changePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const savePassword = () => {
-    if (!user) {
-      return;
-    }
-    updatePassword(user, password)
-      .then(() => {
-        // Update successful.
-        alert("password successfully updated")
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("invalid password");
-        // An error ocurred
-        // ...
-      });
-  };
-
-  const PasswordForm = (
-    // accounts?.map((account, index) => {
-    // return (
-    <div style={{ display: "flex" }}>
-      <>
-        <div style={{ marginRight: "15px" }}>
-          <p>New Password</p>
-          <input
-            className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-            style={{ width: "218px" }}
-            // value={account.newPassword}
-            // onChange={(e) => {
-            //   const newAccounts = accounts;
-            //   newAccounts[index].newPassword = e.target.value;
-            //   setAccounts(newAccounts);
-            // }}
-          ></input>
-        </div>
-
-        <div style={{ marginRight: "15px" }}>
-          <p>Confirm New Password</p>
-          <input
-            className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-            style={{ width: "218px" }}
-            // value={account.confirmNewPassword}
-            onChange={changePassword}
-          ></input>
-        </div>
-
-        <div className="flex items-end">
-          <button
-            className="flex-shrink-0 bg-white-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-2 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
-            type="submit"
-            onClick={savePassword}
-          >
-            Save
-          </button>
-          <button
-            className="flex-shrink-0 bg-white-500 hover:bg-blue-700 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
-            type="submit"
-          >
-            Cancel
-          </button>
-        </div>
-      </>
-    </div>
-  );
-
   return (
     //   accounts?.map((account, index) => {
     <div>
@@ -159,7 +80,7 @@ export default function Account(props: {
             <>
               <input
                 type="text"
-                value={phoneNum}
+                value={contact.phone}
                 style={{ marginLeft: "15px", width: "115px" }}
               />
               <button
@@ -177,18 +98,32 @@ export default function Account(props: {
             <>
               <input
                 className="w-1/5 ml-3.5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-                onChange={changePhoneNum}
+                onChange={(e) => {
+                  setPhoneNum(e.target.value)
+                }}
+                value={phoneNum}
               ></input>
 
               <button
                 className="ml-3.5 flex-shrink-0 bg-white-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-2 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
                 type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const temp = contact;
+                  temp.phone = phoneNum;
+                  updateDoc(doc(db, 'app', 'settings'), {contact : temp})
+                  alert("Succesfully updated phone number!")
+                  setShowPhoneNumberForm(false);
+                }}
               >
                 Save
               </button>
               <button
                 className="flex-shrink-0 bg-white-500 hover:bg-blue-700 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
                 type="submit"
+                onClick={() => {
+                  setShowPhoneNumberForm(false);
+                }}
               >
                 Cancel
               </button>
@@ -219,7 +154,72 @@ export default function Account(props: {
               </button>
             </>
           ) : null}
-          {showPasswordForm ? PasswordForm : null}
+          {showPasswordForm ? (
+            <div style={{ display: "flex" }}>
+              <>
+                <div style={{ marginRight: "15px" }}>
+                  <p>New Password</p>
+                  <input
+                    className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                    style={{ width: "218px" }}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  ></input>
+                </div>
+
+                <div style={{ marginRight: "15px" }}>
+                  <p>Confirm New Password</p>
+                  <input
+                    className="w-4/5 bg-[#FAFBFC] border-[#D9D9D9] border-[1px] rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                    style={{ width: "218px" }}
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                    }}
+                  ></input>
+                </div>
+
+                <div className="flex items-end">
+                  <button
+                    className="flex-shrink-0 bg-white-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-2 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
+                    type="submit"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!user) {
+                        return;
+                      }
+                      updatePassword(user, password)
+                        .then(() => {
+                          // Update successful.
+                          alert("password successfully updated");
+                          setShowPasswordForm(false);
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                          alert(error.message);
+                          // An error ocurred
+                          // ...
+                        });
+                    }}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="flex-shrink-0 bg-white-500 hover:bg-blue-700 text-blue-500 hover:text-white font-bold py-1 px-2 h-10 rounded"
+                    type="submit"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowPasswordForm(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            </div>
+          ) : null}
         </form>
       </div>
       <div className="fixed bottom-0 right-0 left-[318px] bg-white border-t-[1px] px-10 py-4">
