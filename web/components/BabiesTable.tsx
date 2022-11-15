@@ -1,10 +1,10 @@
+import ChildModal from "modals/addChildModal";
+import Image from "next/image";
 import React, { useState } from "react";
 import { useTable } from "react-table";
-import Image from "next/image";
-import dots from "../public/dots.png";
 import book from "../public/book.svg";
-import Modal from "./modal";
-import ChildModal from "modals/addChildModal";
+import dots from "../public/dots.png";
+import Modal from "./Modal";
 
 function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -15,6 +15,7 @@ function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {
 
   const [editModal, toggleEditModal] = useState(false);
   const [babyData, setBabyData] = useState({});
+  const [selectedOptionsPanel, setSelectedOptionsPanel] = useState(-1);
 
   const editBaby = (data: any) => {
     toggleEditModal(true);
@@ -66,6 +67,7 @@ function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {
                             <a
                               href={row.cells.slice(-1)[0].value}
                               className="text-blue-700"
+                              target="_blank"
                             >
                               Baby Book
                             </a>
@@ -75,11 +77,19 @@ function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {
                           <div className="p-4">
                             <div className="group relative">
                               <button>
-                                <Image src={dots} />
+                                <Image
+                                  src={dots}
+                                  onClick={() => {
+                                    if (i === selectedOptionsPanel)
+                                      setSelectedOptionsPanel(-1);
+                                    else setSelectedOptionsPanel(i);
+                                  }}
+                                />
                               </button>
                               <nav
                                 tabIndex={0}
                                 className="absolute w-[127px] rounded-b bg-white border shadow-xl right-1 mt-1 shadow-slate-200 transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100"
+                                hidden={selectedOptionsPanel !== i}
                               >
                                 <ul className="py-1">
                                   <li>
