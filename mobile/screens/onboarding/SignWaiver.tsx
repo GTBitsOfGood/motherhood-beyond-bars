@@ -12,11 +12,12 @@ import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
 //@ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
-import { doc, arrayUnion, Timestamp, setDoc, updateDoc, arrayRemove, getDoc } from "firebase/firestore";
+import { doc, arrayUnion, Timestamp, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
-import { prevSignedWaivers, waiverUpdate } from "../settings/AccountInfo";
+import { waiverUpdate } from "../settings/AccountInfo";
+import { RootTabParamList } from "../../types";
 
 export var waiverSigned = false;
 
@@ -34,8 +35,9 @@ export default function SignWaiver({
   const [waiver, setWaiver] = useState<Waiver | null>(
     route.params?.unsignedWaivers?.[0] || null
   );
+  const [prevSignedWaivers, setPrevSignedWaivers] = useState();
 
-  var prevWaivers = prevSignedWaivers;
+
 
   useEffect(() => {
     if (
@@ -49,6 +51,13 @@ export default function SignWaiver({
         setWaiver(allWaivers[0]);
       }
       setWaviers();
+    }
+
+    if (waiverUpdate) {
+      const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+      getDoc(caregiverDoc).then((doc) => {
+        setPrevSignedWaivers(doc?.data()?.signedWaivers);
+      })
     }
   }, []);
 
@@ -73,14 +82,14 @@ export default function SignWaiver({
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     console.log("UPDATE WAIVER")
 
-    waiver && prevWaivers &&
+    waiver && prevSignedWaivers &&
       updateDoc(caregiverDoc, {
-        signedWaivers: prevWaivers.map((w: { id: string; }) => w.id === waiver.id ? { ...w, timestamp: Timestamp.now() } : w)
+        signedWaivers: prevSignedWaivers.map((w: { id: string; }) => w.id === waiver.id ? { ...w, timestamp: Timestamp.now() } : w)
       });
 
-    // if (waiver && prevWaivers) {
-    //   prevWaivers = prevWaivers.map((w: { id: string; }) => w.id === waiver.id ? { ...w, timestamp: Timestamp.now() } : w);
-    // }
+    if (waiver && prevSignedWaivers) {
+      setPrevSignedWaivers(map((w: { id: string; }) => w.id === waiver.id ? { ...w, timestamp: Timestamp.now() } : w));
+    }
   }
 
 

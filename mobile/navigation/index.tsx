@@ -312,11 +312,6 @@ function OnboardingNavigator() {
             component={AllDone}
             options={{ headerShown: false }}
           />
-          {/* <Onboarding.Screen
-            name="AccountInfo"
-            component={AccountInfo}
-            options={{ headerShown: false }}
-          /> */}
         </>
       ) : (
         <>
@@ -579,11 +574,22 @@ function BottomTabNavigator() {
             </TouchableOpacity>),
         }}
       />
-      <Onboarding.Screen
+      {/* <Onboarding.Screen
         name="AllDone"
         component={AllDone}
         options={{ headerShown: false }}
+      /> */}
+      <BottomTab.Screen
+        name="TabOne"
+        component={BookNavigator}
+        options={{
+          title: "Baby Book",
+          tabBarIcon: ({ focused }) => (
+            <BabyBookSVG color={focused ? "#fff" : "#B2B2B2"} />
+          ),
+        }}
       />
+
     </Onboarding.Navigator > : <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{

@@ -18,7 +18,6 @@ import { waiverSigned } from "../onboarding/SignWaiver";
 import updatedWaivers from "../onboarding/SignWaiver";
 
 export var waiverUpdate = false;
-export var prevSignedWaivers = undefined;
 
 if (waiverSigned) {
   waiverUpdate = false;
@@ -31,8 +30,6 @@ export default function AccountInfo({
 
   const [waivers, setWaivers] = useState<Waiver[]>();
   const [signedWaivers, setSignedWaivers] = useState();
-
-  prevSignedWaivers = signedWaivers;
 
 
   useEffect(() => {
@@ -51,7 +48,6 @@ export default function AccountInfo({
           // const data = doc?.data()?.signedWaivers;
           setSignedWaivers(doc?.data()?.signedWaivers);
         }
-        // console.log("PREV WAIVER: " + prevSignedWaivers);
         console.log("WAIVER: " + signedWaivers);
 
       });
@@ -67,14 +63,12 @@ export default function AccountInfo({
       for (let i = 0; i < waivers?.length; i++) {
         if (waivers[i].lastUpdated > signedWaivers[i].timestamp) {
           waiverUpdate = true;
-          // prevSignedWaivers = updatedWaivers;
           console.log("Waiver " + i + " has been updated!" + waiverUpdate)
         } else {
           console.log("Waiver " + i + " hasn't been updated" + waiverUpdate)
         }
       }
     }
-    // prevSignedWaivers = signedWaivers;
   }
 
 
