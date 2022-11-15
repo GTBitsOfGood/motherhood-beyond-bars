@@ -79,6 +79,7 @@ import General from "../screens/resources/General";
 import FAQ from "../screens/resources/FAQ";
 import Research from "../screens/resources/Research";
 import Links from "../screens/resources/Links";
+import { BabyContext } from "../providers/Baby";
 
 export default function Navigation({
   colorScheme,
@@ -391,49 +392,55 @@ function OnboardingNavigator() {
 const Book = createNativeStackNavigator<BookParamList>();
 
 function BookNavigator() {
+  const babyCtx = useContext(BabyContext);
   return (
     <Book.Navigator>
       <>
-        <Book.Screen
-          name="BabyBookAccess"
-          component={BabyBookAccess}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Book.Screen
-          name="StartBook"
-          component={StartBook}
-          options={{
-            header: () => <View></View>,
-          }}
-        />
-        <Book.Screen
-          name="SelectPicture"
-          component={SelectPicture}
-          options={{
-            header: () => <View></View>,
-          }}
-        />
-        <Book.Screen
-          name="ViewImage"
-          component={ViewImage}
-          options={{
-            headerTitle: () => (
-              // add progress bar/circles and styling here
-              <View>
-                <Text>Picture and Caption</Text>
-              </View>
-            ),
-          }}
-        />
-        <Book.Screen
-          name="BabyBook"
-          component={BabyBook}
-          options={{
-            header: () => <View></View>,
-          }}
-        />
+        {!babyCtx?.id ? (
+          <Book.Screen
+            name="BabyBookAccess"
+            component={BabyBookAccess}
+            options={{
+              headerShown: false,
+            }}
+          />
+        ) : (
+          <>
+            <Book.Screen
+              name="StartBook"
+              component={StartBook}
+              options={{
+                header: () => <View></View>,
+              }}
+            />
+            <Book.Screen
+              name="SelectPicture"
+              component={SelectPicture}
+              options={{
+                header: () => <View></View>,
+              }}
+            />
+            <Book.Screen
+              name="ViewImage"
+              component={ViewImage}
+              options={{
+                headerTitle: () => (
+                  // add progress bar/circles and styling here
+                  <View>
+                    <Text>Picture and Caption</Text>
+                  </View>
+                ),
+              }}
+            />
+            <Book.Screen
+              name="BabyBook"
+              component={BabyBook}
+              options={{
+                header: () => <View></View>,
+              }}
+            />
+          </>
+        )}
       </>
     </Book.Navigator>
   );

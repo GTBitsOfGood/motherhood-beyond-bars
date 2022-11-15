@@ -67,11 +67,6 @@ export type OnboardingParamList = {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
-  BabyBookAccess: undefined;
-  BabyBook: undefined;
-  StartBook: undefined;
-  SelectPicture: undefined;
-  ViewImage: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
@@ -88,7 +83,9 @@ export type BookParamList = {
   BabyBookAccess: undefined;
   BabyBook: undefined;
   StartBook: undefined;
-  SelectPicture: undefined;
+  SelectPicture: {
+    image: any;
+  };
   ViewImage: undefined;
 };
 
@@ -161,8 +158,8 @@ export interface Item {
 }
 
 export interface ItemRequest {
-  created: Timestamp,
-  updated: Timestamp,
-  status : string,
-  items: Item[]
+  created: Timestamp;
+  updated: Timestamp;
+  status: string;
+  items: Item[];
 }
