@@ -84,7 +84,7 @@ export type BookParamList = {
   BabyBook: undefined;
   StartBook: undefined;
   SelectPicture: {
-    image: any;
+    image: string;
   };
   ViewImage: undefined;
 };
@@ -131,10 +131,10 @@ export interface Baby {
   firstName: string;
   lastName: string;
   id: string;
-  caregiverEmail: string;
-  caregiverID: string;
+  createdAt: Timestamp;
+  hospitalName: string;
+  caretakerID: string;
   dob: string;
-  babyBook: string;
 }
 
 export interface Book {

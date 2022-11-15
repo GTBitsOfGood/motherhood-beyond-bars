@@ -393,6 +393,7 @@ const Book = createNativeStackNavigator<BookParamList>();
 
 function BookNavigator() {
   const babyCtx = useContext(BabyContext);
+
   return (
     <Book.Navigator>
       <>
