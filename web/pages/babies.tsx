@@ -1,23 +1,24 @@
-import React, { useState } from "react";
 import BabiesTable from "@components/BabiesTable";
-import { GetServerSideProps } from "next";
-import { db } from "@lib/firebase";
-import { FaPlus } from "react-icons/fa";
-import {
-  collection,
-  query,
-  getDocs,
-  getDoc,
-  Timestamp,
-  DocumentReference,
-  doc,
-  addDoc,
-  serverTimestamp,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
 import ButtonWithIcon from "@components/ButtonWithIcon";
 import Modal from "@components/Modal";
+import { db } from "@lib/firebase";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { GetServerSideProps } from "next";
+import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { encrypt } from "../lib/encryption";
 import ChildModal from "modals/addChildModal";
 import { useRouter } from "next/router";
 
@@ -125,7 +126,7 @@ function genChildrenAndBabyBooksTab({
 
   return (
     <div>
-      <div className="absolute mt-20 border-t w-full" />
+      <div className="absolute mt-20 border-t" />
       <div className="pt-6 px-8 flex h-full flex-col justify-left">
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
@@ -155,7 +156,7 @@ function genChildrenAndBabyBooksTab({
       <Modal
         show={addModal}
         content={
-          <div className="h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
+          <div className="h-screen flex flex-col items-center justify-center overflow-hidden">
             <ChildModal
               header="Add a Child"
               setModal={toggleAddModal}
@@ -178,36 +179,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const babies = await Promise.all(
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
-      let caretaker: {
-        firstName: string;
-        lastName: string;
-      } = { firstName: "No Caregiver Assigned", lastName: "" };
-      try {
-        caretaker = (await getDoc(data?.caretaker))?.data() as {
-          firstName: string;
-          lastName: string;
-        };
-      } catch (e) {
-        console.log(`Couldn't get caretaker for ${data.firstName}`);
-      }
 
       const dobDate = new Timestamp(
         data.dob.seconds,
         data.dob.nanoseconds
       ).toDate();
 
+      const { iv, content } = encrypt(babyDoc.id);
+
       return {
         id: babyDoc.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        name: data?.firstName + " " + data?.lastName || null,
-        caretakerName: caretaker?.firstName + " " + caretaker?.lastName || null,
-        caretakerID: data?.caretaker?.id || null,
+        name: data?.firstName ?? "" + " " + data?.lastName ?? "",
         motherName: data?.motherName || null,
         birthday: dobDate?.toLocaleDateString("en-us") || null,
         sex: data?.sex || null,
-        babyBook: "/book/" + babyDoc.id,
-        hospitalName: data?.hospitalName || null,
+        babyBook: `/book/${content}?iv=${iv}`,
       };
     })
   );

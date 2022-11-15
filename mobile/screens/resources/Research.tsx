@@ -69,7 +69,7 @@ export default function Research({
               </Text>
               <Text style={{ fontSize: 16 }}>General Description:</Text>
 
-              <MarkdownView style={{ fontSize: 16, paddingBottom: 15 }}>
+              <MarkdownView style={{ fontSize: 16 }}>
                 {description}
               </MarkdownView>
               <Text style={{ fontSize: 16 }}>
