@@ -21,16 +21,13 @@ import * as ImagePicker from "expo-image-picker";
 
 type Props = BookStackScreenProps<"SelectPicture">;
 
-export default function SelectPicture(this: any, { navigation }: Props) {
+export default function SelectPicture(this: any, { navigation, route }: Props) {
   const baby = useContext(BabyContext);
   const caregiver = useContext(UserContext);
   const [caption, setCaption] = useState("");
-  const [imageURL, setImageURL] = useState("");
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
-  const [img, setImg] = useState<string | null>(null);
-
-  var display = imageFinal;
+  const [img, setImg] = useState<string | null>(route?.params?.image || null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -44,18 +41,15 @@ export default function SelectPicture(this: any, { navigation }: Props) {
     if (!result.cancelled) {
       setImg(result.uri);
     }
-
-    if (img != null) {
-      display = img;
-    }
   };
 
   async function uploadPicture() {
-    const response = await fetch(display);
+    if (!img) return;
+    const response = await fetch(img);
     const blob = await response.blob();
 
-    const extension = display.split(".").pop();
-    const picName = baby?.id + Date.now() + "." + extension;
+    const extension = img.split(".").pop();
+    const picName = baby!.id + Date.now() + "." + extension;
 
     const babyRef = doc(db, "babies", baby?.id as string);
     console.log("babyRef");
@@ -66,7 +60,7 @@ export default function SelectPicture(this: any, { navigation }: Props) {
 
     uploadBytes(ref(storage, picName), blob).then(async (snapshot) => {
       getDownloadURL(ref(storage, picName)).then(async (url) => {
-        setImageURL(url);
+        setImg(url);
 
         // create baby book document
         const bookDoc = doc(babyRef, "book", picName);
@@ -90,11 +84,8 @@ export default function SelectPicture(this: any, { navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={{ height: "80%" }}>
-        {display && (
-          <Image
-            source={{ uri: display }}
-            style={{ width: 300, height: 450 }}
-          />
+        {img && (
+          <Image source={{ uri: img }} style={{ width: 300, height: 450 }} />
         )}
         <View style={{ position: "absolute", bottom: 15, left: 225 }}>
           <TouchableOpacity onPress={pickImage} style={styles.replace}>

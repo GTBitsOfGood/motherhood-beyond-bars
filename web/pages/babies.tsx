@@ -86,7 +86,6 @@ function genChildrenAndBabyBooksTab({
   const [addModal, toggleAddModal] = useState(false);
 
   const addNewChild = async (child: Baby) => {
-    console.log("child", child);
     const caretakerRef = doc(db, "caregivers", child.caretakerID);
 
     const newBaby = await addDoc(collection(db, "babies"), {
@@ -203,12 +202,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         lastName: data.lastName,
         name: data?.firstName + " " + data?.lastName || null,
         caretakerName: caretaker?.firstName + " " + caretaker?.lastName || null,
-        caretakerID: data?.caretaker.id,
+        caretakerID: data?.caretaker?.id || null,
         motherName: data?.motherName || null,
         birthday: dobDate?.toLocaleDateString("en-us") || null,
         sex: data?.sex || null,
         babyBook: "/book/" + babyDoc.id,
-        hospitalName: data?.hospitalName,
+        hospitalName: data?.hospitalName || null,
       };
     })
   );

@@ -67,11 +67,6 @@ export type OnboardingParamList = {
     unsignedWaivers: Waiver[] | undefined;
   };
   RequestItems: undefined;
-  BabyBookAccess: undefined;
-  BabyBook: undefined;
-  StartBook: undefined;
-  SelectPicture: undefined;
-  ViewImage: undefined;
   ShippingAddress: undefined;
   BestContact: undefined;
   AllDone: undefined;
@@ -88,7 +83,9 @@ export type BookParamList = {
   BabyBookAccess: undefined;
   BabyBook: undefined;
   StartBook: undefined;
-  SelectPicture: undefined;
+  SelectPicture: {
+    image: string;
+  };
   ViewImage: undefined;
 };
 
@@ -120,9 +117,8 @@ export interface Caregiver {
   id: string;
   numAdults: string;
   numChildren: string;
-  agesOfChildren: string;
   signedWaivers: Waiver[];
-  itemsRequested: Item[];
+  itemsRequested: ItemRequest;
   address: string;
   apartment?: string;
   city: string;
@@ -135,10 +131,10 @@ export interface Baby {
   firstName: string;
   lastName: string;
   id: string;
-  caregiverEmail: string;
-  caregiverID: string;
+  createdAt: Timestamp;
+  hospitalName: string;
+  caretakerID: string;
   dob: string;
-  babyBook: string;
 }
 
 export interface Book {
@@ -158,8 +154,12 @@ export interface Waiver {
 
 export interface Item {
   name: string;
-  fulfilled: Boolean;
-  requestedOn: Timestamp;
   gender?: string;
-  size?: number;
+}
+
+export interface ItemRequest {
+  created: Timestamp;
+  updated: Timestamp;
+  status: string;
+  items: Item[];
 }

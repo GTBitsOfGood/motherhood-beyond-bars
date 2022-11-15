@@ -10,8 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { OnboardingStackScreenProps } from "../../types";
-import React, { useContext, useState } from "react";
-import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  Timestamp,
+  setDoc,
+} from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { db } from "../../config/firebase";
 import Checkbox from "../../components/app/Checkbox";
@@ -41,7 +47,13 @@ export default function RequestedItems({
     setItemsCount(newItemsCount);
   };
 
-  const requestItems = async (wantCarSeat: Boolean) => {
+  useEffect(() => {
+    // reset itemsRequested if user goes through onboarding again
+    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+    setDoc(caregiverDoc, { itemsRequested: [] }, { merge: true });
+  }, []);
+
+  const requestItems = async () => {
     if (length === 0) {
       return;
     }
@@ -52,9 +64,6 @@ export default function RequestedItems({
       settings.items
         ?.filter((_, index) => itemsCount[index])
         .map((item) => {
-          if (item.itemName === "carSeat") {
-            wantCarSeat = false;
-          }
           if (item.itemName === "clothing") {
             return {
               ...item,
@@ -73,18 +82,6 @@ export default function RequestedItems({
             };
           }
         }) || [];
-
-    if (wantCarSeat) {
-      itemsRequested?.push({
-        itemName: "carSeat",
-        itemDisplayName: "Car Seat",
-        itemQuantity: 1,
-        itemDescription: "A necessity for transporting the baby",
-        onboarding: true,
-        fulfilled: false,
-        requestedOn: Timestamp.now(),
-      });
-    }
 
     itemsRequested?.push({
       itemName: "beginBox",
@@ -221,7 +218,18 @@ export default function RequestedItems({
               <TouchableOpacity
                 style={[styles.button, { width: 350 }]}
                 onPress={() => {
-                  setModalVisible(!modalVisible);
+                  if (
+                    itemsCount[
+                      settings.items?.findIndex(
+                        (item) => item.itemName === "carSeat"
+                      ) as number
+                    ]
+                  ) {
+                    requestItems();
+                    navigation.navigate("ShippingAddress");
+                  } else {
+                    setModalVisible(!modalVisible);
+                  }
                 }}
               >
                 <Text style={styles.buttonText}>Request</Text>
@@ -260,7 +268,7 @@ export default function RequestedItems({
                     <TouchableOpacity
                       style={styles.button}
                       onPress={() => {
-                        requestItems(false);
+                        requestItems();
                         setModalVisible(!modalVisible);
                         navigation.navigate("ShippingAddress");
                       }}
@@ -278,9 +286,13 @@ export default function RequestedItems({
                     <TouchableOpacity
                       style={styles.button}
                       onPress={() => {
-                        requestItems(true);
                         setModalVisible(!modalVisible);
-                        navigation.navigate("ShippingAddress");
+                        // set car seat to checked
+                        settings.items?.map((item, idx) => {
+                          if (item.itemName === "carSeat" && !itemsCount[idx]) {
+                            toggleItem(idx);
+                          }
+                        });
                       }}
                     >
                       <View
