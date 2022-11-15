@@ -35,8 +35,6 @@ export const BabyBookProvider = ({
             return { ...doc.data(), id: doc.id } as unknown as Book;
           });
 
-          console.log(books);
-
           setBook(books);
         });
         console.log("here");
@@ -55,7 +53,5 @@ export const BabyBookProvider = ({
 };
 
 export function useBabyBook() {
-  console.log("context called");
-
   return useContext(BabyBookContext);
 }
