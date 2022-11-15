@@ -1,7 +1,7 @@
-import BabiesTable from '@components/BabiesTable';
-import ButtonWithIcon from '@components/ButtonWithIcon';
-import Modal from '@components/Modal';
-import { db } from '@lib/firebase';
+import BabiesTable from "@components/BabiesTable";
+import ButtonWithIcon from "@components/ButtonWithIcon";
+import Modal from "@components/Modal";
+import { db } from "@lib/firebase";
 import {
   addDoc,
   collection,
@@ -14,11 +14,11 @@ import {
   serverTimestamp,
   Timestamp,
   updateDoc,
-} from 'firebase/firestore';
-import { GetServerSideProps } from 'next';
-import React, { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { encrypt } from '../lib/encryption';
+} from "firebase/firestore";
+import { GetServerSideProps } from "next";
+import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { encrypt } from "../lib/encryption";
 import ChildModal from "modals/addChildModal";
 import { useRouter } from "next/router";
 
@@ -49,28 +49,28 @@ function genChildrenAndBabyBooksTab({
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Name',
-        accessor: 'name',
+        Header: "Name",
+        accessor: "name",
       },
       {
         Header: "Caretaker's Name",
-        accessor: 'caretakerName',
+        accessor: "caretakerName",
       },
       {
         Header: "Mother's Name",
-        accessor: 'motherName',
+        accessor: "motherName",
       },
       {
-        Header: 'Date of Birth',
-        accessor: 'birthday',
+        Header: "Date of Birth",
+        accessor: "birthday",
       },
       {
-        Header: 'Sex',
-        accessor: 'sex',
+        Header: "Sex",
+        accessor: "sex",
       },
       {
-        Header: '',
-        accessor: 'babyBook',
+        Header: "",
+        accessor: "babyBook",
       },
     ],
     []
@@ -89,7 +89,7 @@ function genChildrenAndBabyBooksTab({
   const addNewChild = async (child: Baby) => {
     const caretakerRef = doc(db, "caregivers", child.caretakerID);
 
-    const newBaby = await addDoc(collection(db, 'babies'), {
+    const newBaby = await addDoc(collection(db, "babies"), {
       ...child,
       dob: child.dob,
       createdAt: serverTimestamp(),
@@ -109,41 +109,41 @@ function genChildrenAndBabyBooksTab({
   const editBaby = async (baby: any) => {
     const babyID = baby.id;
     delete baby.id;
-    await updateDoc(doc(db, 'babies', babyID), baby);
+    await updateDoc(doc(db, "babies", babyID), baby);
 
-    alert('Baby has been updated!');
+    alert("Baby has been updated!");
     refreshData();
   };
 
   const deleteBaby = async (baby: any) => {
     const babyID = baby.id;
 
-    await deleteDoc(doc(db, 'babies', babyID));
+    await deleteDoc(doc(db, "babies", babyID));
 
-    alert('Baby has been deleted!');
+    alert("Baby has been deleted!");
     refreshData();
   };
 
   return (
     <div>
-      <div className='absolute mt-20 border-t w-full' />
-      <div className='pt-6 px-8 flex h-full flex-col justify-left'>
-        <div className='flex flex-row justify-between'>
-          <div className='flex flex-row'>
-            <h1 className='text-2xl mb-5 font-bold'>Children</h1>
-            <h2 className='pl-4 pt-2 pb-8 text-sm text-slate-500'>
-              {babies.length + ' Children'}
+      <div className="absolute mt-20 border-t" />
+      <div className="pt-6 px-8 flex h-full flex-col justify-left">
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-row">
+            <h1 className="text-2xl mb-5 font-bold">Children</h1>
+            <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
+              {babies.length + " Children"}
             </h2>
           </div>
           <div>
             <ButtonWithIcon
               icon={<FaPlus />}
-              text='Add a Child'
+              text="Add a Child"
               onClick={() => toggleAddModal(true)}
             />
           </div>
         </div>
-        <div className='mt-4'>
+        <div className="mt-4">
           <BabiesTable
             columns={columns}
             data={data}
@@ -156,9 +156,9 @@ function genChildrenAndBabyBooksTab({
       <Modal
         show={addModal}
         content={
-          <div className='h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden'>
+          <div className="h-screen flex flex-col items-center justify-center overflow-hidden">
             <ChildModal
-              header='Add a Child'
+              header="Add a Child"
               setModal={toggleAddModal}
               onSubmit={addNewChild}
               caretakers={caregivers}
@@ -173,24 +173,12 @@ function genChildrenAndBabyBooksTab({
 export default genChildrenAndBabyBooksTab;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const itemsRef = query(collection(db, 'babies'));
+  const itemsRef = query(collection(db, "babies"));
   const babyDocs = await getDocs(itemsRef);
 
   const babies = await Promise.all(
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
-      let caretaker: {
-        firstName: string;
-        lastName: string;
-      } = { firstName: 'No Caregiver Assigned', lastName: '' };
-      try {
-        caretaker = (await getDoc(data?.caretaker))?.data() as {
-          firstName: string;
-          lastName: string;
-        };
-      } catch (e) {
-        console.log(`Couldn't get caretaker for ${data.firstName}`);
-      }
 
       const dobDate = new Timestamp(
         data.dob.seconds,
@@ -203,24 +191,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         id: babyDoc.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        name: data?.firstName ?? "" + ' ' + data?.lastName ?? "",
-        caretakerName: caretaker?.firstName + ' ' + caretaker?.lastName || null,
-        caretakerID: data?.caretaker.id,
+        name: data?.firstName ?? "" + " " + data?.lastName ?? "",
         motherName: data?.motherName || null,
-        birthday: dobDate?.toLocaleDateString('en-us') || null,
+        birthday: dobDate?.toLocaleDateString("en-us") || null,
         sex: data?.sex || null,
         babyBook: `/book/${content}?iv=${iv}`,
-        hospitalName: data?.hospitalName,
       };
     })
   );
 
-  const q = query(collection(db, 'caregivers'));
+  const q = query(collection(db, "caregivers"));
   const res = await getDocs(q);
 
   const caregivers = res.docs.map((doc) => ({
     id: doc.id,
-    name: doc.data()['firstName'] + ' ' + doc.data()['lastName'],
+    name: doc.data()["firstName"] + " " + doc.data()["lastName"],
   }));
 
   return {
