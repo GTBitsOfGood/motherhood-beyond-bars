@@ -80,7 +80,7 @@ import FAQ from "../screens/resources/FAQ";
 import Research from "../screens/resources/Research";
 import Links from "../screens/resources/Links";
 import { BabyContext } from "../providers/Baby";
-import { BabyBookProvider } from "../providers/BabyBook";
+import { BabyBookProvider, useBabyBook } from "../providers/BabyBook";
 
 export default function Navigation({
   colorScheme,
@@ -125,7 +125,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const authData = useContext(UserContext);
-  const { contact } = useContext(SettingsContext);
+  const { contact } = useContext(SettingsContext) ?? { context: null };
 
   // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
@@ -393,12 +393,13 @@ function OnboardingNavigator() {
 const Book = createNativeStackNavigator<BookParamList>();
 
 function BookNavigator() {
-  const babyCtx = useContext(BabyContext);
+  const babyContext = useContext(BabyContext);
+  const babyBookContext = useBabyBook();
 
   return (
     <Book.Navigator>
       <>
-        {!babyCtx?.id ? (
+        {!babyContext?.id ? (
           <Book.Screen
             name="BabyBookAccess"
             component={BabyBookAccess}
@@ -408,13 +409,23 @@ function BookNavigator() {
           />
         ) : (
           <>
-            <Book.Screen
-              name="StartBook"
-              component={StartBook}
-              options={{
-                header: () => <View></View>,
-              }}
-            />
+            {babyBookContext?.length === 0 ? (
+              <Book.Screen
+                name="StartBook"
+                component={StartBook}
+                options={{
+                  header: () => <View></View>,
+                }}
+              />
+            ) : (
+              <Book.Screen
+                name="BabyBook"
+                component={BabyBook}
+                options={{
+                  header: () => <View></View>,
+                }}
+              />
+            )}
             <Book.Screen
               name="SelectPicture"
               component={SelectPicture}
@@ -432,13 +443,6 @@ function BookNavigator() {
                     <Text>Picture and Caption</Text>
                   </View>
                 ),
-              }}
-            />
-            <Book.Screen
-              name="BabyBook"
-              component={BabyBook}
-              options={{
-                header: () => <View></View>,
               }}
             />
           </>

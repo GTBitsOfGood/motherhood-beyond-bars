@@ -27,7 +27,7 @@ export default function SelectPicture(this: any, { navigation, route }: Props) {
   const [caption, setCaption] = useState("");
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
-  const [img, setImg] = useState<string | null>(route.params.image);
+  const [img, setImg] = useState<string | null>(route?.params?.image || null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library

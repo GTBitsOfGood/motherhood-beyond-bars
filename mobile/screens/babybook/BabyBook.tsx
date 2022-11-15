@@ -134,10 +134,7 @@ export default function BabyBook({ navigation }: Props) {
         <ScrollView>
           {picsByMonth.map((month, i) => (
             <View key={month.month}>
-              <Text style={{ fontWeight: "bold" }}>
-                {month.month}
-                {/* {month.picsInMonth.length} */}
-              </Text>
+              <Text style={{ fontWeight: "bold" }}>{month.month}</Text>
               {month.picsInMonth.map((picInMonth) => (
                 <View>
                   <View
@@ -147,7 +144,6 @@ export default function BabyBook({ navigation }: Props) {
                       alignSelf: "flex-start",
                     }}
                   >
-                    {/* <Text>{picInMonth.length}</Text> */}
                     {picInMonth.map((a) => (
                       <TouchableHighlight
                         style={{ paddingRight: 5 }}
