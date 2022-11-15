@@ -1,4 +1,5 @@
 import { View } from "../../components/Themed";
+import { useEffect, useState } from 'react'
 import {
   Text,
   StyleSheet,
@@ -13,10 +14,29 @@ import BabyBottleSVG from "../../assets/images/babybottle";
 import CallSVG from "../../assets/images/call";
 import EmailSVG from "../../assets/images/email";
 import PhoneSVG from "../../assets/images/phone";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../../config/firebase";
+
+interface contact {
+  email: string,
+  phone: string
+}
 
 export default function ReachOut({
   navigation,
 }: SupportStackScreenProps<"ReachOut">) {
+
+  const [contact, setContact] = useState<contact>();
+  useEffect(() => {
+    const docRef = doc(db, "app", "settings");
+    getDoc(docRef).then((snapshot) => {
+      const data = snapshot.data();
+      if (data) {
+        setContact(data.contact)
+      }
+    })
+  }, [])
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -41,7 +61,7 @@ export default function ReachOut({
               <Text
                 style={{ paddingBottom: 5, paddingLeft: 20, color: "gray" }}
               >
-                (678) 404-1397
+                {contact?.phone}
               </Text>
             </View>
           </View>
@@ -58,7 +78,7 @@ export default function ReachOut({
               <Text
                 style={{ paddingBottom: 5, paddingLeft: 20, color: "gray" }}
               >
-                info@motherhoodbeyond.org
+                {contact?.email}
               </Text>
             </View>
           </View>
@@ -74,7 +94,7 @@ export default function ReachOut({
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  Linking.openURL(`tel:6784041397`);
+                  Linking.openURL(`tel:${contact?.phone}`);
                 }}
               >
                 <Text style={styles.buttonText}>Call on Google Voice</Text>
