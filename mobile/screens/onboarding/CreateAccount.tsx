@@ -79,17 +79,6 @@ export default function CreateAccount({
               <TouchableOpacity
                 style={styles.button}
                 onPress={async () => {
-                  // if (continueRef?.current) {
-                  //   const applicationVerifier = new RecaptchaVerifier(continueRef?.current, {
-                  //     'size': 'invisible',
-                  //     'callback': (response : any) => {
-                  //       // reCAPTCHA solved, allow signInWithPhoneNumber.
-                  //       console.log(response)
-                  //     }
-                  //   },auth)
-
-                  //   provider.verifyPhoneNumber(route?.params?.phone, applicationVerifier)
-                  // }
                   if (!(await isUniqueEmail(email))) {
                     alert("Email already in use. Try logging in instead.");
                   } else if (!isValidEmail(email)) {
