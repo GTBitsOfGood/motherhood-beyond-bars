@@ -15,12 +15,12 @@ import {
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
-import ChildModal from 'modals/addChildModal';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { encrypt } from '../lib/encryption';
+import ChildModal from "modals/addChildModal";
+import { useRouter } from "next/router";
 
 export type Baby = {
   id: string;

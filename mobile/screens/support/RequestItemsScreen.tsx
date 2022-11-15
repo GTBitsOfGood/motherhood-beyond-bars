@@ -12,7 +12,13 @@ import {
 import { db } from "../../config/firebase";
 import { SupportStackScreenProps } from "../../types";
 import { SettingsContext } from "../../providers/settings";
-import { arrayUnion, doc, Timestamp, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { ItemRequest } from "../../types";
 import Checkbox from "../../components/app/Checkbox";
@@ -42,49 +48,48 @@ export default function SupportScreen({ navigation }: Props) {
       return;
     }
 
-    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-
+    const caregiverDoc: any = doc(db, "caregivers", authData?.uid as string);
+    const caregiverData: any = (await getDoc(caregiverDoc)).data();
     const itemsRequested =
       settings.items
         ?.filter((_, index) => itemsCount[index])
         .map((item) => {
           return {
-            name : item.itemDisplayName
+            name: item.itemDisplayName,
           };
         }) || [];
 
-    // if (otherItems) {
-    //   itemsRequested?.push({
-    //     itemName: "other",
-    //     itemDisplayName: otherItems,
-    //     itemQuantity: 1,
-    //     itemDescription: "",
-    //     onboarding: false,
-    //     fulfilled: false,
-    //     requestedOn: Timestamp.now(),
-    //   });
-    // }
-
-    // if (additionalComments) {
-    //   itemsRequested?.push({
-    //     itemName: "additionalComments",
-    //     itemDisplayName: additionalComments,
-    //     itemQuantity: 1,
-    //     itemDescription: "",
-    //     onboarding: false,
-    //     fulfilled: false,
-    //     requestedOn: Timestamp.now(),
-    //   });
-    // }
-
-    const req : ItemRequest = {
-        created : Timestamp.now(),
-        updated : Timestamp.now(),
-        status: "Pending",
-        items: itemsRequested
+    if (otherItems) {
+      itemsRequested?.push({
+        name: "Other",
+      });
     }
 
-    updateDoc(caregiverDoc, { itemsRequested:req});
+    console.log(itemsRequested)
+
+    console.log(caregiverData)
+
+    const req: ItemRequest = {
+      created: caregiverData.itemsRequested
+        ? caregiverData.itemsRequested.created
+        : Timestamp.now(),
+      updated: Timestamp.now(),
+      additionalComments: caregiverData.itemsRequested.additionalComments
+        ? [
+            ...caregiverData.itemsRequested.additionalComments,
+            additionalComments,
+          ]
+        : [`Additional Requests/Comments:${additionalComments}, Other items: ${otherItems}`],
+      status: "Pending",
+      items: caregiverData.itemsRequested.items
+        ? [...caregiverData.itemsRequested.items, ...itemsRequested]
+        : itemsRequested,
+    };
+
+    console.log(req)
+
+    updateDoc(caregiverDoc, { itemsRequested: req });
+    console.log('ok')
   };
 
   return (

@@ -3,7 +3,7 @@ import { useTable } from "react-table";
 import Image from "next/image";
 import dots from "../public/dots.png";
 import book from "../public/book.svg";
-import Modal from "./Modal";
+import Modal from "./modal";
 import ChildModal from "modals/addChildModal";
 
 function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {

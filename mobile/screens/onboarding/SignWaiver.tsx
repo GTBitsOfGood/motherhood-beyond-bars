@@ -39,6 +39,7 @@ export default function SignWaiver({
     // get name of user to verify signature
     getDoc(doc(db, "caregivers", authData?.uid as string)).then((doc) => {
       setName(doc.data()?.firstName + " " + doc.data()?.lastName);
+      console.log(doc.data()?.firstName + " " + doc.data()?.lastName);
     });
 
     if (
@@ -123,7 +124,8 @@ export default function SignWaiver({
                 onPress={() => {
                   if (
                     isSelected &&
-                    signature.toLowerCase() === name.toLowerCase() &&
+                    signature.toLowerCase().trim() ===
+                      name.toLowerCase().trim() &&
                     date.trim()
                   ) {
                     setSignedWaivers();
@@ -138,10 +140,8 @@ export default function SignWaiver({
                       navigation.navigate("RequestItems");
                     }
                   } else {
-                    if (signature.toLowerCase() !== name.toLowerCase()) {
-                      alert(
-                        "Please sign with your first and last name: " + name
-                      );
+                    if (signature !== name) {
+                      alert("Please sign with your first and last name.");
                     } else {
                       alert(
                         "You must agree to the liability waiver before continuing."
