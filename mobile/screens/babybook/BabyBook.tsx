@@ -165,11 +165,11 @@ export default function BabyBook({ navigation }: Props) {
         </ScrollView>
       </View>
     );
-
   const timestamp = babyContext?.dob && new Date(babyContext.dob);
   const date = timestamp && timestamp.getDate();
   const month = timestamp && timestamp.getMonth() + 1;
   const year = timestamp && timestamp.getFullYear();
+
 
   return (
     <View style={styles.container}>

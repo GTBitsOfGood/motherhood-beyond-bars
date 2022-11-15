@@ -75,6 +75,8 @@ export default function CreatePassword({
                         console.log(`account creation error: ${error}`);
                         if (error.code === "auth/invalid-password") {
                           alert("Password must be at least 6 characters.");
+                        } else {
+                          alert(error.code);
                         }
                       });
                   } else {
