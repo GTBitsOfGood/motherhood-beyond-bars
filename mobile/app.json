@@ -19,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.phultquist.motherhoodbeyondbars"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +30,11 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "aceb05a9-b451-4110-8d48-fe19a4804ddc"
+      }
     }
   }
 }

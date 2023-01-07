@@ -1,6 +1,6 @@
-import ButtonWithIcon from "@components/buttonWithIcon";
+import ButtonWithIcon from "@components/ButtonWithIcon";
 import CaretakerTable from "@components/CaretakerTable";
-import Modal from "@components/modal";
+import Modal from "@components/Modal";
 import { db } from "@lib/firebase";
 import {
   addDoc,
@@ -60,7 +60,6 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
   );
 
   const data = React.useMemo(() => caregivers, [caregivers]);
-
 
   const router = useRouter();
 

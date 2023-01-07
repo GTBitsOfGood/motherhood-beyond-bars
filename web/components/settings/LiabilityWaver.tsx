@@ -17,7 +17,6 @@ export default function LiabilityWaver(props: {
   getChangesMade: () => boolean;
   setChangesMade: Dispatch<SetStateAction<boolean>>;
 }) {
-  
   const [liabilityWavers, setLiabilityWavers] =
     useState<LiabilityWaverEntry[]>();
   const [markdown, setMarkdown] = useState("");
@@ -28,48 +27,47 @@ export default function LiabilityWaver(props: {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(setChangesMade)
-      props.setChangesMade(
-        JSON.stringify(liabilityWavers) !== JSON.stringify(initialLiabilityWavers) ||
-          markdown !== initialMarkdown
-      );
+    props.setChangesMade(
+      JSON.stringify(liabilityWavers) !==
+        JSON.stringify(initialLiabilityWavers) || markdown !== initialMarkdown
+    );
 
-      const warningText =
-        "You have unsaved changes - are you sure you wish to leave this page?";
-      const handleWindowClose = (e: BeforeUnloadEvent) => {
-        if (!props.getChangesMade()) return;
-        e.preventDefault();
-        return (e.returnValue = warningText);
-      };
-      const handleBrowseAway = () => {
-        if (!props.getChangesMade) return;
-        if (window.confirm(warningText)) return;
-        throw "routeChange aborted.";
-      };
-      window.addEventListener("beforeunload", handleWindowClose);
-      router.events.on("routeChangeStart", handleBrowseAway);
-      return () => {
-        window.removeEventListener("beforeunload", handleWindowClose);
-        router.events.off("routeChangeStart", handleBrowseAway);
-      };
-    }, [markdown, liabilityWavers, initialMarkdown, initialLiabilityWavers]);
+    const warningText =
+      "You have unsaved changes - are you sure you wish to leave this page?";
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      if (!props.getChangesMade()) return;
+      e.preventDefault();
+      return (e.returnValue = warningText);
+    };
+    const handleBrowseAway = () => {
+      if (!props.getChangesMade) return;
+      if (window.confirm(warningText)) return;
+      throw "routeChange aborted.";
+    };
+    window.addEventListener("beforeunload", handleWindowClose);
+    router.events.on("routeChangeStart", handleBrowseAway);
+    return () => {
+      window.removeEventListener("beforeunload", handleWindowClose);
+      router.events.off("routeChangeStart", handleBrowseAway);
+    };
+  }, [markdown, liabilityWavers, initialMarkdown, initialLiabilityWavers]);
 
-    useEffect(() => {
-      let ignore = false;
+  useEffect(() => {
+    let ignore = false;
 
-      getDoc(doc(db, "settings/liability waver")).then((doc) => {
-        if (!ignore) {
-          setInitialMarkdown(doc?.data()?.markdown);
-          setInitialLiabilityWavers(doc?.data()?.liabilityWaver);
-          setMarkdown(doc?.data()?.markdown);
-          setLiabilityWavers(doc?.data()?.liabilityWaver);
-        }
-      });
+    getDoc(doc(db, "settings/liability waver")).then((doc) => {
+      if (!ignore) {
+        setInitialMarkdown(doc?.data()?.markdown);
+        setInitialLiabilityWavers(doc?.data()?.liabilityWaver);
+        setMarkdown(doc?.data()?.markdown);
+        setLiabilityWavers(doc?.data()?.liabilityWaver);
+      }
+    });
 
-      return () => {
-        ignore = true;
-      };
-    }, []);
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   function setInfo() {
     const researchDoc = doc(db, "settings", "liability waver");
