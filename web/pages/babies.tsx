@@ -49,8 +49,12 @@ function genChildrenAndBabyBooksTab({
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Name',
-        accessor: 'name',
+        Header: 'First Name',
+        accessor: 'firstName',
+      },
+      {
+        Header: 'Last Name',
+        accessor: 'lastName',
       },
       {
         Header: "Mother's Name",
