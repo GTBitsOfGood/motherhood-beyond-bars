@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PROJECT_ID="fucking-around-278908"
+PROJECT_ID="motherhood-beyond-bars"
 REGION="us-central1"
 SERVICE_NAME="mbb"
 
