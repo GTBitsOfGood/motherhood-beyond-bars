@@ -1,5 +1,5 @@
 # [Motherhood Beyond Bars](https://www.motherhoodbeyond.org/)
-<!-- Test -->
+
 When babies are born to women in the Georgia prison system, the mother is allotted a 48-hour stay in the hospital. After these 48 hours, the mother is returned to prison and a chosen caretaker will then come to the hospital to pick up the baby and bring it home. The nonprofit works with these caretakers to provide them with resources and supplies, but lacks a platform for the client to interact with.
 
 **We're building that platform.**
