@@ -13,8 +13,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import ConstructionSVG from "../../assets/images/construction";
 import { AntDesign } from "@expo/vector-icons";
-//@ts-ignore
-import { MarkdownView } from "react-native-markdown-view";
+import { MarkdownView } from "../onboarding/SignWaiver";
 
 type URL = {
   title: string;

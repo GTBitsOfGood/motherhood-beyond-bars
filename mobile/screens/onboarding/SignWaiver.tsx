@@ -10,12 +10,14 @@ import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";
 import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
-//@ts-ignore
-import { MarkdownView } from "react-native-markdown-view";
 import { doc, arrayUnion, Timestamp, setDoc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
+
+export function MarkdownView(props: any) {
+  return <p>{props.children ?? ""}</p>;
+}
 
 export default function SignWaiver({
   navigation,
