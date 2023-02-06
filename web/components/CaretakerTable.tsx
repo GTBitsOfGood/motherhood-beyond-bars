@@ -146,7 +146,7 @@ function CaretakerTable({
                                                 className='flex flex-col text-center p-2 hover:bg-slate-100'
                                                 onClick={() => {
                                                   confirm(
-                                                    `Are you sure you want to assign ${baby.name} to this caretaker?`
+                                                    `Are you sure you want to assign ${baby.firstName} ${baby.lastName} to this caretaker?`
                                                   ) &&
                                                     assignCaretaker(
                                                       data[i].id,
