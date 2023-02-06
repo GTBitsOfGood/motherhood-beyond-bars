@@ -1,11 +1,11 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import NextNProgress from "nextjs-progressbar";
-import SideBar from "@components/SideBar";
-import SideBarItems from "@lib/SideBarItems";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import UserProvider, { UserContext } from "@lib/contexts/userContext";
+import SideBar from '@components/SideBar';
+import UserProvider, { UserContext } from '@lib/contexts/userContext';
+import SideBarItems from '@lib/SideBarItems';
+import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+import NextNProgress from 'nextjs-progressbar';
+import { useState } from 'react';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -13,8 +13,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserProvider>
       <div>
-        <div className="flex flex-no-wrap h-screen">
-          {!router.asPath.includes("/book") && <SideBar items={SideBarItems} />}
+        <div className='flex flex-no-wrap h-screen'>
+          {!router.asPath.includes('/book') && <SideBar items={SideBarItems} />}
           <NextNProgress />
           <Component {...pageProps} />
         </div>
