@@ -53,7 +53,7 @@ export default function HouseholdInfo({
             <Text style={styles.description}>Number of Adults</Text>
             <TextInput
               style={styles.input}
-              keyboardType="numeric"
+              keyboardType="number-pad"
               onChangeText={(adults) => {
                 setAdults(adults);
               }}
@@ -61,7 +61,7 @@ export default function HouseholdInfo({
             <Text style={styles.description}>Number of Children (current)</Text>
             <TextInput
               style={styles.input}
-              keyboardType="numeric"
+              keyboardType="number-pad"
               onChangeText={(children) => {
                 setChildren(children);
               }}

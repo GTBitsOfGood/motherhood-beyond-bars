@@ -34,7 +34,7 @@ export default function GetStarted({
       </Text>
       <Text style={styles.description}>
         Before we get started, we'll need to collect some information to best
-        meet your needs. If you have any questions, please email us at{" "}
+        meet your needs. If you have any questions, please email us at {"test@email.com"}
         <Text style={{ fontWeight: "bold" }}>{contact?.email}</Text> or
         call us at <Text style={{ fontWeight: "bold" }}>{contact?.phone}</Text>.
       </Text>
