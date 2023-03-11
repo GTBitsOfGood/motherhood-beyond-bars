@@ -103,7 +103,7 @@ export default function FAQ(props: {
                     <div className="flex flex-col w-4/5">
                       <input
                         className={`${
-                          faq.error
+                          faq.error && faq.question.length==0
                             ? ' border-[#FF3939] border-[1px]'
                             : ' border-[#D9D9D9] border-[1px]'
                         } w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
@@ -117,7 +117,7 @@ export default function FAQ(props: {
                         }}
                         placeholder="What's the answer to the life, universe, and everything?"
                       />
-                      {faq.error ? (
+                      {faq.error && faq.question.length==0 ? (
                         <div className="text-sm text-[#FF3939] flex align-middle">
                           <span>
                             <AiFillWarning className="fill-[#FF3939]"></AiFillWarning>
@@ -139,7 +139,7 @@ export default function FAQ(props: {
                     <div className="flex flex-col w-4/5">
                       <input
                         className={`${
-                          faq.error
+                          faq.error && faq.answer.length==0
                             ? ' border-[#FF3939] border-[1px]'
                             : ' border-[#D9D9D9] border-[1px]'
                         } w-full bg-[#FAFBFC] rounded py-2 px-2 focus:outline-0 min-h-[40px]`}
@@ -153,7 +153,7 @@ export default function FAQ(props: {
                         }}
                         placeholder="42"
                       ></input>
-                      {faq.error && (
+                      {faq.error && faq.answer.length==0 && (
                         <div className="text-sm text-[#FF3939] flex align-middle">
                           <span>
                             <AiFillWarning className="fill-[#FF3939]"></AiFillWarning>

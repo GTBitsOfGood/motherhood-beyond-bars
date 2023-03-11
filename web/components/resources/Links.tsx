@@ -33,7 +33,6 @@ export default function Links(props: {
 
   useEffect(() => {
     props.setChangesMade(JSON.stringify(userChanges) !== JSON.stringify(links));
-
     const warningText =
       "You have unsaved changes - are you sure you wish to leave this page?";
     const handleWindowClose = (e: BeforeUnloadEvent) => {
@@ -42,7 +41,7 @@ export default function Links(props: {
       return (e.returnValue = warningText);
     };
     const handleBrowseAway = () => {
-      if (!props.getChangesMade) return;
+      if (!props.getChangesMade()) return;
       if (window.confirm(warningText)) return;
       throw "routeChange aborted.";
     };
