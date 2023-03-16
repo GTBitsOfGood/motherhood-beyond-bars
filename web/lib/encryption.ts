@@ -1,8 +1,6 @@
 import crypto from 'crypto';
-
 const encrypt = (text: string) => {
   const iv = crypto.randomBytes(16);
-
   const cipher = crypto.createCipheriv(
     'aes-256-ctr',
     process.env.SECRET_KEY!,

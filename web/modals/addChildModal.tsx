@@ -23,7 +23,6 @@ function ChildModal({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-
   return (
     <>
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">

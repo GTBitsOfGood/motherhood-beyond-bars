@@ -10,8 +10,13 @@ const SideBar = ({ babyBook } : Props) => {
   const [currentMonth, setCurrentMonth] = useState(-1)
   useEffect(() => {
     const setDefaultState = () => {
-      setCurrentMonth(babyBook[0].months[0].month)
-      setCurrentYear(babyBook[0].year)
+        if(babyBook[0] != undefined) {
+          setCurrentMonth(babyBook[0].months[0].month)
+          setCurrentYear(babyBook[0].year)
+        } else {
+          setCurrentMonth(0);
+          setCurrentYear(0);
+        }
     }
     const onHashChange = (url = window.location.pathname + window.location.hash) => {
       const hash = url.substring(url.indexOf('#') + 1)
