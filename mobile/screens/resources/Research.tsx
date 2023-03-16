@@ -13,7 +13,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import ConstructionSVG from "../../assets/images/construction";
 import { AntDesign } from "@expo/vector-icons";
-import { MarkdownView } from "../onboarding/SignWaiver";
+//@ts-ignore
+import { MarkdownView } from "react-native-markdown-view";
 
 type URL = {
   title: string;
@@ -96,7 +97,7 @@ export default function Research({
                       Linking.openURL(url.url);
                     }}
                     style={styles.button}
-                    key={url.url}
+                    key={index}
                   >
                     <Text
                       style={{

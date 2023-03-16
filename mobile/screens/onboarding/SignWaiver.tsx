@@ -10,6 +10,8 @@ import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";
 import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
+//@ts-ignore
+import { MarkdownView } from "react-native-markdown-view";
 import { doc, arrayUnion, Timestamp, setDoc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
@@ -41,7 +43,6 @@ export default function SignWaiver({
     // get name of user to verify signature
     getDoc(doc(db, "caregivers", authData?.uid as string)).then((doc) => {
       setName(doc.data()?.firstName + " " + doc.data()?.lastName);
-      console.log(doc.data()?.firstName + " " + doc.data()?.lastName);
     });
 
     if (
@@ -142,7 +143,11 @@ export default function SignWaiver({
                     }
                   } else {
                     if (signature !== name) {
-                      alert("Please sign with your first and last name.");
+                      alert(
+                        "Please sign with your first and last name (" +
+                          name +
+                          ")"
+                      );
                     } else {
                       alert(
                         "You must agree to the liability waiver before continuing."
