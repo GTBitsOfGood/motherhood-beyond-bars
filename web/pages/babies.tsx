@@ -1,6 +1,6 @@
 import BabiesTable from '@components/BabiesTable';
-import ButtonWithIcon from '@components/ButtonWithIcon';
-import Modal from '@components/Modal';
+import ButtonWithIcon from '@components/buttonWithIcon';
+import Modal from '@components/modal';
 import { db } from '@lib/firebase';
 import {
   addDoc,
@@ -83,7 +83,7 @@ function genChildrenAndBabyBooksTab({
   const [addModal, toggleAddModal] = useState(false);
 
   const addNewChild = async (child: Baby) => {
-    const caretakerRef = doc(db, 'caregivers', child.caretakerID);
+    const caretakerRef = doc(db, 'caregivers', child.caretakerID as string);
 
     const newBaby = await addDoc(collection(db, 'babies'), {
       ...child,
@@ -176,11 +176,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     babyDocs?.docs.map(async (babyDoc: any) => {
       const data = babyDoc.data() as Baby;
 
-      const dobDate = new Timestamp(
-        data.dob.seconds,
-        data.dob.nanoseconds
-      ).toDate();
-
       const { iv, content } = encrypt(babyDoc.id);
 
       return {
@@ -189,7 +184,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         lastName: data.lastName,
         name: data?.firstName ?? '' + ' ' + data?.lastName ?? '',
         motherName: data?.motherName || null,
-        birthday: dobDate?.toLocaleDateString('en-us') || null,
+        birthday: data?.dob || null,
         sex: data?.sex || null,
         babyBook: `/book/${content}?iv=${iv}`,
       };

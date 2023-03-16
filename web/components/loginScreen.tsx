@@ -9,8 +9,8 @@ import React, { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiFillGoogleCircle } from "react-icons/ai";
 
-import ButtonWithIcon from "./ButtonWithIcon";
-import ErrorAlert from "./ErrorAlert";
+import ButtonWithIcon from "./buttonWithIcon";
+import ErrorAlert from "./errorAlert";
 import MBBLogo from "./mbbLogo";
 
 type AuthFormValues = {
@@ -104,9 +104,6 @@ function LoginScreen() {
                         className="block font-opensans text-base w-80 bg-gray-100 border-1 border-gray-300 p-2"
                         type="password"
                       />
-                      <div className="block text-sm float-right text-blue-600 cursor-pointer p-2">
-                        Forgot Password
-                      </div>
                     </div>
                     <br />
                     <button

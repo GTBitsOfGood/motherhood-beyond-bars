@@ -53,7 +53,7 @@ export default function HouseholdInfo({
             <Text style={styles.description}>Number of Adults</Text>
             <TextInput
               style={styles.input}
-              keyboardType="numeric"
+              keyboardType="number-pad"
               onChangeText={(adults) => {
                 setAdults(adults);
               }}
@@ -61,7 +61,7 @@ export default function HouseholdInfo({
             <Text style={styles.description}>Number of Children (current)</Text>
             <TextInput
               style={styles.input}
-              keyboardType="numeric"
+              keyboardType="number-pad"
               onChangeText={(children) => {
                 setChildren(children);
               }}
@@ -80,6 +80,11 @@ export default function HouseholdInfo({
                 <TouchableOpacity
                   style={styles.button}
                   onPress={async () => {
+                    let numreg = /^[0-9]+$/;
+                    if (!numreg.test(adults) || !numreg.test(children)) {
+                      alert("Please enter a valid number for both inputs.");
+                      return;
+                    }
                     setHousehold();
                     navigation.push("SignWaiver", {
                       unsignedWaivers: await getWaivers(),

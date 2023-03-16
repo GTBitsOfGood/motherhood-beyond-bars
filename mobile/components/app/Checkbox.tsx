@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     borderColor: "#304CD1",
     backgroundColor: "transparent",
     marginRight: 8,
+    zIndex: 0.5
   },
   checkboxChecked: {
     backgroundColor: "#304CD1",
