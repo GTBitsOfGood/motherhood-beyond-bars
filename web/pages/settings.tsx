@@ -7,6 +7,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsFillPencilFill } from "react-icons/bs";
 
+const isValidPhoneNumber = (phone: string) =>
+  /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(phone);
+
 type SettingsPhone = {
   phoneNumber: string;
 };
@@ -22,6 +25,11 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
 
   const onSubmit = handleSubmit(async (data) => {
     const newNumber = data.phoneNumber;
+    console.log("test")
+    if (!isValidPhoneNumber(newNumber)) {
+      alert("Invalid phone number");
+      return;
+    }
 
     const settingsRef = doc(db, "app", "settings");
 

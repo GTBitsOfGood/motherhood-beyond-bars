@@ -17,9 +17,9 @@ import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
 
-// export function MarkdownView(props: any) {
-//   return <p>{props.children || " hi "}</p>;
-// }
+export function MarkdownView(props: any) {
+  return <Text>{props.children ?? ""}</Text>;
+}
 
 export default function SignWaiver({
   navigation,
@@ -74,7 +74,6 @@ export default function SignWaiver({
         { merge: true }
       );
   }
-
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -89,7 +88,7 @@ export default function SignWaiver({
                 maxHeight: "60%",
               }}
             >
-              <MarkdownView
+            <MarkdownView
                 styles={{
                   heading1: {
                     fontSize: 24,
@@ -133,7 +132,7 @@ export default function SignWaiver({
                   ) {
                     setSignedWaivers();
 
-                    if (unsigned.length > 0) {
+                    if (unsigned.length > 1) {
                       const newWaivers = Array.from(unsigned);
                       newWaivers.shift();
                       navigation.push("SignWaiver", {
