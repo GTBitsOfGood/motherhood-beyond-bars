@@ -45,6 +45,7 @@ export default function RequestedItems({
   const toggleItem = (index: number) => {
     const newItemsCount = [...itemsCount];
     newItemsCount[index] = !newItemsCount[index];
+    console.log(newItemsCount);
     setItemsCount(newItemsCount);
   };
 
@@ -175,7 +176,7 @@ export default function RequestedItems({
             <View style={styles.item}>
               <View style={styles.checkboxContainer}>
                 <Checkbox
-                  onPress={() => toggleItem(length - 1)}
+                  onPress={() => {toggleItem(length - 1);}}
                   checked={itemsCount[length - 1]}
                 />
                 <Text style={styles.itemHeader}>Other</Text>

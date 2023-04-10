@@ -80,6 +80,11 @@ export default function HouseholdInfo({
                 <TouchableOpacity
                   style={styles.button}
                   onPress={async () => {
+                    let numreg = /^[0-9]+$/;
+                    if (!numreg.test(adults) || !numreg.test(children)) {
+                      alert("Please enter a valid number for both inputs.");
+                      return;
+                    }
                     setHousehold();
                     navigation.push("SignWaiver", {
                       unsignedWaivers: await getWaivers(),

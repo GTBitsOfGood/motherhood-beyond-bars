@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useTable } from "react-table";
 import book from "../public/book.svg";
 import dots from "../public/dots.png";
-import Modal from "./Modal";
+import Modal from "./modal";
 
 function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =

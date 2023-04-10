@@ -149,12 +149,13 @@ export default function SupportScreen({ navigation }: Props) {
             />
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
-                style={[styles.button, { width: 350 }]}
+                disabled={itemsCount.every(v => v === false) ? true : false}
+                style={itemsCount.every(v => v === false) ? [styles.disabledButton, { width: 350 }] : [styles.button, { width: 350 }]}
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}
               >
-                <Text style={styles.buttonText}>Request</Text>
+                <Text style={itemsCount.every(v => v === false) ? styles.disabledButtonText : styles.buttonText}>Request</Text>
               </TouchableOpacity>
             </View>
             <Text style={styles.footer}>
@@ -187,9 +188,9 @@ export default function SupportScreen({ navigation }: Props) {
                   <TouchableOpacity
                     style={[styles.button, { width: 350 }]}
                     onPress={() => {
-                      requestItems();
-                      setModalVisible(!modalVisible);
-                      navigation.navigate("ReachOut");
+                        requestItems();
+                        setModalVisible(!modalVisible);
+                        navigation.navigate("ReachOut");
                     }}
                   >
                     <Text style={styles.buttonText}>Close</Text>
@@ -215,8 +216,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
   },
+  disabledButton: {
+    borderWidth: 1,
+    borderColor: "#808080",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+  },
   buttonText: {
     color: "#304CD1",
+    padding: 10,
+    fontWeight: "500",
+  },
+  disabledButtonText: {
+    color: "#808080",
     padding: 10,
     fontWeight: "500",
   },

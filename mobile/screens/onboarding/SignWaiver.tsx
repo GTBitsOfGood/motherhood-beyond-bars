@@ -10,13 +10,15 @@ import { Text, View } from "../../components/Themed";
 import { OnboardingStackScreenProps, Waiver } from "../../types";
 import { db } from "../../config/firebase";
 import React, { useContext, useEffect, useState } from "react";
+//@ts-ignore
+import { MarkdownView } from "react-native-markdown-view";
 import { doc, arrayUnion, Timestamp, setDoc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../providers/User";
 import { getWaivers } from "../../lib/getWaivers";
 import Checkbox from "../../components/app/Checkbox";
 
 export function MarkdownView(props: any) {
-  return <p>{props.children ?? ""}</p>;
+  return <Text>{props.children ?? ""}</Text>;
 }
 
 export default function SignWaiver({
@@ -41,7 +43,6 @@ export default function SignWaiver({
     // get name of user to verify signature
     getDoc(doc(db, "caregivers", authData?.uid as string)).then((doc) => {
       setName(doc.data()?.firstName + " " + doc.data()?.lastName);
-      console.log(doc.data()?.firstName + " " + doc.data()?.lastName);
     });
 
     if (
@@ -73,7 +74,6 @@ export default function SignWaiver({
         { merge: true }
       );
   }
-
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -88,7 +88,7 @@ export default function SignWaiver({
                 maxHeight: "60%",
               }}
             >
-              <MarkdownView
+            <MarkdownView
                 styles={{
                   heading1: {
                     fontSize: 24,
@@ -132,7 +132,7 @@ export default function SignWaiver({
                   ) {
                     setSignedWaivers();
 
-                    if (unsigned.length > 0) {
+                    if (unsigned.length > 1) {
                       const newWaivers = Array.from(unsigned);
                       newWaivers.shift();
                       navigation.push("SignWaiver", {
@@ -143,7 +143,11 @@ export default function SignWaiver({
                     }
                   } else {
                     if (signature !== name) {
-                      alert("Please sign with your first and last name.");
+                      alert(
+                        "Please sign with your first and last name (" +
+                          name +
+                          ")"
+                      );
                     } else {
                       alert(
                         "You must agree to the liability waiver before continuing."

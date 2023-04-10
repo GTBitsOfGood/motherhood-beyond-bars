@@ -9,8 +9,8 @@ import React, { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiFillGoogleCircle } from "react-icons/ai";
 
-import ButtonWithIcon from "./ButtonWithIcon";
-import ErrorAlert from "./ErrorAlert";
+import ButtonWithIcon from "./buttonWithIcon";
+import ErrorAlert from "./errorAlert";
 import MBBLogo from "./mbbLogo";
 
 type AuthFormValues = {

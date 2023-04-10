@@ -23,6 +23,7 @@ export default function RecoverPassword({
   const [input, setInput] = useState("");
   const [reset, setReset] = useState(false);
   const [type, setType] = useState("");
+  const [error, setError] = useState(false)
 
   const sendEmail = (email: string) => {
     console.log("reset email sent to " + email);
@@ -32,6 +33,7 @@ export default function RecoverPassword({
       })
       .catch(function (e) {
         console.log(e);
+        setError(true);
       });
   };
 
@@ -122,6 +124,7 @@ export default function RecoverPassword({
             )}
           </View>
         </TouchableWithoutFeedback>
+        <Text style={[error ? styles.errorText : styles.hidden]}>There was an error in recovering your password. You may have inputted an incorrect email or phone number.</Text>
       </ScrollView>
     </View>
   );
@@ -146,6 +149,15 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     fontSize: 14,
     paddingBottom: 8,
+  },
+  errorText: {
+    paddingTop: 12,
+    fontSize: 14,
+    color: "#FF0000",
+    padding: 20,
+  },
+  hidden: {
+    display: "none"
   },
   input: {
     backgroundColor: "#FAFBFC",

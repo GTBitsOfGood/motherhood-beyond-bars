@@ -145,7 +145,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     content: params?.babyId as string,
     iv: query.iv as string,
   });
-
   const babyRef = doc(db, 'babies', babyId as string);
   const baby = await getDoc(babyRef);
   const babyData = baby.data() as Baby;

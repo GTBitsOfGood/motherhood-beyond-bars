@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     fontSize: 16,
+    width: 300
   },
   FAQText: {
     fontSize: 24,
