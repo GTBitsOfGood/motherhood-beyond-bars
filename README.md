@@ -65,3 +65,15 @@ firebase emulators:start --only functions
 ```
 
 Use another terminal session to make requests, or use Postman.
+
+## Getting Started: Docker
+
+Both the application (web & mobile) can be ran directly in a development environment via `docker-compose`. This may simplify build environment setup as only Docker & Docker-compose need to be installed.
+
+To run both the mobile & web appplications, simply type `docker-compose up` in the root directory.
+
+To run only the web application, type `docker-compose up web` in the terminal in the same main directory
+
+To run only the mobile application, type `docker-compose up mobile` in the terminal in the same main directory
+
+Both appplications in the docker environment have support for live-reloading of changes made on the host machine
