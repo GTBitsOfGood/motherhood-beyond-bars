@@ -1,6 +1,6 @@
-import ButtonWithIcon from "@components/ButtonWithIcon";
+import ButtonWithIcon from "@components/buttonWithIcon";
 import CaretakerTable from "@components/CaretakerTable";
-import Modal from "@components/Modal";
+import Modal from "@components/modal";
 import { db } from "@lib/firebase";
 import {
   addDoc,
@@ -128,9 +128,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         ? data.createdAt.toDate().toLocaleDateString()
         : null,
       assigned: child ? true : false,
-      address: `${data.address}, ${
-        data.apartment ? `${data.apartment}, ` : ""
-      }${data.city}, ${data.state}`,
+      address: `${data.address}, ${data.apartment ? `${data.apartment}, ` : ""
+        }${data.city}, ${data.state}`,
       prefferedCommunication: data.prefferedCommunication || "N/A",
       childName: child ? child.firstName + " " + child.lastName : null,
       houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,

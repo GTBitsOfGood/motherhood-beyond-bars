@@ -1,6 +1,6 @@
 import BabiesTable from '@components/BabiesTable';
-import ButtonWithIcon from '@components/ButtonWithIcon';
-import Modal from '@components/Modal';
+import ButtonWithIcon from '@components/buttonWithIcon';
+import Modal from '@components/modal';
 import { db } from '@lib/firebase';
 import {
   addDoc,
