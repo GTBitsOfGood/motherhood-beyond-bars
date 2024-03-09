@@ -4,7 +4,6 @@ import { useContext } from "react";
 
 const Home = () => {
   const { admin, user } = useContext(UserContext);
-
   if (!admin) {
     return <LoginScreen />;
   }
