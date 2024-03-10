@@ -161,12 +161,12 @@ function RootNavigator() {
               title: "Welcome",
               headerRight: () =>
                 !authData?.uid ? null : (
-                  // <Button
-                  //   title="Logout"
-                  //   onPress={() => {
-                  //     signOut(auth);
-                  //   }}
-                  // />
+                  <Button
+                    title="Logout"
+                    onPress={() => {
+                      signOut(auth);
+                    }}
+                  />
                 ),
               headerLeft: () => (
                 <Button
