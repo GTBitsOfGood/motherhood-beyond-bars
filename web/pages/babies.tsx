@@ -182,6 +182,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ).toDate();
 
       const { iv, content } = encrypt(babyDoc.id);
+      
 
       return {
         id: babyDoc.id,
