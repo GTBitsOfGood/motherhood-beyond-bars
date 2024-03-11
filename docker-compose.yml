@@ -1,7 +1,7 @@
 version: "3.8"
-services: 
+services:
   web:
-    container_name: motherhood-beyond-bars-web 
+    container_name: motherhood-beyond-bars-web
     build:
       context: ./web
       target: dev
@@ -15,14 +15,14 @@ services:
       - /app/.next
     ports:
       - 3000:3000
-  
+
   mobile:
     container_name: motherhood-beyond-bars-mobile
     build:
       context: ./mobile
       target: dev
     restart: always
-    command: npm start 
+    command: npm start
     platform: linux/amd64
     environment:
       - NODE_ENV=development
