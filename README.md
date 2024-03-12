@@ -21,7 +21,7 @@ This project is organized as a monorepo. This means that while there are essenti
 
 ## Your development environment
 
-> Node 18.19.1, Expo 50
+> Node 16.13.1, Expo 50
 
 ### Firebase
 
