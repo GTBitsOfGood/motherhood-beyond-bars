@@ -2,15 +2,17 @@ import React, { useContext } from "react";
 import { auth } from "@lib/firebase";
 import { signOut } from "firebase/auth";
 import { UserContext } from "@lib/contexts/userContext";
+import LoginScreen from "./loginScreen";
+import { useRouter } from "next/router";
 
 function SignOutButton() {
+  const router = useRouter();
   const { user } = useContext(UserContext);
 
   const logout = () => {
     signOut(auth);
+    router.push("/");
   };
-
-  if (!user) return null;
 
   return (
     <button
