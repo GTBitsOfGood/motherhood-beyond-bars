@@ -1,11 +1,13 @@
 import crypto from 'crypto';
 
+const key = crypto.createHash('sha256').update(String(process.env.SECRET_KEY)).digest('base64').substr(0, 32);
+
 const encrypt = (text: string) => {
   const iv = crypto.randomBytes(16);
 
   const cipher = crypto.createCipheriv(
     'aes-256-ctr',
-    process.env.SECRET_KEY!,
+    key!,
     iv
   );
 
@@ -20,7 +22,7 @@ const encrypt = (text: string) => {
 const decrypt = (hash: { iv: string; content: string }) => {
   const decipher = crypto.createDecipheriv(
     'aes-256-ctr',
-    process.env.SECRET_KEY!,
+    key!,
     Buffer.from(hash.iv, 'hex')
   );
 
