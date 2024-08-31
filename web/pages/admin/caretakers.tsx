@@ -1,21 +1,16 @@
-import ButtonWithIcon from "@components/buttonWithIcon";
 import CaretakerTable from "@components/CaretakerTable";
-import Modal from "@components/modal";
 import { db } from "@lib/firebase";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
   query,
-  serverTimestamp,
 } from "firebase/firestore";
 import { GetServerSideProps } from "next";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
-import { FaPlus } from "react-icons/fa";
 
 export enum CommunicationType {
   "N/A" = "N/A",
@@ -38,7 +33,11 @@ type Caretaker = {
   liabilityWaiver: string;
 };
 
-function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
+export default function genCaretakersTab({
+  caregivers: caretakers,
+}: {
+  caregivers: any[];
+}) {
   const [caregivers, setCaretakers] = useState<Caretaker[]>(caretakers);
 
   const columns = useMemo(
@@ -98,8 +97,6 @@ function genCaretakersTab({ caregivers: caretakers }: { caregivers: any[] }) {
   );
 }
 
-export default genCaretakersTab;
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const itemsRef = query(collection(db, "caregivers"));
   const caregiverDocs = await getDocs(itemsRef);
@@ -128,12 +125,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         ? data.createdAt.toDate().toLocaleDateString()
         : null,
       assigned: child ? true : false,
-      address: `${data.address}, ${data.apartment ? `${data.apartment}, ` : ""
-        }${data.city}, ${data.state}`,
+      address: `${data.address}, ${
+        data.apartment ? `${data.apartment}, ` : ""
+      }${data.city}, ${data.state}`,
       prefferedCommunication: data.prefferedCommunication || "N/A",
       childName: child ? child.firstName + " " + child.lastName : null,
       houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,
-      liabilityWaiver: data.signedWaivers?.at(-1).id || null,
+      // liabilityWaiver: data.signedWaivers?.at(-1).id || null,
+      liabilityWaiver: "",
     });
   });
 

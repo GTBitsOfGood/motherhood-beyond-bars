@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ItemRequestsTable from "@components/itemRequestsTable/ItemRequestsTable";
-import { GetServerSideProps } from "next";
 import Ellipse from "@components/Icons/Ellipse";
 import DownChevron from "@components/Icons/DownChevron";
 import Line31 from "@components/Icons/Line31";
@@ -45,7 +44,7 @@ export interface Waiver {
 export interface Item {
   name: string;
   gender?: string;
-  size?:string;
+  size?: string;
 }
 
 export interface ItemRequest {
@@ -56,7 +55,7 @@ export interface ItemRequest {
   items: Item[];
 }
 
-function genItemRequestsTab() {
+export default function genItemRequestsTab() {
   const [selectedSectionIndex, setSelectedSectionIndex] = useState<number>(0);
   const [data, setData] = useState<Caregiver[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -295,5 +294,3 @@ function genItemRequestsTab() {
     </div>
   );
 }
-
-export default genItemRequestsTab;

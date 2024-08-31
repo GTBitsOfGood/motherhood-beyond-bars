@@ -7,27 +7,27 @@ import settings_icon from "../public/settings_icon.png";
 const SideBarItems = [
   {
     name: "Caretakers",
-    route: "/caretakers",
+    route: "/admin/caretakers",
     icon: caretakers_icon,
   },
   {
     name: "Children & Baby Books",
-    route: "/babies",
+    route: "/admin/babies",
     icon: children_and_baby_books_icon,
   },
   {
     name: "Item Requests",
-    route: "/item-requests",
+    route: "/admin/item-requests",
     icon: item_requests_icon,
   },
   {
     name: "Resource Library",
-    route: "/resource-library",
+    route: "/admin/resource-library",
     icon: resource_library_icon,
   },
   {
     name: "Settings",
-    route: "/settings",
+    route: "/admin/settings",
     icon: settings_icon,
   },
 ];

@@ -1,12 +1,8 @@
-import LoginScreen from "@components/loginScreen";
 import { UserContext } from "@lib/contexts/userContext";
 import { useContext } from "react";
 
 const Home = () => {
-  const { admin, user } = useContext(UserContext);
-  if (!admin) {
-    return <LoginScreen />;
-  }
+  const { user } = useContext(UserContext);
 
   return (
     <div className="w-full h-full flex flex-col">

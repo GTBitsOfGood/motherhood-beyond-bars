@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { db } from "@lib/firebase";
 
-import { Caregiver } from "pages/item-requests";
+import { Caregiver } from "pages/admin/item-requests";
 
 function SideBar(props: any) {
   const router = useRouter();

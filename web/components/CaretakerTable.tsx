@@ -130,7 +130,7 @@ function CaretakerTable({ columns, data, onDelete }: any) {
                                         </div>
                                         <div key={key} className="col-span-2">
                                           {key === "Liability Waiver" ? (
-                                            <Link href={`/waivers/${val}`}>
+                                            <Link href={`/admin/waivers/${val}`}>
                                               <a className="text-sm text-blue-400">
                                                 Link
                                               </a>

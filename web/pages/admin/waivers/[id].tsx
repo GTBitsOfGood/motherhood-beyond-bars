@@ -36,8 +36,8 @@ export default function WaiverPage({ waiver }: Props) {
 
   return (
     <div className="p-10">
-      <Link href="/waivers" passHref>
-        <a className="hover:underline" href="/waivers">
+      <Link href="/admin/waivers" passHref>
+        <a className="hover:underline" href="/admin/waivers">
           Back
         </a>
       </Link>
