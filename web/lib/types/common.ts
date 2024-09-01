@@ -14,3 +14,8 @@ export interface Waiver {
   name: string;
   order: number;
 }
+
+export type AuthFormValues = {
+  email: string;
+  password: string;
+};

@@ -1,6 +1,6 @@
 import { db } from "db/firebase";
 import { formatDoc } from "db/firebase/getDoc";
-import { Waiver } from "@lib/types";
+import { Waiver } from "@lib/types/common";
 import {
   collection,
   doc,
