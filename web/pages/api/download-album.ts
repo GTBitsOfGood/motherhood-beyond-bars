@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { decrypt } from '@lib/encryption';
-import { db } from '@lib/firebase';
+import { decrypt } from '@lib/utils/encryption';
+import { db } from 'db/firebase';
 import {
   collection,
   doc,

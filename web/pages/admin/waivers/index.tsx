@@ -1,6 +1,6 @@
-import { formatDate } from "@lib/date";
-import { db } from "@lib/firebase";
-import { formatDoc } from "@lib/firebase/getDoc";
+import { formatDate } from "@lib/utils/date";
+import { db } from "db/firebase";
+import { formatDoc } from "db/firebase/getDoc";
 import { Waiver } from "@lib/types";
 import {
   addDoc,

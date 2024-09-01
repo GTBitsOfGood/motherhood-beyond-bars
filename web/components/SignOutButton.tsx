@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from "@lib/firebase";
+import { auth } from "db/firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/router";
 

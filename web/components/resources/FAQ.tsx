@@ -3,7 +3,7 @@ import { doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import UpChevron from '@components/Icons/UpChevron';
 import DownChevron from '@components/Icons/DownChevron';
 import TrashCan from '@components/Icons/TrashCan';
-import { db } from '@lib/firebase';
+import { db } from 'db/firebase';
 import { AiFillWarning } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 

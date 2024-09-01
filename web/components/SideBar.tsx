@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { collection, query, onSnapshot } from "firebase/firestore";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 
 import { Caregiver } from "pages/admin/item-requests";
 

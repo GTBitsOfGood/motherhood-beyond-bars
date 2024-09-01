@@ -1,5 +1,5 @@
 import ButtonWithIcon from "@components/buttonWithIcon";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Link from "next/link";

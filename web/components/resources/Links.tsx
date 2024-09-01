@@ -1,4 +1,4 @@
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import UpChevron from "@components/Icons/UpChevron";

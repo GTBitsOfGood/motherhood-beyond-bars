@@ -8,7 +8,7 @@ import React, { useContext } from "react";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { auth } from "@lib/firebase";
+import { auth } from "db/firebase";
 import { UserContext } from "@lib/contexts/userContext";
 
 import ButtonWithIcon from "@components/buttonWithIcon";

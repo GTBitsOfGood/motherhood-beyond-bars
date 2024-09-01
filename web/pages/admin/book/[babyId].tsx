@@ -2,7 +2,7 @@ import PictureArray from "@components/BabyBook/PictureArray";
 import PictureModal from "@components/BabyBook/PictureModal";
 import SideBar from "@components/BabyBook/Sidebar";
 import TopBar from "@components/BabyBook/Topbar";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 import {
   collection,
   doc,
@@ -16,7 +16,7 @@ import {
 import { GetServerSideProps } from "next";
 import { Baby } from "pages/admin/babies";
 import { useState } from "react";
-import { decrypt } from "@lib/encryption";
+import { decrypt } from "@lib/utils/encryption";
 
 export default function BabyBook({
   babyBook,

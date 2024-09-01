@@ -12,7 +12,7 @@ import {
   setDoc,
   Timestamp,
 } from "firebase/firestore";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 
 export interface Caregiver {
   firstName: string;

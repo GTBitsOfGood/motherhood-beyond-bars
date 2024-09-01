@@ -1,5 +1,5 @@
 import CaretakerTable from "@components/CaretakerTable";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 import {
   collection,
   deleteDoc,

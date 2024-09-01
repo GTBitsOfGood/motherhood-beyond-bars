@@ -1,4 +1,4 @@
-import { monthIndexToString } from "@lib/date";
+import { monthIndexToString } from "@lib/utils/date";
 import { useRouter } from "next/router";
 import { BabyBookYear, BabyBookMonth } from "pages/admin/book/[babyId]";
 import { useEffect, useState } from "react";

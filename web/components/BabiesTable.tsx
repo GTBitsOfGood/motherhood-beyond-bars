@@ -1,4 +1,4 @@
-import ChildModal from "modals/addChildModal";
+import ChildModal from "@components/modals/addChildModal";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useTable } from "react-table";

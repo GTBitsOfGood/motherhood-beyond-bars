@@ -3,7 +3,7 @@ import DownChevron from "@components/Icons/DownChevron";
 import RightChevronBlue from "@components/Icons/RightChevronBlue";
 import { useState } from "react";
 import { Timestamp, setDoc, doc } from "firebase/firestore";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 import { Caregiver, Item } from "pages/admin/item-requests";
 
 export default function ItemRequestRow({

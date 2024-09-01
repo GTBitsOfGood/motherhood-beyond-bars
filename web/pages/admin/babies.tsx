@@ -1,7 +1,7 @@
 import BabiesTable from "@components/BabiesTable";
 import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 import {
   addDoc,
   collection,
@@ -14,12 +14,12 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import ChildModal from "modals/addChildModal";
+import ChildModal from "@components/modals/addChildModal";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { encrypt } from "@lib/encryption";
+import { encrypt } from "@lib/utils/encryption";
 
 export type Baby = {
   id: string;
