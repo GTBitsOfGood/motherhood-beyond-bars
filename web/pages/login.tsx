@@ -1,24 +1,15 @@
-import {
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
-
 import React, { useContext } from "react";
 import { AiFillGoogleCircle } from "react-icons/ai";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import { auth } from "db/firebase";
+import { loginWithCredentials, loginWithGoogle } from "db/actions/Login";
+
+import { AuthFormValues } from "@lib/types/common";
 import { UserContext } from "@lib/contexts/userContext";
 
 import ButtonWithIcon from "@components/buttonWithIcon";
 import ErrorAlert from "@components/errorAlert";
 import MBBLogo from "@components/mbbLogo";
-
-type AuthFormValues = {
-  email: string;
-  password: string;
-};
 
 export default function LoginScreen() {
   const { admin: userAdmin } = useContext(UserContext);
@@ -27,21 +18,6 @@ export default function LoginScreen() {
   if (userAdmin) {
     return null;
   }
-
-  const loginWithCredentials: SubmitHandler<AuthFormValues> = async (data) => {
-    try {
-      // TODO redirect user to correct home page with /admin or /caregiver
-      // probably by checking if the login was successful then using router to route
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-    } catch (error) {
-      console.error(error);
-      alert("Invalid credentials!");
-    }
-  };
-
-  const loginWithGoogle = async () => {
-    await signInWithPopup(auth, new GoogleAuthProvider());
-  };
 
   return (
     <div className="flex absolute bg-white overflow-hidden">
