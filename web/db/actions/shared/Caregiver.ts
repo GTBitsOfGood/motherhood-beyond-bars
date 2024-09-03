@@ -1,9 +1,12 @@
 import { doc, updateDoc } from "firebase/firestore";
 
-import { db } from "db/firebase";
 import { Caregiver } from "@lib/types/users";
+import { db } from "db/firebase";
 
-export async function updateCaregiver(uid: string, caregiver: Partial<Caregiver>) {
+export async function updateCaregiver(
+  uid: string,
+  caregiver: Partial<Caregiver>
+) {
   const caregiverDoc = doc(db, "caregivers", uid);
 
   // TODO catch errors

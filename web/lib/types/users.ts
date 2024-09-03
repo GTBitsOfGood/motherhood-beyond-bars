@@ -1,3 +1,4 @@
+import { DocumentReference } from "firebase/firestore";
 import { Waiver } from "./common";
 import { ItemRequest } from "./items";
 
@@ -9,7 +10,7 @@ export type Account = {
   phoneNumber: string;
 };
 
-export interface Caregiver extends Account {
+export type Caregiver = Account & {
   id: string;
   numAdults: number;
   numChildren: number;
@@ -21,4 +22,5 @@ export interface Caregiver extends Account {
   state: string;
   zipCode: string;
   contact: string;
+  babies: DocumentReference[];
 }

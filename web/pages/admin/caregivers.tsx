@@ -3,16 +3,8 @@ import { useRouter } from "next/router";
 
 import React, { useMemo, useState } from "react";
 
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-} from "firebase/firestore";
-
-import { db } from "db/firebase";
+import { Caregiver } from "@lib/types/users";
+import { deleteCaretaker, getCaregivers } from "db/actions/caregiver/Caregiver";
 
 import CaretakerTable from "@components/CaretakerTable";
 
@@ -23,10 +15,8 @@ export enum CommunicationType {
   Phone = "Phone",
 }
 
-type Caretaker = {
-  id: string;
+export type CaregiverDisplay = Caregiver & {
   name: string;
-  email: string;
   phone: string;
   registeredDate?: Date;
   assigned: boolean;
@@ -42,7 +32,8 @@ export default function genCaretakersTab({
 }: {
   caregivers: any[];
 }) {
-  const [caregivers, setCaretakers] = useState<Caretaker[]>(caretakers);
+  const [caregivers, setCaretakers] =
+    useState<Partial<CaregiverDisplay>[]>(caretakers);
 
   const columns = useMemo(
     () => [
@@ -70,13 +61,6 @@ export default function genCaretakersTab({
     router.replace(router.asPath);
   };
 
-  const deleteCaretaker = async (caretaker: Caretaker) => {
-    await deleteDoc(doc(db, "caregivers", caretaker.id));
-    setCaretakers(caretakers.filter((c) => c.id !== caretaker.id));
-    alert("Caretaker deleted");
-    refreshData();
-  };
-
   return (
     <div className="max-h-screen overflow-auto w-full">
       <div className="relative mt-20 border-t w-full " />
@@ -93,7 +77,13 @@ export default function genCaretakersTab({
           <CaretakerTable
             columns={columns}
             data={data}
-            onDelete={deleteCaretaker}
+            onDelete={(caregiver: CaregiverDisplay) =>
+              deleteCaretaker(caregiver.id).then(() => {
+                setCaretakers(caretakers.filter((c) => c.id !== caregiver.id));
+                alert("Caretaker deleted");
+                refreshData();
+              })
+            }
           />
         </div>
       </div>
@@ -102,43 +92,7 @@ export default function genCaretakersTab({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const itemsRef = query(collection(db, "caregivers"));
-  const caregiverDocs = await getDocs(itemsRef);
-
-  const caregivers: Caretaker[] = [];
-
-  const formatPhoneNumber = (phoneNumberString: string) => {
-    const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
-    const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      const intlCode = match[1] ? "+1 " : "";
-      return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
-    }
-    return null;
-  };
-
-  caregiverDocs.forEach(async (doc) => {
-    const data = doc.data();
-    const child: any = data.baby ? (await getDoc(data.baby)).data() : null;
-    caregivers.push({
-      id: doc.id,
-      name: data.firstName + " " + data.lastName,
-      email: data.email || "N/A",
-      phone: (data.phoneNumber && formatPhoneNumber(data.phoneNumber)) || "N/A",
-      registeredDate: data.createdAt
-        ? data.createdAt.toDate().toLocaleDateString()
-        : null,
-      assigned: child ? true : false,
-      address: `${data.address}, ${
-        data.apartment ? `${data.apartment}, ` : ""
-      }${data.city}, ${data.state}`,
-      prefferedCommunication: data.prefferedCommunication || "N/A",
-      childName: child ? child.firstName + " " + child.lastName : null,
-      houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,
-      // liabilityWaiver: data.signedWaivers?.at(-1).id || null,
-      liabilityWaiver: "",
-    });
-  });
+  const caregivers: Partial<CaregiverDisplay>[] = await getCaregivers();
 
   return { props: { caregivers } };
 };
