@@ -7,9 +7,9 @@ import { loginWithCredentials, loginWithGoogle } from "db/actions/Login";
 import { AuthFormValues } from "@lib/types/common";
 import { UserContext } from "@lib/contexts/userContext";
 
-import ButtonWithIcon from "@components/buttonWithIcon";
 import ErrorAlert from "@components/errorAlert";
 import MBBLogo from "@components/mbbLogo";
+import Button from "@components/atoms/Button";
 
 export default function LoginScreen() {
   const { admin: userAdmin } = useContext(UserContext);
@@ -41,7 +41,7 @@ export default function LoginScreen() {
           </div>
           <div className="w-1/2">
             <div className="flex h-screen">
-              <div className="m-auto w-full">
+              <div className="m-auto w-2/3">
                 {userAdmin === false && (
                   <div className="flex flex-row items-center justify-center m-10">
                     <ErrorAlert
@@ -90,13 +90,11 @@ export default function LoginScreen() {
                       />
                     </div>
                     <br />
-                    <button
-                      type="submit"
-                      className="text-blue-600 w-80 p-2 border-2 border-blue-600 my-4"
-                    >
-                      Log In
-                    </button>
-                    <ButtonWithIcon
+                    <Button
+                      text="Log In"
+                      submit={true}
+                    />
+                    <Button
                       icon={<AiFillGoogleCircle />}
                       text="Log In with Google"
                       onClick={loginWithGoogle}

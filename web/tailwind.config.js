@@ -10,12 +10,21 @@ module.exports = {
     fontFamily: {
       opensans: ["Open Sans", "sans-serif"],
     },
-    extend: {},
     extend: {
       fontFamily: {
         sans: ["Open Sans", ...defaultTheme.fontFamily.sans],
       },
       colors: {
+        background: "#FFFFFF",
+        "secondary-background": "#FAFBFC",
+        "mbb-pink": "#B14378",
+        "primary-text": "#000000",
+        "secondary-text": "#1A1A1A",
+        "light-gray": "#D9D9D9",
+        "medium-gray": "#8C8C8C",
+        "dark-gray": "#666666",
+        "icon-gray": "#BFBFBF",
+        "icon-light-gray": "#DFE3E8",
         dark: {
           100: "#BFBFBF",
           400: "#666666",
