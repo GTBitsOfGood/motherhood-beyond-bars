@@ -10,6 +10,7 @@ import { UserContext } from "@lib/contexts/userContext";
 import ErrorAlert from "@components/errorAlert";
 import MBBLogo from "@components/mbbLogo";
 import Button from "@components/atoms/Button";
+import TextInput from "@components/atoms/TextInput";
 
 export default function LoginScreen() {
   const { admin: userAdmin } = useContext(UserContext);
@@ -66,15 +67,13 @@ export default function LoginScreen() {
                   Log In
                 </div>
                 <form onSubmit={handleSubmit(loginWithCredentials)}>
-                  <div className="flex flex-col justify-center items-center">
-                    <div>
+                  <div className="flex flex-col justify-center items-center w-full">
+                    <div className="w-full">
                       <div className="font-opensans text-base">
                         Username or Email
                       </div>
-                      <input
-                        {...register("email", { required: true })}
-                        className="font-opensans text-base w-80 bg-gray-100 border-1 border-gray-300 p-2"
-                        type="text"
+                      <TextInput
+                        formValue={{...register("email", { required: true })}}
                       />
                     </div>
                     <br />
