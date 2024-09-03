@@ -1,8 +1,8 @@
-import PictureArray from '@components/BabyBook/PictureArray';
-import PictureModal from '@components/BabyBook/PictureModal';
-import SideBar from '@components/BabyBook/Sidebar';
-import TopBar from '@components/BabyBook/Topbar';
-import { db } from '@lib/firebase';
+import PictureArray from "@components/BabyBook/PictureArray";
+import PictureModal from "@components/BabyBook/PictureModal";
+import SideBar from "@components/BabyBook/Sidebar";
+import TopBar from "@components/BabyBook/Topbar";
+import { db } from "db/firebase";
 import {
   collection,
   doc,
@@ -12,11 +12,11 @@ import {
   orderBy,
   query as doQuery,
   Timestamp,
-} from 'firebase/firestore';
-import { GetServerSideProps } from 'next';
-import { Baby } from 'pages/babies';
-import { useState } from 'react';
-import { decrypt } from '../../lib/encryption';
+} from "firebase/firestore";
+import { GetServerSideProps } from "next";
+import { Baby } from "pages/admin/babies";
+import { useState } from "react";
+import { decrypt } from "@lib/utils/encryption";
 
 export default function BabyBook({
   babyBook,
@@ -65,7 +65,7 @@ export default function BabyBook({
     setIsPictureSelected(false);
   };
   return (
-    <div className='flex flex-col w-full h-full'>
+    <div className="flex flex-col w-full h-full">
       <TopBar
         number={totImages}
         name={baby.name}
@@ -73,7 +73,7 @@ export default function BabyBook({
         content={content}
         iv={iv}
       />
-      <div className='relative flex grow-0 overflow-hidden'>
+      <div className="relative flex grow-0 overflow-hidden">
         <SideBar babyBook={babyBook} />
         <PictureArray babyBook={babyBook} select={selectImage} />
         {isPictureSelected && (
@@ -134,9 +134,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const props = {
     babyBook: [] as BabyBookYear[],
     totImages: 0,
-    baby: { name: '', mother: '' },
-    content: '',
-    iv: '',
+    baby: { name: "", mother: "" },
+    content: "",
+    iv: "",
   };
   if (!params || !params.babyId || !query.iv) return { props };
   props.content = params?.babyId as string;
@@ -146,16 +146,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     iv: query.iv as string,
   });
 
-  const babyRef = doc(db, 'babies', babyId as string);
+  const babyRef = doc(db, "babies", babyId as string);
   const baby = await getDoc(babyRef);
   const babyData = baby.data() as Baby;
   props.baby = {
-    name: babyData.firstName + ' ' + babyData.lastName,
+    name: babyData.firstName + " " + babyData.lastName,
     mother: babyData.motherName,
   };
   const babyBookRef = doQuery(
     collection(db, `babies/${babyId}/book`),
-    orderBy('date', 'desc')
+    orderBy("date", "desc")
   );
   const babyBookDocs = await getDocs(babyBookRef);
   babyBookDocs.docs.forEach((book) => {
@@ -178,9 +178,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     )
       year.months.push({ month: currMonth, images: [] });
     year.months[year.months.length - 1].images.push({
-      caption: raw.caption || '',
+      caption: raw.caption || "",
       imageUrl: raw.imageURL,
-      caregiverId: raw.caregiverID?.id || '',
+      caregiverId: raw.caregiverID?.id || "",
       date: {
         seconds: raw.date.seconds,
         nanoseconds: raw.date.nanoseconds,

@@ -1,6 +1,6 @@
-import { db } from "@lib/firebase";
-import { formatDoc } from "@lib/firebase/getDoc";
-import { Waiver } from "@lib/types";
+import { db } from "db/firebase";
+import { formatDoc } from "db/firebase/getDoc";
+import { Waiver } from "@lib/types/common";
 import {
   collection,
   doc,
@@ -36,8 +36,8 @@ export default function WaiverPage({ waiver }: Props) {
 
   return (
     <div className="p-10">
-      <Link href="/waivers" passHref>
-        <a className="hover:underline" href="/waivers">
+      <Link href="/admin/waivers" passHref>
+        <a className="hover:underline" href="/admin/waivers">
           Back
         </a>
       </Link>

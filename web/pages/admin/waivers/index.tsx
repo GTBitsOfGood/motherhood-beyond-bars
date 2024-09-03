@@ -1,7 +1,7 @@
-import { formatDate } from "@lib/date";
-import { db } from "@lib/firebase";
-import { formatDoc } from "@lib/firebase/getDoc";
-import { Waiver } from "@lib/types";
+import { formatDate } from "@lib/utils/date";
+import { db } from "db/firebase";
+import { formatDoc } from "db/firebase/getDoc";
+import { Waiver } from "@lib/types/common";
 import {
   addDoc,
   collection,
@@ -9,8 +9,6 @@ import {
   orderBy,
   query,
   serverTimestamp,
-  setDoc,
-  Timestamp,
 } from "firebase/firestore";
 import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
@@ -36,7 +34,7 @@ export default function Waivers({ waivers }: Props) {
               order: waivers.length,
             } as Waiver);
 
-            router.push(`/waivers/${newDoc.id}`);
+            router.push(`/admin/waivers/${newDoc.id}`);
           }}
         >
           + New
@@ -52,7 +50,7 @@ export default function Waivers({ waivers }: Props) {
             }`}
             key={waiver.id}
             onClick={() => {
-              router.push(`/waivers/${waiver.id}`);
+              router.push(`/admin/waivers/${waiver.id}`);
             }}
           >
             <td className=" text-gray-800 text-lg">{waiver.name}</td>

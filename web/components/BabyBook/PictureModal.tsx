@@ -1,10 +1,10 @@
 import DownloadIcon from "@components/Icons/DownloadIcon";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import RightChevronIcon from "@components/Icons/RightChevronIcon";
-import { monthIndexToString } from "@lib/date";
+import { monthIndexToString } from "@lib/utils/date";
 import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
-import { BabyImage } from "pages/book/[babyId]";
+import { BabyImage } from "pages/admin/book/[babyId]";
 import { v4 } from "uuid";
 
 const PictureModal = ({

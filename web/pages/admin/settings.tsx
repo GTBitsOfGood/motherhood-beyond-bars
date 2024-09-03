@@ -1,5 +1,5 @@
 import ButtonWithIcon from "@components/buttonWithIcon";
-import { db } from "@lib/firebase";
+import { db } from "db/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -25,7 +25,6 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
 
   const onSubmit = handleSubmit(async (data) => {
     const newNumber = data.phoneNumber;
-    console.log("test")
     if (!isValidPhoneNumber(newNumber)) {
       alert("Invalid phone number");
       return;
@@ -83,7 +82,7 @@ function genSettingsTab({ phoneNumber }: SettingsPhone) {
         </form>
 
         <div className="my-10">
-          <Link href="/waivers">
+          <Link href="/admin/waivers">
             <ButtonWithIcon text="Waivers" icon={<BsFillPencilFill />} />
           </Link>
         </div>

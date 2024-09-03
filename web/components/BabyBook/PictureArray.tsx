@@ -1,8 +1,8 @@
 import ArrowUpIcon from "@components/Icons/LeftChevronIcon copy"
-import { monthIndexToString } from "@lib/date"
+import { monthIndexToString } from "@lib/utils/date"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { BabyBookYear, BabyImage } from "pages/book/[babyId]"
+import { BabyBookYear, BabyImage } from "pages/admin/book/[babyId]"
 import React, { useEffect, useRef, useState } from "react"
 
 const PictureArray = ({ babyBook, select } : Props) => {

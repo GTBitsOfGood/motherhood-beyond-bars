@@ -1,27 +1,27 @@
-import LoginScreen from "@components/loginScreen";
-import { UserContext } from "@lib/contexts/userContext";
-import { useContext } from "react";
+import { Account, Caregiver } from "@lib/types/users";
+import { createCaregiverAccount } from "db/actions/SignUp";
+import { updateCaregiver } from "db/actions/caregiver/Caregiver";
 
-const Home = () => {
-  const { admin, user } = useContext(UserContext);
-  if (!admin) {
-    return <LoginScreen />;
-  }
+export default function Index() {
+    return (
+        <div>
+            <button
+            onClick={() => {
+                const caregiver: Partial<Caregiver> = {
+                    numAdults: 1,
+                    numChildren: 1,
+                    signedWaivers: [],
+                    address: "5 Cramer Drive",
+                    city: "Chester",
+                    state: "NJ",
+                    zipCode: "07930",
+                    contact: "Email",
+                };
 
-  return (
-    <div className="w-full h-full flex flex-col">
-      <div className="text-lg m-auto font-bold font-opensans text-center">
-        Welcome
-        <br />
-        {user?.displayName}!
-        <br />
-      </div>
-
-      <div className="text-lg m-auto font-opensans text-center">
-        Please use the tabs on the left to navigate.
-      </div>
-    </div>
-  );
-};
-
-export default Home;
+                updateCaregiver("Ufnn7fOKQKSeGAe54tpHEaGVGUl2", caregiver);
+            }}>
+                Click me
+            </button>
+        </div>
+    )
+}
