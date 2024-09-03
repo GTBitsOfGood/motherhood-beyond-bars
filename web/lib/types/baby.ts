@@ -1,14 +1,19 @@
 import { Timestamp } from "firebase/firestore";
 
-// TODO change DOB to Date
 export interface Baby {
+  id: string;
   firstName: string;
   lastName: string;
-  id: string;
   createdAt: Timestamp;
   hospitalName: string;
   caretakerID: string;
-  dob: string;
+  //   caretakerName: string;
+  //   caretaker: DocumentReference;
+  dob: Timestamp;
+  //   birthday: string;
+  sex: string;
+  motherName: string;
+  babyBook: string;
 }
 
 export interface Book {

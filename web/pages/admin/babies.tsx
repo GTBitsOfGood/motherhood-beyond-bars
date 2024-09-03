@@ -1,40 +1,21 @@
-import BabiesTable from "@components/BabiesTable";
-import ButtonWithIcon from "@components/buttonWithIcon";
-import Modal from "@components/modal";
-import { db } from "db/firebase";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  DocumentReference,
-  getDocs,
-  query,
-  serverTimestamp,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
-import ChildModal from "@components/modals/addChildModal";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { encrypt } from "@lib/utils/encryption";
 
-export type Baby = {
-  id: string;
-  caretakerName: string;
-  caretakerID: string;
-  caretaker: DocumentReference;
-  motherName: string;
-  birthday: string;
-  sex: string;
-  babyBook: string;
-  dob: Timestamp;
-  firstName: string;
-  lastName: string;
-  hospitalName: string;
-};
+import { Baby } from "@lib/types/baby";
+import {
+  addNewChild,
+  editBaby,
+  deleteBaby,
+  getBabies,
+  getCaregiversInfo,
+} from "db/actions/admin/Baby";
+
+import BabiesTable from "@components/BabiesTable";
+import ButtonWithIcon from "@components/buttonWithIcon";
+import Modal from "@components/modal";
+import ChildModal from "@components/modals/addChildModal";
 
 export default function genChildrenAndBabyBooksTab({
   babies,
@@ -73,6 +54,7 @@ export default function genChildrenAndBabyBooksTab({
 
   const router = useRouter();
 
+  // TODO this doesn't work, need better way to update table after adding/deleting objects
   const refreshData = () => {
     router.replace(router.asPath);
   };
@@ -80,49 +62,6 @@ export default function genChildrenAndBabyBooksTab({
   const data = React.useMemo(() => getData(), []);
 
   const [addModal, toggleAddModal] = useState(false);
-
-  const addNewChild = async (child: Baby) => {
-    let caretakerRef = null;
-    if (child.caretakerID) {
-      caretakerRef = doc(db, "caregivers", child.caretakerID);
-    }
-
-    const newBaby = await addDoc(collection(db, "babies"), {
-      ...child,
-      dob: child.dob,
-      createdAt: serverTimestamp(),
-      caretaker: caretakerRef,
-      babyBookEntries: [],
-    });
-
-    if (caretakerRef) {
-      await updateDoc(caretakerRef, {
-        baby: newBaby,
-      });
-    }
-
-    toggleAddModal(false);
-    alert(`${child.firstName} ${child.lastName} has been added!`);
-    refreshData();
-  };
-
-  const editBaby = async (baby: any) => {
-    const babyID = baby.id;
-    delete baby.id;
-    await updateDoc(doc(db, "babies", babyID), baby);
-
-    alert("Baby has been updated!");
-    refreshData();
-  };
-
-  const deleteBaby = async (baby: any) => {
-    const babyID = baby.id;
-
-    await deleteDoc(doc(db, "babies", babyID));
-
-    alert("Baby has been deleted!");
-    refreshData();
-  };
 
   return (
     <div>
@@ -147,8 +86,15 @@ export default function genChildrenAndBabyBooksTab({
           <BabiesTable
             columns={columns}
             data={data}
-            onEdit={editBaby}
-            onDelete={deleteBaby}
+            onEdit={(baby: any) => editBaby(baby).then(() => {
+              toggleAddModal(false);
+              alert("Baby has been updated!");
+              refreshData();
+            })}
+            onDelete={(baby: any) => deleteBaby(baby).then(() => {
+              alert("Baby has been deleted!");
+              refreshData();
+            })}
             caretakers={caregivers}
           />
         </div>
@@ -160,7 +106,13 @@ export default function genChildrenAndBabyBooksTab({
             <ChildModal
               header="Add a Child"
               setModal={toggleAddModal}
-              onSubmit={addNewChild}
+              onSubmit={(baby) =>
+                addNewChild(baby).then(() => {
+                  toggleAddModal(false);
+                  alert(`${baby.firstName} ${baby.lastName} has been added!`);
+                  refreshData();
+                })
+              }
               caretakers={caregivers}
             />
           </div>
@@ -171,40 +123,8 @@ export default function genChildrenAndBabyBooksTab({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const itemsRef = query(collection(db, "babies"));
-  const babyDocs = await getDocs(itemsRef);
-
-  const babies = await Promise.all(
-    babyDocs?.docs.map(async (babyDoc: any) => {
-      const data = babyDoc.data() as Baby;
-
-      const dobDate = new Timestamp(
-        data.dob.seconds,
-        data.dob.nanoseconds
-      ).toDate();
-
-      const { iv, content } = encrypt(babyDoc.id);
-
-      return {
-        id: babyDoc.id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        name: data?.firstName ?? "" + " " + data?.lastName ?? "",
-        motherName: data?.motherName || null,
-        birthday: dobDate?.toLocaleDateString("en-us") || null,
-        sex: data?.sex || null,
-        babyBook: `/admin/book/${content}?iv=${iv}`,
-      };
-    })
-  );
-
-  const q = query(collection(db, "caregivers"));
-  const res = await getDocs(q);
-
-  const caregivers = res.docs.map((doc) => ({
-    id: doc.id,
-    name: doc.data()["firstName"] + " " + doc.data()["lastName"],
-  }));
+  const babies = await getBabies();
+  const caregivers = await getCaregiversInfo();
 
   return {
     props: {

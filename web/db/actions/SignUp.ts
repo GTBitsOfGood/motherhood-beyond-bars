@@ -19,36 +19,33 @@ export const isUniqueEmail = async (email: string) => {
   ).empty;
 };
 
-export async function createAdminAccount({
-  email,
-  password,
-  firstName,
-  lastName,
-  phoneNumber,
-}: Account) {
+export async function createAdminAccount(account: Account) {
   // TODO Check if admin is whitelisted first
-  await createUserWithEmailAndPassword(auth, email.trim(), password).then(
-    () => {
-      // TODO set firstName, lastName, and phoneNumber for Admins
-    }
-  );
+  await createUserWithEmailAndPassword(
+    auth,
+    account.email.trim(),
+    account.password
+  ).then(() => {
+    // TODO set firstName, lastName, and phoneNumber for Admins
+  });
 
   // TODO return success or error message
 }
 
 // TODO return success or error message
 export async function createCaregiverAccount(account: Account) {
-  debugger
-  await createUserWithEmailAndPassword(auth, account.email.trim(), account.password).then(
-    (userCredential) => {
-      debugger
-      const authData = userCredential.user;
-      const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-      setDoc(caregiverDoc, {
-        firstName: account.firstName,
-        lastName: account.lastName,
-        phoneNumber: account.phoneNumber
-      });
-    }
-  );
+  await createUserWithEmailAndPassword(
+    auth,
+    account.email.trim(),
+    account.password
+  ).then((userCredential) => {
+    debugger;
+    const authData = userCredential.user;
+    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+    setDoc(caregiverDoc, {
+      firstName: account.firstName,
+      lastName: account.lastName,
+      phoneNumber: account.phoneNumber,
+    });
+  });
 }

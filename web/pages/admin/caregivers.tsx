@@ -1,5 +1,8 @@
-import CaretakerTable from "@components/CaretakerTable";
-import { db } from "db/firebase";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+
+import React, { useMemo, useState } from "react";
+
 import {
   collection,
   deleteDoc,
@@ -8,9 +11,10 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
-import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+
+import { db } from "db/firebase";
+
+import CaretakerTable from "@components/CaretakerTable";
 
 export enum CommunicationType {
   "N/A" = "N/A",
@@ -79,7 +83,7 @@ export default function genCaretakersTab({
       <div className="pt-6 px-8 flex h-full flex-col justify-left">
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
-            <h1 className="text-2xl mb-5 font-bold">Caretakers</h1>
+            <h1 className="text-2xl mb-5 font-bold">Caregivers</h1>
             <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
               {caregivers?.length + " People"}
             </h2>

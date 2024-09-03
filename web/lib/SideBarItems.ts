@@ -6,8 +6,8 @@ import settings_icon from "../public/settings_icon.png";
 
 const SideBarItems = [
   {
-    name: "Caretakers",
-    route: "/admin/caretakers",
+    name: "Caregivers",
+    route: "/admin/caregivers",
     icon: caretakers_icon,
   },
   {
