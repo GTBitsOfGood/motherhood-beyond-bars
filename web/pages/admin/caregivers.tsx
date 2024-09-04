@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 
 import { Caregiver } from "@lib/types/users";
-import { deleteCaretaker, getCaregivers } from "db/actions/caregiver/Caregiver";
+import { deleteCaretaker, getCaregivers } from "db/actions/admin/Caregiver";
 
 import CaretakerTable from "@components/CaretakerTable";
 
