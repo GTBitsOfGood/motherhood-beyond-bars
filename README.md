@@ -8,26 +8,22 @@ When babies are born to women in the Georgia prison system, the mother is allott
 
 You'll need:
 
-1. Figma access (can be found on [notion page](https://www.notion.so/gtbitsofgood/Motherhood-Beyond-Bars-2c8b73628cda49b090319de9d61f0f0b))
-2. Firebase access (ask [@phultquist](https://github.com/phultquist))
+1. [Figma](https://www.figma.com/design/1eq6iy7h2Cd7rYTxPB4s5P/Motherhood-Beyond-Bars-%2F-Spr2022-(Copy)?node-id=6212-1439&node-type=CANVAS&t=c1VA2QufmU1WeN6E-0)
+2. Firebase Access - In Bitwarden, ask Parker if you need help accessing it!
 
 ### Making Changes
 
 When you make a change, create a new branch on the repository
 
-## A note about the Monorepo
+## Important Changes for Fall 2024
 
-This project is organized as a monorepo. This means that while there are essentially two parts — the web app and the mobile app — they are under the same repository. Each has its own folder `/web` and `/mobile`, respectively. There are few shared components between these two apps, which is why a monorepo mananger like turborepo was not used.
+The project was originally two parts: a web app in React and a mobile app in React Native. We are completely abandoning the React Native portion and recreating all mobile pages for web. This means that all development should be in `/web` and `/mobile` should only be used to backend endpoints and guides to create pages.
 
 ## Your development environment
 
-> Node 16.13.1, Expo 44
+> Node 16.13.1
 
-### Firebase
-
-Normally, we'd use Firebase emulator so that way we don't touch the production database. However, this is a brand new project, so for now we'll use the global database.
-
-## Getting Started: Web (admin)
+## Getting Started: Web
 
 ```bash
 cd web
@@ -39,19 +35,9 @@ npm run dev
 
 In order for the jszip library to function properly, node version >=18.12.1 must be used
 
-## Getting Started: Mobile (caretaker)
+### Firebase
 
-```bash
-cd mobile
-npm install
-npm run start
-```
-
-You may have to install the `expo-cli` which you can do with the following command:
-
-```bash
-npm install -g expo-cli
-```
+Normally, we'd use Firebase emulator so that way we don't touch the production database. However, this is a brand new project, so for now we'll use the global database.
 
 ## Getting Started: Functions
 
@@ -71,6 +57,21 @@ Use another terminal session to make requests, or use Postman.
 Both the application (web & mobile) can be ran directly in a development environment via `docker-compose`. This may simplify build environment setup as only Docker & Docker-compose need to be installed.
 
 To run both the mobile & web appplications, simply type `docker-compose up` in the root directory.
+
+## Getting Started: Mobile (Caretaker) [OUTDATED]
+Note: the mobile repo does not work and will only be met with errors.
+
+```bash
+cd mobile
+npm install
+npm run start
+```
+
+You may have to install the `expo-cli` which you can do with the following command:
+
+```bash
+npm install -g expo-cli
+```
 
 To run only the web application, type `docker-compose up web` in the terminal in the same main directory
 
