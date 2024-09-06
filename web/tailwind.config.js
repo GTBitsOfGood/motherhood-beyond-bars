@@ -25,6 +25,7 @@ module.exports = {
         "dark-gray": "#666666",
         "icon-gray": "#BFBFBF",
         "icon-light-gray": "#DFE3E8",
+        "empty-gray": "#E3E3E3",
         dark: {
           100: "#BFBFBF",
           400: "#666666",
