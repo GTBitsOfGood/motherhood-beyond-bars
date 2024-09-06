@@ -1,21 +1,21 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from "firebase/firestore";
 
 export interface User {
-	name: string;
-	email: string;
-	// add more
+  name: string;
+  email: string;
+  // add more
 }
 
 export interface Waiver {
-	content: string;
-	id?: string;
-	description: string;
-	lastUpdated: string | Timestamp;
-	name: string;
-	order: number;
+  content: string;
+  id?: string;
+  description: string;
+  lastUpdated: string | Timestamp;
+  name: string;
+  order: number;
 }
 
 export type AuthFormValues = {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 };

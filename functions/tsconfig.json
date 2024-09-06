@@ -1,16 +1,16 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"esModuleInterop": true,
-		"noImplicitReturns": true,
-		"noUnusedLocals": true,
-		"outDir": "lib",
-		"sourceMap": true,
-		"strict": true,
-		"target": "es2017",
-		"skipLibCheck": true
-	},
-	"compileOnSave": true,
-	"include": ["src"],
-	"exclude": ["node_modules"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "skipLibCheck": true
+  },
+  "compileOnSave": true,
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

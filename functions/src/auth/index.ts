@@ -1,3 +1,3 @@
-import validateSigninRequest from './validateSigninRequest';
+import validateSigninRequest from "./validateSigninRequest";
 
 export { validateSigninRequest };
