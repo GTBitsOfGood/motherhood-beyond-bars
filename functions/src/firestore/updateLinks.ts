@@ -4,7 +4,6 @@ import og from "fetch-opengraph";
 const updateLinks = functions.firestore
   .document("resources/links")
   .onUpdate(async (change: any, context) => {
-
     // retrieve the previous and current value
     const before = change.before.data();
     const after = change.after.data();
@@ -15,7 +14,7 @@ const updateLinks = functions.firestore
       }
       return false;
     });
-    
+
     // only update if name has changed to prevent infinite loops
     if (changed.length === 0) return null;
 
@@ -24,7 +23,7 @@ const updateLinks = functions.firestore
       return og.fetch(link.url).catch((err: any) => {
         return false;
       });
-    })
+    });
 
     const data = await Promise.all(promises);
 
@@ -38,7 +37,7 @@ const updateLinks = functions.firestore
         title: after.links[index].title || ogData.title,
         description: after.links[index].description || ogData.description,
         image: ogData.image,
-      }
+      };
     });
 
     return change.after.ref.set(after);

@@ -86,15 +86,19 @@ export default function genChildrenAndBabyBooksTab({
           <BabiesTable
             columns={columns}
             data={data}
-            onEdit={(baby: any) => editBaby(baby).then(() => {
-              toggleAddModal(false);
-              alert("Baby has been updated!");
-              refreshData();
-            })}
-            onDelete={(baby: any) => deleteBaby(baby).then(() => {
-              alert("Baby has been deleted!");
-              refreshData();
-            })}
+            onEdit={(baby: any) =>
+              editBaby(baby).then(() => {
+                toggleAddModal(false);
+                alert("Baby has been updated!");
+                refreshData();
+              })
+            }
+            onDelete={(baby: any) =>
+              deleteBaby(baby).then(() => {
+                alert("Baby has been deleted!");
+                refreshData();
+              })
+            }
             caretakers={caregivers}
           />
         </div>

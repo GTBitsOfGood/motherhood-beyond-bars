@@ -11,7 +11,7 @@ try {
    * We skip the "already exists" message which is
    * not an actual error when we're hot-reloading.
    */
-  if (error instanceof Error && !/already exists/u.test(error.message)) {
+  if (error instanceof Error && !/already exists/.test(error.message)) {
     console.error("Firebase admin initialization error", error.stack);
   }
 }

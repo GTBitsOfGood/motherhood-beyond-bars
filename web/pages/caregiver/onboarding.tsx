@@ -14,20 +14,21 @@ export default function CaregiverOnboarding() {
 
   return (
     <div>
-      {page == 0 ? (
-        <GetStartedPage setPage={setPage} />
-      ) : page == 1 ? (
-        <HouseholdInfoPage setPage={setPage} />
-      ) : page == 2 ? (
-        <LiabilityWaiverPage setPage={setPage} />
-      ) : page == 3 ? (
-        <RequestItemsPage setPage={setPage} />
-      ) : page == 4 ? (
-        <ShippingAddressPage setPage={setPage} />
-      ) : page == 5 ? (
-        <PreferredContactPage setPage={setPage} />
-      ) : null
-      // Save data and route to next page
+      {
+        page == 0 ? (
+          <GetStartedPage setPage={setPage} />
+        ) : page == 1 ? (
+          <HouseholdInfoPage setPage={setPage} />
+        ) : page == 2 ? (
+          <LiabilityWaiverPage setPage={setPage} />
+        ) : page == 3 ? (
+          <RequestItemsPage setPage={setPage} />
+        ) : page == 4 ? (
+          <ShippingAddressPage setPage={setPage} />
+        ) : page == 5 ? (
+          <PreferredContactPage setPage={setPage} />
+        ) : null
+        // Save data and route to next page
       }
     </div>
   );

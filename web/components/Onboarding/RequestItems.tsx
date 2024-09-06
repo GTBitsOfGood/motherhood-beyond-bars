@@ -5,9 +5,5 @@ interface Props {
 }
 
 export default function RequestItemsPage({ setPage }: Props) {
-
-  return (
-    <div>
-    </div>
-  )
+  return <div></div>;
 }

@@ -73,7 +73,7 @@ export default function LoginScreen() {
                         Username or Email
                       </div>
                       <TextInput
-                        formValue={{...register("email", { required: true })}}
+                        formValue={{ ...register("email", { required: true }) }}
                       />
                     </div>
                     <br />
@@ -89,10 +89,7 @@ export default function LoginScreen() {
                       />
                     </div>
                     <br />
-                    <Button
-                      text="Log In"
-                      submit={true}
-                    />
+                    <Button text="Log In" submit={true} />
                     <Button
                       icon={<AiFillGoogleCircle />}
                       text="Log In with Google"
