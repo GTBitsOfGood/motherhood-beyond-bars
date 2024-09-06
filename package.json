@@ -1,9 +1,13 @@
 {
-  "scripts": {
-    "build": "cd web && npm run build"
-  },
-  "dependencies": {
-    "net": "^1.0.2",
-    "next": "^12.3.0"
-  }
+	"scripts": {
+		"build": "cd web && npm run build",
+		"format": "prettier --write ."
+	},
+	"dependencies": {
+		"net": "^1.0.2",
+		"next": "^12.3.0"
+	},
+	"devDependencies": {
+		"prettier": "^3.3.3"
+	}
 }

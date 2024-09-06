@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
+import express from 'express';
+import cors from 'cors';
 
-import { newItemRequestRouter } from "./routes/newItemRequest";
+import { newItemRequestRouter } from './routes/newItemRequest';
 
 const app = express();
 app.use(cors({ origin: true }));

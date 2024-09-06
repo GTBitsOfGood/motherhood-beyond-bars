@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface Props {
-  setPage: (arg0: any) => any;
+	setPage: (arg0: any) => any;
 }
 
 export default function GetStartedPage({ setPage }: Props) {
-  return <div></div>;
+	return <div></div>;
 }

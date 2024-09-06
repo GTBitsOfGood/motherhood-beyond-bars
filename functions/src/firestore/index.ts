@@ -1,4 +1,4 @@
-import sendEmailOnRequest from "./sendEmailOnRequest";
-import updateLinks from "./updateLinks";
+import sendEmailOnRequest from './sendEmailOnRequest';
+import updateLinks from './updateLinks';
 
 export { sendEmailOnRequest, updateLinks };
