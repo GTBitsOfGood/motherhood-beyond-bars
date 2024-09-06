@@ -22,7 +22,6 @@ export default function BackButton({ onClick, disabled }: Props) {
 				<path
 					d='M15 18L9 12L15 6'
 					className={`${disabled ? 'stroke-dark-gray' : 'group-hover:stroke-dark-gray'}`}
-					stroke='#8C8C8C'
 					stroke-width='3'
 					stroke-linecap='square'
 					stroke-linejoin='round'
