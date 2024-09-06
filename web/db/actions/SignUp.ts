@@ -11,6 +11,8 @@ import {
 import { auth, db } from "db/firebase";
 import { Account } from "@lib/types/users";
 
+type signUpStatus = 'Success' | 'Error';
+
 export const isUniqueEmail = async (email: string) => {
   (
     await getDocs(
@@ -21,31 +23,63 @@ export const isUniqueEmail = async (email: string) => {
 
 export async function createAdminAccount(account: Account) {
   // TODO Check if admin is whitelisted first
-  await createUserWithEmailAndPassword(
-    auth,
-    account.email.trim(),
-    account.password
-  ).then(() => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      account.email.trim(),
+      account.password
+    )
     // TODO set firstName, lastName, and phoneNumber for Admins
-  });
-
-  // TODO return success or error message
+    // TODO return success or error message
+    const authData = userCredential.user;
+    if (!authData?.uid) {
+      throw new Error("Couldn't get userID")
+    }
+    const adminDoc = doc(db, "admins", authData?.uid as string);
+    setDoc(adminDoc, {
+      firstName: account.firstName,
+      lastName: account.lastName,
+      phoneNumber: account.phoneNumber,
+    });
+    console.log("You've successfully signed up!")
+    return {
+      status: "Success" as signUpStatus
+    }
+  } catch (error) {
+    console.error("Error logging in", error);
+    return {
+      status: "Error" as signUpStatus
+    }
+  }
 }
 
 // TODO return success or error message
 export async function createCaregiverAccount(account: Account) {
-  await createUserWithEmailAndPassword(
-    auth,
-    account.email.trim(),
-    account.password
-  ).then((userCredential) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      account.email.trim(),
+      account.password
+    )
     debugger;
     const authData = userCredential.user;
+    if (!authData?.uid) {
+      throw new Error("Couldn't get userID")
+    }
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     setDoc(caregiverDoc, {
       firstName: account.firstName,
       lastName: account.lastName,
       phoneNumber: account.phoneNumber,
     });
-  });
+    console.log("You've successfully signed up!")
+    return {
+      status: "Success" as signUpStatus
+    }
+  } catch (error) {
+    console.error("Error logging in", error);
+    return {
+      status: "Error" as signUpStatus
+    }
+  }
 }
