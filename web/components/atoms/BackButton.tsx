@@ -21,14 +21,14 @@ export default function BackButton({ onClick, disabled }: Props) {
 			>
 				<path
 					d='M15 18L9 12L15 6'
-					className={`${disabled ? 'stroke-dark-gray' : 'group-hover:stroke-dark-gray'}`}
-					stroke-width='3'
-					stroke-linecap='square'
-					stroke-linejoin='round'
+					className={`stroke-medium-gray ${disabled ? 'stroke-dark-gray' : 'group-hover:stroke-dark-gray'}`}
+					strokeWidth='3'
+					strokeLinecap='square'
+					strokeLinejoin='round'
 				/>
 			</svg>
 			<div
-				className={`${disabled ? 'text-stroke-dark-gray' : 'group-hover:text-stroke-dark-gray'}`}
+				className={`${disabled ? 'text-dark-gray' : 'group-hover:text-dark-gray'}`}
 			>
 				Back
 			</div>
