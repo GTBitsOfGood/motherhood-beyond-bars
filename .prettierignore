@@ -2,3 +2,5 @@
 **/package-lock.json
 **/yarn.lock
 **/.next
+**/mobile
+**/.github
