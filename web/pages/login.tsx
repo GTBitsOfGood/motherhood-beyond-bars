@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 
 import { loginWithCredentials, loginWithGoogle } from "db/actions/Login";
 
@@ -15,6 +16,7 @@ import TextInput from "@components/atoms/TextInput";
 export default function LoginScreen() {
   const { admin: userAdmin } = useContext(UserContext);
   const { register, handleSubmit } = useForm<AuthFormValues>();
+  const router = useRouter();
 
   if (userAdmin) {
     return null;
@@ -66,7 +68,11 @@ export default function LoginScreen() {
                 <div className="font-opensans text-2xl font-bold text-center mb-8">
                   Log In
                 </div>
-                <form onSubmit={handleSubmit(loginWithCredentials)}>
+                <form onSubmit={handleSubmit((data) => loginWithCredentials(data).then((results) => {
+                  if (results.success) {
+                    router.push('/admin/caregivers')
+                  }
+                }))}>
                   <div className="flex flex-col justify-center items-center w-full">
                     <div className="w-full">
                       <div className="font-opensans text-base">

@@ -7,9 +7,8 @@ import {
 import { SubmitHandler } from "react-hook-form";
 import { auth } from "db/firebase";
 import { AuthFormValues } from "@lib/types/common";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-//possible statuses
-type loginStatus = 'Success' | 'Error';
 
 export const loginWithCredentials: SubmitHandler<AuthFormValues> = async (data) => {
   try {
@@ -18,13 +17,13 @@ export const loginWithCredentials: SubmitHandler<AuthFormValues> = async (data) 
     const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
     console.log("You've successfully logged in!")
     return {
-      status: "Success" as loginStatus
+      success: true
     }
   } catch (error) {
     console.error("Error logging in", error);
     alert("Invalid credentials!");
     return {
-      status: "Error" as loginStatus
+      success: false
     }
   }
 };
@@ -32,14 +31,22 @@ export const loginWithCredentials: SubmitHandler<AuthFormValues> = async (data) 
 export const loginWithGoogle = async () => {
   try {
     const userCredential = await signInWithPopup(auth, new GoogleAuthProvider());
-    console.log("You've successfully logged in!")
-    return {
-      status: "Success" as loginStatus
+    debugger
+    const isNewUser = userCredential.user.metadata.creationTime === userCredential.user.metadata.lastSignInTime;
+    if (isNewUser) {
+      return {
+        success: true,
+        isNewUser: true
+      }
+    } else {
+      return {
+        success: true,
+        isNewUser: false
+      }
     }
   } catch (error) {
-    console.error("Error logging in", error);
     return {
-      status: "Error" as loginStatus
+      success: false
     }
   }
 };
