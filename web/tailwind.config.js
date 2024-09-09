@@ -33,6 +33,9 @@ module.exports = {
         highlight: "#304CD1",
         alt: "rgba(48, 76, 209, 0.1)",
       },
+      height: {
+        screen: ["100vh", "100svh"],
+      },
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],
