@@ -8,7 +8,6 @@ import { AuthFormValues } from "@lib/types/common";
 import { UserContext } from "@lib/contexts/userContext";
 
 import ErrorAlert from "@components/errorAlert";
-import MBBLogo from "@components/mbbLogo";
 import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
 
@@ -26,9 +25,9 @@ export default function LoginScreen() {
         <div className="flex h-screen">
           <div className="w-1/2 place-items-center gradient-bg">
             <div className="flex flex-wrap flex-col place-content-center h-full">
-              <div className="self-center">
+              {/* <div className="self-center">
                 <MBBLogo />
-              </div>
+              </div> */}
               <br />
               <div className="text-white text-4xl uppercase text-center font-opensans font-bold">
                 Motherhood <br /> Beyond Bars
