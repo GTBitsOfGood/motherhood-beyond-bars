@@ -69,11 +69,11 @@ export default function LoginScreen() {
                 <form onSubmit={handleSubmit(loginWithCredentials)}>
                   <div className="flex flex-col justify-center items-center w-full">
                     <div className="w-full">
-                      <div className="font-opensans text-base">
-                        Username or Email
-                      </div>
                       <TextInput
-                        formValue={{...register("email", { required: true })}}
+                        label="Username or Email"
+                        formValue={{
+                          ...register("email", { required: true }),
+                        }}
                       />
                     </div>
                     <br />
@@ -89,10 +89,7 @@ export default function LoginScreen() {
                       />
                     </div>
                     <br />
-                    <Button
-                      text="Log In"
-                      submit={true}
-                    />
+                    <Button text="Log In" submit={true} />
                     <Button
                       icon={<AiFillGoogleCircle />}
                       text="Log In with Google"
