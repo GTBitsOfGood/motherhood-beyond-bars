@@ -1,6 +1,7 @@
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ErrorText from "./ErrorText";
+import keyboardScroll from "@lib/utils/KeyboardScroll";
 
 interface Props {
   label: string;
@@ -22,6 +23,7 @@ export default function DatePicker({
       <label htmlFor={label}>{label}</label>
       <ReactDatePicker
         name={label}
+        onFocus={(e) => keyboardScroll(e)}
         selected={value}
         onChange={onChange}
         disabled={disabled}

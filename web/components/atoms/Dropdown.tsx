@@ -1,6 +1,8 @@
 import ReactDropdown, { Option, Group } from "react-dropdown";
 import "react-dropdown/style.css";
 import ErrorText from "./ErrorText";
+import keyboardScroll from "@lib/utils/KeyboardScroll";
+import { useRef } from "react";
 
 interface Props {
   options: (string | Option | Group)[];
@@ -39,7 +41,7 @@ export default function Dropdown({
   placeholder = "Select",
 }: Props) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" onFocus={(e) => keyboardScroll(e)}>
       <label>{label}</label>
       <ReactDropdown
         options={options}

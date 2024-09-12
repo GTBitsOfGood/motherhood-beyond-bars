@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import ErrorText from "./ErrorText";
+import keyboardScroll from "@lib/utils/KeyboardScroll";
 
 interface Props {
   label: string;
@@ -27,6 +28,7 @@ export default function TextInput({
       </label>
       <input
         type="text"
+        onFocus={(e) => keyboardScroll(e)}
         {...formValue}
         name={label}
         className={`w-full mt-2 py-2.5 px-2 bg-secondary-background items-center border border-light-gray rounded ${disabled ? "!bg-light-gray" : "!bg-secondary-background"} !text-black ${error ? "!border-[#FF3939]" : "!border-light-gray"}`}
