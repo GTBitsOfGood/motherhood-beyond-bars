@@ -128,8 +128,8 @@ export default function genItemRequestsTab() {
     return c1.itemsRequested.created > c2.itemsRequested.created
       ? 1
       : c1.itemsRequested.created < c2.itemsRequested.created
-      ? -1
-      : 0;
+        ? -1
+        : 0;
   }
 
   const sections = [

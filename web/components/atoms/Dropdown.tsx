@@ -1,8 +1,4 @@
-import ReactDropdown, {
-  Option,
-  Group,
-  ReactDropdownProps,
-} from "react-dropdown";
+import ReactDropdown, { Option, Group } from "react-dropdown";
 import "react-dropdown/style.css";
 import ErrorText from "./ErrorText";
 

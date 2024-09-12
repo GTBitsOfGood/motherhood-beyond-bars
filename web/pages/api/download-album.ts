@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { decrypt } from '@lib/utils/encryption';
-import { db } from 'db/firebase';
+import { decrypt } from "@lib/utils/encryption";
+import { db } from "db/firebase";
 import {
   collection,
   doc,
@@ -10,10 +10,10 @@ import {
   orderBy,
   query,
   Timestamp,
-} from 'firebase/firestore';
-import JSZip from 'jszip';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { v4 } from 'uuid';
+} from "firebase/firestore";
+import JSZip from "jszip";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { v4 } from "uuid";
 
 interface RawBabyImage {
   caption: string;
@@ -27,7 +27,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (!req.query.content || !req.query.iv) {
-    res.status(200).json({ message: 'baby ID and iv required.' });
+    res.status(200).json({ message: "baby ID and iv required." });
   } else {
     const babyId = decrypt({
       content: req.query.content as string,
@@ -40,7 +40,7 @@ export default async function handler(
       const data = doc.data();
 
       return {
-        id: data.caption !== '' ? data.caption : v4(),
+        id: data.caption !== "" ? data.caption : v4(),
         ...(data as RawBabyImage),
       };
     });
@@ -59,12 +59,12 @@ export default async function handler(
       zip.file(babyBook.id, response);
     }
     const content = await zip.generateAsync({
-      type: 'blob',
+      type: "blob",
     });
-    res.setHeader('Content-Type', content.type);
-    res.setHeader('Content-Length', content.size);
-    res.setHeader('Content-Disposition', `attachment; filename=babybook.zip`);
-    res.write(Buffer.from(await content.arrayBuffer()), 'binary');
+    res.setHeader("Content-Type", content.type);
+    res.setHeader("Content-Length", content.size);
+    res.setHeader("Content-Disposition", `attachment; filename=babybook.zip`);
+    res.write(Buffer.from(await content.arrayBuffer()), "binary");
     res.end();
   }
 }

@@ -6,14 +6,13 @@ function ItemRequestsTable({
   columns,
   data,
   selectedRows,
-  setSelectedRows
+  setSelectedRows,
 }: {
   columns: any[];
   data: Caregiver[];
-  selectedRows : string[]
-  setSelectedRows: any
+  selectedRows: string[];
+  setSelectedRows: any;
 }) {
-
   return (
     <div className="flex flex-col w-full">
       <table>
