@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import ErrorText from "./ErrorText";
 import keyboardScroll from "@lib/utils/KeyboardScroll";
 
@@ -31,7 +31,7 @@ export default function TextInput({
         onFocus={(e) => keyboardScroll(e)}
         {...formValue}
         name={label}
-        className={`w-full mt-2 py-2.5 px-2 bg-secondary-background items-center border border-light-gray rounded ${disabled ? "!bg-light-gray" : "!bg-secondary-background"} !text-black ${error ? "!border-[#FF3939]" : "!border-light-gray"}`}
+        className={`w-full mt-2 py-2.5 px-2 bg-secondary-background items-center border border-light-gray rounded ${disabled ? "!bg-light-gray" : "!bg-secondary-background"} !text-primary-text ${error ? "!border-[#FF3939]" : "!border-light-gray"}`}
         onChange={onChange}
         placeholder={placeholder}
       />
