@@ -5,7 +5,7 @@ interface Props {
 
 export default function ProgressBar({ progress }: Props) {
   return (
-    <div className="h-[6px] relative rounded-full bg-empty-gray">
+    <div className="h-[6px] w-[107px] lg:w-[250px] relative rounded-full bg-empty-gray">
       <div
         style={{ width: `${progress}%` }}
         className="rounded-full bg-mbb-pink absolute top-0 left-0 bottom-0 transition-all"

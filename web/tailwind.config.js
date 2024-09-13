@@ -12,7 +12,10 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        'custom-background': 'radial-gradient(115.79% 108.31% at 24.4% 30.17%, #EDB1CB 0.01%, #B14378 92.53%)'
+        "custom-background":
+          "radial-gradient(115.79% 108.31% at 24.4% 30.17%, #EDB1CB 0.01%, #B14378 92.53%)",
+        "onboarding-background":
+          "radial-gradient(147.14% 98.02% at 24.4% 30.17%, #EDB1CB 0%, #B14378 100%)",
       },
       fontFamily: {
         sans: ["Open Sans", ...defaultTheme.fontFamily.sans],
