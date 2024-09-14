@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, UserCredential } from "firebase/auth";
 import {
   collection,
   query,
@@ -10,6 +10,7 @@ import {
 
 import { auth, db } from "db/firebase";
 import { Account } from "@lib/types/users";
+import { user } from "firebase-functions/v1/auth";
 
 export const isUniqueEmail = async (email: string) => {
   (
@@ -33,19 +34,20 @@ export async function createAdminAccount(account: Account) {
 }
 
 // TODO return success or error message
-export async function createCaregiverAccount(account: Account) {
-  await createUserWithEmailAndPassword(
-    auth,
-    account.email.trim(),
-    account.password
-  ).then((userCredential) => {
-    debugger;
-    const authData = userCredential.user;
-    const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
-    setDoc(caregiverDoc, {
-      firstName: account.firstName,
-      lastName: account.lastName,
-      phoneNumber: account.phoneNumber,
-    });
+export async function createAccount(email: string, password: string) {
+  return await createUserWithEmailAndPassword(auth, email.trim(), password).then((userCredential) => {
+    return {"success": true, userCredential}
+  }).catch((error) => {
+    return {"success": false}
+  })
+}
+
+export async function createCaregiverAccount(userCredential: UserCredential, firstName: string, lastName: string, phoneNumber: string) {
+  const authData = userCredential.user;
+  const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
+  setDoc(caregiverDoc, {
+    firstName: firstName,
+    lastName: lastName,
+    phoneNumber: phoneNumber,
   });
 }
