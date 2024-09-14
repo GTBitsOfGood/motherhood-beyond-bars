@@ -1,20 +1,23 @@
 import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
+import { OnboardingFormData } from "@lib/types/users";
 import { Dispatch, SetStateAction, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 interface Props {
   setPage: Dispatch<SetStateAction<number>>;
+  form: UseFormReturn<OnboardingFormData>;
 }
 
-export default function LiabilityWaiverPage({ setPage }: Props) {
+export default function LiabilityWaiverPage({ setPage, form }: Props) {
   return (
-    <div className="flex flex-col px-6 gap-3">
+    <div className="flex flex-col px-6 gap-3 flex-grow">
       <h1 className="text-primary-text text-2xl font-bold font-opensans">
         Liability Waiver
       </h1>
-      <div className="bg-[#C4C4C4] overflow-auto shrink-0 pt-2 px-3">
-        {/* Waiver here */}
+      <div className="bg-secondary-background border border-light-gray overflow-auto shrink-0 pt-2 px-3 max-h-[300px]">
         <p>
+          {/* TODO: Full Waiver here */}
           PARTICIPANT RELEASE AND WAIVER OF LIABILITY In consideration for the
           willingness of Motherhood Beyond Bars (“Organization”) to accept the
           individual signing below (“Participant”), as a participant in its
@@ -41,6 +44,7 @@ export default function LiabilityWaiverPage({ setPage }: Props) {
         <label>Date</label>
         <TextInput /> {/* TODO: <DatePicker /> */}
       </div>
+      <div className="flex-grow" />
       <Button text="Next" onClick={() => setPage((prev) => prev + 1)} />
     </div>
   );

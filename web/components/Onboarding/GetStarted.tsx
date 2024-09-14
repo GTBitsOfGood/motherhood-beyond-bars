@@ -7,8 +7,8 @@ interface Props {
 
 export default function GetStartedPage({ setPage }: Props) {
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col shrink-0 py-7 gap-4 items-center justify-center bg-onboarding-background">
+    <div className="flex flex-col flex-grow">
+      <div className="lg:hidden flex flex-col shrink-0 py-7 gap-4 items-center justify-center bg-onboarding-background">
         <img
           src="/MBBLogo.svg"
           className="stroke-[2.1px] object-contain sm:stroke-[3px]"
@@ -31,6 +31,7 @@ export default function GetStartedPage({ setPage }: Props) {
           <strong className="font-semibold">info@motherhoodbeyond.org</strong>{" "}
           or call us at <strong className="font-semibold">678-404-1397</strong>.
         </p>
+        <div className="flex-grow" />
         <Button type="primary" text="Get Started" onClick={() => setPage(1)} />
       </div>
     </div>

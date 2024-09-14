@@ -24,3 +24,9 @@ export type Caregiver = Account & {
   contact: string;
   babies: DocumentReference[];
 };
+
+export type OnboardingFormData = Omit<
+  Caregiver,
+  "id" | "email" | "password" | "firstName" | "lastName" | "phoneNumber" | 'babies'
+>;
+
