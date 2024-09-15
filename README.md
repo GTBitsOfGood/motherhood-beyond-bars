@@ -8,7 +8,7 @@ When babies are born to women in the Georgia prison system, the mother is allott
 
 You'll need:
 
-1. [Figma](https://www.figma.com/design/1eq6iy7h2Cd7rYTxPB4s5P/Motherhood-Beyond-Bars-%2F-Spr2022-(Copy)?node-id=6212-1439&node-type=CANVAS&t=c1VA2QufmU1WeN6E-0)
+1. [Figma](<https://www.figma.com/design/1eq6iy7h2Cd7rYTxPB4s5P/Motherhood-Beyond-Bars-%2F-Spr2022-(Copy)?node-id=6212-1439&node-type=CANVAS&t=c1VA2QufmU1WeN6E-0>)
 2. Firebase Access - In Bitwarden, ask Parker if you need help accessing it!
 
 ### Making Changes
@@ -59,6 +59,7 @@ Both the application (web & mobile) can be ran directly in a development environ
 To run both the mobile & web appplications, simply type `docker-compose up` in the root directory.
 
 ## Getting Started: Mobile (Caretaker) [OUTDATED]
+
 Note: the mobile repo does not work and will only be met with errors.
 
 ```bash
