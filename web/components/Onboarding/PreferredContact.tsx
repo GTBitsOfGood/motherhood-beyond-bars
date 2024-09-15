@@ -18,9 +18,12 @@ export default function PreferredContactPage({ setPage, form }: Props) {
       <input type="radio" />
       <input type="radio" />
       <div className="flex-grow" />
-      <Button text="Finish" onClick={() => {
-        // TODO: submit form data
-      }} />
+      <Button
+        text="Finish"
+        onClick={() => {
+          // TODO: submit form data
+        }}
+      />
     </div>
   );
 }
