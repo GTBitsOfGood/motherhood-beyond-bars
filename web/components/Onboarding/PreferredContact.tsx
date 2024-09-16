@@ -1,7 +1,8 @@
 import Button from "@components/atoms/Button";
 import { OnboardingFormData } from "@lib/types/users";
 import { updateCaregiver } from "db/actions/shared/Caregiver";
-import { Dispatch, SetStateAction } from "react";
+import { auth } from "db/firebase";
+import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 interface Props {
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export default function PreferredContactPage({ setPage, form }: Props) {
+  const [submitting, setSubmitting] = useState(false);
+
   return (
     <div className="flex flex-col px-6 gap-3 flex-grow">
       <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center">
@@ -46,9 +49,18 @@ export default function PreferredContactPage({ setPage, form }: Props) {
       <div className="flex-grow" />
       <Button
         text="Finish"
-        onClick={() => {
-          console.log(form.getValues());
-          updateCaregiver("Where do I get this?", form.getValues());
+        disabled={submitting}
+        onClick={async () => {
+          const { saveAddress, ...caregiverUpdate } = form.getValues();
+
+          if (!auth.currentUser) return;
+
+          setSubmitting(true);
+          try {
+            await updateCaregiver(auth.currentUser?.uid, caregiverUpdate);
+          } finally {
+            setSubmitting(false);
+          }
         }}
       />
     </div>
