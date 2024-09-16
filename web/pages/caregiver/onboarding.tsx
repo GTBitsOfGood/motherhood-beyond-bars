@@ -24,7 +24,7 @@ export default function CaregiverOnboarding() {
   });
 
   return (
-    <div className="flex w-full">
+    <div className="flex absolute w-screen h-screen">
       <div className="hidden lg:flex grow flex-col shrink-0 py-7 px-6 gap-4 items-center justify-center bg-onboarding-background2">
         <img
           src="/MBBLogo.svg"
@@ -66,13 +66,15 @@ export default function CaregiverOnboarding() {
             ) : null
             // Save data and route to next page
           }
-          <Button
-            text="debug next"
-            onClick={() => {
-              console.log(form.getValues());
-              setPage((prev) => Math.min(5, prev + 1));
-            }}
-          />
+          {page == 1 || page == 3 ? (
+            <Button
+              text="debug next"
+              onClick={() => {
+                console.log(form.getValues());
+                setPage((prev) => Math.min(5, prev + 1));
+              }}
+            />
+          ) : null}
         </div>
       </div>
     </div>
