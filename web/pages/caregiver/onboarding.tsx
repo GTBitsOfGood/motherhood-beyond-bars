@@ -47,7 +47,7 @@ export default function CaregiverOnboarding() {
               <BackButton
                 onClick={() => setPage((prev) => Math.max(0, prev - 1))}
               />
-              <ProgressBar progress={(page / 5) * 100} />
+              <ProgressBar progress={(page / 5) * 100} width="30%" />
             </div>
           )}
           {
