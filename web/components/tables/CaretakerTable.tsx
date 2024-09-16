@@ -2,20 +2,24 @@ import React from "react";
 import { useTable } from "react-table";
 import { HiOutlineTrash } from "react-icons/hi";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import Tooltip from "./ToolTip";
+import Tooltip from "../ToolTip";
 import Link from "next/link";
 
-function CaretakerTable({ columns, data, onDelete }: any) {
+function CaretakerTable({props}: any) {
+  if (!props) {
+    return <></>; 
+  }
+  
+  const { columns, data, onDelete } = props;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
     });
-
   const [open, setOpen] = React.useState(Array(data.length).fill(false));
 
   const metadata = {
-    Address: "address",
+    "Address": "address",
     "Pref. Communication": "prefferedCommunication",
     "Child Name": "childName",
     "Household Info": "houseHoldInfo",

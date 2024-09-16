@@ -1,67 +1,59 @@
 import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-
-import { Baby } from "@lib/types/baby";
 import {
   addNewChild,
   editBaby,
   deleteBaby,
-  getBabies,
   getCaregiversInfo,
+  getBabyPage,
 } from "db/actions/admin/Baby";
 
-import BabiesTable from "@components/BabiesTable";
+import PaginatedTable from "@components/tables/PaginatedTable";
 import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
 import ChildModal from "@components/modals/addChildModal";
+import { usePaginatedData } from "@components/molecules/Pagination/PaginationHooks";
+import { BABIES_TAB } from "pages/consts";
 
-export default function genChildrenAndBabyBooksTab({
-  babies,
-  caregivers,
-}: {
-  babies: Baby[];
-  caregivers: any[];
-}) {
-  const getData = () => babies;
+const tab = BABIES_TAB;
+
+interface CaregiverInfo {
+    id: string;
+    name: string;
+}
+
+export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) {
+
+  const { data: babies, totalRecords, currPage, setCurrPage } = usePaginatedData(getBabyPage, tab);
 
   const columns = React.useMemo(
     () => [
-      {
-        Header: "Name",
-        accessor: "name",
-      },
-      {
-        Header: "Mother's Name",
-        accessor: "motherName",
-      },
-      {
-        Header: "Date of Birth",
-        accessor: "birthday",
-      },
-      {
-        Header: "Sex",
-        accessor: "sex",
-      },
-      {
-        Header: "",
-        accessor: "babyBook",
-      },
+      { Header: "Name", accessor: "name" },
+      { Header: "Mother's Name", accessor: "motherName" },
+      { Header: "Date of Birth", accessor: "birthday" },
+      { Header: "Sex", accessor: "sex" },
+      { Header: "", accessor: "babyBook" },
     ],
     []
   );
 
-  const router = useRouter();
+  const [addModal, toggleAddModal] = useState(false);
 
-  // TODO this doesn't work, need better way to update table after adding/deleting objects
-  const refreshData = () => {
-    router.replace(router.asPath);
+  const handleEdit = async (baby: any) => {
+    await editBaby(baby);
+    alert("Baby has been updated!");
+    setCurrPage(1);
   };
 
-  const data = React.useMemo(() => getData(), []);
+  const handleDelete = async (baby: any) => {
+    await deleteBaby(baby);
+    alert("Baby has been deleted!");
+    setCurrPage(1);
+  };
 
-  const [addModal, toggleAddModal] = useState(false);
+  const paginatedProps = {totalRecords: totalRecords, pageNumber: currPage}
+  const tableProps = {columns: columns, data: babies, onEdit: handleEdit, onDelete: handleDelete}
 
   return (
     <div>
@@ -71,7 +63,7 @@ export default function genChildrenAndBabyBooksTab({
           <div className="flex flex-row">
             <h1 className="text-2xl mb-5 font-bold">Children</h1>
             <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
-              {babies.length + " Children"}
+              {totalRecords + " Children"}
             </h2>
           </div>
           <div>
@@ -83,19 +75,14 @@ export default function genChildrenAndBabyBooksTab({
           </div>
         </div>
         <div className="mt-4">
-          <BabiesTable
-            columns={columns}
-            data={data}
-            onEdit={(baby: any) => editBaby(baby).then(() => {
-              toggleAddModal(false);
-              alert("Baby has been updated!");
-              refreshData();
-            })}
-            onDelete={(baby: any) => deleteBaby(baby).then(() => {
-              alert("Baby has been deleted!");
-              refreshData();
-            })}
-            caretakers={caregivers}
+          <PaginatedTable
+            type={tab}
+            paginatedProps={paginatedProps}
+            tableProps={tableProps}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onNextPage={() => setCurrPage(currPage + 1)}
+            onPrevPage={() => setCurrPage(currPage - 1)}
           />
         </div>
       </div>
@@ -110,7 +97,7 @@ export default function genChildrenAndBabyBooksTab({
                 addNewChild(baby).then(() => {
                   toggleAddModal(false);
                   alert(`${baby.firstName} ${baby.lastName} has been added!`);
-                  refreshData();
+                  setCurrPage(1);
                 })
               }
               caretakers={caregivers}
@@ -123,12 +110,10 @@ export default function genChildrenAndBabyBooksTab({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const babies = await getBabies();
   const caregivers = await getCaregiversInfo();
 
   return {
     props: {
-      babies,
       caregivers,
     },
   };
