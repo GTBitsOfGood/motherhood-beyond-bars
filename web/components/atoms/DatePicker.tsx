@@ -1,7 +1,7 @@
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ErrorText from "./ErrorText";
-import keyboardScroll from "@lib/utils/KeyboardScroll";
+import keyboardScroll from "@lib/utils/keyboardScroll";
 
 interface Props {
   label: string;
