@@ -1,7 +1,9 @@
 import Button from "@components/atoms/Button";
+import DatePicker from "@components/atoms/DatePicker";
 import TextInput from "@components/atoms/TextInput";
+import CheckboxText from "@components/molecules/CheckboxText";
 import { OnboardingFormData } from "@lib/types/users";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 interface Props {
@@ -12,7 +14,7 @@ interface Props {
 export default function LiabilityWaiverPage({ setPage, form }: Props) {
   return (
     <div className="flex flex-col px-6 gap-3 flex-grow">
-      <h1 className="text-primary-text text-2xl font-bold font-opensans">
+      <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center">
         Liability Waiver
       </h1>
       <div className="bg-secondary-background border border-light-gray overflow-auto shrink-0 pt-2 px-3 max-h-[300px]">
@@ -35,14 +37,12 @@ export default function LiabilityWaiverPage({ setPage, form }: Props) {
           voluntarily accepts the Donated Items “As-Is.”
         </p>
       </div>
-      <input type="checkbox" /> {/* TODO: <CheckboxText /> */}
+      <CheckboxText label="I agree to the Liability Waiver" />
       <div className="mt-3">
-        <label>Signature</label>
-        <TextInput />
+        <TextInput label="Signature" />
       </div>
       <div className="mb-6">
-        <label>Date</label>
-        <TextInput /> {/* TODO: <DatePicker /> */}
+        <DatePicker label="Date" /> {/* TODO: <DatePicker /> */}
       </div>
       <div className="flex-grow" />
       <Button text="Next" onClick={() => setPage((prev) => prev + 1)} />

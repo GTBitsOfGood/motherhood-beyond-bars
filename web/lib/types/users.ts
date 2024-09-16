@@ -34,4 +34,6 @@ export type OnboardingFormData = Omit<
   | "lastName"
   | "phoneNumber"
   | "babies"
->;
+> & {
+  saveAddress: boolean;
+};
