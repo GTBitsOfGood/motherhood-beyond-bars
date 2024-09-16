@@ -1,7 +1,7 @@
 import ReactDropdown, { Option, Group } from "react-dropdown";
 import "react-dropdown/style.css";
 import ErrorText from "./ErrorText";
-import keyboardScroll from "@lib/utils/KeyboardScroll";
+import keyboardScroll from "@lib/utils/keyboardScroll";
 import { useRef } from "react";
 import SmallDownChevron from "@components/Icons/SmallDownChevron";
 
