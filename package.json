@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^8.4.0",
+    "jotai": "^2.9.3",
     "net": "^1.0.2",
     "next": "^14.2.8"
   },

@@ -14,7 +14,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { GetServerSideProps } from "next";
-import { Baby } from "pages/admin/babies";
+import { Baby } from "@lib/types/baby";
 import { useState } from "react";
 import { decrypt } from "@lib/utils/encryption";
 

@@ -1,3 +1,4 @@
+import BackButton from "@components/atoms/BackButton";
 import { useState } from "react";
 
 interface Props {
@@ -5,5 +6,5 @@ interface Props {
 }
 
 export default function LiabilityWaiverPage({ setPage }: Props) {
-  return <div></div>;
+  return <BackButton />;
 }

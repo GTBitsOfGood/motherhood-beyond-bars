@@ -12,8 +12,9 @@ export type Account = {
 
 export type Caregiver = Account & {
   id: string;
-  numAdults: number;
-  numChildren: number;
+  numAdults: number | undefined;
+  numChildren: number | undefined;
+  agesChildren: string | undefined;
   signedWaivers: Waiver[];
   itemsRequested: ItemRequest;
   address: string;
@@ -23,4 +24,21 @@ export type Caregiver = Account & {
   zipCode: string;
   contact: string;
   babies: DocumentReference[];
+};
+
+export type OnboardingFormData = Omit<
+  Caregiver,
+  | "bbChecked"
+  | "spsChecked"
+  | "csChecked"
+  | "bcChecked"
+  | "id"
+  | "email"
+  | "password"
+  | "firstName"
+  | "lastName"
+  | "phoneNumber"
+  | "babies"
+> & {
+  saveAddress: boolean;
 };

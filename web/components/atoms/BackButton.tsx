@@ -1,3 +1,5 @@
+import { useAtom } from "jotai";
+import { pageAtom } from "pages/caregiver/controls";
 import { MouseEventHandler } from "react";
 
 interface Props {
@@ -6,10 +8,14 @@ interface Props {
 }
 
 export default function BackButton({ onClick, disabled }: Props) {
+  const [page, setPage] = useAtom(pageAtom);
   return (
     <button
       className="group flex items-center gap-[2px] text-medium-gray"
-      onClick={onClick}
+      onClick={() => {
+        onClick;
+        setPage(page - 1);
+      }}
       disabled={disabled}
     >
       <svg
