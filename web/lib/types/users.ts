@@ -36,4 +36,7 @@ export type OnboardingFormData = Omit<
   | "babies"
 > & {
   saveAddress: boolean;
+  agreedToWaiver: boolean;
+  agreedDate: Date;
+  agreedSignature: string;
 };

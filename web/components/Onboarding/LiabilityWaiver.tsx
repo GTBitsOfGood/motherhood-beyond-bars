@@ -4,7 +4,8 @@ import TextInput from "@components/atoms/TextInput";
 import CheckboxText from "@components/molecules/CheckboxText";
 import { OnboardingFormData } from "@lib/types/users";
 import { Dispatch, SetStateAction } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
+import ErrorToast from "./ErrorToast";
 
 interface Props {
   setPage: Dispatch<SetStateAction<number>>;
@@ -12,8 +13,15 @@ interface Props {
 }
 
 export default function LiabilityWaiverPage({ setPage, form }: Props) {
+  const agreeError = form.getFieldState("agreedToWaiver").error;
+  const dateError = form.getFieldState("agreedDate").error;
+  const signatureError = form.getFieldState("agreedSignature").error;
+  const hasError = !!(agreeError || dateError || signatureError);
+
   return (
     <div className="flex flex-col px-6 gap-3 flex-grow">
+      {(signatureError || dateError) && <ErrorToast />}
+      {agreeError && <ErrorToast text="Must agree to the Liability Waiver" />}
       <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center">
         Liability Waiver
       </h1>
@@ -37,15 +45,58 @@ export default function LiabilityWaiverPage({ setPage, form }: Props) {
           voluntarily accepts the Donated Items “As-Is.”
         </p>
       </div>
-      <CheckboxText label="I agree to the Liability Waiver" />
+      <Controller
+        control={form.control}
+        name="agreedToWaiver"
+        defaultValue={false}
+        rules={{
+          validate: (v) => (!v ? "Must aggree to the Liability Waiver" : true),
+        }}
+        render={({ field: { name, onBlur, onChange, ref, value } }) => (
+          <CheckboxText
+            label="I agree to the Liability Waiver"
+            value={value}
+            onChange={(v) => onChange(v)}
+          />
+        )}
+      />
       <div className="mt-3">
-        <TextInput label="Signature" />
+        <TextInput
+          label="Signature"
+          error={form.formState.errors.agreedSignature?.message}
+          formValue={form.register("agreedSignature", {
+            validate: (v) => (!v ? "Address cannot be empty" : true),
+          })}
+        />
       </div>
       <div className="mb-6">
-        <DatePicker label="Date" /> {/* TODO: <DatePicker /> */}
+        <Controller
+          control={form.control}
+          name="agreedDate"
+          rules={{
+            validate: (v) => (!v ? "Date cannot be empty" : true),
+          }}
+          render={({ field: { name, onBlur, onChange, ref, value } }) => (
+            <DatePicker
+              label="Date"
+              value={value}
+              onChange={(v) => onChange(v)}
+              error={form.formState.errors.agreedDate?.message}
+            />
+          )}
+        />
       </div>
       <div className="flex-grow" />
-      <Button text="Next" onClick={() => setPage((prev) => prev + 1)} />
+      <Button
+        text="Next"
+        disabled={!!hasError}
+        onClick={async () => {
+          const isValid = await form.trigger(undefined, { shouldFocus: true });
+          if (!isValid) return;
+
+          setPage((prev) => prev + 1);
+        }}
+      />
     </div>
   );
 }

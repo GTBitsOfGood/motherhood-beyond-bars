@@ -51,7 +51,13 @@ export default function PreferredContactPage({ setPage, form }: Props) {
         text="Finish"
         disabled={submitting}
         onClick={async () => {
-          const { saveAddress, ...caregiverUpdate } = form.getValues();
+          const {
+            saveAddress,
+            agreedToWaiver,
+            agreedDate,
+            agreedSignature,
+            ...caregiverUpdate
+          } = form.getValues();
 
           if (!auth.currentUser) return;
 

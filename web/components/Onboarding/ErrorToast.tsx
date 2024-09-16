@@ -1,7 +1,11 @@
 import ErrorTriangle from "@components/Icons/ErrorTriangle";
 import { useState } from "react";
 
-export default function ErrorToast() {
+interface Props {
+  text?: string;
+}
+
+export default function ErrorToast({ text }: Props) {
   const [closed, setClosed] = useState(false);
 
   return (
@@ -9,7 +13,9 @@ export default function ErrorToast() {
       {!closed && (
         <div className="flex p-2 items-center justify-between rounded border border-[#E60606]">
           <ErrorTriangle />
-          <p className="text-[#E60606]">Please fill in all required fields.</p>
+          <p className="text-[#E60606]">
+            {text || "Please fill in all required fields."}
+          </p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="10"
