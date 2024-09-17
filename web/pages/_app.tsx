@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <UserProvider>
       <div>
         <div className="flex flex-no-wrap h-screen">
-          {!router.asPath.includes("/book") && <SideBar items={SideBarItems} />}
+          {/* {!router.asPath.includes("/book") && <SideBar items={SideBarItems} />} */}
           <NextNProgress />
           <Component {...pageProps} />
         </div>

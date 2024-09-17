@@ -48,7 +48,7 @@ export default function CheckboxCard({
     isClothing
 }: CheckboxCardProps) {
   return (
-    <div className="shadow-[0_3px_16px_rgba(71,80,123,0.12)] rounded flex flex-row items-start content-center px-[10px] py-[10px] w-[300px]" onClick={() => onChange(!checked)}>
+    <div className="shadow-[0_3px_16px_rgba(71,80,123,0.12)] rounded flex flex-row items-start content-center px-[0px] py-[10px] mx-[20px] my-[10px] w-[300px]" onClick={() => onChange(!checked)}>
       <Checkbox checked={checked} onChange={() => {}} />
       <div className="mx-[10px] text-[#666666]">
         <h1 className="text-nowrap font-semibold text-[16px] leading-[24px]">{title}</h1>

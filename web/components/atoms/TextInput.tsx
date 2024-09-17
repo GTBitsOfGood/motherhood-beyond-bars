@@ -64,34 +64,8 @@ export default function TextInput({
     <div className="flex flex-col content-center items-start">
       <label>{label}</label>
       <input {...formValue} {...props} className={`w-[${width}px] h-[44px] border border-solid border-b-gray-300 rounded-[4px] box-border`}/>
-      {showError && <p>{error}</p>}
+      {showError && <p className="font-normal text-[14px] leading-[19px] text-[#E60606]">{error}</p>}
     </div>
   );
 }
 
-
-// /* _Atom */
-
-// box-sizing: border-box;
-
-// /* Auto layout */
-// display: flex;
-// flex-direction: row;
-// align-items: center;
-// padding: 10px 8px;
-// gap: 8px;
-// 
-// width: 400px;
-// height: 44px;
-
-// /* Function/background */
-// background: #FAFBFC;
-// /* Function/border */
-// border: 1px solid #D9D9D9;
-// border-radius: 4px;
-
-// /* Inside auto layout */
-// flex: none;
-// order: 1;
-// align-self: stretch;
-// flex-grow: 0;
