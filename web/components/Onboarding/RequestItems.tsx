@@ -100,7 +100,7 @@ export default function RequestItemsPage({
               }
               onClick={() => {
                 setOpen(false);
-                setPage(4);
+                setPage(page + 1);
               }} 
               className="bg-pink-500 text-white p-2 rounded flex flex-row"
             >
@@ -112,7 +112,7 @@ export default function RequestItemsPage({
               </svg>}
               onClick={() => {
                 setOpen(false);
-                setCSChecked(false);
+                setCSChecked(true);
               }} 
               className="bg-gray-500 text-white p-2 rounded flex flex-row"
             >
@@ -121,7 +121,12 @@ export default function RequestItemsPage({
           </div>
         </Modal>
         <div className="w-full flex justify-center mt-8">
-          <NextButton onClick={() => setOpen(true)}/>
+          <NextButton 
+            onClick={() => {
+              if (!csChecked) setOpen(true); // if user don't have a car seat, open the modal to confirm again
+              else setPage(page + 1);
+            }}
+          />
         </div>
 
         </div>
