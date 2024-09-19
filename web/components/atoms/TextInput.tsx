@@ -27,7 +27,7 @@ export default function TextInput({
       type={inputType}
       {...formValue}
       className={
-        `w-full py-2.5 px-2 bg-secondary-background items-center border rounded mb-[1%] ${hasError ? "border-[#E60606]" : "border-light-gray"}`
+        `w-full py-2.5 px-2 bg-secondary-background items-center border rounded mb-[1%] ${hasError ? "border-error-red" : "border-light-gray"}`
       }
       onChange={(event) => {
         setValue(event.target.value);
@@ -42,9 +42,5 @@ export default function TextInput({
         {errorMsg}
       </p>
     </div>
-    
-    // TODO add error message and error border, if there is an error message, show error border
-    // There should always be a space for the error message, the space shouldn't disappear
-    // when the error message isn't there
   );
 }
