@@ -14,6 +14,18 @@ const getLastRecordOnPage = (
 const isValidPage = (firstRecordOnPage: number, totalRecords: number) =>
   firstRecordOnPage > 0 && firstRecordOnPage <= totalRecords;
 
+const LeftArrow = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path d="M15.1599 7.41L10.5799 12L15.1599 16.59L13.7499 18L7.74991 12L13.7499 6L15.1599 7.41Z" fill="currentColor"/>
+  </svg>
+);
+
+const RightArrow = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path d="M8.84009 7.41L13.4201 12L8.84009 16.59L10.2501 18L16.2501 12L10.2501 6L8.84009 7.41Z" fill="currentColor"/>
+  </svg>
+);
+
 const getArrows = (
   firstRecordOnPage: number,
   totalRecords: number,
@@ -21,8 +33,8 @@ const getArrows = (
   onNextPage: any,
   onPrevPage: any
 ) => [
-  { symbol: "<", disabled: firstRecordOnPage <= pageSize, onClick: onPrevPage },
-  { symbol: ">", disabled: totalRecords <= currPage * pageSize, onClick: onNextPage },
+  { symbol: <LeftArrow/>, disabled: firstRecordOnPage <= pageSize, onClick: onPrevPage },
+  { symbol: <RightArrow/>, disabled: totalRecords <= currPage * pageSize, onClick: onNextPage },
 ];
 
 const ArrowButton = ({
@@ -30,7 +42,7 @@ const ArrowButton = ({
   disabled,
   onClick
 }: {
-  symbol: string;
+  symbol: JSX.Element;
   disabled: boolean;
   onClick: () => void;
 }) => (
@@ -73,8 +85,8 @@ function Pagination({
         {firstRecordOnPage} - {lastRecordOnPage} of {totalRecords}
       </h1>
       <div className="flex items-center gap-2">
-        {arrows.map(({ symbol, disabled, onClick }) => (
-          <ArrowButton key={symbol} symbol={symbol} disabled={disabled} onClick={onClick}/>
+        {arrows.map(({ symbol, disabled, onClick }, index) => (
+          <ArrowButton key={index} symbol={symbol} disabled={disabled} onClick={onClick} />
         ))}
       </div>
     </div>
