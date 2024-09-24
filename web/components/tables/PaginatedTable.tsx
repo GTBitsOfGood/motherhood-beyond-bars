@@ -2,7 +2,7 @@ import React from "react";
 import Pagination from "@components/molecules/Pagination/Pagination";
 import CaretakerTable from "@components/tables/CaretakerTable";
 import BabiesTable from "@components/tables/BabiesTable";
-import { BABIES_TAB, CAREGIVERS_TAB } from "pages/consts";
+import { BABIES_TAB, CAREGIVERS_TAB } from "@lib/utils/consts";
 
 export default function PaginatedTable({type, tableProps, paginatedProps, onNextPage, onPrevPage}: any) {
     return (

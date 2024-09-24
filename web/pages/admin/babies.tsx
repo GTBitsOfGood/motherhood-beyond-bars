@@ -14,7 +14,7 @@ import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
 import ChildModal from "@components/modals/addChildModal";
 import { usePaginatedData } from "@components/molecules/Pagination/PaginationHooks";
-import { BABIES_TAB } from "pages/consts";
+import { BABIES_TAB } from "@lib/utils/consts";
 
 const tab = BABIES_TAB;
 

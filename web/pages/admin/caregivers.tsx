@@ -2,7 +2,7 @@ import React from "react";
 import { deleteCaretaker, getCaregiverPage } from "db/actions/admin/Caregiver";
 import PaginatedTable from "@components/tables/PaginatedTable";
 import { usePaginatedData } from "@components/molecules/Pagination/PaginationHooks";
-import { CAREGIVERS_TAB } from "pages/consts";
+import { CAREGIVERS_TAB } from "@lib/utils/consts";
 
 const tab = CAREGIVERS_TAB;
 
