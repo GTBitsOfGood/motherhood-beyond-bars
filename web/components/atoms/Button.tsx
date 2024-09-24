@@ -21,7 +21,7 @@ export default function Button({
     <button
       className={`
         flex bg-background justify-center items-center w-full px-4 pt-2 pb-[9px]
-        ${type == "primary" ? " border border-mbb-pink rounded " : null }
+        ${type == "primary" ? " border border-mbb-pink rounded " : null}
       `}
       onClick={onClick}
       disabled={disabled}
