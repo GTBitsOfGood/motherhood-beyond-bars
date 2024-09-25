@@ -21,21 +21,21 @@ export const isUniqueEmail = async (email: string) => {
 // TODO return success or error message
 export async function createAccount(email: string, password: string) {
   return await createUserWithEmailAndPassword(auth, email.trim(), password)
-    .then((userCredential) => {
-      return { success: true, userCredential };
+    .then((userCredential: UserCredential) => {
+      return { success: true, userCredential: userCredential };
     })
     .catch((error) => {
-      return { success: false };
+      return { success: false, userCredential: undefined };
     });
 }
 
 export async function createCaregiverAccount(
-  userCredential: UserCredential,
+  userCredential: UserCredential | undefined,
   firstName: string,
   lastName: string,
   phoneNumber: string
 ) {
-  const authData = userCredential.user;
+  const authData = userCredential ? userCredential.user : undefined;
   try {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     setDoc(caregiverDoc, {

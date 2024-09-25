@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
+import { UserCredential } from "firebase/auth";
 
 import { loginWithGoogle } from "db/actions/Login";
 import { createAccount, createCaregiverAccount } from "db/actions/SignUp";
@@ -30,7 +31,8 @@ export default function SignUpScreen() {
   const [lastNameError, setLastNameError] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
 
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
+  const [acc, setAcc] = useState<UserCredential>();
 
   if (userAdmin) {
     return null;
@@ -150,17 +152,21 @@ export default function SignUpScreen() {
                 <div className="mb-5 sm:mb-7">
                   <Button
                     text={`${page === 1 ? "Continue" : "Get started"}`}
-                    onClick={() => {
-                      let acc = null;
+                    onClick={async () => {
                       if (page === 1) {
                         if (email && password && password === confirmPassword) {
-                          acc = createAccount(email, password).then((e) => {
-                            if (e.success) {
-                              setPage(2);
-                            } else {
-                              alert("error");
+                          const acc = await createAccount(email, password).then(
+                            (e) => {
+                              if (e.success) {
+                                //route to next page
+                                setPage(2);
+                                return e.userCredential;
+                              } else {
+                                alert("error");
+                              }
+                              setAcc(acc);
                             }
-                          });
+                          );
                         } else {
                           if (!email) {
                             setEmailError("Please enter a email");
