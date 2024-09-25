@@ -7,6 +7,7 @@ interface Props {
   placeholder?: string;
   errorMsg?: string;
   inputType?: string;
+  key?: string;
 }
 
 export default function TextInput({
@@ -16,29 +17,27 @@ export default function TextInput({
   placeholder = "",
   errorMsg = "",
   inputType = "text",
+  key = "",
 }: Props) {
   const [value, setValue] = useState(currentValue);
-
-  const hasError = !!errorMsg
 
   return (
     <div>
       <input
-      type={inputType}
-      {...formValue}
-      className={
-        `w-full py-2.5 px-2 bg-secondary-background items-center border rounded mb-[1%] ${hasError ? "border-error-red" : "border-light-gray"}`
-      }
-      onChange={(event) => {
-        setValue(event.target.value);
-        if (onChange) {
-          onChange(event.target.value);
-        }
-      }}
-      placeholder={placeholder}
-      value={value}
+        key={key}
+        type={inputType}
+        {...formValue}
+        className={`w-full py-2.5 px-2 bg-secondary-background items-center border rounded ${errorMsg ? "border-error-red" : "border-light-gray"}`}
+        onChange={(event) => {
+          setValue(event.target.value);
+          if (onChange) {
+            onChange(event.target.value);
+          }
+        }}
+        placeholder={placeholder}
+        value={value}
       />
-      <p className="w-auto text-[#e50606] text-sm font-normal font-opensans">
+      <p className="w-auto text-error-red text-sm font-normal font-opensans">
         {errorMsg}
       </p>
     </div>
