@@ -2,52 +2,39 @@ import {
   doc,
   deleteDoc,
   collection,
-  getDoc,
   getDocs,
   query,
 } from "firebase/firestore";
 
-import { formatPhoneNumber } from "@lib/utils/contactInfo";
 import { db } from "db/firebase";
 
-import { CaregiverDisplay } from "pages/admin/caregivers";
+import { PaginationInfoType, PaginationReferencesType } from "@lib/types/common";
+import { getQueryConstraintsFromPagination } from "@lib/utils/pagination";
+import { CAREGIVERS_COLLECTION_PATH } from "db/consts";
+import getCaregiversFromCaregiverDocs from "@lib/utils/caregiver";
+
+const path = CAREGIVERS_COLLECTION_PATH;
 
 export async function getCaregivers() {
-  const itemsRef = query(collection(db, "caregivers"));
+  const itemsRef = query(collection(db, path));
   const caregiverDocs = await getDocs(itemsRef);
 
-  const caregivers: Partial<CaregiverDisplay>[] = [];
-
-  // TODO update for multiple children
-  caregiverDocs.forEach(async (doc) => {
-    const data = doc.data();
-    const child: any = data.baby ? (await getDoc(data.baby)).data() : null;
-    caregivers.push({
-      id: doc.id,
-      name: data.firstName + " " + data.lastName,
-      email: data.email || "N/A",
-      phone: (data.phoneNumber && formatPhoneNumber(data.phoneNumber)) || "N/A",
-      registeredDate: data.createdAt
-        ? data.createdAt.toDate().toLocaleDateString()
-        : null,
-      assigned: child ? true : false,
-      address: `${data.address}, ${
-        data.apartment ? `${data.apartment}, ` : ""
-      }${data.city}, ${data.state}`,
-      prefferedCommunication: data.prefferedCommunication || "N/A",
-      childName: child ? child.firstName + " " + child.lastName : null,
-      houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,
-      // liabilityWaiver: data.signedWaivers?.at(-1).id || null,
-      liabilityWaiver: "",
-    });
-  });
-
-  // TODO catch errors
+  const caregivers = await getCaregiversFromCaregiverDocs(caregiverDocs);
 
   return caregivers;
 }
 
+
+export async function getCaregiverPage(pageNumber: number, paginationReferences: PaginationReferencesType) {
+  const constraints = getQueryConstraintsFromPagination(path, pageNumber, paginationReferences)
+  const itemsRef = query(collection(db, path), ...constraints);
+  const caregiverDocs = await getDocs(itemsRef);
+  const caregivers = await getCaregiversFromCaregiverDocs(caregiverDocs);
+  const paginationInfo: PaginationInfoType = {pageNumber: pageNumber, startAfter: caregiverDocs?.docs[caregivers.length - 1]}
+  return {data: caregivers, paginationInfo: paginationInfo};
+}
+
 export const deleteCaretaker = async (caretakerID: string) => {
   // TODO catch errors
-  await deleteDoc(doc(db, "caregivers", caretakerID));
+  await deleteDoc(doc(db, path, caretakerID));
 };

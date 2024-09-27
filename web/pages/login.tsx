@@ -48,7 +48,7 @@ export default function LoginScreen() {
                 <div className={`${emailError ? "mb-1 sm:mb-1" : "mb-6"}`}>
                   <p className="mb-2 sm:mb-1">Email</p>
                   <TextInput
-                    errorMsg={emailError}
+                    error={emailError}
                     onChange={(event) => {
                       setEmail(event);
                       setEmailError("");
@@ -59,7 +59,7 @@ export default function LoginScreen() {
                   <p className="mb-2 sm:mb-1">Password</p>
                   <TextInput
                     inputType="password"
-                    errorMsg={passwordError}
+                    error={passwordError}
                     onChange={(event) => {
                       setPassword(event);
                       setPasswordError("");

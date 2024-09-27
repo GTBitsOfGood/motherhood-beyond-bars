@@ -1,33 +1,44 @@
 import React, { useState } from "react";
+import ErrorText from "./ErrorText";
+import keyboardScroll from "@lib/utils/keyboardScroll";
 
 interface Props {
-  onChange?: (arg0: any) => any;
+  label?: string;
+  disabled?: boolean;
+  onChange?: (value: string) => void;
   formValue?: object;
   currentValue?: string;
   placeholder?: string;
-  errorMsg?: string;
+  error?: string;
   inputType?: string;
   key?: string;
 }
 
 export default function TextInput({
-  onChange = undefined,
+  label = "",
+  disabled = false,
+  onChange,
   formValue = {},
   currentValue = "",
   placeholder = "",
-  errorMsg = "",
+  error = "",
   inputType = "text",
   key = "",
 }: Props) {
   const [value, setValue] = useState(currentValue);
 
   return (
-    <div>
+    <div className="flex flex-col">
+      <label className="font-opensans text-base mb-2" htmlFor={label}>
+        {label}
+      </label>
       <input
         key={key}
         type={inputType}
+        onFocus={(e) => keyboardScroll(e)}
         {...formValue}
-        className={`w-full py-2.5 px-2 bg-secondary-background items-center border rounded ${errorMsg ? "border-error-red" : "border-light-gray"}`}
+        name={label}
+        className={`w-full py-2.5 px-2 bg-secondary-background items-center border rounded ${disabled ? "!bg-light-gray" : "!bg-secondary-background"} ${error ? "border-error-red" : "border-light-gray"}`}
         onChange={(event) => {
           setValue(event.target.value);
           if (onChange) {
@@ -37,9 +48,7 @@ export default function TextInput({
         placeholder={placeholder}
         value={value}
       />
-      <p className="w-auto text-error-red text-sm font-normal font-opensans">
-        {errorMsg}
-      </p>
+      <ErrorText error={error} />
     </div>
   );
 }

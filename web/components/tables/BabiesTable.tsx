@@ -2,11 +2,16 @@ import ChildModal from "@components/modals/addChildModal";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useTable } from "react-table";
-import book from "../public/book.svg";
-import dots from "../public/dots.png";
-import Modal from "./modal";
+import book from "../../public/book.svg";
+import dots from "../../public/dots.png";
+import Modal from "@components/modal";
 
-function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {
+function BabiesTable({props}: any) {
+  if (!props) {
+    return <></>; 
+  }
+  
+  const { columns, data, onEdit, caretakers, onDelete } = props;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -107,7 +112,7 @@ function BabiesTable({ columns, data, onEdit, caretakers, onDelete }: any) {
                                       onClick={() => {
                                         confirm(
                                           "Are you sure you want to delete this baby?"
-                                        ) && onDelete(row.original);
+                                        )  && onDelete(row.original) && setSelectedOptionsPanel(-1);
                                       }}
                                       className="block px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer"
                                     >
