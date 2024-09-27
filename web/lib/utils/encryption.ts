@@ -21,8 +21,8 @@ const encrypt = (text: string) => {
   encrypted.set(final, updated.length);
 
   return {
-    iv: Buffer.from(iv).toString("hex"),
-    content: Buffer.from(encrypted).toString("hex"),
+    iv: Buffer.from(iv).toString(),
+    content: Buffer.from(encrypted).toString(),
   };
 };
 
@@ -38,11 +38,11 @@ const decrypt = (hash: { iv: string; content: string }) => {
   );
   const final = decipher.final();
 
-  const decrpyted = new Uint8Array(updated.length + final.length);
-  decrpyted.set(updated, 0);
-  decrpyted.set(final, updated.length);
+  const decrypted = new Uint8Array(updated.length + final.length);
+  decrypted.set(updated, 0);
+  decrypted.set(final, updated.length);
 
-  return decrpyted.toString();
+  return Buffer.from(decrypted).toString();
 };
 
 export { encrypt, decrypt };
