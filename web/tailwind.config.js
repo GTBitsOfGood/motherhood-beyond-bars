@@ -30,7 +30,7 @@ module.exports = {
         "icon-gray": "#BFBFBF",
         "icon-light-gray": "#DFE3E8",
         "empty-gray": "#E3E3E3",
-        "error-red": "#E60606",
+        "error-red": "#E50606",
         "light-black": "#191919",
         dark: {
           100: "#BFBFBF",

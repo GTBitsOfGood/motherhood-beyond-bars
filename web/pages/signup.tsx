@@ -1,18 +1,17 @@
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { UserCredential } from "firebase/auth";
 
 import { loginWithGoogle } from "db/actions/Login";
 import { createAccount, createCaregiverAccount } from "db/actions/SignUp";
-import { UserContext } from "@lib/contexts/userContext";
 
 import TextInput from "@components/atoms/TextInput";
 import Button from "@components/atoms/Button";
 import HalfScreen from "@components/logos/HalfScreen";
 import BackButton from "@components/atoms/BackButton";
+import Banner from "@components/molecules/Banner";
 
 export default function SignUpScreen() {
-  const { admin: userAdmin } = useContext(UserContext);
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -33,130 +32,130 @@ export default function SignUpScreen() {
 
   const [page, setPage] = useState(1);
   const [acc, setAcc] = useState<UserCredential>();
-
-  if (userAdmin) {
-    return null;
-  }
+  const [errorBannerMsg, setErrorBannerMsg] = useState("");
 
   return (
     <div className="flex absolute bg-white">
       <div className="h-screen w-screen">
         <div className="flex flex-col w-full h-full sm:flex-row">
-          <HalfScreen></HalfScreen>
-          <div className="flex flex-col w-full h-full justify-center items-center sm:w-1/2">
+          <HalfScreen
+            caregiver={true}
+            backButtonFunction={page == 2 ? () => setPage(1) : undefined}
+          />
+          <div className="flex flex-col w-full h-full justify-center items-center mt-6 sm:mt-0 sm:w-1/2">
             <div className="flex flex-col w-[90%] sm:w-[60%] sm:items-center">
-              {page === 2 ? (
-                <div className="flex w-full justify-start mb-2">
-                  <BackButton onClick={() => setPage(1)} />
+              <div className="hidden sm:flex w-full justify-start sm:mb-8">
+                {page === 2 && <BackButton onClick={() => setPage(1)} />}
+              </div>
+              {errorBannerMsg && (
+                <div className="hidden sm:inline mt-0 sm:-mt-4">
+                  <Banner
+                    text={errorBannerMsg}
+                    onClose={() => setErrorBannerMsg("")}
+                  />
                 </div>
-              ) : null}
-              <p className="text-primary-text text-2xl font-bold font-opensans mb-5">
+              )}
+              <p className="text-primary-text text-2xl font-bold font-opensans mb-4 sm:mb-8">
                 Sign Up
               </p>
-              <div className="flex flex-col w-full">
-                <div
-                  className={`${emailError || firstNameError ? "mb-5 sm:mb-3" : "mb-10 sm:mb-8"}`}
-                >
-                  {page === 1 ? (
-                    <div>
-                      <p className="mb-2 sm:mb-1">Email</p>
-                      <TextInput
-                        key="email"
-                        currentValue={email}
-                        errorMsg={emailError}
-                        onChange={(event) => {
-                          setEmail(event);
-                          setEmailError("");
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <p className="mb-2 sm:mb-1">First Name</p>
-                      <TextInput
-                        key="firstName"
-                        currentValue={firstName}
-                        errorMsg={firstNameError}
-                        onChange={(event) => {
-                          setFirstName(event);
-                          setFirstNameError("");
-                        }}
-                      />
-                    </div>
-                  )}
+              {errorBannerMsg && (
+                <div className="inline -mt-2 sm:hidden sm:mt-0">
+                  <Banner
+                    text={errorBannerMsg}
+                    onClose={() => setErrorBannerMsg("")}
+                  />
                 </div>
-                <div
-                  className={`${passwordError || lastNameError ? "mb-5 sm:mb-3" : "mb-10 sm:mb-8"}`}
-                >
-                  {page === 1 ? (
-                    <div>
-                      <p className="mb-2 sm:mb-1">Password</p>
-                      <TextInput
-                        key="password"
-                        currentValue={password}
-                        inputType="password"
-                        errorMsg={passwordError}
-                        onChange={(event) => {
-                          setPassword(event);
-                          setPasswordError("");
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <p className="mb-2 sm:mb-1">Last Name</p>
-                      <TextInput
-                        key="lastName"
-                        currentValue={lastName}
-                        errorMsg={lastNameError}
-                        onChange={(event) => {
-                          setLastName(event);
-                          setLastNameError("");
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div
-                  className={`${confirmPasswordError || phoneNumberError ? "mb-5 sm:mb-3" : "mb-10 sm:mb-8"}`}
-                >
-                  {page === 1 ? (
-                    <div>
-                      <p className="mb-2 sm:mb-1">Confirm Password</p>
-                      <TextInput
-                        key="confirmPassword"
-                        currentValue={confirmPassword}
-                        inputType="password"
-                        errorMsg={confirmPasswordError}
-                        onChange={(event) => {
-                          setConfirmPassword(event);
-                          setConfirmPasswordError("");
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <p className="mb-2 sm:mb-1">Phone Number</p>
-                      <TextInput
-                        key="phoneNumber"
-                        currentValue={phoneNumber}
-                        errorMsg={phoneNumberError}
-                        onChange={(event) => {
-                          setPhoneNumber(event);
-                          setPhoneNumberError("");
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="mb-5 sm:mb-7">
-                  <Button
-                    text={`${page === 1 ? "Continue" : "Get started"}`}
-                    onClick={async () => {
-                      if (page === 1) {
-                        if (email && password && password === confirmPassword) {
-                          const acc = await createAccount(email, password).then(
-                            (e) => {
+              )}
+              <div className="flex flex-col w-full gap-2 sm:gap-6">
+                {page === 1 ? (
+                  <TextInput
+                    key="email"
+                    label="Email"
+                    currentValue={email}
+                    error={emailError}
+                    onChange={(event) => {
+                      setEmail(event);
+                      setEmailError("");
+                    }}
+                  />
+                ) : (
+                  <TextInput
+                    key="firstName"
+                    label="First Name"
+                    currentValue={firstName}
+                    error={firstNameError}
+                    onChange={(event) => {
+                      setFirstName(event);
+                      setFirstNameError("");
+                    }}
+                  />
+                )}
+                {page === 1 ? (
+                  <TextInput
+                    key="password"
+                    label="Password"
+                    currentValue={password}
+                    inputType="password"
+                    error={passwordError}
+                    onChange={(event) => {
+                      setPassword(event);
+                      setPasswordError("");
+                    }}
+                  />
+                ) : (
+                  <div>
+                    <TextInput
+                      key="lastName"
+                      label="Last Name"
+                      currentValue={lastName}
+                      error={lastNameError}
+                      onChange={(event) => {
+                        setLastName(event);
+                        setLastNameError("");
+                      }}
+                    />
+                  </div>
+                )}
+                {page === 1 ? (
+                  <TextInput
+                    key="confirmPassword"
+                    label="Confirm Password"
+                    currentValue={confirmPassword}
+                    inputType="password"
+                    error={confirmPasswordError}
+                    onChange={(event) => {
+                      setConfirmPassword(event);
+                      setConfirmPasswordError("");
+                    }}
+                  />
+                ) : (
+                  <TextInput
+                    key="phoneNumber"
+                    label="Phone Number"
+                    currentValue={phoneNumber}
+                    error={phoneNumberError}
+                    onChange={(event) => {
+                      setPhoneNumber(event);
+                      setPhoneNumberError("");
+                    }}
+                  />
+                )}
+                <div>
+                  <div className="mb-5 sm:mb-7">
+                    <Button
+                      text={`${page === 1 ? "Continue" : "Get started"}`}
+                      onClick={async () => {
+                        // TODO fix backend logic
+                        if (page === 1) {
+                          if (
+                            email &&
+                            password &&
+                            password === confirmPassword
+                          ) {
+                            const acc = await createAccount(
+                              email,
+                              password
+                            ).then((e) => {
                               if (e.success) {
                                 //route to next page
                                 setPage(2);
@@ -165,81 +164,85 @@ export default function SignUpScreen() {
                                 alert("error");
                               }
                               setAcc(acc);
+                            });
+                          } else {
+                            if (!email) {
+                              setEmailError("Please enter a email");
                             }
-                          );
+                            if (!password) {
+                              setPasswordError("Please enter a password");
+                            } else if (password.length < 10) {
+                              setPasswordError(
+                                "Password must contain at least 10 characters"
+                              );
+                            }
+                            if (!confirmPassword) {
+                              setConfirmPasswordError(
+                                "Please enter a password"
+                              );
+                            } else if (password !== confirmPassword) {
+                              setConfirmPasswordError("Passwords must match");
+                            }
+                          }
                         } else {
-                          if (!email) {
-                            setEmailError("Please enter a email");
-                          }
-                          if (!password) {
-                            setPasswordError("Please enter a password");
-                          } else if (password.length < 10) {
-                            setPasswordError(
-                              "Password must contain at least 10 characters"
-                            );
-                          }
-                          if (!confirmPassword) {
-                            setConfirmPasswordError("Please enter a password");
-                          } else if (password !== confirmPassword) {
-                            setConfirmPasswordError("Passwords must match");
+                          if (
+                            firstName &&
+                            lastName &&
+                            phoneNumber &&
+                            /[^0-9]/.test(phoneNumber)
+                          ) {
+                            createCaregiverAccount(
+                              acc,
+                              firstName,
+                              lastName,
+                              phoneNumber
+                            ).then((e) => {
+                              if (e.success) {
+                                router.push("/caregiver/onboarding");
+                              } else {
+                                // TODO handle error
+                              }
+                            });
+                          } else {
+                            if (!firstName) {
+                              setFirstNameError("Please enter a first name");
+                            }
+                            if (!lastName) {
+                              setLastNameError("Please enter a last name");
+                            }
+                            if (!phoneNumber) {
+                              setPhoneNumberError(
+                                "Please enter a phone number"
+                              );
+                            } else if (/[^0-9]/.test(phoneNumber)) {
+                              setPhoneNumberError(
+                                "Phone number should only contain numbers"
+                              );
+                            }
                           }
                         }
-                      } else {
-                        if (
-                          firstName &&
-                          lastName &&
-                          phoneNumber &&
-                          /[^0-9]/.test(phoneNumber)
-                        ) {
-                          createCaregiverAccount(
-                            acc,
-                            firstName,
-                            lastName,
-                            phoneNumber
-                          ).then((e) => {
+                      }}
+                    ></Button>
+                  </div>
+                  {page === 1 && (
+                    <div className="mb-6 sm:mb-2">
+                      <Button
+                        text="Sign up with Google"
+                        type="Google"
+                        onClick={() => {
+                          loginWithGoogle().then((e) => {
                             if (e.success) {
                               router.push("/caregiver/onboarding");
                             } else {
-                              // TODO handle error
+                              //TODO handle error
                             }
                           });
-                        } else {
-                          if (!firstName) {
-                            setFirstNameError("Please enter a first name");
-                          }
-                          if (!lastName) {
-                            setLastNameError("Please enter a last name");
-                          }
-                          if (!phoneNumber) {
-                            setPhoneNumberError("Please enter a phone number");
-                          } else if (/[^0-9]/.test(phoneNumber)) {
-                            setPhoneNumberError(
-                              "Phone number should only contain numbers"
-                            );
-                          }
-                        }
-                      }
-                    }}
-                  ></Button>
-                </div>
-                <div className="mb-8">
-                  {page === 1 && (
-                    <Button
-                      text="Sign up with Google"
-                      type="Google"
-                      onClick={() => {
-                        loginWithGoogle().then((e) => {
-                          if (e.success) {
-                            router.push("/caregiver/onboarding");
-                          } else {
-                            //TODO handle error
-                          }
-                        });
-                      }}
-                    ></Button>
+                        }}
+                      ></Button>
+                    </div>
                   )}
                 </div>
-                <div className="flex flex-row justify-center">
+                <div className="flex flex-row justify-center mb-8 sm:mb-0">
                   <div className="text-light-black text-base font-normal font-opensans leading-tight tracking-tight mr-2">
                     Already have an account?&nbsp;
                     <button

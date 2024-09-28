@@ -29,9 +29,11 @@ export default function TextInput({
 
   return (
     <div className="flex flex-col">
-      <label className="font-opensans text-base mb-2" htmlFor={label}>
-        {label}
-      </label>
+      {label && (
+        <label className="font-opensans text-base mb-2" htmlFor={label}>
+          {label}
+        </label>
+      )}
       <input
         key={key}
         type={inputType}

@@ -3,12 +3,13 @@ import { MouseEventHandler } from "react";
 interface Props {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
+  darkerColor?: boolean;
 }
 
-export default function BackButton({ onClick, disabled }: Props) {
+export default function BackButton({ onClick, disabled, darkerColor }: Props) {
   return (
     <button
-      className="group flex items-center gap-[2px] text-medium-gray"
+      className={`group flex items-center gap-[2px] ${!darkerColor ? "text-medium-gray" : "text-primary-text font-semibold"}`}
       onClick={onClick}
       disabled={disabled}
     >
@@ -21,7 +22,7 @@ export default function BackButton({ onClick, disabled }: Props) {
       >
         <path
           d="M15 18L9 12L15 6"
-          className={`stroke-medium-gray ${disabled ? "stroke-dark-gray" : "group-hover:stroke-dark-gray"}`}
+          className={`${!darkerColor ? "stroke-medium-gray" : "stroke-primary-text group-hover:stroke-dark-gray"} ${disabled ? "stroke-dark-gray" : "group-hover:stroke-dark-gray"}`}
           strokeWidth="3"
           strokeLinecap="square"
           strokeLinejoin="round"

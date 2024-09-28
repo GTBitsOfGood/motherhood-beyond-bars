@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import { loginWithCredentials, loginWithGoogle } from "db/actions/Login";
-import { UserContext } from "@lib/contexts/userContext";
 
 import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
@@ -10,19 +9,13 @@ import HalfScreen from "@components/logos/HalfScreen";
 import Banner from "@components/molecules/Banner";
 
 export default function LoginScreen() {
-  const { admin: userAdmin } = useContext(UserContext);
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [errorBanner, setErrorBanner] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  if (userAdmin) {
-    return null;
-  }
+  const [errorBannerMsg, setErrorBannerMsg] = useState("");
 
   return (
     <div className="flex absolute bg-white">
@@ -31,23 +24,31 @@ export default function LoginScreen() {
           <HalfScreen></HalfScreen>
           <div className="flex flex-col w-full h-full justify-center items-center mt-8 sm:mt-0 sm:w-1/2">
             <div className={`flex flex-col w-[90%] sm:w-[60%] sm:items-center`}>
+              {errorBannerMsg && (
+                <div className="hidden sm:inline">
+                  <Banner
+                    text={errorBannerMsg}
+                    onClose={() => setErrorBannerMsg("")}
+                  />
+                </div>
+              )}
               <p
-                className={`text-primary-text text-2xl font-bold font-opensans mb-10 sm:order-1 ${errorBanner ? "mb-1" : "mb-16"}`}
+                className={`text-primary-text text-2xl font-bold font-opensans mb-10 sm:order-1`}
               >
                 Log In
               </p>
-              <div className="sm:w-[55%]">
-                {errorBanner && (
+              {errorBannerMsg && (
+                <div className="inline -mt-8 sm:hidden sm:mt-0">
                   <Banner
-                    text={errorMsg}
-                    onClose={() => setErrorBanner(false)}
-                  ></Banner>
-                )}
-              </div>
+                    text={errorBannerMsg}
+                    onClose={() => setErrorBannerMsg("")}
+                  />
+                </div>
+              )}
               <div className="flex flex-col w-full sm:order-2">
-                <div className={`${emailError ? "mb-1 sm:mb-1" : "mb-6"}`}>
-                  <p className="mb-2 sm:mb-1">Email</p>
+                <div className="sm:mb-6">
                   <TextInput
+                    label="Email"
                     error={emailError}
                     onChange={(event) => {
                       setEmail(event);
@@ -55,23 +56,21 @@ export default function LoginScreen() {
                     }}
                   ></TextInput>
                 </div>
-                <div className={`${passwordError ? "mb-1 sm:mb-1" : "mb-2"}`}>
-                  <p className="mb-2 sm:mb-1">Password</p>
-                  <TextInput
-                    inputType="password"
-                    error={passwordError}
-                    onChange={(event) => {
-                      setPassword(event);
-                      setPasswordError("");
-                    }}
-                  ></TextInput>
-                </div>
-                <div className="flex justify-end mb-10 sm:mb-8">
+                <TextInput
+                  label="Password"
+                  inputType="password"
+                  error={passwordError}
+                  onChange={(event) => {
+                    setPassword(event);
+                    setPasswordError("");
+                  }}
+                ></TextInput>
+                <div className="flex justify-end mb-9 sm:mb-10">
                   <div className="w-auto text-center text-mbb-pink text-sm font-semibold font-opensans">
                     Forgot Password
                   </div>
                 </div>
-                <div className="mb-8 sm:mb-6">
+                <div className="mb-5 sm:mb-7">
                   <Button
                     text="Log In"
                     onClick={() => {
@@ -81,10 +80,9 @@ export default function LoginScreen() {
                             // TODO route to Caregiver or Admin page depending
                             router.push("/admin/caregivers");
                           } else {
-                            setErrorMsg(
+                            setErrorBannerMsg(
                               "Email or password is incorrect, please double check the correct email and password for your account."
                             );
-                            setErrorBanner(true);
                           }
                         });
                       } else {
@@ -98,21 +96,20 @@ export default function LoginScreen() {
                     }}
                   ></Button>
                 </div>
-                <div className="mb-8 sm:mb-10">
+                <div className="mb-10">
                   <Button
                     text="Sign in with Google"
                     type="Google"
                     onClick={() => {
                       loginWithGoogle().then((e) => {
-                        // TODO make this info function so it's reusable
+                        // TODO make this into function so it's reusable
                         if (e.success) {
                           // TODO
                           router.push("/admin/caregivers");
                         } else {
-                          setErrorMsg(
+                          setErrorBannerMsg(
                             "Email or password is incorrect, please double check the correct email and password for your account."
                           );
-                          setErrorBanner(true);
                         }
                       });
                     }}
