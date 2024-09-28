@@ -14,6 +14,7 @@ const PictureArray = ({ babyBook, select }: Props) => {
       year.months.map((_) => React.createRef<HTMLDivElement>())
     )
   );
+
   useEffect(() => {
     const onHashChange = (
       url = window.location.pathname + window.location.hash
@@ -53,6 +54,7 @@ const PictureArray = ({ babyBook, select }: Props) => {
     if (scrollTop > 0) setShowToTop(true);
     else setShowToTop(false);
   };
+
   const toTop = () => {
     if (!wrapper.current) return;
     wrapper.current.scrollTop = 0;
@@ -115,7 +117,7 @@ const BabyBookImage = ({
     >
       <Image src={image.imageUrl} layout={"fill"} objectFit={"cover"} />
       {image.caption && (
-        <p className="absolute bottom-0 line-clamp-3 text-ellipsis bg-white w-full min-h-[4rem] p-2">
+        <p className="absolute bottom-0 left-0 right-0 line-clamp-3 text-ellipsis bg-white min-h-[4rem] p-3">
           {image.caption}
         </p>
       )}

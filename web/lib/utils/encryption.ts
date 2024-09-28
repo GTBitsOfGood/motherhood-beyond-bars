@@ -42,7 +42,7 @@ const decrypt = (hash: { iv: string; content: string }) => {
   decrpyted.set(updated, 0);
   decrpyted.set(final, updated.length);
 
-  return decrpyted.toString();
+  return new TextDecoder().decode(decrpyted);
 };
 
 export { encrypt, decrypt };

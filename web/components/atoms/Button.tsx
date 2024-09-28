@@ -7,12 +7,14 @@ interface Props {
   submit?: boolean;
   icon?: React.ReactNode;
   disabled?: boolean;
+  width?: string | number;
 }
 
 export default function Button({
   text,
   type = "primary",
   onClick,
+  width,
   submit = false,
   icon = undefined,
   disabled = false,
@@ -26,9 +28,12 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       type={submit ? "submit" : "button"}
+      style={{ width }}
     >
       {icon ? <span className="mt-1 mr-2">{icon}</span> : null}
-      <span className="text-base font-semibold text-mbb-pink">{text}</span>
+      <span className="text-base font-semibold text-mbb-pink line-clamp-1">
+        {text}
+      </span>
     </button>
   );
 }

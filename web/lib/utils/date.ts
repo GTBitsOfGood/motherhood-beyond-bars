@@ -16,20 +16,22 @@ export function formatDate(date: string) {
 
 export function monthIndexToString(index: number | string) {
   const number = parseInt(index as string);
-  if (!isNaN(number) && (number < 0 || number > 11)) return "Not a Month";
-  const INDEX_TO_MONTH: { [key: string]: string } = {
-    "0": "January",
-    "1": "February",
-    "2": "March",
-    "3": "April",
-    "4": "May",
-    "5": "June",
-    "6": "July",
-    "7": "August",
-    "8": "September",
-    "9": "October",
-    "10": "November",
-    "11": "December",
-  };
-  return INDEX_TO_MONTH[index];
+  if (isNaN(number) || number < 0 || number > 11) return "Not a Month";
+
+  const INDEX_TO_MONTH = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ] as const;
+
+  return INDEX_TO_MONTH[number];
 }

@@ -60,7 +60,7 @@ const SideBar = ({ babyBook }: Props) => {
 
   return (
     <div className="overflow-auto shrink-0">
-      <div className="w-[164px] flex flex-col items-end pt-8 text-dark-400 overflow-hidden">
+      <div className="w-[164px] flex flex-col items-stretch pt-8 text-dark-400 overflow-hidden">
         {babyBook.map((year) => (
           <YearSection
             key={year.year}
@@ -104,17 +104,17 @@ const YearSection = ({
   };
 
   return (
-    <div className="w-full flex flex-col items-end">
+    <div className="w-full flex flex-col items-stretch">
       <p
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`font-semibold text-lg border-r px-4 cursor-pointer ${
+        className={`font-semibold text-lg border-r px-4 cursor-pointer text-end ${
           year === currentYear ? "text-black" : ""
         }`}
       >
         {year}
       </p>
       <div
-        className={`flex flex-col text-right w-full ${
+        className={`flex flex-col items-stretch text-right w-full ${
           isExpanded ? "" : "hidden"
         }`}
       >
@@ -122,9 +122,9 @@ const YearSection = ({
           <p
             key={month.month}
             onClick={() => pushHash(`${year}.${month.month}`)}
-            className={`p-1 px-8 w-full border-r cursor-pointer ${
+            className={`p-1 px-8 border-r cursor-pointer ${
               month.month === currentMonth
-                ? "bg-alt border-r-[3px] border-highlight text-black"
+                ? "bg-mbb-pink/10 border-r-[3px] border-mbb-pink text-black"
                 : ""
             }`}
           >

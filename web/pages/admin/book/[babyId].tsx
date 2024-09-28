@@ -59,11 +59,14 @@ export default function BabyBook({
         if (i < 0 || i === babyBook.length) return;
       }
     }
+
     selectImage(i, j, k);
   };
+
   const deselectImage = () => {
     setIsPictureSelected(false);
   };
+
   return (
     <div className="flex flex-col w-full h-full">
       <TopBar
