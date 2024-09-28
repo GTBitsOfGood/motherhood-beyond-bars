@@ -6,13 +6,14 @@ interface Props {
 
 export default function ErrorText({ error }: Props) {
   return (
-    <div className="flex items-center gap-2 text-[#FF3939] h-6">
-      {error && (
-        <>
-          <ErrorTriangle />
-          <span>{error}</span>
-        </>
+    <>
+      {error ? (
+        <div className="text-sm font-normal text-error-red mt-[0.3125rem]">
+          {error}
+        </div>
+      ) : (
+        <div className="mt-[1.5625rem]"></div>
       )}
-    </div>
+    </>
   );
 }
