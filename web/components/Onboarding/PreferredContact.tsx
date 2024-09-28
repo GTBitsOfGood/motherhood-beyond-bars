@@ -1,52 +1,56 @@
-import Button from "@components/atoms/Button";
-import { OnboardingFormData } from "@lib/types/users";
-import { updateCaregiver } from "db/actions/shared/Caregiver";
-import { auth } from "db/firebase";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
+import { updateCaregiver } from "db/actions/shared/Caregiver";
+import { auth } from "db/firebase";
+
+import { OnboardingFormData } from "@lib/types/users";
+
+import Button from "@components/atoms/Button";
+
 interface Props {
-  setPage: Dispatch<SetStateAction<number>>;
   form: UseFormReturn<OnboardingFormData>;
 }
 
-export default function PreferredContactPage({ setPage, form }: Props) {
+export default function PreferredContactPage({ form }: Props) {
   const [submitting, setSubmitting] = useState(false);
 
   return (
-    <div className="flex flex-col px-6 gap-3 flex-grow">
-      <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center">
+    <div className="flex flex-col px-6 gap-3 flex-grow sm:justify-center sm:items-center text-base font-normal text-primary-text font-opensans">
+      <h1 className="text-2xl font-bold sm:text-center">
         What&#39;s the best way to contact you?
       </h1>
-      <div className="flex items-center">
-        <input
-          type="radio"
-          id="phone"
-          value="phone"
-          defaultValue="phone"
-          {...form.register("contact")}
-        />
-        <label htmlFor="phone">Phone</label>
+      <div className="flex flex-col gap-2 mb-4">
+        <div className="flex items-center gap-2">
+          <input
+            type="radio"
+            id="email"
+            value="email"
+            {...form.register("contact")}
+          />
+          <label htmlFor="email">Email</label>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="radio"
+            id="phone"
+            value="phone"
+            defaultValue="phone"
+            {...form.register("contact")}
+          />
+          <label htmlFor="phone">Phone</label>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="radio"
+            id="text"
+            value="text"
+            {...form.register("contact")}
+          />
+          <label htmlFor="text">Text</label>
+        </div>
       </div>
-      <div className="flex items-center">
-        <input
-          type="radio"
-          id="text"
-          value="text"
-          {...form.register("contact")}
-        />
-        <label htmlFor="text">Text</label>
-      </div>
-      <div className="flex items-center">
-        <input
-          type="radio"
-          id="email"
-          value="email"
-          {...form.register("contact")}
-        />
-        <label htmlFor="email">Email</label>
-      </div>
-      <div className="flex-grow" />
+      {/* TODO make sure this works with all info */}
       <Button
         text="Finish"
         disabled={submitting}

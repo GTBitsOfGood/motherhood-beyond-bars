@@ -15,15 +15,21 @@ export default function Button({
   submit = false,
   icon = undefined,
 }: Props) {
-  const googleStyles =
-    "w-60 text-primary-text font-opensans text-start text-sm sm:text-base";
-  const primarySyles =
-    "text-mbb-pink px-4 pt-2 pb-[0.5625rem] text-base font-opensans border border-mbb-pink rounded gap-2";
-  const styles =
-    type === "primary" ? primarySyles : type === "Google" ? googleStyles : null;
+  let styles = "";
+
+  if (disabled) {
+    styles =
+      "text-base font-opensans text-icon-gray border border-icon-gray px-4 pt-2 pb-[0.5625rem] rounded gap-2";
+  } else if (type === "Google") {
+    styles =
+      "w-60 text-primary-text font-opensans text-start text-sm sm:text-base";
+  } else {
+    styles =
+      "text-mbb-pink px-4 pt-2 pb-[0.5625rem] text-base font-opensans border border-mbb-pink rounded gap-2";
+  }
 
   return (
-    <div className="flex flex-row justify-center">
+    <div className="flex flex-row justify-center w-full">
       <button
         onClick={onClick}
         className={`flex flex-row w-full h-full justify-center items-center font-semibold ${styles}`}

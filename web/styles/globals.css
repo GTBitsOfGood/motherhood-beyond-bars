@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  input[type="radio"] {
+    @apply accent-mbb-pink;
+  }
+
+  input[type="radio"]:focus {
+    @apply ring-mbb-pink;
+  }
+}
+
 td {
   border-spacing: 5px;
   @apply p-5;

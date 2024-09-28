@@ -28,9 +28,12 @@ export default function TextInput({
   const [value, setValue] = useState(currentValue);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       {label && (
-        <label className="font-opensans text-base mb-2" htmlFor={formValue ? formValue.name : undefined}>
+        <label
+          className="font-opensans text-base mb-2"
+          htmlFor={formValue ? formValue.name : undefined}
+        >
           {label}
         </label>
       )}

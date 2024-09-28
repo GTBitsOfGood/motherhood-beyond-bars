@@ -1,10 +1,12 @@
+import { Dispatch, SetStateAction } from "react";
+import { Controller, UseFormReturn } from "react-hook-form";
+
+import { OnboardingFormData } from "@lib/types/users";
+
 import Button from "@components/atoms/Button";
 import DatePicker from "@components/atoms/DatePicker";
 import TextInput from "@components/atoms/TextInput";
 import CheckboxText from "@components/molecules/CheckboxText";
-import { OnboardingFormData } from "@lib/types/users";
-import { Dispatch, SetStateAction } from "react";
-import { Controller, UseFormReturn } from "react-hook-form";
 import ErrorToast from "./ErrorToast";
 
 interface Props {
@@ -19,15 +21,15 @@ export default function LiabilityWaiverPage({ setPage, form }: Props) {
   const hasError = !!(agreeError || dateError || signatureError);
 
   return (
-    <div className="flex flex-col px-6 gap-3 flex-grow">
-      {(signatureError || dateError) && <ErrorToast />}
+    <div className="flex flex-col px-6 gap-3 flex-grow sm:items-center mb-8">
+      {/* TODO replace with Error banner and fix formatting */}
       {agreeError && <ErrorToast text="Must agree to the Liability Waiver" />}
-      <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center">
+      <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center sm:mt-8">
         Liability Waiver
       </h1>
-      <div className="bg-secondary-background border border-light-gray overflow-auto shrink-0 pt-2 px-3 max-h-[300px]">
+      {/* TODO Pull waivers from database */}
+      <div className="bg-secondary-background border border-light-gray overflow-auto shrink-0 pt-2 px-3 max-h-[300px] sm:w-[80%]">
         <p>
-          {/* TODO: Full Waiver here */}
           PARTICIPANT RELEASE AND WAIVER OF LIABILITY In consideration for the
           willingness of Motherhood Beyond Bars (“Organization”) to accept the
           individual signing below (“Participant”), as a participant in its
@@ -60,43 +62,48 @@ export default function LiabilityWaiverPage({ setPage, form }: Props) {
           />
         )}
       />
-      <div className="mt-3">
-        <TextInput
-          label="Signature"
-          error={form.formState.errors.agreedSignature?.message}
-          formValue={form.register("agreedSignature", {
-            validate: (v) => (!v ? "Address cannot be empty" : true),
-          })}
-        />
-      </div>
-      <div className="mb-6">
-        <Controller
-          control={form.control}
-          name="agreedDate"
-          rules={{
-            validate: (v) => (!v ? "Date cannot be empty" : true),
-          }}
-          render={({ field: { name, onBlur, onChange, ref, value } }) => (
-            <DatePicker
-              label="Date"
-              value={value}
-              onChange={(v) => onChange(v)}
-              error={form.formState.errors.agreedDate?.message}
-            />
-          )}
-        />
-      </div>
-      <div className="flex-grow" />
-      <Button
-        text="Next"
-        disabled={!!hasError}
-        onClick={async () => {
-          const isValid = await form.trigger(undefined, { shouldFocus: true });
-          if (!isValid) return;
+      <div className="sm:w-[60%]">
+        <div className="mb-2">
+          <TextInput
+            label="Signature"
+            error={form.formState.errors.agreedSignature?.message}
+            formValue={form.register("agreedSignature", {
+              validate: (v) => (!v ? "Address cannot be empty" : true),
+            })}
+          />
+        </div>
+        <div className="mb-2">
+          {/* TODO set default date to today */}
+          <Controller
+            control={form.control}
+            name="agreedDate"
+            rules={{
+              validate: (v) => (!v ? "Date cannot be empty" : true),
+            }}
+            render={({ field: { name, onBlur, onChange, ref, value } }) => (
+              <DatePicker
+                label="Date"
+                value={value}
+                onChange={(v) => onChange(v)}
+                error={form.formState.errors.agreedDate?.message}
+              />
+            )}
+          />
+        </div>
 
-          setPage((prev) => prev + 1);
-        }}
-      />
+        <Button
+          text="Next"
+          disabled={!!hasError}
+          onClick={async () => {
+            const isValid = await form.trigger(undefined, {
+              shouldFocus: true,
+            });
+            if (!isValid) return;
+
+            setPage((prev) => prev + 1);
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -19,7 +19,8 @@ export default function CheckboxText({ value, onChange, label }: Props) {
         })
       }
     >
-      {/** TODO: <Checkbox value={value} /> */}
+      {/** TODO: <Checkbox value={value} /> aka replace with Checkbox component */}
+      {/* TODO align when small screen */}
       <input type="checkbox" name={label} checked={checked} />
       <label htmlFor={label}>{label}</label>
     </button>

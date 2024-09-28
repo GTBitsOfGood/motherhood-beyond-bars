@@ -9,7 +9,7 @@ interface Props {
 export default function BackButton({ onClick, disabled, darkerColor }: Props) {
   return (
     <button
-      className={`group flex items-center gap-[2px] ${!darkerColor ? "text-medium-gray" : "text-primary-text font-semibold"}`}
+      className={`group flex items-center gap-[2px] text-base font-normal ${!darkerColor ? "text-medium-gray" : "text-primary-text font-semibold"}`}
       onClick={onClick}
       disabled={disabled}
     >

@@ -1,5 +1,3 @@
-import ErrorTriangle from "@components/Icons/ErrorTriangle";
-
 interface Props {
   error?: string;
 }
