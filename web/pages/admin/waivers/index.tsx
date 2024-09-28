@@ -19,6 +19,7 @@ interface Props {
 
 export default function Waivers({ waivers }: Props) {
   const router = useRouter();
+
   return (
     <div className="p-10">
       <div className="flex flex-row justify-between">
