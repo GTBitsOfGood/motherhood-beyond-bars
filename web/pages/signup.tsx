@@ -145,26 +145,27 @@ export default function SignUpScreen() {
                     <Button
                       text={`${page === 1 ? "Continue" : "Get started"}`}
                       onClick={async () => {
-                        // TODO fix backend logic
+                        // TODO update backend so creates account at end
                         if (page === 1) {
                           if (
                             email &&
                             password &&
                             password === confirmPassword
                           ) {
-                            const acc = await createAccount(
-                              email,
-                              password
-                            ).then((e) => {
-                              if (e.success) {
-                                //route to next page
-                                setPage(2);
-                                return e.userCredential;
-                              } else {
-                                alert("error");
-                              }
-                              setAcc(acc);
-                            });
+                            setAcc(
+                              await createAccount(email, password).then((e) => {
+                                if (e.success) {
+                                  setPage(2);
+                                  return "userCredential" in e
+                                    ? e.userCredential
+                                    : undefined;
+                                } else {
+                                  setErrorBannerMsg(
+                                    "Something went wrong, please try again."
+                                  );
+                                }
+                              })
+                            );
                           } else {
                             if (!email) {
                               setEmailError("Please enter a email");
@@ -185,12 +186,8 @@ export default function SignUpScreen() {
                             }
                           }
                         } else {
-                          if (
-                            firstName &&
-                            lastName &&
-                            phoneNumber &&
-                            /[^0-9]/.test(phoneNumber)
-                          ) {
+                          // TODO fix error checking for phone number
+                          if (firstName && lastName && phoneNumber) {
                             createCaregiverAccount(
                               acc,
                               firstName,
@@ -200,7 +197,9 @@ export default function SignUpScreen() {
                               if (e.success) {
                                 router.push("/caregiver/onboarding");
                               } else {
-                                // TODO handle error
+                                setErrorBannerMsg(
+                                  "Something went wrong, please try again."
+                                );
                               }
                             });
                           } else {
@@ -232,9 +231,13 @@ export default function SignUpScreen() {
                         onClick={() => {
                           loginWithGoogle().then((e) => {
                             if (e.success) {
-                              router.push("/caregiver/onboarding");
+                              if ("isNewUser" in e && !e.isNewUser) {
+                                router.push("/caregiver/babyBook");
+                              } else {
+                                setPage(2);
+                              }
                             } else {
-                              //TODO handle error
+                              setErrorBannerMsg("error" in e ? e.error : "");
                             }
                           });
                         }}

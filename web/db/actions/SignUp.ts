@@ -18,14 +18,14 @@ export const isUniqueEmail = async (email: string) => {
   ).empty;
 };
 
-// TODO return success or error message
 export async function createAccount(email: string, password: string) {
   return await createUserWithEmailAndPassword(auth, email.trim(), password)
-    .then((userCredential: UserCredential) => {
+    .then((userCredential) => {
       return { success: true, userCredential: userCredential };
     })
     .catch((error) => {
-      return { success: false, userCredential: undefined };
+      // auth/email-already-in-use
+      return { success: false };
     });
 }
 

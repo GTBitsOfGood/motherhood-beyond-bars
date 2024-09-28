@@ -3,27 +3,52 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
-import { auth } from "db/firebase";
+import { db, auth } from "db/firebase";
+
+// TODO handle case where user signed up with Google tries to sign in with email and vice versa
 
 export const loginWithCredentials = async (email: string, password: string) => {
-  // TODO return if user is Admin or Caregiver
   return await signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      return { success: true };
+    .then(async () => {
+      let admin = false;
+      const adminDoc = await getDoc(doc(db, "app", "admin"));
+
+      if (adminDoc.exists()) {
+        if (adminDoc.data().whitelist.includes(email)) {
+          admin = true;
+        }
+      }
+
+      return { success: true, admin: admin };
     })
     .catch((error) => {
-      return { success: false };
+      let errorMsg = "";
+      if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/invalid-email"
+      ) {
+        errorMsg =
+          "Email or password is incorrect, please double check the email and password for your account.";
+      } else {
+        errorMsg = "Something went wrong, please try again.";
+      }
+
+      return { success: false, error: errorMsg };
     });
 };
 
 export const loginWithGoogle = async () => {
-  // TODO return if user is new or not
   return await signInWithPopup(auth, new GoogleAuthProvider())
-    .then(() => {
-      return { success: true };
+    .then((res) => {
+      const isNewUser =
+        res.user.metadata.creationTime === res.user.metadata.lastSignInTime;
+      return { success: true, isNewUser: isNewUser };
     })
     .catch((error) => {
-      return { success: false };
+      const errorMsg = "Something went wrong, please try again.";
+      return { success: false, error: errorMsg };
     });
 };

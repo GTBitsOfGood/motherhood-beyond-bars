@@ -77,24 +77,25 @@ export default function LoginScreen() {
                       if (email && password) {
                         loginWithCredentials(email, password).then((e) => {
                           if (e.success) {
-                            // TODO route to Caregiver or Admin page depending
-                            router.push("/admin/caregivers");
+                            if ("admin" in e && e.admin) {
+                              router.push("/admin/caregivers");
+                            } else {
+                              router.push("/caregiver/babyBook");
+                            }
                           } else {
-                            setErrorBannerMsg(
-                              "Email or password is incorrect, please double check the correct email and password for your account."
-                            );
+                            setErrorBannerMsg("error" in e ? e.error : "");
                           }
                         });
                       } else {
                         if (!email) {
-                          setEmailError("Please enter a email");
+                          setEmailError("Please enter email");
                         }
                         if (!password) {
-                          setPasswordError("Please enter a password");
+                          setPasswordError("Please enter password");
                         }
                       }
                     }}
-                  ></Button>
+                  />
                 </div>
                 <div className="mb-10">
                   <Button
@@ -102,14 +103,14 @@ export default function LoginScreen() {
                     type="Google"
                     onClick={() => {
                       loginWithGoogle().then((e) => {
-                        // TODO make this into function so it's reusable
                         if (e.success) {
-                          // TODO
-                          router.push("/admin/caregivers");
+                          if ("isNewUser" in e && !e.isNewUser) {
+                            router.push("/caregiver/babyBook");
+                          } else {
+                            router.push("/caregiver/onboarding");
+                          }
                         } else {
-                          setErrorBannerMsg(
-                            "Email or password is incorrect, please double check the correct email and password for your account."
-                          );
+                          setErrorBannerMsg("error" in e ? e.error : "");
                         }
                       });
                     }}
