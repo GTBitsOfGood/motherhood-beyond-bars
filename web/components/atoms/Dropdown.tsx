@@ -25,7 +25,7 @@ export default function Dropdown({
   placeholder = "Select",
 }: Props) {
   return (
-    <div className="flex flex-col" onFocus={(e) => keyboardScroll(e)}>
+    <div className="flex flex-col w-full" onFocus={(e) => keyboardScroll(e)}>
       <label>{label}</label>
       <ReactDropdown
         options={options}
@@ -39,7 +39,7 @@ export default function Dropdown({
         arrowClosed={<SmallDownChevron />}
         arrowOpen={<SmallDownChevron />}
       />
-      {error && <ErrorText error={error} />}
+      <ErrorText error={error} />
     </div>
   );
 }
