@@ -87,6 +87,7 @@ export default function BabyBook({
         motherName={baby.mother}
         content={content}
         iv={iv}
+        isPictureSelected={isPictureSelected}
       />
       <div className="relative flex grow-0 overflow-hidden">
         <SideBar babyBook={babyBook} />

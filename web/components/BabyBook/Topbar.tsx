@@ -5,7 +5,14 @@ import PersonIcon from "@components/Icons/PersonIcon";
 import { useState } from "react";
 import Button from "@components/atoms/Button";
 
-const TopBar = ({ number, motherName, name, content, iv }: Props) => {
+const TopBar = ({
+  number,
+  motherName,
+  name,
+  content,
+  iv,
+  isPictureSelected,
+}: Props) => {
   const [copiedConfirmation, setCopiedConfirmation] = useState(false);
 
   const downloadAlbum = () => {
@@ -56,20 +63,22 @@ const TopBar = ({ number, motherName, name, content, iv }: Props) => {
           <p className="text-dark-400 ml-1">Mother - {motherName}</p>
         </div>
       </div>
-      <div className="flex items-center gap-[18px] mr-6">
-        <Button
-          onClick={downloadAlbum}
-          text="Download album"
-          icon={<DownloadIcon />}
-          width="auto"
-        />
-        <Button
-          onClick={copyLink}
-          text="Copy link"
-          icon={<LinkIcon />}
-          width="auto"
-        />
-      </div>
+      {!isPictureSelected && (
+        <div className="flex items-center gap-[18px] mr-6">
+          <Button
+            onClick={downloadAlbum}
+            text="Download album"
+            icon={<DownloadIcon />}
+            width="auto"
+          />
+          <Button
+            onClick={copyLink}
+            text="Copy link"
+            icon={<LinkIcon />}
+            width="auto"
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -80,6 +89,7 @@ interface Props {
   name: string;
   content: string;
   iv: string;
+  isPictureSelected: boolean;
 }
 
 export default TopBar;

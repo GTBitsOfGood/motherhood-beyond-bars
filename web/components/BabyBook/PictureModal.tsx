@@ -44,7 +44,7 @@ const PictureModal = ({
           onClick={() => deselect()}
         >
           <LeftChevronIcon />
-          <p className="ml-2">Back</p>
+          <p className="ml-2">Back to album</p>
         </div>
       </div>
       <div className="flex w-full justify-between flex-grow p-4">
