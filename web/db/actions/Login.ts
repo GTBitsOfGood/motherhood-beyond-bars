@@ -1,9 +1,7 @@
-import {
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import Cookies from "js-cookie"; // For setting cookies
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 import { db, auth } from "db/firebase";
 
@@ -13,6 +11,19 @@ export const loginWithCredentials = async (email: string, password: string) => {
   return await signInWithEmailAndPassword(auth, email, password)
     .then(async () => {
       let admin = false;
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+      Cookies.set("authToken", token, {
+        path: "/",
+        secure: true,
+        sameSite: "Strict",
+      });
+
       const adminDoc = await getDoc(doc(db, "app", "admin"));
 
       if (adminDoc.exists()) {
@@ -42,7 +53,15 @@ export const loginWithCredentials = async (email: string, password: string) => {
 
 export const loginWithGoogle = async () => {
   return await signInWithPopup(auth, new GoogleAuthProvider())
-    .then((res) => {
+    .then(async (res) => {
+      const user = res.user;
+      const token = await user.getIdToken();
+      Cookies.set("authToken", token, {
+        path: "/",
+        secure: true,
+        sameSite: "Strict",
+      });
+
       const isNewUser =
         res.user.metadata.creationTime === res.user.metadata.lastSignInTime;
       return { success: true, isNewUser: isNewUser };
