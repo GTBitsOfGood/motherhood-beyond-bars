@@ -3,25 +3,52 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
-import { SubmitHandler } from "react-hook-form";
+import { db, auth } from "db/firebase";
 
-import { auth } from "db/firebase";
-import { AuthFormValues } from "@lib/types/common";
+// TODO handle case where user signed up with Google tries to sign in with email and vice versa
 
-export const loginWithCredentials: SubmitHandler<AuthFormValues> = async (
-  data
-) => {
-  try {
-    // TODO redirect user to correct home page with /admin or /caregiver
-    // probably by checking if the login was successful then using router to route
-    await signInWithEmailAndPassword(auth, data.email, data.password);
-  } catch (error) {
-    console.error(error);
-    alert("Invalid credentials!");
-  }
+export const loginWithCredentials = async (email: string, password: string) => {
+  return await signInWithEmailAndPassword(auth, email, password)
+    .then(async () => {
+      let admin = false;
+      const adminDoc = await getDoc(doc(db, "app", "admin"));
+
+      if (adminDoc.exists()) {
+        if (adminDoc.data().whitelist.includes(email)) {
+          admin = true;
+        }
+      }
+
+      return { success: true, admin: admin };
+    })
+    .catch((error) => {
+      let errorMsg = "";
+      if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/invalid-email"
+      ) {
+        errorMsg =
+          "Email or password is incorrect, please double check the email and password for your account.";
+      } else {
+        errorMsg = "Something went wrong, please try again.";
+      }
+
+      return { success: false, error: errorMsg };
+    });
 };
 
 export const loginWithGoogle = async () => {
-  await signInWithPopup(auth, new GoogleAuthProvider());
+  return await signInWithPopup(auth, new GoogleAuthProvider())
+    .then((res) => {
+      const isNewUser =
+        res.user.metadata.creationTime === res.user.metadata.lastSignInTime;
+      return { success: true, isNewUser: isNewUser };
+    })
+    .catch((error) => {
+      const errorMsg = "Something went wrong, please try again.";
+      return { success: false, error: errorMsg };
+    });
 };

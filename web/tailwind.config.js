@@ -14,6 +14,10 @@ module.exports = {
       backgroundImage: {
         "custom-background":
           "radial-gradient(115.79% 108.31% at 24.4% 30.17%, #EDB1CB 0.01%, #B14378 92.53%)",
+        "onboarding-background":
+          "radial-gradient(147.14% 98.02% at 24.4% 30.17%, #EDB1CB 0%, #B14378 100%)",
+        "onboarding-background2":
+          "radial-gradient(86.27% 87.14% at 24.4% 30.17%, #EDB1CB 0.01%, #B14378 79.82%)",
       },
       fontFamily: {
         sans: ["Open Sans", ...defaultTheme.fontFamily.sans],
@@ -30,6 +34,8 @@ module.exports = {
         "icon-gray": "#BFBFBF",
         "icon-light-gray": "#DFE3E8",
         "empty-gray": "#E3E3E3",
+        "error-red": "#E50606",
+        "light-black": "#191919",
         dark: {
           100: "#BFBFBF",
           400: "#666666",

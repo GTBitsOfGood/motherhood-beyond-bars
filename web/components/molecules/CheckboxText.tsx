@@ -1,18 +1,17 @@
 import { ReactNode, useState } from "react";
 
 interface Props {
-  children: ReactNode;
+  label: string;
   value?: boolean;
   onChange?: (value: boolean) => void;
 }
 
-export default function CheckboxText({ value, onChange, children }: Props) {
-  const [checked, setChecked] = useState(value);
+export default function CheckboxText({ value, onChange, label }: Props) {
+  const [checked, setChecked] = useState(value ?? false);
 
   return (
     <button
-      className="flex gap-2 bg-white shadow border border-light-gray"
-      aria-roledescription="checkbox"
+      className="flex gap-2 bg-white items-center"
       onClick={() =>
         setChecked((prev) => {
           onChange?.(!prev);
@@ -20,9 +19,10 @@ export default function CheckboxText({ value, onChange, children }: Props) {
         })
       }
     >
-      {/** TODO: <Checkbox value={value} /> */}
-      <input type="checkbox" checked={checked} aria-hidden />
-      {children}
+      {/** TODO: <Checkbox value={value} /> aka replace with Checkbox component */}
+      {/* TODO align when small screen */}
+      <input type="checkbox" name={label} checked={checked} />
+      <label htmlFor={label}>{label}</label>
     </button>
   );
 }

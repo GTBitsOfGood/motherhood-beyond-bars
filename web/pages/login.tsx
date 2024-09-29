@@ -1,101 +1,132 @@
-import React, { useContext } from "react";
-import { AiFillGoogleCircle } from "react-icons/ai";
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 import { loginWithCredentials, loginWithGoogle } from "db/actions/Login";
 
-import { AuthFormValues } from "@lib/types/common";
-import { UserContext } from "@lib/contexts/userContext";
-
-import ErrorAlert from "@components/errorAlert";
 import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
+import HalfScreen from "@components/logos/HalfScreen";
+import Banner from "@components/molecules/Banner";
 
 export default function LoginScreen() {
-  const { admin: userAdmin } = useContext(UserContext);
-  const { register, handleSubmit } = useForm<AuthFormValues>();
+  const router = useRouter();
 
-  if (userAdmin) {
-    return null;
-  }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [errorBannerMsg, setErrorBannerMsg] = useState("");
 
   return (
-    <div className="flex absolute bg-white overflow-hidden">
+    <div className="flex absolute bg-white">
       <div className="h-screen w-screen">
-        <div className="flex h-screen">
-          <div className="w-1/2 place-items-center gradient-bg">
-            <div className="flex flex-wrap flex-col place-content-center h-full">
-              {/* <div className="self-center">
-                <MBBLogo />
-              </div> */}
-              <br />
-              <div className="text-white text-4xl uppercase text-center font-opensans font-bold">
-                Motherhood <br /> Beyond Bars
-              </div>
-              <br />
-              <div className="text-white text-2xl text-center font-opensans">
-                Admin Portal
-              </div>
-              <br />
-            </div>
-          </div>
-          <div className="w-1/2">
-            <div className="flex h-screen">
-              <div className="m-auto w-2/3">
-                {userAdmin === false && (
-                  <div className="flex flex-row items-center justify-center m-10">
-                    <ErrorAlert
-                      title="Error: Account Not Authorized"
-                      message={
-                        <p>
-                          Your account has not been granted access. This site is
-                          for Motherhood Beyond Bars admin only. Please contact{" "}
-                          <a
-                            href="mailto:info@motherhoodbeyond.org"
-                            className="text-blue-700"
-                          >
-                            info@motherhoodbeyond.org
-                          </a>{" "}
-                          if you require assistance.
-                        </p>
-                      }
-                    />
-                  </div>
-                )}
-                <div className="font-opensans text-2xl font-bold text-center mb-8">
-                  Log In
+        <div className="flex flex-col w-full h-full sm:flex-row">
+          <HalfScreen></HalfScreen>
+          <div className="flex flex-col w-full h-full justify-center items-center mt-8 sm:mt-0 sm:w-1/2">
+            <div className={`flex flex-col w-[90%] sm:w-[60%] sm:items-center`}>
+              {errorBannerMsg && (
+                <div className="hidden sm:inline">
+                  <Banner
+                    text={errorBannerMsg}
+                    onClose={() => setErrorBannerMsg("")}
+                  />
                 </div>
-                <form onSubmit={handleSubmit(loginWithCredentials)}>
-                  <div className="flex flex-col justify-center items-center w-full">
-                    <div className="w-full">
-                      <TextInput
-                        label="Username or Email"
-                        formValue={{
-                          ...register("email", { required: true }),
-                        }}
-                      />
-                    </div>
-                    <br />
-                    <br />
-                    <div>
-                      <div className="font-opensans text-base">Password</div>
-                      <input
-                        {...register("password", {
-                          required: true,
-                        })}
-                        className="block font-opensans text-base w-80 bg-gray-100 border-1 border-gray-300 p-2"
-                        type="password"
-                      />
-                    </div>
-                    <br />
-                    <Button text="Log In" submit={true} />
-                    <Button
-                      icon={<AiFillGoogleCircle />}
-                      text="Log In with Google"
-                      onClick={loginWithGoogle}
-                    />
+              )}
+              <p
+                className={`text-primary-text text-2xl font-bold font-opensans mb-10 sm:order-1`}
+              >
+                Log In
+              </p>
+              {errorBannerMsg && (
+                <div className="inline -mt-8 sm:hidden sm:mt-0">
+                  <Banner
+                    text={errorBannerMsg}
+                    onClose={() => setErrorBannerMsg("")}
+                  />
+                </div>
+              )}
+              <div className="flex flex-col w-full sm:order-2">
+                <div className="sm:mb-6">
+                  <TextInput
+                    label="Email"
+                    error={emailError}
+                    onChange={(event) => {
+                      setEmail(event);
+                      setEmailError("");
+                    }}
+                  ></TextInput>
+                </div>
+                <TextInput
+                  label="Password"
+                  inputType="password"
+                  error={passwordError}
+                  onChange={(event) => {
+                    setPassword(event);
+                    setPasswordError("");
+                  }}
+                ></TextInput>
+                <div className="flex justify-end mb-9 sm:mb-10">
+                  <div className="w-auto text-center text-mbb-pink text-sm font-semibold font-opensans">
+                    Forgot Password
                   </div>
-                </form>
+                </div>
+                <div className="mb-5 sm:mb-7">
+                  <Button
+                    text="Log In"
+                    onClick={() => {
+                      if (email && password) {
+                        loginWithCredentials(email, password).then((e) => {
+                          if (e.success) {
+                            if ("admin" in e && e.admin) {
+                              router.push("/admin/caregivers");
+                            } else {
+                              router.push("/caregiver/babyBook");
+                            }
+                          } else {
+                            setErrorBannerMsg("error" in e ? e.error : "");
+                          }
+                        });
+                      } else {
+                        if (!email) {
+                          setEmailError("Please enter email");
+                        }
+                        if (!password) {
+                          setPasswordError("Please enter password");
+                        }
+                      }
+                    }}
+                  />
+                </div>
+                <div className="mb-10">
+                  <Button
+                    text="Sign in with Google"
+                    type="Google"
+                    onClick={() => {
+                      loginWithGoogle().then((e) => {
+                        if (e.success) {
+                          if ("isNewUser" in e && !e.isNewUser) {
+                            router.push("/caregiver/babyBook");
+                          } else {
+                            router.push("/caregiver/onboarding");
+                          }
+                        } else {
+                          setErrorBannerMsg("error" in e ? e.error : "");
+                        }
+                      });
+                    }}
+                  ></Button>
+                </div>
+                <div className="flex flex-row justify-center mb-8 sm:mb-0">
+                  <div className="text-light-black text-base font-normal font-opensans leading-tight tracking-tight mr-2">
+                    Don&apos;t have an account?&nbsp;
+                    <button
+                      className="text-mbb-pink text-base font-semibold underline"
+                      onClick={() => router.push("/signup")}
+                    >
+                      Sign up now
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
