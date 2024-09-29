@@ -32,6 +32,7 @@ module.exports = {
         "empty-gray": "#E3E3E3",
         "error-red": "#E60606",
         "light-black": "#191919",
+        "image-gray": "#f2f2f2",
         dark: {
           100: "#BFBFBF",
           400: "#666666",
