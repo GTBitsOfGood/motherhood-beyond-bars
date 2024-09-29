@@ -106,32 +106,32 @@ const PictureArray = ({ babyBook, select, selectedForDownload }: Props) => {
                     </span>
                   </h2>
                   <div className="flex flex-wrap">
-                    {month.images.map((image, k) => (
-                      <BabyBookImage
-                        image={image}
-                        onClick={() => select(i, j, k)}
-                        selected={selectedForDownload.has(
-                          selectedForDownloadKey(i, j, k)
-                        )}
-                        onCheckboxClick={() => {
-                          if (
-                            selectedForDownload.has(
-                              selectedForDownloadKey(i, j, k)
-                            )
-                          ) {
-                            selectedForDownload.delete(
-                              selectedForDownloadKey(i, j, k)
-                            );
-                          } else {
-                            selectedForDownload.set(
-                              selectedForDownloadKey(i, j, k),
-                              image
-                            );
-                          }
-                        }}
-                        key={k}
-                      />
-                    ))}
+                    {month.images.map((image, k) => {
+                      const imageSelected = selectedForDownload.has(
+                        selectedForDownloadKey(i, j, k)
+                      );
+
+                      return (
+                        <BabyBookImage
+                          image={image}
+                          onClick={() => select(i, j, k)}
+                          selected={imageSelected}
+                          onCheckboxClick={() => {
+                            if (imageSelected) {
+                              selectedForDownload.delete(
+                                selectedForDownloadKey(i, j, k)
+                              );
+                            } else {
+                              selectedForDownload.set(
+                                selectedForDownloadKey(i, j, k),
+                                image
+                              );
+                            }
+                          }}
+                          key={k}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               );
