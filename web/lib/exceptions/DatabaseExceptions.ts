@@ -19,3 +19,27 @@ export class PathNotFoundError extends DatabaseException {
         super(`Path not found: ${path}`, HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR);
     }
 }
+
+export class FailedToFetchError extends DatabaseException {
+  constructor(docType: string) {
+      super(`Failed to fetch ${docType} documents.`, HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export class FailedToAddError extends DatabaseException {
+  constructor(docType: string) {
+      super(`Failed to add ${docType} document.`, HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export class FailedToEditError extends DatabaseException {
+  constructor(docType: string) {
+    super(`Failed to edit ${docType} document.`, HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export class FailedToDeleteError extends DatabaseException {
+  constructor(docType: string) {
+    super(`Failed to delete ${docType} document.`, HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR);
+  }
+}

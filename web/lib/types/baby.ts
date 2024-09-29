@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore";
+import { DocumentReference, Timestamp } from "firebase/firestore";
 
 export interface Baby {
   id: string;
@@ -7,10 +7,9 @@ export interface Baby {
   createdAt: Timestamp;
   hospitalName: string;
   caretakerID: string;
-  //   caretakerName: string;
-  //   caretaker: DocumentReference;
+  caretakerName: string;
+  caretaker: DocumentReference;
   dob: Timestamp;
-  //   birthday: string;
   sex: string;
   motherName: string;
   babyBook: string;

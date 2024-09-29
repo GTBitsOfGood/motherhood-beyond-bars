@@ -1,28 +1,62 @@
-import React from "react";
+import SearchableDropdown from "@components/atoms/SearchInput";
+import { getCaregivers } from "db/actions/admin/Caregiver";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiLoaderCircle } from "react-icons/bi";
 import { FaTimes } from "react-icons/fa";
 
+interface CaregiverOption {
+  label: string;
+  value: any;
+}
+
 function ChildModal({
   setModal,
   onSubmit,
-  caretakers,
-  buttonText = "Add a Child",
+  buttonText = "Add child",
   header = "Add a Child",
   values,
 }: {
   setModal: (modal: boolean) => void;
   onSubmit: (data: any) => void;
-  caretakers: { name: string; id: string }[];
   buttonText?: string;
   header?: string;
   values?: any;
 }) {
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
+  const [caregivers, setCaregivers] = useState<any[]>([]);
+
+  const handleCaretakerChange = (selectedCaretaker: any) => {
+    if (selectedCaretaker) {
+      setValue("caretakerName", selectedCaretaker.label); 
+      setValue("caretakerID", selectedCaretaker.value.id);
+      setValue("caretaker", selectedCaretaker.value); 
+    }
+  }
+
+  const fetchCaregivers = async () => {
+    try {
+        const fetchedData = await getCaregivers();
+        setCaregivers(fetchedData.map((caregiver) => (
+          { label: caregiver.name, value: caregiver }
+        )));
+    } catch (error) {
+        console.error('Error fetching records.');
+    }
+};
+
+  const defaultCaretaker = values?.caretakerID
+  ? caregivers.find(c => c.value.id === values.caretakerID) 
+  : null;
+
+  useEffect(() => {
+    fetchCaregivers();
+  }, [])
 
   return (
     <>
@@ -73,8 +107,7 @@ function ChildModal({
                     <input
                       className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                       placeholder="MM/DD/YY"
-                      // defaultValue={defaultDate}
-                      defaultValue={values?.dob && values?.dob.slice(0, -8)}
+                      defaultValue={values?.birthday}
                       {...register("dob", { required: false })}
                     />
                     {/* {errors.dob && (
@@ -87,6 +120,7 @@ function ChildModal({
                     <p>Sex</p>
                     <select
                       className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      defaultValue={values?.sex || "select"}
                       {...register("sex", { required: true })}
                     >
                       <option value="select">Select</option>
@@ -94,12 +128,16 @@ function ChildModal({
                       <option value="male">Male</option>
                     </select>
                   </div>
+                  <div className="form-group mb-3 w-full col-span-2 ">
+                    <SearchableDropdown options={caregivers}
+                    label="Caregiver" placeholder={defaultCaretaker?.label ?? "Select"} onChange={handleCaretakerChange}/>
+                  </div>
                   <div className="form-group mb-3 w-full col-span-2">
                     <p>Mother Name</p>
                     <input
                       type={"text"}
                       className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-                      placeholder="Full Name"
+                      placeholder="First Last"
                       defaultValue={values?.motherName}
                       {...register("motherName", { required: true })}
                     />
@@ -109,9 +147,18 @@ function ChildModal({
                       </span>
                     )}
                   </div>
+                  <div className="form-group mb-3 w-full col-span-2">
+                    <p>Hospital of Birth</p>
+                    <input
+                      type={"text"}
+                      className="w-full bg-[#FAFBFC] border-[#D9D9D9] border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
+                      defaultValue={values?.hospitalName}
+                      {...register("hospitalName", { required: false })}
+                    />
+                  </div>
                   <div className="form-group flex justify-end w-full col-span-2 mt-5">
                     <button
-                      className="px-4 py-2 rounded-md text-md text-blue-700 font-semibold"
+                      className="px-4 py-2 rounded-md text-md text-[#B14378] font-semibold"
                       onClick={() => setModal(false)}
                     >
                       Cancel
@@ -119,11 +166,11 @@ function ChildModal({
                     <button
                       disabled={isSubmitting}
                       type="submit"
-                      className={`"bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" ${
+                      className={`"bg-transparent hover:bg-[#B14378] text-[#B14378] font-semibold hover:text-white py-2 px-4 border border-[#B14378] hover:border-transparent rounded" ${
                         isSubmitting && "opacity-50 cursor-not-allowed"
                       }`}
                     >
-                      Add child
+                      {buttonText}
                     </button>
                   </div>
                   {values && values.id && (

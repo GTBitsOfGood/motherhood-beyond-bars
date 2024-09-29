@@ -7,6 +7,7 @@ export function usePaginatedData<T>(fetchPage: (page: number, paginationReferenc
     const [currPage, setCurrPage] = useState(1);
     const [data, setData] = useState<T[]>([]);
     const [totalRecords, setTotalRecords] = useState<number>(0);
+    const [refreshKey, setRefreshKey] = useState<number>(0)
 
     const fetchTotalRecords = async () => {
         try {
@@ -36,7 +37,13 @@ export function usePaginatedData<T>(fetchPage: (page: number, paginationReferenc
     useEffect(() => {
         fetchPageData();
         fetchTotalRecords();
-    }, [currPage]);
+      }, [currPage]);
+
+      useEffect(() => {
+        setCurrPage(1);
+        fetchPageData();
+        fetchTotalRecords();
+      }, [refreshKey]);
 
     return {
         data,
@@ -44,6 +51,7 @@ export function usePaginatedData<T>(fetchPage: (page: number, paginationReferenc
         currPage,
         setCurrPage,
         onNextPage: () => setCurrPage(prev => prev + 1),
-        onPrevPage: () => setCurrPage(prev => prev - 1)
+        onPrevPage: () => setCurrPage(prev => prev - 1),
+        refresh: () => setRefreshKey(prev => prev + 1)
     };
 }

@@ -2,24 +2,20 @@ import React from "react";
 import { useTable } from "react-table";
 import { HiOutlineTrash } from "react-icons/hi";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import Tooltip from "../ToolTip";
+import Tooltip from "./ToolTip";
 import Link from "next/link";
 
-function CaretakerTable({props}: any) {
-  if (!props) {
-    return <></>; 
-  }
-  
-  const { columns, data, onDelete } = props;
+function CaretakerTable({ columns, data, onDelete }: any) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
     });
+
   const [open, setOpen] = React.useState(Array(data.length).fill(false));
 
   const metadata = {
-    "Address": "address",
+    Address: "address",
     "Pref. Communication": "prefferedCommunication",
     "Child Name": "childName",
     "Household Info": "houseHoldInfo",
@@ -75,18 +71,18 @@ function CaretakerTable({props}: any) {
                           return (
                             <>
                               <td
-                                className="py-4 px-6 text-base border-t text-black whitespace-nowrap"
+                                className="py-4 px-6 text-base border-t font-normal text-black whitespace-nowrap"
                                 {...cell.getCellProps()}
                               >
                                 {cell.column.id === "assigned" ? (
                                   cell.value ? (
-                                    <span className=" bg-blue-200 rounded-md p-2">
+                                    <div className="text-xs bg-blue-200 text-center rounded-md p-2">
                                       Assigned
-                                    </span>
+                                    </div>
                                   ) : (
-                                    <span className=" bg-orange-200 rounded-md p-2">
-                                      Not assigned
-                                    </span>
+                                    <div className="text-xs bg-orange-200 text-center rounded-md p-2">
+                                      Not Assigned
+                                    </div>
                                   )
                                 ) : (
                                   cell.render("Cell")
