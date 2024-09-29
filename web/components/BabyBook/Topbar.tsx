@@ -2,22 +2,15 @@ import DownloadIcon from "@components/Icons/DownloadIcon";
 import ImageIcon from "@components/Icons/ImageIcon";
 import LinkIcon from "@components/Icons/LinkIcon";
 import PersonIcon from "@components/Icons/PersonIcon";
-import { GetServerSideProps } from "next";
-import Image from "next/image";
-import { stringify } from "querystring";
 import { useState } from "react";
-import admin_portal_gradient from "../../public/admin_portal_gradient.png";
-import left_heart from "../../public/left_heart.png";
-import right_heart from "../../public/right_heart.png";
 import Button from "@components/atoms/Button";
 
 const TopBar = ({ number, motherName, name, content, iv }: Props) => {
   const [copiedConfirmation, setCopiedConfirmation] = useState(false);
 
-  const downloadAlbum = async () => {
+  const downloadAlbum = () => {
     const a = document.createElement("a");
     a.href = `/api/download-album?content=${content}&iv=${iv}`;
-    console.log(a.href);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -63,13 +56,19 @@ const TopBar = ({ number, motherName, name, content, iv }: Props) => {
           <p className="text-dark-400 ml-1">Mother - {motherName}</p>
         </div>
       </div>
-      <div className="flex items-center justify-center gap-[18px] mr-6">
+      <div className="flex items-center gap-[18px] mr-6">
         <Button
           onClick={downloadAlbum}
           text="Download album"
           icon={<DownloadIcon />}
+          width="auto"
         />
-        <Button onClick={downloadAlbum} text="Copy link" icon={<LinkIcon />} />
+        <Button
+          onClick={copyLink}
+          text="Copy link"
+          icon={<LinkIcon />}
+          width="auto"
+        />
       </div>
     </div>
   );
