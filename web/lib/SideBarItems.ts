@@ -4,7 +4,7 @@ import item_requests_icon from "../public/item_requests_icon.png";
 import resource_library_icon from "../public/resource_library_icon.png";
 import settings_icon from "../public/settings_icon.png";
 
-const SideBarItems = [
+const AdminSideBarItems = [
   {
     name: "Caregivers",
     route: "/admin/caregivers",
@@ -31,5 +31,33 @@ const SideBarItems = [
     icon: settings_icon,
   },
 ];
+
+const CaregiverSideBarItems = [
+  {
+    name: "Baby Book",
+    route: "/caregiver/baby-book",
+    icon: children_and_baby_books_icon,
+  },
+  {
+    name: "MBB Support",
+    route: "/caregiver/mbb-support",
+    icon: item_requests_icon,
+  },
+  {
+    name: "Resource Library",
+    route: "/caregiver/resource-library",
+    icon: resource_library_icon,
+  },
+  {
+    name: "Settings",
+    route: "/caregiver/settings",
+    icon: settings_icon,
+  },
+];
+
+const SideBarItems = {
+  AdminSideBarItems,
+  CaregiverSideBarItems
+};
 
 export default SideBarItems;
