@@ -1,30 +1,35 @@
 import {
-  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-
+import Cookies from "js-cookie"; // For setting cookies
 import { db, auth } from "db/firebase";
 
-// TODO handle case where user signed up with Google tries to sign in with email and vice versa
-
+// Login with Email and Password
 export const loginWithCredentials = async (email: string, password: string) => {
   return await signInWithEmailAndPassword(auth, email, password)
     .then(async () => {
-      let admin = false;
-      const adminDoc = await getDoc(doc(db, "app", "admin"));
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
-      if (adminDoc.exists()) {
-        if (adminDoc.data().whitelist.includes(email)) {
-          admin = true;
-        }
-      }
+      // Fetch the token and set it in the cookies
+      const token = await user.getIdToken();
+      Cookies.set("authToken", token, {
+        path: "/",
+        secure: true, // Enable this in production
+        sameSite: "Strict",
+      });
 
-      return { success: true, admin: admin };
+      return { success: true }; // No need to return admin status here
     })
     .catch((error) => {
       let errorMsg = "";
+      console.error("Error during login:", error); // Debug log for errors
       if (
         error.code === "auth/wrong-password" ||
         error.code === "auth/user-not-found" ||
@@ -40,14 +45,27 @@ export const loginWithCredentials = async (email: string, password: string) => {
     });
 };
 
+// Login with Google
 export const loginWithGoogle = async () => {
   return await signInWithPopup(auth, new GoogleAuthProvider())
-    .then((res) => {
+    .then(async (res) => {
+      const user = res.user;
+
+      // Fetch the token and set it in the cookies
+      const token = await user.getIdToken();
+      Cookies.set("authToken", token, {
+        path: "/",
+        secure: true, // Enable in production
+        sameSite: "Strict",
+      });
+
+      // Check if the user is new
       const isNewUser =
         res.user.metadata.creationTime === res.user.metadata.lastSignInTime;
-      return { success: true, isNewUser: isNewUser };
+      return { success: true, isNewUser };
     })
     .catch((error) => {
+      console.error("Error during Google login:", error); // Debug log for errors
       const errorMsg = "Something went wrong, please try again.";
       return { success: false, error: errorMsg };
     });
