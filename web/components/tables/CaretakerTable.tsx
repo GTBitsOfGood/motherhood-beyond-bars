@@ -4,12 +4,13 @@ import { HiOutlineTrash } from "react-icons/hi";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Tooltip from "../ToolTip";
 import Link from "next/link";
+import DeleteProfileModal from "@components/modals/DeleteProfileModal";
 
-function CaretakerTable({props}: any) {
+function CaretakerTable({ props }: any) {
   if (!props) {
-    return <></>; 
+    return <></>;
   }
-  
+
   const { columns, data, onDelete } = props;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
@@ -17,9 +18,11 @@ function CaretakerTable({props}: any) {
       data,
     });
   const [open, setOpen] = React.useState(Array(data.length).fill(false));
+  const [openDeleteModal, toggleDeleteModal] = React.useState(false);
+  const [toDelete, setToDelete] = React.useState(null);
 
   const metadata = {
-    "Address": "address",
+    Address: "address",
     "Pref. Communication": "prefferedCommunication",
     "Child Name": "childName",
     "Household Info": "houseHoldInfo",
@@ -39,7 +42,7 @@ function CaretakerTable({props}: any) {
                     {headerGroup.headers.map((column) => (
                       <th
                         scope="col"
-                        className="py-3 px-6 text-base font-normal tracking-wider text-slate-500 text-center"
+                        className="py-3 px-6 text-base font-normal tracking-wider text-dark-400 text-center"
                         {...column.getHeaderProps()}
                       >
                         {column.render("Header")}
@@ -79,15 +82,11 @@ function CaretakerTable({props}: any) {
                                 {...cell.getCellProps()}
                               >
                                 {cell.column.id === "assigned" ? (
-                                  cell.value ? (
-                                    <span className=" bg-blue-200 rounded-md p-2">
-                                      Assigned
-                                    </span>
-                                  ) : (
-                                    <span className=" bg-orange-200 rounded-md p-2">
-                                      Not assigned
-                                    </span>
-                                  )
+                                  <span
+                                    className={`${cell.value ? "bg-light-blue" : "bg-light-orange"} rounded-md p-2`}
+                                  >
+                                    {cell.value ? "Assigned" : "Not assigned"}
+                                  </span>
                                 ) : (
                                   cell.render("Cell")
                                 )}
@@ -100,9 +99,8 @@ function CaretakerTable({props}: any) {
                             <div
                               className="pr-2 pt-1 cursor-pointer"
                               onClick={() => {
-                                confirm(
-                                  "Are you sure you want to delete this caretaker?"
-                                ) && onDelete(row.original);
+                                setToDelete(row.original ?? null);
+                                toggleDeleteModal(true);
                               }}
                             >
                               <Tooltip tooltipText="Delete">
@@ -119,7 +117,7 @@ function CaretakerTable({props}: any) {
                             className="border-b duration-300"
                           >
                             <div>
-                              <div className="m-2 bg-gray-200 p-4 self-center mx-auto w-full">
+                              <div className="m-2 bg-secondary-background p-4 self-center mx-auto w-full">
                                 <div className="grid grid-cols-3 gap-2">
                                   {Object.keys(metadata).map((key) => {
                                     const data: any = row.original;
@@ -128,7 +126,7 @@ function CaretakerTable({props}: any) {
                                       <>
                                         <div
                                           key={key}
-                                          className="uppercase text-gray-600 font-semibold text-sm"
+                                          className="uppercase text-dark-400 font-semibold text-sm"
                                         >
                                           {key}
                                         </div>
@@ -137,7 +135,7 @@ function CaretakerTable({props}: any) {
                                             <Link
                                               href={`/admin/waivers/${val}`}
                                             >
-                                              <a className="text-sm text-blue-400">
+                                              <a className="text-sm text-mbb-pink">
                                                 Link
                                               </a>
                                             </Link>
@@ -162,6 +160,14 @@ function CaretakerTable({props}: any) {
           </div>
         </div>
       </div>
+      <DeleteProfileModal
+        isOpen={openDeleteModal}
+        onClose={() => toggleDeleteModal(false)}
+        onDelete={() => {
+          onDelete(toDelete);
+          toggleDeleteModal(false);
+        }}
+      />
     </div>
   );
 }

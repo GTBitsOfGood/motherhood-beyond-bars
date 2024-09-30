@@ -6,11 +6,11 @@ import book from "../../public/book.svg";
 import dots from "../../public/dots.png";
 import Modal from "@components/modal";
 
-function BabiesTable({props}: any) {
+function BabiesTable({ props }: any) {
   if (!props) {
-    return <></>; 
+    return <></>;
   }
-  
+
   const { columns, data, onEdit, caretakers, onDelete } = props;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
@@ -112,9 +112,11 @@ function BabiesTable({props}: any) {
                                       onClick={() => {
                                         confirm(
                                           "Are you sure you want to delete this baby?"
-                                        )  && onDelete(row.original) && setSelectedOptionsPanel(-1);
+                                        ) &&
+                                          onDelete(row.original) &&
+                                          setSelectedOptionsPanel(-1);
                                       }}
-                                      className="block px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer"
+                                      className="block px-4 py-2 text-error-red hover:bg-gray-100 cursor-pointer"
                                     >
                                       Remove
                                     </div>
@@ -143,7 +145,9 @@ function BabiesTable({props}: any) {
               setModal={toggleEditModal}
               onSubmit={(baby) => {
                 onEdit(baby).then(() => {
-                  toggleEditModal(false);})}}
+                  toggleEditModal(false);
+                });
+              }}
               values={babyData}
             />
           </div>
