@@ -1,39 +1,45 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { getAuth } from "firebase-admin/auth";
-import { initializeApp, cert } from "firebase-admin/app";
-import { getApps } from "firebase-admin/app";
+import { NextApiRequest, NextApiResponse } from "next";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "db/firebase"; // Import Firestore db from your firebase setup
+import admin from "db/firebase/admin"; // Import initialized Firebase Admin SDK
 
-// Initialize Firebase Admin SDK only once
-if (!getApps().length) {
-  initializeApp({
-    credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-    }),
-  });
-}
-
-// This API route verifies the token and checks the user role
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { token } = req.body; // Extract token from the request body
+  // Ensure that Firebase Admin SDK is initialized
+  admin.app();
+
+  const { token } = req.body;
 
   if (!token) {
-    return res.status(400).json({ error: "No token provided" });
+    return res.status(400).json({ success: false, error: "Token is missing" });
   }
 
   try {
-    // Verify the Firebase ID token
+    // Verifying the token with Firebase Admin SDK
     const decodedToken = await getAuth().verifyIdToken(token);
-    const isAdmin = decodedToken.admin || false;
+    const caregiverId = decodedToken.uid;
+    const userEmail = decodedToken.email;
 
-    // Respond with user info and roles
-    return res.status(200).json({ success: true, isAdmin });
+    // Check if the user is an admin by looking at the Firestore whitelist
+    const adminDoc = await getDoc(doc(db, "app", "admin"));
+    let isAdmin = false;
+    if (adminDoc.exists()) {
+      const whitelist = adminDoc.data()?.whitelist || [];
+      if (whitelist.includes(userEmail)) {
+        isAdmin = true;
+      }
+    }
+
+    // Return the caregiver ID and admin status
+    return res.status(200).json({
+      success: true,
+      caregiverId: caregiverId,
+      isAdmin: isAdmin, // Return the admin status based on Firestore
+    });
   } catch (error) {
-    console.error("Token verification error:", error);
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ success: false, error: "Invalid token" });
   }
 }

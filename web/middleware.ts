@@ -3,16 +3,23 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("authToken"); // Get the token from cookies
-
   const url = req.nextUrl.clone();
+  const referer = req.headers.get("referer");
 
+  // If referer exists, parse it and extract the pathname
+  let refererPathname = null;
+  if (referer) {
+    const refererUrl = new URL(referer);
+    refererPathname = refererUrl.pathname;
+  }
+
+  // Redirect to login if no token is present
   if (!token) {
-    // Redirect to login if no token is found
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Call the API route to verify the token and check the user's role
+  // Call the API route to decode the token and get the user's role and ID
   try {
     const response = await fetch(`${req.nextUrl.origin}/api/verifyToken`, {
       method: "POST",
@@ -23,39 +30,49 @@ export async function middleware(req: NextRequest) {
     });
 
     if (!response.ok) {
-      console.error(
-        "Failed to fetch token verification. Status:",
-        response.status
-      );
-      const errorText = await response.text(); // Log the actual response body
-      console.error("Response body:", errorText); // Log the response text
-      throw new Error("API request failed.");
+      url.pathname = "/login"; // Redirect to a custom 403 page or any other page
+      return NextResponse.redirect(url);
     }
 
-    const result = await response.json(); // Parse the JSON response
+    const result = await response.json();
 
     if (!result.success) {
-      // If token verification fails, redirect to login
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
 
     const isAdmin = result.isAdmin;
 
-    // Redirect caregivers from admin pages
-    if (!isAdmin && req.nextUrl.pathname.startsWith("/admin")) {
-      url.pathname = "/caregiver/babyBook";
+    // Role-based redirection from "/home"
+    if (req.nextUrl.pathname === "/home") {
+      url.pathname = isAdmin ? "/admin/caregivers" : `/caregiver`;
       return NextResponse.redirect(url);
     }
 
-    return NextResponse.next(); // Allow access if user is authorized
+    // Handle Onboarding route
+    if (req.nextUrl.pathname === "/onboarding") {
+      url.pathname = isAdmin ? "/admin/caregivers" : `/caregiver/onboarding`;
+      return NextResponse.redirect(url);
+    }
+
+    // Admins can access any page
+    if (isAdmin) {
+      return NextResponse.next();
+    }
+
+    // Caregivers can't access admin pages
+    if (!isAdmin && req.nextUrl.pathname.startsWith("/admin")) {
+      url.pathname = refererPathname !== "/caregiver" ? "/caregiver" : "/login";
+      return NextResponse.redirect(url);
+    }
+
+    return NextResponse.next(); // Token exists, allow access
   } catch (error) {
-    console.error("Error in middleware:", error);
     url.pathname = "/login";
-    return NextResponse.redirect(url); // Redirect to login if something goes wrong
+    return NextResponse.redirect(url);
   }
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/caregiver/:path*"],
+  matcher: ["/admin/:path*", "/caregiver/:path*", "/home"],
 };
