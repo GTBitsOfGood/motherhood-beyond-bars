@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import admin_portal_gradient from "../public/admin_portal_gradient.png";
-import left_heart from "../public/left_heart.png";
-import right_heart from "../public/right_heart.png";
-import SignOutButton from "./SignOutButton";
+import SignOutButton from "../SignOutButton";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -11,10 +8,9 @@ import { collection, query, onSnapshot } from "firebase/firestore";
 import { db } from "db/firebase";
 
 import { Caregiver } from "pages/admin/item-requests";
-import NavBarLogo from "./logos/NavBarLogo";
+import NavBarLogo from '@components/logos/NavBarLogo';
 
-function SideBar(props: any) {
-  console.log(props.items);
+function DesktopNavBar(props: any) {
   const router = useRouter();
   const [pendingCount, setPendingCount] = useState();
 
@@ -43,10 +39,23 @@ function SideBar(props: any) {
   return (
     <div className="flex flex-col justify-between sm:relative bg-black shadow md:h-full hidden sm:flex">
       <div className="w-[318px] flex-col justify-start ">
-        {/* TO DO: no logic for rendering the caregiver name, use default "ABC D" */}
-        <NavBarLogo isAdmin={props.isAdmin} caregiverName="ABC D"/>
+        {/* <span className="left-0 right-0 w-[318px] h-[81px]">
+          <Image className="relative" src={admin_portal_gradient} />
+        </span>
+        <span className="absolute top-[26px] left-[33px]">
+          <Image className="static px-10" src={left_heart} />
+        </span>
+        <span className="absolute top-[26px] left-[49px]">
+          <Image className="static px-10" src={right_heart} />
+        </span>
+        <span className="absolute top-[29px] left-[82px]">
+          <h1 className="text-md font-bold inline-block whitespace-nowrap uppercase text-white">
+            Admin Portal
+          </h1>
+        </span> */}
+        {/* <NavBarLogo /> */}
         <div className="pt-4">
-          {(props.isAdmin? props.items.AdminSideBarItems : props.items.CaregiverSideBarItems).map((item: any, idx: number) => (
+          {props.items.map((item: any, idx: number) => (
             <ul
               key={idx}
               className={`px-8 py-2 flex-col justify-center items-center ${
@@ -81,4 +90,4 @@ function SideBar(props: any) {
   );
 }
 
-export default SideBar;
+export default DesktopNavBar;
