@@ -19,7 +19,7 @@ function CaretakerTable({ props }: any) {
     });
   const [open, setOpen] = React.useState(Array(data.length).fill(false));
   const [openDeleteModal, toggleDeleteModal] = React.useState(false);
-  const [toDelete, setToDelete] = React.useState(null);
+  const [toDelete, setToDelete] = React.useState<object | null>(null);
 
   const metadata = {
     Address: "address",
