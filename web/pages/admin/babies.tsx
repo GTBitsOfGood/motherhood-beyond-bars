@@ -5,31 +5,26 @@ import {
   addNewChild,
   editBaby,
   deleteBaby,
-  getCaregiversInfo,
   getBabyPage,
 } from "db/actions/admin/Baby";
 
 import PaginatedTable from "@components/tables/PaginatedTable";
 import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
-import ChildModal from "@components/modals/addChildModal";
+import ChildModal from "@components/modals/ChildModal";
 import { usePaginatedData } from "@components/molecules/Pagination/PaginationHooks";
 import { BABIES_TAB } from "@lib/utils/consts";
 
 const tab = BABIES_TAB;
 
-interface CaregiverInfo {
-    id: string;
-    name: string;
-}
+export default function genChildrenAndBabyBooksTab() {
 
-export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) {
-
-  const { data: babies, totalRecords, currPage, setCurrPage } = usePaginatedData(getBabyPage, tab);
+  const { data: babies, totalRecords, currPage, setCurrPage, refresh } = usePaginatedData(getBabyPage, tab);
 
   const columns = React.useMemo(
     () => [
       { Header: "Name", accessor: "name" },
+      { Header: "Caretaker's Name", accessor: "caretakerName"},
       { Header: "Mother's Name", accessor: "motherName" },
       { Header: "Date of Birth", accessor: "birthday" },
       { Header: "Sex", accessor: "sex" },
@@ -42,14 +37,14 @@ export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) 
 
   const handleEdit = async (baby: any) => {
     await editBaby(baby);
+    refresh();
     alert("Baby has been updated!");
-    setCurrPage(1);
   };
 
   const handleDelete = async (baby: any) => {
     await deleteBaby(baby);
+    refresh();
     alert("Baby has been deleted!");
-    setCurrPage(1);
   };
 
   const paginatedProps = {totalRecords: totalRecords, pageNumber: currPage}
@@ -96,11 +91,10 @@ export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) 
               onSubmit={(baby) =>
                 addNewChild(baby).then(() => {
                   toggleAddModal(false);
+                  refresh();
                   alert(`${baby.firstName} ${baby.lastName} has been added!`);
-                  setCurrPage(1);
                 })
               }
-              caretakers={caregivers}
             />
           </div>
         }
@@ -108,13 +102,3 @@ export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) 
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const caregivers = await getCaregiversInfo();
-
-  return {
-    props: {
-      caregivers,
-    },
-  };
-};

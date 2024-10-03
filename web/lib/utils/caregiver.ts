@@ -8,7 +8,7 @@ export default async function getCaregiversFromCaregiverDocs(caregiverDocs: FBDo
     const caregivers = await Promise.all( 
         caregiverDocs?.docs.map(async (doc) => {
             const data = doc.data();
-            const child: any = data.baby ? (await getDoc(data.baby)).data() : null;
+            const children = data.babies;
             return {
                 id: doc.id,
                 name: data.firstName + " " + data.lastName,
@@ -17,18 +17,17 @@ export default async function getCaregiversFromCaregiverDocs(caregiverDocs: FBDo
                 registeredDate: data.createdAt
                     ? data.createdAt.toDate().toLocaleDateString()
                     : null,
-                assigned: child ? true : false,
+                assigned: children && children.length > 0 ? true : false,
                 address: `${data.address}, ${
                     data.apartment ? `${data.apartment}, ` : ""
                 }${data.city}, ${data.state}`,
                 prefferedCommunication: data.prefferedCommunication || "N/A",
-                childName: child ? child.firstName + " " + child.lastName : null,
+                babies: children,
                 houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,
                 // liabilityWaiver: data.signedWaivers?.at(-1).id || null,
                 liabilityWaiver: "",
                 }
         })
     );
-
     return caregivers;
 }

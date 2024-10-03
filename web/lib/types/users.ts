@@ -23,6 +23,7 @@ export type Caregiver = Account & {
   zipCode: string;
   contact: string;
   babies: DocumentReference[];
+  babyCount: number;
 };
 
 export type OnboardingFormData = Omit<
