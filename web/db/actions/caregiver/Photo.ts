@@ -1,5 +1,5 @@
 import React from "react";
-import { db, storage } from "../../db/firebase"; // import firebase storage
+import { db, storage } from "firebase"; // import firebase storage
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 
