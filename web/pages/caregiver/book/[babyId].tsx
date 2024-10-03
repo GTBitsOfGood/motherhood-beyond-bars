@@ -30,7 +30,7 @@ export default function BabyBook({
   iv,
 }: Props) {
   return (
-    <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[18px] w-full">
+    <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
       <div className="self-start">
         <h1 className="text-2xl sm:text-3xl font-bold text-primary-text">
           {baby.firstName} {baby.lastName}
@@ -57,7 +57,7 @@ export default function BabyBook({
               <h2 className="sm:text-lg font-medium text-dark-gray">
                 {monthIndexToString(month)} {year}
               </h2>
-              <div className="grid grid-cols-4 gap-[6px] md:gap-x-4 md:gap-y-2">
+              <div className="grid grid-cols-4 gap-[0.375rem] md:gap-x-4 md:gap-y-2">
                 {images.map(({ imageUrl, date }) => (
                   <>
                     <div
@@ -83,7 +83,7 @@ export default function BabyBook({
         )
       )}
       <label
-        className="flex items-center justify-center fixed cursor-pointer rounded-full w-[60px] h-[60px] bottom-6 right-6 bg-mbb-pink"
+        className="flex items-center justify-center fixed cursor-pointer rounded-full w-[3.75rem] h-[3.75rem] bottom-6 right-6 bg-mbb-pink"
         title="Upload Photo"
         aria-roledescription="input"
       >
@@ -96,11 +96,7 @@ export default function BabyBook({
 
             if (!imageFile) return;
 
-            console.log("Image ready for upload!", imageFile);
-
             // TODO: Upload Image and description
-
-            console.log("Uploaded image.");
           }}
         />
         <PlusIcon />
