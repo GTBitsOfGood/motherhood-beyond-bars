@@ -13,7 +13,6 @@
     "@types/markdown-it": "^12.2.3",
     "@types/react-icons": "^3.0.0",
     "autoprefixer": "^10.4.2",
-    "crypto": "^1.0.1",
     "firebase": "^9.23.0",
     "firebase-admin": "^11.2.0",
     "firebase-functions": "^4.0.2",
