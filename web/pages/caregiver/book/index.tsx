@@ -7,6 +7,8 @@ interface Props {
   books: { name: string; birthday: string; bookLink: string }[];
 }
 
+// TODO add topbar and merge designs
+
 export default function BabyBookHome({ babies, books }: Props) {
   if (babies.length === 0) {
     return (

@@ -1,8 +1,3 @@
-import PictureArray from "@components/BabyBook/PictureArray";
-import PictureModal from "@components/BabyBook/PictureModal";
-import SideBar from "@components/BabyBook/Sidebar";
-import TopBar from "@components/BabyBook/Topbar";
-import { db } from "db/firebase";
 import {
   collection,
   doc,
@@ -13,14 +8,19 @@ import {
   query as doQuery,
   Timestamp,
 } from "firebase/firestore";
+
 import { GetServerSideProps } from "next";
+import Image from "next/image";
+
+import { db } from "db/firebase";
+import { uploadPhoto } from "db/actions/caregiver/Photo";
+
 import { Baby } from "@lib/types/baby";
-import { useState } from "react";
 import { decrypt } from "@lib/utils/encryption";
+import { monthIndexToString } from "@lib/utils/date";
+
 import SmileIcon from "@components/Icons/SmileIcon";
 import PlusIcon from "@components/Icons/PlusIcon";
-import { monthIndexToString } from "@lib/utils/date";
-import Image from "next/image";
 
 export default function BabyBook({
   babyBook,
@@ -29,6 +29,8 @@ export default function BabyBook({
   content,
   iv,
 }: Props) {
+  // TODO add TopBar when done
+
   return (
     <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
       <div className="self-start">
@@ -36,7 +38,7 @@ export default function BabyBook({
           {baby.firstName} {baby.lastName}
           {baby.lastName[baby.lastName.length - 1] === "s" ? "'" : "'s"} Album
         </h1>
-        <p className="text-dark-gray">Birthday: {baby.birthday}</p>
+        <p className="text-dark-gray sm:text-xl">Birthday: {baby.birthday}</p>
       </div>
       {totImages === 0 ? (
         <>
@@ -54,7 +56,7 @@ export default function BabyBook({
         babyBook.flatMap(({ year, months }) =>
           months.map(({ month, images }) => (
             <div key={`${year}${month}`} className="flex flex-col self-stretch">
-              <h2 className="sm:text-lg font-medium text-dark-gray">
+              <h2 className="sm:text-lg font-semibold text-dark-gray">
                 {monthIndexToString(month)} {year}
               </h2>
               <div className="grid grid-cols-4 gap-[0.375rem] md:gap-x-4 md:gap-y-2">
@@ -92,11 +94,12 @@ export default function BabyBook({
           accept="image/*"
           className="hidden"
           onChange={(e) => {
-            const imageFile = e.target.files?.[0];
-
-            if (!imageFile) return;
-
-            // TODO: Upload Image and description
+            const results = uploadPhoto(e);
+            if (results.success) {
+              // TODO show upload photo page
+            } else {
+              // TODO handle error
+            }
           }}
         />
         <PlusIcon />

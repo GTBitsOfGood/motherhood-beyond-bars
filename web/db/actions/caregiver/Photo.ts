@@ -1,9 +1,17 @@
 import React from "react";
-import { db, storage } from "../../firebase"; // import firebase storage
+import { db, storage } from "../../db/firebase"; // import firebase storage
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 
-export async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+interface returnType {
+  success: boolean;
+  data?: { downloadURL: object };
+  error?: string;
+}
+
+export function uploadPhoto(
+  e: React.ChangeEvent<HTMLInputElement>
+): returnType {
   const files = e.target.files;
   if (!files || files.length === 0) {
     return { success: false, error: "File attempted to be uploaded was empty" };
@@ -19,10 +27,6 @@ export async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
 
     uploadTask.on(
       "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      },
       (error) => {
         return { success: false, error: `Upload failed: ${error}` };
       },
@@ -48,16 +52,26 @@ export async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
           `${caregiverID}_${Date.now()}`
         );
 
-        await setDoc(docRef, {
-          imageUrl: imageURL,
-          caption: caption,
-          date: Timestamp.now(),
-          caregiverId: caregiverID,
-        });
+        // TODO fix logic os that caption is added after
+        try {
+          await setDoc(docRef, {
+            imageUrl: imageURL,
+            caption: caption,
+            date: Timestamp.now(),
+            caregiverId: caregiverID,
+          });
+        } catch (error) {
+          return { success: false, error: `Upload failed: ${error}` };
+        }
 
         return { success: true, data: { downloadURL: downloadURL } };
       }
     );
+
+    return {
+      success: false,
+      error: `Upload failed: Something has gone wrong, please try again`,
+    };
   } catch (error) {
     return { success: false, error: `Upload failed: ${error}` };
   }
