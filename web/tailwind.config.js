@@ -38,6 +38,8 @@ module.exports = {
         "empty-gray": "#E3E3E3",
         "error-red": "#E50606",
         "light-black": "#191919",
+        "light-orange": "#FFE3B3",
+        "light-blue": "#DEEBFF",
         dark: {
           100: "#BFBFBF",
           400: "#666666",
