@@ -21,8 +21,8 @@ const encrypt = (text: string) => {
   encrypted.set(final, updated.length);
 
   return {
-    iv: Buffer.from(iv).toString(),
-    content: Buffer.from(encrypted).toString(),
+    iv: Buffer.from(iv).toString("hex"),
+    content: Buffer.from(encrypted).toString("hex"),
   };
 };
 
