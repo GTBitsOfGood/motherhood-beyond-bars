@@ -23,7 +23,6 @@ function CaretakerModal({
   } = useForm();
 
   const handleClose = () => {
-    console.log("Closing modal");
     setModal(false);
   };
 

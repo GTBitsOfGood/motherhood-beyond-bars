@@ -11,7 +11,7 @@ function BabiesTable({ props }: any) {
     return <></>;
   }
 
-  const { columns, data, onEdit, caretakers, onDelete } = props;
+  const { columns, data, onEdit, onDelete } = props;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
