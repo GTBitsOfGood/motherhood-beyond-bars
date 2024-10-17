@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body, #app, #app>div {
+  height: 100vh;
+  width: 100vw;
+}
+
 @layer base {
   input[type="radio"] {
     @apply accent-mbb-pink;
