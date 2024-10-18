@@ -14,6 +14,8 @@ module.exports = {
       backgroundImage: {
         "custom-background":
           "radial-gradient(115.79% 108.31% at 24.4% 30.17%, #EDB1CB 0.01%, #B14378 92.53%)",
+        "navbar-background":
+          "radial-gradient(69.03% 159.84% at 14.6% -7.47%, #EDB1CB 0%, #B14378 100%)",
       },
       fontFamily: {
         sans: ["Open Sans", ...defaultTheme.fontFamily.sans],
@@ -27,6 +29,7 @@ module.exports = {
         "light-gray": "#D9D9D9",
         "medium-gray": "#8C8C8C",
         "dark-gray": "#666666",
+        "navbar-gray-text": "#C2C2C2",
         "icon-gray": "#BFBFBF",
         "icon-light-gray": "#DFE3E8",
         "empty-gray": "#E3E3E3",

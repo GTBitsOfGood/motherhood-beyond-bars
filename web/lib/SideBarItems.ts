@@ -1,8 +1,8 @@
-import caretakers_icon from "../public/caretakers_icon.png";
-import children_and_baby_books_icon from "../public/children_and_baby_books_icon.png";
-import item_requests_icon from "../public/item_requests_icon.png";
-import resource_library_icon from "../public/resource_library_icon.png";
-import settings_icon from "../public/settings_icon.png";
+import caretakers_icon from "../public/caretakers_icon.svg";
+import children_and_baby_books_icon from "../public/children_and_baby_books_icon.svg";
+import item_requests_icon from "../public/item_requests_icon.svg";
+import resource_library_icon from "../public/resource_library_icon.svg";
+import settings_icon from "../public/settings_icon.svg";
 
 const AdminSideBarItems = [
   {

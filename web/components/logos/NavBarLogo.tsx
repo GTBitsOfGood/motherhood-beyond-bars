@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import navbar_logo from "../../public/navbar_logo.png";
+import navbar_logo from "../../public/navbar_logo.svg";
 import navbar_logo_bg from "../../public/navbar_logo_bg.png"
 
 interface LogoProps {
@@ -10,38 +10,43 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({ isAdmin, caregiverName }) => {
   const homeLink = isAdmin ? '/admin' : '/caregiver';
-  
+
   return (
-    <div>
-        <Link href={homeLink}>
-        <button>
-            <span className="left-0 right-0 w-[318px] h-[81px]">
-                <Image className="relative" src={navbar_logo_bg} />
-            </span>
-            <span className="absolute top-[26px] left-[33px]">
-                <Image className="static px-10" src={navbar_logo} />
-            </span>
-            {
-                isAdmin ? 
-                    <span className="absolute top-[29px] left-[82px]">
-                        <h1 className="text-md font-bold inline-block whitespace-nowrap uppercase text-white">
-                            Admin Portal
-                        </h1>
-                    </span> :
-                    <span className="absolute top-[22px] left-[90px] flex flex-col items-start">
-                        <h1 className="text-md font-bold inline-block whitespace-nowrap uppercase text-white">
-                            {caregiverName}
-                        </h1>
-                        <h1 className="text-sm font-normal inline-block whitespace-nowrap uppercase text-white">
-                            Caregiver
-                        </h1>
+    // use custom gradient for admin navbar background, use mbb pink for caregiver navbar background
+    <div className={`w-full h-full flex justify-between items-center p-4 ${isAdmin ? 'bg-navbar-background' : 'bg-mbb-pink'}`}>
+        <Link href={homeLink} passHref>
+            <button
+                className="w-full h-full"
+                onClick={(e) => {
+                    // If already at home page, do not refresh, otherwise there's error "attempted to hard navigate to same URL"
+                    if (window.location.pathname === homeLink) {
+                        e.preventDefault();
+                    }
+                }}
+            >
+                <div className="flex flex-row items-center">
+                    <span>
+                        <Image className="static px-10" src={navbar_logo} />
                     </span>
-            }
-        </button>
-      {/* <button className="flex items-center justify-center p-2">
-        <img src={isAdmin ? '/path/to/admin-logo.png' : '/path/to/caregiver-logo.png'} alt="Logo" />
-      </button> */}
-    </Link>
+                    {
+                        isAdmin ? 
+                            <span className="px-[18px]">
+                                <h1 className="text-md font-bold inline-block whitespace-nowrap uppercase text-white">
+                                    Admin Portal
+                                </h1>
+                            </span> :
+                            <span className="flex flex-col items-start px-[10px]">
+                                <h1 className="text-md font-bold inline-block whitespace-nowrap uppercase text-white">
+                                    {caregiverName}
+                                </h1>
+                                <h1 className="text-sm font-normal inline-block whitespace-nowrap uppercase text-white">
+                                    Caregiver
+                                </h1>
+                            </span>
+                    }
+                </div>
+            </button>
+        </Link>
     </div>
 
   );
