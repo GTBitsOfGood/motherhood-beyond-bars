@@ -23,8 +23,6 @@ function CaretakerTable({ props }: any) {
   const [open, setOpen] = React.useState(Array(data.length).fill(false));
   const [openDeleteModal, toggleDeleteModal] = React.useState(false);
   const [toDelete, setToDelete] = React.useState<object | null>(null);
-
-  // New state to store babies data
   const [babies, setBabies] = React.useState<any[]>(
     Array(data.length).fill(null)
   );
@@ -135,7 +133,6 @@ function CaretakerTable({ props }: any) {
                         </td>
                       </tr>
 
-                      {/* Expanded section for additional details */}
                       {open[i] && (
                         <tr>
                           <td

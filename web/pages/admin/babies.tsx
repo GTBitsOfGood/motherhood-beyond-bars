@@ -41,11 +41,13 @@ export default function genChildrenAndBabyBooksTab() {
   const handleEdit = async (baby: any) => {
     await editBaby(baby);
     alert("Baby has been updated!");
+    loadData();
   };
 
   const handleDelete = async (baby: any) => {
     await deleteBaby(baby);
     alert("Baby has been deleted!");
+    loadData();
   };
 
   const tableProps = {
@@ -65,18 +67,14 @@ export default function genChildrenAndBabyBooksTab() {
 
   async function loadData() {
     let babies;
-    console.log("here");
-    console.log(caregiver);
     if (caregiver && typeof caregiver === "string") {
-      console.log("attempting to fetch babies from caregiver id");
       babies = await getBabiesFromCaregiver(caregiver);
-      console.log(babies);
     }
     if (!babies) {
       babies = await getBabies();
     }
     setBabies(babies);
-    setFilteredBabies(babies); // Initially set filteredBabies to full dataset
+    setFilteredBabies(babies);
   }
 
   // Filter babies based on the search query
@@ -134,6 +132,7 @@ export default function genChildrenAndBabyBooksTab() {
                 addNewChild(baby).then(() => {
                   toggleAddModal(false);
                   alert(`${baby.firstName} ${baby.lastName} has been added!`);
+                  loadData();
                 })
               }
             />

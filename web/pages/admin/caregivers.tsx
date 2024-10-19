@@ -109,6 +109,7 @@ export default function genCaregiversTab() {
                   alert(
                     `${caregiver.firstName} ${caregiver.lastName} has been added!`
                   );
+                  loadData();
                 })
               }
             />

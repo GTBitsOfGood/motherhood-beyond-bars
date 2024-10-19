@@ -32,7 +32,6 @@ function BabiesTable({ props }: any) {
     setBabyData(data);
   };
 
-  // Metadata for additional information
   const metadata = {
     "Hospital Name": "hospitalName",
   };

@@ -10,7 +10,7 @@ export default function SearchBar({
   };
 
   return (
-    <div className="max-w-[400px] px-4 py-2 flex items-center gap-4 border border-[#666666] rounded-md">
+    <div className="max-w-[400px] px-4 py-2 flex items-center gap-4 border border-dark-gray rounded-md">
       <div>
         <SearchIcon />
       </div>
