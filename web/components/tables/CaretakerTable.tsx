@@ -5,6 +5,8 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import Tooltip from "../ToolTip";
 import Link from "next/link";
 import DeleteProfileModal from "@components/modals/DeleteProfileModal";
+import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
+import LinkArrowIcon from "@components/Icons/LinkArrowIcon";
 
 function CaretakerTable({ props }: any) {
   if (!props) {
@@ -17,9 +19,15 @@ function CaretakerTable({ props }: any) {
       columns,
       data,
     });
+
   const [open, setOpen] = React.useState(Array(data.length).fill(false));
   const [openDeleteModal, toggleDeleteModal] = React.useState(false);
   const [toDelete, setToDelete] = React.useState<object | null>(null);
+
+  // New state to store babies data
+  const [babies, setBabies] = React.useState<any[]>(
+    Array(data.length).fill(null)
+  );
 
   const metadata = {
     Address: "address",
@@ -29,10 +37,25 @@ function CaretakerTable({ props }: any) {
     "Liability Waiver": "liabilityWaiver",
   };
 
+  // Function to fetch babies for a specific caregiver
+  const getBabies = async (index: number) => {
+    if (!babies[index]) {
+      const caregiverID = data[index].id;
+      const fetchedBabies = await getBabiesFromCaregiver(caregiverID); // Fetch babies by caregiver ID
+      if (fetchedBabies) {
+        setBabies((prevBabies) => {
+          const newBabies = [...prevBabies];
+          newBabies[index] = fetchedBabies;
+          return newBabies;
+        });
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col">
-      <div className="sm:-mx-6 lg:-mx-8">
-        <div className="inline-block sm:px-6 lg:px-8 w-full">
+      <div>
+        <div className="inline-block w-full">
           <div>
             <table {...getTableProps()} className="w-full">
               <thead>
@@ -58,6 +81,7 @@ function CaretakerTable({ props }: any) {
                     <>
                       <tr
                         onClick={() => {
+                          getBabies(i); // Fetch babies when caregiver row is clicked
                           setOpen((prevOpen) => {
                             const newOpen = [...prevOpen];
                             newOpen[i] = !newOpen[i];
@@ -74,26 +98,26 @@ function CaretakerTable({ props }: any) {
                             }`}
                           />
                         </td>
-                        {row.cells.map((cell) => {
-                          return (
-                            <>
-                              <td
-                                className="py-4 px-6 text-base border-t text-black whitespace-nowrap"
-                                {...cell.getCellProps()}
+                        {row.cells.map((cell) => (
+                          <td
+                            className="py-4 px-6 text-base border-t text-black whitespace-nowrap"
+                            {...cell.getCellProps()}
+                          >
+                            {cell.column.id === "assigned" ? (
+                              <span
+                                className={`${
+                                  cell.value
+                                    ? "bg-light-blue"
+                                    : "bg-light-orange"
+                                } rounded-md p-2`}
                               >
-                                {cell.column.id === "assigned" ? (
-                                  <span
-                                    className={`${cell.value ? "bg-light-blue" : "bg-light-orange"} rounded-md p-2`}
-                                  >
-                                    {cell.value ? "Assigned" : "Not assigned"}
-                                  </span>
-                                ) : (
-                                  cell.render("Cell")
-                                )}
-                              </td>
-                            </>
-                          );
-                        })}
+                                {cell.value ? "Assigned" : "Not assigned"}
+                              </span>
+                            ) : (
+                              cell.render("Cell")
+                            )}
+                          </td>
+                        ))}
                         <td className="border-t">
                           <div className="flex flex-row">
                             <div
@@ -110,43 +134,70 @@ function CaretakerTable({ props }: any) {
                           </div>
                         </td>
                       </tr>
+
+                      {/* Expanded section for additional details */}
                       {open[i] && (
                         <tr>
                           <td
                             colSpan={columns.length + 1}
                             className="border-b duration-300"
                           >
-                            <div>
-                              <div className="m-2 bg-secondary-background p-4 self-center mx-auto w-full">
-                                <div className="grid grid-cols-3 gap-2">
-                                  {Object.keys(metadata).map((key) => {
-                                    const data: any = row.original;
-                                    const val = data[(metadata as any)[key]];
-                                    return val ? (
-                                      <>
-                                        <div
-                                          key={key}
-                                          className="uppercase text-dark-400 font-semibold text-sm"
+                            <div className="m-2 bg-secondary-background p-4 self-center mx-auto w-full">
+                              <div className="grid grid-cols-3 gap-2">
+                                {Object.keys(metadata).map((key) => {
+                                  const data: any = row.original;
+                                  const val = data[(metadata as any)[key]];
+                                  return val ? (
+                                    <>
+                                      <div
+                                        key={key}
+                                        className="uppercase text-dark-400 font-semibold text-sm"
+                                      >
+                                        {key}
+                                      </div>
+                                      <div key={key} className="col-span-2">
+                                        {key === "Liability Waiver" ? (
+                                          <Link href={`/admin/waivers/${val}`}>
+                                            <a className="text-sm text-mbb-pink">
+                                              Link
+                                            </a>
+                                          </Link>
+                                        ) : (
+                                          <div className="text-sm">{val}</div>
+                                        )}
+                                      </div>
+                                    </>
+                                  ) : null;
+                                })}
+                                {babies[i] && babies[i].length > 0 && (
+                                  <>
+                                    <div className="uppercase text-dark-400 font-semibold text-sm">
+                                      Children Names
+                                    </div>
+                                    <div className="col-span-2 text-sm flex gap-4">
+                                      <div>
+                                        {babies[i]
+                                          .map(
+                                            (baby) =>
+                                              baby.firstName +
+                                              " " +
+                                              baby.lastName
+                                          )
+                                          .join(", ")}
+                                      </div>
+                                      <div>
+                                        <Link
+                                          href={`/admin/babies?caregiver=${data[i].id}`}
                                         >
-                                          {key}
-                                        </div>
-                                        <div key={key} className="col-span-2">
-                                          {key === "Liability Waiver" ? (
-                                            <Link
-                                              href={`/admin/waivers/${val}`}
-                                            >
-                                              <a className="text-sm text-mbb-pink">
-                                                Link
-                                              </a>
-                                            </Link>
-                                          ) : (
-                                            <div className="text-sm">{val}</div>
-                                          )}
-                                        </div>
-                                      </>
-                                    ) : null;
-                                  })}
-                                </div>
+                                          <a className="text-sm text-mbb-pink font-semibold flex">
+                                            Manage
+                                            <LinkArrowIcon />
+                                          </a>
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
                               </div>
                             </div>
                           </td>

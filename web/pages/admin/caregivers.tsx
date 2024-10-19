@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   addNewCaregiver,
   deleteCaretaker,
-  getCaregiverPage,
   getCaregivers,
 } from "db/actions/admin/Caregiver";
 import PaginatedTable from "@components/tables/PaginatedTable";
@@ -17,7 +16,7 @@ const tab = CAREGIVERS_TAB;
 
 export default function genCaregiversTab() {
   const [caregivers, setCaregivers] = useState<any[]>([]);
-  const [filteredCaregivers, setFilteredCaregivers] = useState<any[]>([]); // Store filtered caregivers
+  const [filteredCaregivers, setFilteredCaregivers] = useState<any[]>([]);
   const [currPage, setCurrPage] = useState(1);
 
   const columns = React.useMemo(
@@ -32,13 +31,13 @@ export default function genCaregiversTab() {
 
   const handleDelete = async (caregiver: any) => {
     deleteCaretaker(caregiver);
-    loadData(); // Refresh data after deletion
+    loadData();
   };
 
   const [addModal, toggleAddModal] = useState(false);
 
   const paginatedProps = {
-    totalRecords: filteredCaregivers.length, // Use filtered data for pagination
+    totalRecords: filteredCaregivers.length,
     pageNumber: currPage,
   };
 
@@ -51,14 +50,12 @@ export default function genCaregiversTab() {
     onDelete: handleDelete,
   };
 
-  // Load caregivers from the API
   async function loadData() {
     const caregivers = await getCaregivers();
     setCaregivers(caregivers);
-    setFilteredCaregivers(caregivers); // Initially set filteredCaregivers to the full dataset
+    setFilteredCaregivers(caregivers);
   }
 
-  // Filter caregivers based on the search query
   const handleSearch = (input: string) => {
     const filtered = caregivers.filter((caregiver) =>
       caregiver.name.toLowerCase().includes(input.toLowerCase())
@@ -72,12 +69,11 @@ export default function genCaregiversTab() {
 
   return (
     <div>
-      <div className="absolute mt-20 border-t" />
-      <div className="pt-6 px-9 flex h-full flex-col justify-left">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row">
-            <h1 className="text-2xl mb-5 font-bold">Caregivers</h1>
-            <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
+      <div className="flex flex-col border-t">
+        <div className="flex flex-row justify-between mx-9 my-4">
+          <div className="flex flex-row gap-6 items-center">
+            <h1 className="text-2xl font-bold">Caregivers</h1>
+            <h2 className="text-sm text-slate-500">
               {filteredCaregivers?.length + " People"}
             </h2>
           </div>
@@ -89,7 +85,8 @@ export default function genCaregiversTab() {
             />
           </div>
         </div>
-        <div>
+        <hr className="border-t" />
+        <div className="m-6">
           <PaginatedTable
             type={tab}
             tableProps={tableProps}

@@ -13,10 +13,14 @@ import Modal from "@components/modal";
 import ChildModal from "@components/modals/ChildModal";
 import { BABIES_TAB } from "@lib/utils/consts";
 import { PAGINATION_PAGE_SIZE } from "db/consts";
+import { useRouter } from "next/router";
+import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 
 const tab = BABIES_TAB;
 
 export default function genChildrenAndBabyBooksTab() {
+  const router = useRouter();
+  const { caregiver } = router.query;
   const [babies, setBabies] = useState<any[]>([]);
   const [filteredBabies, setFilteredBabies] = useState<any[]>([]); // Store filtered babies
   const [currPage, setCurrPage] = useState(1);
@@ -60,7 +64,17 @@ export default function genChildrenAndBabyBooksTab() {
   };
 
   async function loadData() {
-    const babies = await getBabies();
+    let babies;
+    console.log("here");
+    console.log(caregiver);
+    if (caregiver && typeof caregiver === "string") {
+      console.log("attempting to fetch babies from caregiver id");
+      babies = await getBabiesFromCaregiver(caregiver);
+      console.log(babies);
+    }
+    if (!babies) {
+      babies = await getBabies();
+    }
     setBabies(babies);
     setFilteredBabies(babies); // Initially set filteredBabies to full dataset
   }
@@ -75,16 +89,15 @@ export default function genChildrenAndBabyBooksTab() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [caregiver]);
 
   return (
     <div>
-      <div className="absolute mt-20 border-t" />
-      <div className="pt-6 px-8 flex h-full flex-col justify-left">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row">
-            <h1 className="text-2xl mb-5 font-bold">Children</h1>
-            <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
+      <div className="flex flex-col border-t">
+        <div className="flex flex-row justify-between mx-9 my-4">
+          <div className="flex flex-row gap-6 items-center">
+            <h1 className="text-2xl font-bold">Children</h1>
+            <h2 className="text-sm text-slate-500">
               {filteredBabies?.length + " Children"}
             </h2>
           </div>
@@ -96,7 +109,8 @@ export default function genChildrenAndBabyBooksTab() {
             />
           </div>
         </div>
-        <div>
+        <hr className="border-t" />
+        <div className="m-6">
           <PaginatedTable
             type={tab}
             paginatedProps={paginatedProps}

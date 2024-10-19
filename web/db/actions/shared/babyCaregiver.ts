@@ -3,6 +3,7 @@ import {
   arrayUnion,
   DocumentData,
   DocumentReference,
+  getDoc,
   getDocs,
   increment,
 } from "firebase/firestore";
@@ -56,7 +57,7 @@ export async function getBabiesFromCaregiver(caretakerID: string) {
 
   const caregiverData = caregiverDoc.data();
   const babyRefs = caregiverData?.babies || [];
-  const babyDocs = await getDocs(babyRefs);
-  const babies = await getBabiesFromBabyDocs(babyDocs as any);
+  const babyDocs = await Promise.all(babyRefs.map((ref: any) => getDoc(ref)));
+  const babies = await getBabiesFromBabyDocs({ docs: babyDocs } as any);
   return babies;
 }
