@@ -1,9 +1,18 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FAQ, Links, Research } from "../../components";
+import { Waiver } from "@lib/types/common";
+import { GetServerSideProps } from "next";
+import { collection, getDocs, orderBy, query } from "@firebase/firestore";
+import { db } from "db/firebase";
+import { formatDoc } from "db/firebase/getDoc";
+import Waivers from "@components/resources/Waivers";
 
-function ResourceLibraryPage() {
+interface Props {
+  waivers: Waiver[]; // Add waivers to props
+}
+
+function ResourceLibraryPage({ waivers }: Props) {
   const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
   const [changesMade, setChangesMade] = useState<boolean>(false);
 
@@ -50,6 +59,16 @@ function ResourceLibraryPage() {
       ),
     },
     {
+      title: "Waivers & Forms",
+      component: (
+        <Waivers
+          waivers={waivers}
+          getChangesMade={() => changesMade}
+          setChangesMade={setChangesMade}
+        />
+      ),
+    },
+    {
       title: "Research",
       component: (
         <Research
@@ -70,6 +89,7 @@ function ResourceLibraryPage() {
           {/* Segmented Control */}
           {sections.map((section, i) => (
             <button
+              key={i}
               className={`py-4 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
                 selectedSectionIndex === i
                   ? "bg-blue-700 text-white"
@@ -99,23 +119,24 @@ function ResourceLibraryPage() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const itemsRef = query(collection(db, 'links'));
-//   const linkDocs = await getDocs(itemsRef);
+export const getServerSideProps = async () => {
+  try {
+    const queryRef = query(collection(db, "waivers"), orderBy("order", "asc"));
+    const waiverDocs = await getDocs(queryRef);
+    const allWaivers = waiverDocs.docs.map(formatDoc) as Waiver[];
 
-//   const links: Link[] = [];
-
-//   linkDocs.forEach(async (doc) => {
-//     const data = doc.data();
-//     links.push({
-//       id: doc.id,
-//       title: data.title,
-//       description: data.description,
-//       url: data.url,
-//     });
-//   });
-
-//   return { props: { links } };
-// };
-
+    return {
+      props: {
+        waivers: allWaivers, // This will be passed to WaiversPage as props
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching waivers:", error);
+    return {
+      props: {
+        waivers: [], // Handle error with empty array
+      },
+    };
+  }
+};
 export default ResourceLibraryPage;
