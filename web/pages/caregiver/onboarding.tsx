@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import { OnboardingFormData } from "@lib/types/users";
 
@@ -14,8 +14,16 @@ import RequestItemsPage from "@components/Onboarding/RequestItems";
 import ShippingAddressPage from "@components/Onboarding/ShippingAddress";
 import PreferredContactPage from "@components/Onboarding/PreferredContact";
 import HalfScreen from "@components/logos/HalfScreen";
+import { GetServerSideProps } from "next";
+import { getWaivers } from "db/actions/shared/waiver";
+import { BrowserWaiver } from "@lib/types/common";
+import { Timestamp } from "firebase/firestore";
 
-export default function CaregiverOnboarding() {
+interface Props {
+  waivers: BrowserWaiver[];
+}
+
+export default function CaregiverOnboarding({ waivers }: Props) {
   // Page 0 - Let's Get Started, Page 1 - Household Information, Page 2 - Liability Waiver,
   // Page 3 - Request Items, Page 4 - Shipping Address, Page 5 - Contact Page
   const [page, setPage] = useState(0);
@@ -25,6 +33,30 @@ export default function CaregiverOnboarding() {
       contact: "phone",
     },
   });
+
+  const waiverFields = useFieldArray({
+    control: form.control,
+    name: "waivers",
+  });
+
+  useEffect(() => {
+    waiverFields.remove();
+    waivers
+      .filter((waiver) => waiver.onboarding)
+      .forEach((waiver) =>
+        waiverFields.append(
+          {
+            agreedToWaiver: false,
+            agreedDate: new Date(),
+            agreedSignature: "",
+            waiver,
+          },
+          {
+            shouldFocus: false,
+          }
+        )
+      );
+  }, [waivers, waiverFields.remove, waiverFields.append]);
 
   return (
     <div className="flex flex-col sm:flex-row absolute items-center sm:justify-center w-screen h-screen">
@@ -44,7 +76,11 @@ export default function CaregiverOnboarding() {
           ) : page == 1 ? (
             <HouseholdInfoPage setPage={setPage} />
           ) : page == 2 ? (
-            <LiabilityWaiverPage setPage={setPage} form={form} />
+            <LiabilityWaiverPage
+              setPage={setPage}
+              form={form}
+              waiverFields={waiverFields}
+            />
           ) : page == 3 ? (
             <RequestItemsPage setPage={setPage} />
           ) : page == 4 ? (
@@ -67,3 +103,16 @@ export default function CaregiverOnboarding() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const waivers = await getWaivers();
+
+  return {
+    props: {
+      waivers: waivers.map((w) => ({
+        ...w,
+        lastUpdated: (w.lastUpdated as Timestamp).toDate().toISOString(),
+      })),
+    },
+  };
+};

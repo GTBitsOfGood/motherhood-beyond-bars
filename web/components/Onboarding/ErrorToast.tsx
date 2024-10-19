@@ -11,7 +11,7 @@ export default function ErrorToast({ text }: Props) {
   return (
     <>
       {!closed && (
-        <div className="flex p-2 items-center justify-between rounded border border-[#E60606]">
+        <div className="flex p-2 gap-2 items-center justify-between rounded border border-[#E60606]">
           <ErrorTriangle />
           <p className="text-[#E60606]">
             {text || "Please fill in all required fields."}

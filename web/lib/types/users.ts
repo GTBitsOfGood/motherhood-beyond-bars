@@ -1,5 +1,5 @@
 import { DocumentReference } from "firebase/firestore";
-import { Waiver } from "./common";
+import { BrowserWaiver, Waiver } from "./common";
 import { ItemRequest } from "./items";
 
 export type Account = {
@@ -37,7 +37,10 @@ export type OnboardingFormData = Omit<
   | "babies"
 > & {
   saveAddress: boolean;
-  agreedToWaiver: boolean;
-  agreedDate: Date;
-  agreedSignature: string;
+  waivers: {
+    agreedToWaiver: boolean;
+    agreedDate: Date;
+    agreedSignature: string;
+    waiver: BrowserWaiver;
+  }[];
 };
