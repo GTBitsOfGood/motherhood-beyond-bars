@@ -77,11 +77,8 @@ export default function LoginScreen() {
                       if (email && password) {
                         loginWithCredentials(email, password).then((e) => {
                           if (e.success) {
-                            if ("admin" in e && e.admin) {
-                              router.push("/admin/caregivers");
-                            } else {
-                              router.push("/caregiver/babyBook");
-                            }
+                            // Push to a generic route, let middleware handle role-based redirection
+                            router.push("/home");
                           } else {
                             setErrorBannerMsg("error" in e ? e.error : "");
                           }
@@ -104,10 +101,12 @@ export default function LoginScreen() {
                     onClick={() => {
                       loginWithGoogle().then((e) => {
                         if (e.success) {
-                          if ("isNewUser" in e && !e.isNewUser) {
-                            router.push("/caregiver/babyBook");
+                          if ("isNewUser" in e && e.isNewUser) {
+                            // Redirect new users to the onboarding page
+                            router.push("/onboarding");
                           } else {
-                            router.push("/caregiver/onboarding");
+                            // Push to a generic route, let middleware handle role-based redirection
+                            router.push("/home");
                           }
                         } else {
                           setErrorBannerMsg("error" in e ? e.error : "");

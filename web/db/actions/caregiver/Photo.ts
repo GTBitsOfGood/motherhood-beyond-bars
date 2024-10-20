@@ -52,7 +52,7 @@ export function uploadPhoto(
           `${caregiverID}_${Date.now()}`
         );
 
-        // TODO fix logic os that caption is added after
+        // TODO fix logic so that caption is added after
         try {
           await setDoc(docRef, {
             imageUrl: imageURL,

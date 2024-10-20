@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "db/firebase";
+import Cookies from "js-cookie";
 
 export const isUniqueEmail = async (email: string) => {
   (
@@ -20,7 +21,14 @@ export const isUniqueEmail = async (email: string) => {
 
 export async function createAccount(email: string, password: string) {
   return await createUserWithEmailAndPassword(auth, email.trim(), password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+      Cookies.set("authToken", token, {
+        path: "/",
+        secure: true,
+        sameSite: "Strict",
+      });
       return { success: true, userCredential: userCredential };
     })
     .catch((error) => {

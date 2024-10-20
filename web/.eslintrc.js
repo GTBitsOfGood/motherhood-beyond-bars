@@ -23,5 +23,6 @@ module.exports = {
     "@typescript-eslint/no-unused-expressions": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-require-imports": "off",
+    "@next/next/no-server-import-in-page": "off",
   },
 };
