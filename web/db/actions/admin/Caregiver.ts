@@ -7,24 +7,42 @@ import {
   serverTimestamp,
   addDoc,
   updateDoc,
+  getDoc,
+  orderBy,
 } from "firebase/firestore";
 
 import { db } from "db/firebase";
 
-import { PaginationInfoType, PaginationReferencesType } from "@lib/types/common";
+import {
+  PaginationInfoType,
+  PaginationReferencesType,
+} from "@lib/types/common";
 import { getQueryConstraintsFromPagination } from "@lib/utils/pagination";
-import { CAREGIVERS_COLLECTION_PATH } from "db/consts";
+import { CAREGIVERS_COLLECTION_PATH, COLLECTION_ORDER_KEYS } from "db/consts";
 import getCaregiversFromCaregiverDocs from "@lib/utils/caregiver";
 import { Caregiver } from "@lib/types/users";
-import { FailedToAddError, FailedToDeleteError, FailedToEditError, FailedToFetchError, GenericDatabaseErrorException } from "@lib/exceptions/DatabaseExceptions";
+import {
+  FailedToAddError,
+  FailedToDeleteError,
+  FailedToEditError,
+  FailedToFetchError,
+} from "@lib/exceptions/DatabaseExceptions";
 import { removeCaretakerFromBabies } from "../shared/babyCaregiver";
 
 const docType = "caregiver";
 const path = CAREGIVERS_COLLECTION_PATH;
 
+export async function getCaregiver(caretakerID: string) {
+  if (!caretakerID) return null;
+  const caregiverRef = doc(collection(db, path), caretakerID); // "caregivers" is the collection
+  const caregiverDoc = await getDoc(caregiverRef);
+  return caregiverDoc;
+}
+
 export async function getCaregivers() {
   try {
-    const itemsRef = query(collection(db, path));
+    const constraint = orderBy(COLLECTION_ORDER_KEYS[path]);
+    const itemsRef = query(collection(db, path), constraint);
     const caregiverDocs = await getDocs(itemsRef);
     const caregivers = await getCaregiversFromCaregiverDocs(caregiverDocs);
     return caregivers;
@@ -48,8 +66,15 @@ export const addNewCaregiver = async (caregiver: Caregiver) => {
   }
 };
 
-export async function getCaregiverPage(pageNumber: number, paginationReferences: PaginationReferencesType) {
-  const constraints = getQueryConstraintsFromPagination(path, pageNumber, paginationReferences);
+export async function getCaregiverPage(
+  pageNumber: number,
+  paginationReferences: PaginationReferencesType
+) {
+  const constraints = getQueryConstraintsFromPagination(
+    path,
+    pageNumber,
+    paginationReferences
+  );
   try {
     const itemsRef = query(collection(db, path), ...constraints);
     const caregiverDocs = await getDocs(itemsRef);
@@ -64,10 +89,7 @@ export async function getCaregiverPage(pageNumber: number, paginationReferences:
   }
 }
 
-export async function updateCaregiver(
-  uid: string,
-  caregiver: any
-) {
+export async function updateCaregiver(uid: string, caregiver: any) {
   const caregiverDoc = doc(db, path, uid);
   try {
     await updateDoc(caregiverDoc, caregiver as Partial<Caregiver>);
@@ -77,7 +99,7 @@ export async function updateCaregiver(
 }
 
 export const deleteCaretaker = async (caretaker: Caregiver) => {
-  const caretakerID = caretaker.id; 
+  const caretakerID = caretaker.id;
 
   try {
     await removeCaretakerFromBabies(caretaker.babies);
@@ -86,4 +108,3 @@ export const deleteCaretaker = async (caretaker: Caregiver) => {
     throw new FailedToDeleteError(docType);
   }
 };
-
