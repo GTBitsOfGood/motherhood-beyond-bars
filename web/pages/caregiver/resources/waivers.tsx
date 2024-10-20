@@ -1,6 +1,6 @@
 import DownloadIcon from "@components/Icons/DownloadIcon";
 import { BrowserWaiver } from "@lib/types/common";
-import { getWaivers } from "db/actions/shared/waiver";
+import { getWaivers } from "db/actions/shared/Waiver";
 import { Timestamp } from "firebase-admin/firestore";
 import MarkdownIt from "markdown-it";
 import { GetServerSideProps } from "next";

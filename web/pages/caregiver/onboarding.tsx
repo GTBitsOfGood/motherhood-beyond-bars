@@ -15,7 +15,7 @@ import ShippingAddressPage from "@components/Onboarding/ShippingAddress";
 import PreferredContactPage from "@components/Onboarding/PreferredContact";
 import HalfScreen from "@components/logos/HalfScreen";
 import { GetServerSideProps } from "next";
-import { getWaivers } from "db/actions/shared/waiver";
+import { getWaivers } from "db/actions/shared/Waiver";
 import { BrowserWaiver } from "@lib/types/common";
 import { Timestamp } from "firebase/firestore";
 
@@ -105,6 +105,7 @@ export default function CaregiverOnboarding({ waivers }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  // TODO figure out what's going wrong with this function
   const waivers = await getWaivers();
 
   return {

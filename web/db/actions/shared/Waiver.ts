@@ -1,19 +1,17 @@
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "db/firebase";
-
+import { FailedToFetchError } from "@lib/exceptions/DatabaseExceptions";
 import { Waiver } from "@lib/types/common";
+import { db } from "db/firebase";
+import { collection, getDocs, query } from "firebase/firestore";
 
-// TODO add error checking
-export async function getWaivers() {
-  const waiverQuery = collection(db, "waivers");
-  const waiverDocs = await getDocs(waiverQuery);
-  const waivers = waiverDocs.docs.map(
-    (doc) =>
-      ({
-        ...doc.data(),
-        id: doc.id,
-      } as Waiver)
-  );
+const DOC_TYPE = "waivers";
+const PATH = "waivers";
 
-  return waivers;
+export async function getWaivers(): Promise<Waiver[]> {
+  try {
+    const itemsRef = query(collection(db, PATH));
+    const waiverDocs = await getDocs(itemsRef);
+    return waiverDocs.docs.map((doc) => doc.data() as Waiver);
+  } catch (error) {
+    throw new FailedToFetchError(DOC_TYPE);
+  }
 }
