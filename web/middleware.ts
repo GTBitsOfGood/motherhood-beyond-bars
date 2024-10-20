@@ -6,6 +6,9 @@ export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const referer = req.headers.get("referer");
 
+  const caregiverHome = "caregiver/book";
+  const adminHome = "admin/caregivers";
+
   // If referer exists, parse it and extract the pathname
   let refererPathname = null;
   if (referer) {
@@ -30,14 +33,14 @@ export async function middleware(req: NextRequest) {
     });
 
     if (!response.ok) {
-      url.pathname = "/login"; // Redirect to a custom 403 page or any other page
+      url.pathname = "/403"; // Redirect to a custom 403 page or any other page
       return NextResponse.redirect(url);
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      url.pathname = "/login";
+      url.pathname = "/403"; // TODO figure out if this should be 403 or login
       return NextResponse.redirect(url);
     }
 
@@ -45,13 +48,13 @@ export async function middleware(req: NextRequest) {
 
     // Role-based redirection from "/home"
     if (req.nextUrl.pathname === "/home") {
-      url.pathname = isAdmin ? "/admin/caregivers" : `/caregiver`;
+      url.pathname = isAdmin ? adminHome : caregiverHome;
       return NextResponse.redirect(url);
     }
 
     // Handle Onboarding route
     if (req.nextUrl.pathname === "/onboarding") {
-      url.pathname = isAdmin ? "/admin/caregivers" : `/caregiver/onboarding`;
+      url.pathname = isAdmin ? adminHome : "/caregiver/onboarding";
       return NextResponse.redirect(url);
     }
 
@@ -62,7 +65,7 @@ export async function middleware(req: NextRequest) {
 
     // Caregivers can't access admin pages
     if (!isAdmin && req.nextUrl.pathname.startsWith("/admin")) {
-      url.pathname = refererPathname !== "/caregiver" ? "/caregiver" : "/login";
+      url.pathname = caregiverHome;
       return NextResponse.redirect(url);
     }
 
@@ -74,5 +77,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/caregiver/:path*", "/home"],
+  matcher: ["/admin/:path*", "/caregiver/:path*", "/home", "/"],
 };
