@@ -28,6 +28,7 @@ The project was originally two parts: a web app in React and a mobile app in Rea
 ```bash
 cd web
 npm install
+npm run secrets:windows # or secrets:linux for Mac or Linux users
 npm run dev
 ```
 
