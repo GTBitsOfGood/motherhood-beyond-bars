@@ -17,6 +17,10 @@ import { GetServerSideProps } from "next";
 import { Baby } from "@lib/types/baby";
 import { useState } from "react";
 import { decrypt } from "@lib/utils/encryption";
+import { useMap } from "@lib/hooks/useMap";
+import Button from "@components/atoms/Button";
+import DownloadIcon from "@components/Icons/DownloadIcon";
+import XIcon from "@components/Icons/XIcon";
 
 export default function BabyBook({
   babyBook,
@@ -28,11 +32,15 @@ export default function BabyBook({
   const [isPictureSelected, setIsPictureSelected] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<BabyImage>();
   const [currIndexes, setCurrIndexes] = useState({ i: -1, j: -1, k: -1 });
+  const selectedForDownload = useMap<string, BabyImage>();
+
   const selectImage = (i: number, j: number, k: number) => {
     setIsPictureSelected(true);
     setSelectedImage(babyBook[i].months[j].images[k]);
     setCurrIndexes({ i, j, k });
+    selectedForDownload.clear();
   };
+
   const selectImageOffset = (
     i: number,
     j: number,
@@ -59,23 +67,31 @@ export default function BabyBook({
         if (i < 0 || i === babyBook.length) return;
       }
     }
+
     selectImage(i, j, k);
   };
+
   const deselectImage = () => {
     setIsPictureSelected(false);
   };
+
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="relative flex flex-col w-full h-full">
       <TopBar
         number={totImages}
         name={baby.name}
         motherName={baby.mother}
         content={content}
         iv={iv}
+        isPictureSelected={isPictureSelected}
       />
       <div className="relative flex grow-0 overflow-hidden">
         <SideBar babyBook={babyBook} />
-        <PictureArray babyBook={babyBook} select={selectImage} />
+        <PictureArray
+          babyBook={babyBook}
+          select={selectImage}
+          selectedForDownload={selectedForDownload}
+        />
         {isPictureSelected && (
           <PictureModal
             image={selectedImage}
@@ -83,6 +99,29 @@ export default function BabyBook({
             currentIndexs={currIndexes}
             deselect={deselectImage}
           />
+        )}
+        {selectedForDownload.size > 0 && (
+          <div className="absolute w-[70vw] left-[50%] translate-x-[-50%] rounded shadow bottom-3.5 px-6 py-[1.125rem] flex justify-between bg-background">
+            <div className="flex items-center gap-[1.125rem]">
+              <XIcon
+                onClick={() => {
+                  selectedForDownload.clear();
+                }}
+              />
+              <p className="text-lg font-bold">
+                {selectedForDownload.size} file
+                {selectedForDownload.size > 1 ? "s" : ""} selected
+              </p>
+            </div>
+            <Button
+              icon={<DownloadIcon />}
+              text="Download selected"
+              width="auto"
+              onClick={() => {
+                // TODO: implement download only selected images in zip
+              }}
+            />
+          </div>
         )}
       </div>
     </div>

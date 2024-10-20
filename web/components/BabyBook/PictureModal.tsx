@@ -1,3 +1,4 @@
+import Button from "@components/atoms/Button";
 import DownloadIcon from "@components/Icons/DownloadIcon";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import RightChevronIcon from "@components/Icons/RightChevronIcon";
@@ -37,13 +38,13 @@ const PictureModal = ({
   ).toDate();
   return (
     <div className="absolute flex flex-col align-center w-full h-full bg-white">
-      <div className="flex mt-8 ml-8 text-highlight font-semibold">
+      <div className="flex mt-8 ml-8 text-mbb-pink font-semibold">
         <div
           className="flex cursor-pointer items-center"
           onClick={() => deselect()}
         >
           <LeftChevronIcon />
-          <p className="ml-2">Download</p>
+          <p className="ml-2">Back to album</p>
         </div>
       </div>
       <div className="flex w-full justify-between flex-grow p-4">
@@ -90,13 +91,12 @@ const PictureModal = ({
           <p className="my-4">
             {image.caption === "" ? "No Caption" : image.caption}
           </p>
-          <button
+          <Button
             onClick={downloadImage}
-            className="rounded px-4 py-2 border border-highlight flex items-center text-highlight"
-          >
-            <DownloadIcon />
-            <p className="ml-2">Download</p>
-          </button>
+            text="Download"
+            icon={<DownloadIcon />}
+            width="auto"
+          />
         </div>
       </div>
     </div>

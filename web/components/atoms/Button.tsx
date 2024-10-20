@@ -5,12 +5,14 @@ interface Props {
   submit?: boolean;
   icon?: React.ReactNode;
   disabled?: boolean;
+  width?: string | number;
 }
 
 export default function Button({
   text,
   type = "primary",
   onClick,
+  width,
   disabled = false,
   submit = false,
   icon = undefined,
@@ -29,24 +31,24 @@ export default function Button({
   }
 
   return (
-    <div className="flex flex-row justify-center w-full">
-      <button
-        onClick={onClick}
-        className={`flex flex-row w-full h-full justify-center items-center font-semibold ${styles}`}
-        disabled={disabled}
-        type={submit ? "submit" : "button"}
-      >
-        {icon ? <span className="mt-1 mr-2">{icon}</span> : null}
-        {type === "Google" && (
-          <div className="flex justify-end w-1/5 -ml-8">
-            <img
-              src="/GoogleImage.png"
-              className="w-full h-auto object-contain"
-            ></img>
-          </div>
-        )}
-        {text}
-      </button>
-    </div>
+    <button
+      onClick={onClick}
+      className={`flex w-full items-center justify-center font-semibold ${styles}`}
+      disabled={disabled}
+      type={submit ? "submit" : "button"}
+      style={{ width }}
+      title={text}
+    >
+      {icon ? <span className="mr-2">{icon}</span> : null}
+      {type === "Google" && (
+        <div className="flex justify-end w-1/5 -ml-8">
+          <img
+            src="/GoogleImage.png"
+            className="w-full h-auto object-contain"
+          />
+        </div>
+      )}
+      <span className="line-clamp-1">{text}</span>
+    </button>
   );
 }
