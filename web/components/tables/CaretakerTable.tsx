@@ -7,6 +7,7 @@ import Link from "next/link";
 import DeleteProfileModal from "@components/modals/DeleteProfileModal";
 import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 import LinkArrowIcon from "@components/Icons/LinkArrowIcon";
+import { Baby } from "@lib/types/baby";
 
 function CaretakerTable({ props }: any) {
   if (!props) {
@@ -175,7 +176,7 @@ function CaretakerTable({ props }: any) {
                                       <div>
                                         {babies[i]
                                           .map(
-                                            (baby) =>
+                                            (baby: Baby) =>
                                               baby.firstName +
                                               " " +
                                               baby.lastName

@@ -117,7 +117,7 @@ function BabiesTable({ props }: any) {
                               </div>
                               <a
                                 href={row.cells.slice(-1)[0].value}
-                                className="text-blue-700"
+                                className="text-mbb-pink"
                                 target="_blank"
                               >
                                 Baby Book
@@ -174,6 +174,8 @@ function BabiesTable({ props }: any) {
                           </td>
                         </tr>
 
+                        {/* TODO fix styles to match the Figma */}
+                        {/* TODO either add loading state or serverside fetching */}
                         {/* Additional information section */}
                         {open[i] && (
                           <tr>
@@ -181,7 +183,7 @@ function BabiesTable({ props }: any) {
                               colSpan={columns.length + 1}
                               className="border-b duration-300"
                             >
-                              <div className="m-2 bg-secondary-background p-4 self-center mx-auto w-full">
+                              <div className="bg-secondary-background m-2 mx-auto p-4 self-center w-full">
                                 <div className="grid grid-cols-3 gap-2">
                                   {Object.keys(metadata).map((key) => {
                                     const data: any = row.original;

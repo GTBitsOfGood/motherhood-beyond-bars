@@ -77,6 +77,7 @@ export default function genChildrenAndBabyBooksTab() {
     setFilteredBabies(babies);
   }
 
+  // TODO add some intuitive way to either go back or clear search
   // Filter babies based on the search query
   const handleSearch = (input: string) => {
     const filtered = babies.filter((baby) =>
@@ -102,7 +103,7 @@ export default function genChildrenAndBabyBooksTab() {
           <div>
             <ButtonWithIcon
               icon={<FaPlus />}
-              text="Add a Child"
+              text="Add a child"
               onClick={() => toggleAddModal(true)}
             />
           </div>
