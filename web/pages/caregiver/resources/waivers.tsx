@@ -9,7 +9,7 @@ import { BrowserWaiver } from "@lib/types/common";
 import DownloadIcon from "@components/Icons/DownloadIcon";
 import BackButton from "@components/atoms/BackButton";
 import QuestionAnswer from "@components/resources/QuestionAnswer";
-import TopBar from "@components/resources/TopBar";
+import TitleTopBar from "@components/logos/TitleTopBar";
 
 interface Props {
   waivers: BrowserWaiver[];
@@ -23,7 +23,7 @@ export default function Waivers({ waivers }: Props) {
   return (
     // TODO fix styles and formatting to alignw with Figma
     <div className="w-full h-full flex flex-col justify-start items-start">
-      <TopBar />
+      <TitleTopBar title="Resources" />
       <div className="w-full p-6 overflow-auto">
         <BackButton
           onClick={() => {
