@@ -1,11 +1,15 @@
 import ArrowUpIcon from "@components/Icons/LeftChevronIcon copy";
+import { UseMapWrapper } from "@lib/hooks/useMap";
 import { monthIndexToString } from "@lib/utils/date";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { BabyBookYear, BabyImage } from "pages/admin/book/[babyId]";
 import React, { useEffect, useRef, useState } from "react";
 
-const PictureArray = ({ babyBook, select }: Props) => {
+const selectedForDownloadKey = (i: number, j: number, k: number) =>
+  `${i}${j}${k}`;
+
+const PictureArray = ({ babyBook, select, selectedForDownload }: Props) => {
   const router = useRouter();
   const wrapper = useRef<HTMLDivElement>(null);
   const [showToTop, setShowToTop] = useState(false);
@@ -14,6 +18,7 @@ const PictureArray = ({ babyBook, select }: Props) => {
       year.months.map((_) => React.createRef<HTMLDivElement>())
     )
   );
+
   useEffect(() => {
     const onHashChange = (
       url = window.location.pathname + window.location.hash
@@ -53,6 +58,7 @@ const PictureArray = ({ babyBook, select }: Props) => {
     if (scrollTop > 0) setShowToTop(true);
     else setShowToTop(false);
   };
+
   const toTop = () => {
     if (!wrapper.current) return;
     wrapper.current.scrollTop = 0;
@@ -69,19 +75,63 @@ const PictureArray = ({ babyBook, select }: Props) => {
           <div key={year.year} className="mb-10">
             <h1 className="text-3xl font-semibold mb-4">{year.year}</h1>
             {year.months.map((month, j) => {
+              const monthSelected = month.images.every((_, k) =>
+                selectedForDownload.has(selectedForDownloadKey(i, j, k))
+              );
+
               return (
                 <div key={month.month} ref={refs.current[i][j]}>
-                  <h2 className="font-semibold mb-2">
-                    {monthIndexToString(month.month)} {year.year}
+                  <h2
+                    className="group flex items-center font-semibold mb-2 cursor-pointer"
+                    onClick={() => {
+                      selectedForDownload.batch((map) => {
+                        month.images.forEach((img, k) => {
+                          const key = selectedForDownloadKey(i, j, k);
+                          if (monthSelected) {
+                            map.delete(key);
+                          } else {
+                            map.set(key, img);
+                          }
+                        });
+                      });
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={monthSelected}
+                      className={`hidden mr-2 w-6 h-6 group-hover:block ${monthSelected ? "!block" : ""}`}
+                    />
+                    <span>
+                      {monthIndexToString(month.month)} {year.year}
+                    </span>
                   </h2>
                   <div className="flex flex-wrap">
-                    {month.images.map((image, k) => (
-                      <BabyBookImage
-                        image={image}
-                        onClick={() => select(i, j, k)}
-                        key={k}
-                      />
-                    ))}
+                    {month.images.map((image, k) => {
+                      const imageSelected = selectedForDownload.has(
+                        selectedForDownloadKey(i, j, k)
+                      );
+
+                      return (
+                        <BabyBookImage
+                          image={image}
+                          onClick={() => select(i, j, k)}
+                          selected={imageSelected}
+                          onCheckboxClick={() => {
+                            if (imageSelected) {
+                              selectedForDownload.delete(
+                                selectedForDownloadKey(i, j, k)
+                              );
+                            } else {
+                              selectedForDownload.set(
+                                selectedForDownloadKey(i, j, k),
+                                image
+                              );
+                            }
+                          }}
+                          key={k}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               );
@@ -104,21 +154,36 @@ const PictureArray = ({ babyBook, select }: Props) => {
 const BabyBookImage = ({
   image,
   onClick,
+  onCheckboxClick,
+  selected,
 }: {
   image: BabyImage;
   onClick: () => void;
+  selected: boolean;
+  onCheckboxClick: () => void;
 }) => {
+  const borderClasses = `border hover:border-mbb-pink ${selected ? "!border-mbb-pink" : ""}`;
+
   return (
     <div
-      className="w-[200px] h-[300px] overflow-hidden relative shadow-lg rounded mx-3 my-3 cursor-pointer"
+      className={`group w-[200px] h-[300px] overflow-hidden relative shadow-lg rounded mx-3 my-3 cursor-pointer ${borderClasses}`}
       onClick={onClick}
     >
       <Image src={image.imageUrl} layout={"fill"} objectFit={"cover"} />
       {image.caption && (
-        <p className="absolute bottom-0 line-clamp-3 text-ellipsis bg-white w-full min-h-[4rem] p-2">
+        <p className="absolute bottom-0 left-0 right-0 line-clamp-3 text-ellipsis bg-white min-h-[4rem] p-3">
           {image.caption}
         </p>
       )}
+      <input
+        type="checkbox"
+        checked={selected}
+        className={`absolute hidden top-2 left-2 w-6 h-6 group-hover:block ${selected ? "!block" : ""}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onCheckboxClick();
+        }}
+      />
     </div>
   );
 };
@@ -126,6 +191,7 @@ const BabyBookImage = ({
 interface Props {
   babyBook: BabyBookYear[];
   select: (arg0: number, arg1: number, arg2: number) => void;
+  selectedForDownload: UseMapWrapper<string, BabyImage>;
 }
 
 export default PictureArray;

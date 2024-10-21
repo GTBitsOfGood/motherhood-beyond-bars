@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import ErrorText from "./ErrorText";
 import keyboardScroll from "@lib/utils/keyboardScroll";
 
 interface Props {
-  label?: string;
+  label?: ReactNode;
   disabled?: boolean;
   onChange?: (value: string) => void;
-  formValue?: object;
+  formValue?: Record<string, any>;
   currentValue?: string;
   placeholder?: string;
   error?: string;
@@ -28,9 +28,12 @@ export default function TextInput({
   const [value, setValue] = useState(currentValue);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       {label && (
-        <label className="font-opensans text-base mb-2" htmlFor={label}>
+        <label
+          className="font-opensans text-base mb-2"
+          htmlFor={formValue ? formValue.name : undefined}
+        >
           {label}
         </label>
       )}
@@ -39,7 +42,6 @@ export default function TextInput({
         type={inputType}
         onFocus={(e) => keyboardScroll(e)}
         {...formValue}
-        name={label}
         className={`w-full py-2.5 px-2 bg-secondary-background items-center border rounded ${disabled ? "!bg-light-gray" : "!bg-secondary-background"} ${error ? "border-error-red" : "border-light-gray"}`}
         onChange={(event) => {
           setValue(event.target.value);

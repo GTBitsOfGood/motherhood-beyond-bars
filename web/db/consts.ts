@@ -7,5 +7,5 @@ export const PAGINATION_PAGE_SIZE = 5;
 
 export const COLLECTION_ORDER_KEYS: Record<CollectionPath, string> = {
     [BABIES_COLLECTION_PATH]: 'firstName',
-    [CAREGIVERS_COLLECTION_PATH]: 'firstName'
+    [CAREGIVERS_COLLECTION_PATH]: 'babyCount'
 }

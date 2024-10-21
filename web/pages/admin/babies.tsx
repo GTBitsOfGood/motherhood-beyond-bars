@@ -1,35 +1,35 @@
-import { GetServerSideProps } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import {
   addNewChild,
   editBaby,
   deleteBaby,
-  getCaregiversInfo,
-  getBabyPage,
+  getBabies,
 } from "db/actions/admin/Baby";
 
 import PaginatedTable from "@components/tables/PaginatedTable";
 import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
-import ChildModal from "@components/modals/addChildModal";
-import { usePaginatedData } from "@components/molecules/Pagination/PaginationHooks";
+import ChildModal from "@components/modals/ChildModal";
 import { BABIES_TAB } from "@lib/utils/consts";
+import { PAGINATION_PAGE_SIZE } from "db/consts";
+import { useRouter } from "next/router";
+import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 
 const tab = BABIES_TAB;
 
-interface CaregiverInfo {
-    id: string;
-    name: string;
-}
-
-export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) {
-
-  const { data: babies, totalRecords, currPage, setCurrPage } = usePaginatedData(getBabyPage, tab);
+export default function genChildrenAndBabyBooksTab() {
+  const router = useRouter();
+  const { caregiver } = router.query;
+  const [babies, setBabies] = useState<any[]>([]);
+  const [filteredBabies, setFilteredBabies] = useState<any[]>([]); // Store filtered babies
+  const [currPage, setCurrPage] = useState(1);
+  const [addModal, toggleAddModal] = useState(false);
 
   const columns = React.useMemo(
     () => [
       { Header: "Name", accessor: "name" },
+      { Header: "Caretaker's Name", accessor: "caretakerName" },
       { Header: "Mother's Name", accessor: "motherName" },
       { Header: "Date of Birth", accessor: "birthday" },
       { Header: "Sex", accessor: "sex" },
@@ -38,43 +38,78 @@ export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) 
     []
   );
 
-  const [addModal, toggleAddModal] = useState(false);
-
   const handleEdit = async (baby: any) => {
     await editBaby(baby);
     alert("Baby has been updated!");
-    setCurrPage(1);
+    loadData();
   };
 
   const handleDelete = async (baby: any) => {
     await deleteBaby(baby);
     alert("Baby has been deleted!");
-    setCurrPage(1);
+    loadData();
   };
 
-  const paginatedProps = {totalRecords: totalRecords, pageNumber: currPage}
-  const tableProps = {columns: columns, data: babies, onEdit: handleEdit, onDelete: handleDelete}
+  const tableProps = {
+    columns: columns,
+    data: filteredBabies.slice(
+      (currPage - 1) * PAGINATION_PAGE_SIZE,
+      currPage * PAGINATION_PAGE_SIZE
+    ),
+    onEdit: handleEdit,
+    onDelete: handleDelete,
+  };
+
+  const paginatedProps = {
+    totalRecords: filteredBabies.length, // Use filtered data for pagination
+    pageNumber: currPage,
+  };
+
+  async function loadData() {
+    let babies;
+    if (caregiver && typeof caregiver === "string") {
+      babies = await getBabiesFromCaregiver(caregiver);
+    }
+    if (!babies) {
+      babies = await getBabies();
+    }
+    setBabies(babies);
+    setFilteredBabies(babies);
+  }
+
+  // TODO add some intuitive way to either go back or clear search
+  // Filter babies based on the search query
+  const handleSearch = (input: string) => {
+    const filtered = babies.filter((baby) =>
+      baby.name.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredBabies(filtered);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [caregiver]);
 
   return (
     <div>
-      <div className="absolute mt-20 border-t" />
-      <div className="pt-6 px-8 flex h-full flex-col justify-left">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row">
-            <h1 className="text-2xl mb-5 font-bold">Children</h1>
-            <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
-              {totalRecords + " Children"}
+      <div className="flex flex-col border-t">
+        <div className="flex flex-row justify-between mx-9 my-4">
+          <div className="flex flex-row gap-6 items-center">
+            <h1 className="text-2xl font-bold">Children</h1>
+            <h2 className="text-sm text-slate-500">
+              {filteredBabies?.length + " Children"}
             </h2>
           </div>
           <div>
             <ButtonWithIcon
               icon={<FaPlus />}
-              text="Add a Child"
+              text="Add a child"
               onClick={() => toggleAddModal(true)}
             />
           </div>
         </div>
-        <div className="mt-4">
+        <hr className="border-t" />
+        <div className="m-6">
           <PaginatedTable
             type={tab}
             paginatedProps={paginatedProps}
@@ -83,6 +118,7 @@ export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) 
             onDelete={handleDelete}
             onNextPage={() => setCurrPage(currPage + 1)}
             onPrevPage={() => setCurrPage(currPage - 1)}
+            onSearch={handleSearch}
           />
         </div>
       </div>
@@ -97,10 +133,9 @@ export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) 
                 addNewChild(baby).then(() => {
                   toggleAddModal(false);
                   alert(`${baby.firstName} ${baby.lastName} has been added!`);
-                  setCurrPage(1);
+                  loadData();
                 })
               }
-              caretakers={caregivers}
             />
           </div>
         }
@@ -108,13 +143,3 @@ export default function genChildrenAndBabyBooksTab(caregivers: CaregiverInfo[]) 
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const caregivers = await getCaregiversInfo();
-
-  return {
-    props: {
-      caregivers,
-    },
-  };
-};

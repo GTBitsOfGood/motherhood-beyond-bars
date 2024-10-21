@@ -1,5 +1,5 @@
 import { DocumentReference } from "firebase/firestore";
-import { Waiver } from "./common";
+import { BrowserWaiver, Waiver } from "./common";
 import { ItemRequest } from "./items";
 
 export type Account = {
@@ -23,4 +23,24 @@ export type Caregiver = Account & {
   zipCode: string;
   contact: string;
   babies: DocumentReference[];
+  babyCount: number;
+};
+
+export type OnboardingFormData = Omit<
+  Caregiver,
+  | "id"
+  | "email"
+  | "password"
+  | "firstName"
+  | "lastName"
+  | "phoneNumber"
+  | "babies"
+> & {
+  saveAddress: boolean;
+  waivers: {
+    agreedToWaiver: boolean;
+    agreedDate: Date;
+    agreedSignature: string;
+    waiver: BrowserWaiver;
+  }[];
 };

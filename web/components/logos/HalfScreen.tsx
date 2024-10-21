@@ -3,14 +3,18 @@ import BackButton from "@components/atoms/BackButton";
 interface Props {
   caregiver?: boolean;
   backButtonFunction?: (value: any) => void;
+  hiddenOnMobile?: boolean;
 }
 
 export default function HalfScreen({
   caregiver = false,
   backButtonFunction = undefined,
+  hiddenOnMobile = false,
 }: Props) {
   return (
-    <div className="flex flex-col bg-custom-background w-full h-[20%] justify-center items-center sm:w-1/2 sm:h-full">
+    <div
+      className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} flex-col bg-custom-background w-full h-[20%] justify-center items-center sm:w-1/2 sm:h-full`}
+    >
       {backButtonFunction && (
         <div className="flex sm:hidden flex-start w-[90%] mt-2 -mb-5">
           <BackButton darkerColor={true} onClick={backButtonFunction} />
