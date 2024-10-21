@@ -35,17 +35,17 @@ const AdminSideBarItems = [
 const CaregiverSideBarItems = [
   {
     name: "Baby Book",
-    route: "/caregiver/baby-book",
+    route: "/caregiver/book",
     icon: children_and_baby_books_icon,
   },
   {
     name: "MBB Support",
-    route: "/caregiver/mbb-support",
+    route: "/caregiver/items",
     icon: item_requests_icon,
   },
   {
     name: "Resource Library",
-    route: "/caregiver/resource-library",
+    route: "/caregiver/resources",
     icon: resource_library_icon,
   },
   {

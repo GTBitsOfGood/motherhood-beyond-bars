@@ -19,23 +19,26 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize(); // Check on component mount
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    if (router.asPath.includes('admin')) setIsAdmin(true);
+    if (router.asPath.includes("admin")) setIsAdmin(true);
   }, []);
+
+  const hideNavBar = router.asPath.includes("/login") || router.asPath.includes("/signup") || router.asPath.includes("/caregiver/onboarding");
 
   return (
     <UserProvider>
       <div className="flex flex-col sm:flex-row flex-no-wrap h-screen">
-        {
-          isMobile ? <MobileNavBar isAdmin={isAdmin} items={SideBarItems} /> 
-            : 
-          <SideBar isAdmin={isAdmin} items={SideBarItems}/>
-        }
+        {!hideNavBar &&
+          (isMobile ? (
+            <MobileNavBar isAdmin={isAdmin} items={SideBarItems} />
+          ) : (
+            <SideBar isAdmin={isAdmin} items={SideBarItems} />
+          ))}
         <NextNProgress />
         <Component {...pageProps} />
       </div>

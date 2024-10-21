@@ -8,7 +8,7 @@ interface TopBarProps {
   
 const TopBar: React.FC<TopBarProps> = ({ title, onNavToggle }) => {
     return (
-      <div className="bg-mbb-pink text-white flex justify-between items-center p-4 z-40">
+      <div className="bg-custom-background text-white flex justify-between items-center p-4 z-40">
         <button onClick={onNavToggle} className="text-white focus:outline-none lg:hidden">
             <Image className="static px-10" src={topbar_logo} />
         </button>
