@@ -109,7 +109,7 @@ export default function Links(props: {
         <div className="fixed bottom-0 right-0 left-[318px] bg-white border-t-[1px] px-10 py-4">
           <div className="flex items-center justify-between ">
             <div
-              className="text-[#304CD1] font-semibold hover:cursor-pointer"
+              className="text-mbb-pink font-semibold hover:cursor-pointer"
               onClick={createTempLink}
             >
               + Add a link
@@ -117,8 +117,8 @@ export default function Links(props: {
             <div
               className={
                 props.getChangesMade()
-                  ? "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
-                  : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
+                  ? "py-2 px-3 rounded border-mbb-pink text-mbb-pink hover:bg-mbb-pink hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
+                  : "py-2 px-3 rounded border-mbb-pink text-mbb-pink border-[1px] font-semibold hover:cursor-pointer"
               }
               onClick={saveChanges}
             >

@@ -162,6 +162,7 @@ function Waivers({
     }
   };
 
+  // TODO fix styles and maybe find different Markdown editor or show Markdown results in split-screen
   return (
     <div className="flex h-full">
       {/* Sidebar for Waiver List */}
@@ -173,7 +174,7 @@ function Waivers({
               key={waiver.id}
               className={`cursor-pointer p-3 text-left ${
                 selectedWaiver?.id === waiver.id
-                  ? "bg-gray-200"
+                  ? "bg-mbb-pink/10"
                   : "bg-white hover:bg-gray-100"
               }`}
               onClick={() => {
@@ -194,7 +195,7 @@ function Waivers({
         </ul>
         <button
           onClick={handleNewWaiver}
-          className="text-blue-600 hover:text-blue-800 font-semibold"
+          className="ml-3 text-mbb-pink hover:text-mbb-pink font-semibold"
           disabled={loading}
         >
           + Add a Waiver
@@ -234,8 +235,10 @@ function Waivers({
               </button>
               <button
                 className={`py-2 px-4 font-semibold border rounded-md ${
-                  getChangesMade()
-                    ? "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                  // TODO disable button when no changes
+                  // getChangesMade()
+                  true
+                    ? "border-mbb-pink text-mbb-pink hover:bg-mbb-pink hover:text-white"
                     : "border-gray-400 text-gray-400"
                 }`}
                 onClick={handleSaveWaiver}

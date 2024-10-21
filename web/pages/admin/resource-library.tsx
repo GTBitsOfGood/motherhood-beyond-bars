@@ -1,11 +1,13 @@
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { FAQ, Links, Research } from "../../components";
-import { Waiver } from "@lib/types/common";
-import { GetServerSideProps } from "next";
+
 import { collection, getDocs, orderBy, query } from "@firebase/firestore";
 import { db } from "db/firebase";
 import { formatDoc } from "db/firebase/getDoc";
+
+import { Waiver } from "@lib/types/common";
+import { FAQ, Links } from "../../components";
 import Waivers from "@components/resources/Waivers";
 
 interface Props {
@@ -67,16 +69,7 @@ function ResourceLibraryPage({ waivers }: Props) {
           setChangesMade={setChangesMade}
         />
       ),
-    },
-    {
-      title: "Research",
-      component: (
-        <Research
-          getChangesMade={() => changesMade}
-          setChangesMade={setChangesMade}
-        />
-      ),
-    },
+    }
   ];
 
   return (
@@ -92,7 +85,7 @@ function ResourceLibraryPage({ waivers }: Props) {
               key={i}
               className={`py-4 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
                 selectedSectionIndex === i
-                  ? "bg-blue-700 text-white"
+                  ? "bg-mbb-pink text-white"
                   : "bg-gray-100 text-gray-400"
               }`}
               onClick={() => {
