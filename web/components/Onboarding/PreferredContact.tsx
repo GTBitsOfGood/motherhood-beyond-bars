@@ -55,19 +55,17 @@ export default function PreferredContactPage({ form }: Props) {
         text="Finish"
         disabled={submitting}
         onClick={async () => {
-          const {
-            saveAddress,
-            agreedToWaiver,
-            agreedDate,
-            agreedSignature,
-            ...caregiverUpdate
-          } = form.getValues();
+          const { saveAddress, waivers, ...caregiverUpdate } = form.getValues();
 
           if (!auth.currentUser) return;
 
           setSubmitting(true);
           try {
-            await updateCaregiver(auth.currentUser?.uid, caregiverUpdate);
+            await updateCaregiver(auth.currentUser?.uid, {
+              ...caregiverUpdate,
+              // May need to convert the timestamp here to another format because it is in ISO on the browser
+              signedWaivers: waivers.map((waiver) => waiver.waiver),
+            });
           } finally {
             setSubmitting(false);
           }
