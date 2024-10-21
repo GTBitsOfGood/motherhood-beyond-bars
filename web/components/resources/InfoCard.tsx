@@ -1,17 +1,10 @@
-
 interface Props {
   title: string;
-  description?: string;
-  content?: ReactNode;
+  description: string;
   onClick: () => any;
 }
 
-export default function InfoCard({
-  title,
-  description,
-  content,
-  onClick,
-}: Props) {
+export default function InfoCard({ title, description, onClick }: Props) {
   const action = () => {
     onClick();
   };
@@ -23,11 +16,7 @@ export default function InfoCard({
     >
       <div className="flex flex-col justify-start items-start sm:w-[20rem]">
         <div className="text-black text-lg font-bold sm:pb-1">{title}</div>
-        {description ? (
-          <div className="text-dark-gray text-left">{description}</div>
-        ) : (
-          content
-        )}
+        <div className="text-dark-gray text-left">{description}</div>
       </div>
       <img src="/KeyboardRightArrow.svg"></img>
     </button>
