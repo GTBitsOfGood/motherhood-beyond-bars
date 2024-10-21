@@ -98,6 +98,7 @@ function Waivers({
         lastUpdated: new Date().toISOString(),
         description: "Waiver Description",
         order: localWaivers.length,
+        onboarding: true
       };
       setLocalWaivers([...localWaivers, newWaiver]);
       setSelectedWaiver(newWaiver);
