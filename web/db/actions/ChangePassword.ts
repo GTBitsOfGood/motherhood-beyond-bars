@@ -16,8 +16,20 @@ export async function changePassword(
     return { success: false, message: "No user is logged in" };
   }
 
+  // Check if the user is an email/password user
+  const isPasswordUser = user.providerData.some(
+    (provider) => provider.providerId === "password"
+  );
+
+  if (!isPasswordUser) {
+    return {
+      success: false,
+      message: "Password change is not available for Google login users.",
+    };
+  }
+
   try {
-    // Reauthenticate the user with the current password
+    // Reauthenticate the email/password user with current password
     const credential = EmailAuthProvider.credential(
       user.email || "",
       currentPassword

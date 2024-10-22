@@ -63,7 +63,7 @@ function SettingsPage() {
         <label className="text-lg mr-4 w-36">Password:</label>
 
         {/* Password Inputs container using Flex */}
-        <div className="flex-1 flex space-x-4 items-center">
+        <div className="flex-1 flex space-x-4">
           <div className="flex flex-col w-full gap-1">
             <label className="text-lg">Current Password</label>
             <input
@@ -96,35 +96,40 @@ function SettingsPage() {
             <label className="text-lg">Confirm new password</label>
             <input
               type="password"
-              placeholder="Confirm new password"
               className="border border-gray-300 p-2 rounded w-full"
               {...register("confirmPassword", {
                 required: true,
                 validate: (value) => value === watch("newPassword"),
               })}
             />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs">Passwords must match</p>
+            )}
           </div>
-          {errors.confirmPassword && (
-            <p className="text-red-500 text-xs">Passwords must match</p>
-          )}
 
-          {/* Action Buttons */}
-          <button
-            type="submit"
-            className={`bg-[#AD186F] text-white font-bold py-2 px-6 rounded hover:bg-[#8C145A] transition duration-150 ease-in-out ${
-              loading ? "opacity-50" : ""
-            }`}
-            disabled={loading}
-          >
-            {loading ? "Saving..." : "Save"}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="text-[#AD186F] hover:text-[#8C145A] font-semibold transition duration-150 ease-in-out"
-          >
-            Cancel
-          </button>
+          <div className="flex gap-5 self-end">
+            {/* Align this div with the bottom of input fields */}
+            <button
+              type="submit"
+              className={`py-2 px-4 font-semibold border rounded-md ${
+                // TODO disable button when no changes
+                // getChangesMade()
+                true
+                  ? "border-mbb-pink text-mbb-pink hover:bg-mbb-pink hover:text-white"
+                  : "border-gray-400 text-gray-400"
+              }`}
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </button>
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="text-mbb-pink hover:text-[#8C145A] font-semibold transition duration-150 ease-in-out"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </form>
