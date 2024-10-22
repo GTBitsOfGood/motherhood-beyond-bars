@@ -1,105 +1,134 @@
-import ButtonWithIcon from "@components/buttonWithIcon";
-import { db } from "db/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { GetServerSideProps } from "next";
-import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { BsFillPencilFill } from "react-icons/bs";
+import { useRouter } from "next/router";
+import { changePassword } from "db/actions/ChangePassword";
 
-const isValidPhoneNumber = (phone: string) =>
-  /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(phone);
-
-type SettingsPhone = {
-  phoneNumber: string;
+type PasswordForm = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 };
 
-function genSettingsTab({ phoneNumber }: SettingsPhone) {
-  const [phNumber, setPhNumberState] = useState(phoneNumber);
+function SettingsPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
-  } = useForm<SettingsPhone>();
+    watch,
+  } = useForm<PasswordForm>();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const router = useRouter();
 
-  const onSubmit = handleSubmit(async (data) => {
-    const newNumber = data.phoneNumber;
-    if (!isValidPhoneNumber(newNumber)) {
-      alert("Invalid phone number");
+  const onSubmit = async (data: PasswordForm) => {
+    const { currentPassword, newPassword, confirmPassword } = data;
+
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
       return;
     }
 
-    const settingsRef = doc(db, "app", "settings");
+    setLoading(true);
+    const result = await changePassword(currentPassword, newPassword);
 
-    await updateDoc(settingsRef, {
-      contact: {
-        phone: newNumber,
-      },
-    });
+    if (result.success) {
+      setSuccessMessage(result.message);
+    } else {
+      setErrorMessage(result.message);
+    }
 
-    alert("Phone number updated");
-    setPhNumberState(newNumber);
-    setValue("phoneNumber", "");
-  });
+    setLoading(false);
+  };
 
   return (
-    <div>
-      <div className="absolute mt-20 border-t w-full" />
-      <div className="pt-6 px-8 flex h-full flex-col justify-left">
-        <h1 className="text-2xl mb-5 font-bold">Settings</h1>
-        <h2 className="text-md mt-5 mb-5 font-bold">
-          Current Phone Number: {phNumber}
-        </h2>
-        <h2 className="text-md mb-5 font-bold">Update Phone Number</h2>
-        <form className="w-full max-w-sm" onSubmit={onSubmit}>
-          <div className="flex items-center border-b py-2">
+    <form
+      className="flex flex-col items-start p-6 bg-gray-50 rounded-lg shadow-md w-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <h1 className="text-2xl mb-6 font-bold text-gray-800">Settings</h1>
+
+      {/* Display messages */}
+      {errorMessage && <p className="text-red-600 mb-4">{errorMessage}</p>}
+      {successMessage && (
+        <p className="text-green-600 mb-4">{successMessage}</p>
+      )}
+
+      {/* Form container */}
+      <div className="flex items-center mb-6">
+        {/* Label */}
+        <label className="text-lg mr-4 w-36">Password:</label>
+
+        {/* Password Inputs container using Flex */}
+        <div className="flex-1 flex space-x-4 items-center">
+          <div className="flex flex-col w-full gap-1">
+            <label className="text-lg">Current Password</label>
             <input
-              id="phoneInput"
-              className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-              type="text"
-              placeholder="Enter Phone Number"
-              aria-label="Phone number"
-              {...register("phoneNumber", {
-                pattern:
-                  /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
-                required: true,
-              })}
+              type="password"
+              className="border border-gray-300 p-2 rounded w-full"
+              {...register("currentPassword", { required: true })}
             />
-            {errors.phoneNumber && (
-              <p className="text-red-500 text-xs italic">
-                {" "}
-                {errors.phoneNumber.message}
+            {errors.currentPassword && (
+              <p className="text-red-500 text-xs">
+                Current password is required
               </p>
             )}
-            <button
-              className="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded"
-              type="submit"
-            >
-              Submit
-            </button>
           </div>
-        </form>
 
-        <div className="my-10">
-          <Link href="/admin/waivers">
-            <ButtonWithIcon text="Waivers" icon={<BsFillPencilFill />} />
-          </Link>
+          <div className="flex flex-col w-full gap-1">
+            <label className="text-lg">New Password</label>
+            <input
+              type="password"
+              className="border border-gray-300 p-2 rounded w-full"
+              {...register("newPassword", { required: true, minLength: 6 })}
+            />
+            {errors.newPassword && (
+              <p className="text-red-500 text-xs">
+                New password must be at least 6 characters long
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col w-full gap-1">
+            <label className="text-lg">Confirm new password</label>
+            <input
+              type="password"
+              placeholder="Confirm new password"
+              className="border border-gray-300 p-2 rounded w-full"
+              {...register("confirmPassword", {
+                required: true,
+                validate: (value) => value === watch("newPassword"),
+              })}
+            />
+          </div>
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-xs">Passwords must match</p>
+          )}
+
+          {/* Action Buttons */}
+          <button
+            type="submit"
+            className={`bg-[#AD186F] text-white font-bold py-2 px-6 rounded hover:bg-[#8C145A] transition duration-150 ease-in-out ${
+              loading ? "opacity-50" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "Save"}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="text-[#AD186F] hover:text-[#8C145A] font-semibold transition duration-150 ease-in-out"
+          >
+            Cancel
+          </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
-export default genSettingsTab;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const settingsRef = doc(db, "app", "settings");
-  const settings = (await getDoc(settingsRef))?.data();
-
-  return {
-    props: {
-      phoneNumber: settings?.contact.phone,
-    },
-  };
-};
+export default SettingsPage;
