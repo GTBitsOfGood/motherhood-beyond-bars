@@ -2,46 +2,81 @@ import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import HalfScreen from "@components/logos/HalfScreen";
+import ErrorToast from "@components/Onboarding/ErrorToast";
+import { PasswordException } from "@lib/exceptions/passwordExceptions";
+import { validatePassword } from "@lib/utils/passwordCreation";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      validatePassword(newPassword, confirmPassword);
+    } catch (error) {
+      if (error instanceof PasswordException) {
+        setError(error.message);
+      } else {
+        console.error(error);
+      }
+    }
+  };
 
   return (
-    <>
-      <div className="flex absolute bg-white">
-        <div className="h-screen w-screen">
-          <div className="flex flex-col h-full sm:flex-row">
-            <HalfScreen />
-            <div className="flex flex-col justify-center m-6 mt-8 gap-10 sm:w-1/2 sm:items-center">
+    <div className="flex absolute bg-white w-screen h-screen">
+      <div className="flex flex-col h-full sm:flex-row w-full">
+        <HalfScreen />
+        <form
+          className="flex flex-col justify-center mx-6 mt-8 gap-10 sm:w-1/2 sm:items-center sm:mx-0"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex flex-col gap-2">
+            <div className="max-w-lg w-full flex flex-col gap-6 sm:mt-[calc(60px)]">
               <div className="flex flex-col gap-3 sm:items-center">
-                <div className="text-2xl font-bold">Set New Password?</div>
-                <div>Password must be at least 8 characters</div>
+                <h1 className="text-2xl font-bold">Set New Password?</h1>
+                <p>Password must be at least 8 characters.</p>
               </div>
-              <div className="flex flex-col gap-5 max-w-lg w-full">
-                <TextInput
-                  label="New Password"
-                  placeholder="Create a secure password"
-                />
-                <TextInput
-                  label="Confirm New Password"
-                  placeholder="Confirm your password"
-                />
-                <Button text="Reset Password"></Button>
-              </div>
-              <button
-                className="flex leading-tight tracking-tight items-center gap-1 justify-center"
-                onClick={() => {
-                  router.push("login");
-                }}
-              >
-                <LeftChevronIcon width={13.5} height={12} />
-                Back to Log In
-              </button>
+            </div>
+            <div className="sm:absolute sm:top-12 sm:left-3/4 sm:transform sm:-translate-x-1/2 w-full sm:max-w-lg">
+              {error && (
+                <ErrorToast text={error} onClose={() => setError(null)} />
+              )}
             </div>
           </div>
-        </div>
+          <div className="flex flex-col gap-5 max-w-lg w-full">
+            <TextInput
+              label="New Password"
+              placeholder="Create a secure password"
+              currentValue={newPassword}
+              onChange={setNewPassword}
+            />
+            <TextInput
+              label="Confirm New Password"
+              placeholder="Confirm your password"
+              currentValue={confirmPassword}
+              onChange={setConfirmPassword}
+            />
+            <button type="submit">
+              <Button text="Reset Password" />
+            </button>
+          </div>
+          <button
+            className="flex leading-tight tracking-tight items-center gap-1 justify-center mb-10"
+            onClick={() => {
+              router.push("login");
+            }}
+          >
+            <LeftChevronIcon width={13.5} height={12} />
+            Back to Log In
+          </button>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
