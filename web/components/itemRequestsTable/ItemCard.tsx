@@ -25,7 +25,7 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
   };
 
   return (
-    <div className="w-full h-min rounded shadow p-4 sm:mr-3">
+    <div className="w-full h-min rounded shadow p-4 sm:mx-1 sm:mb-4 sm:w-[48%]">
       <div className="justify-start items-center gap-1 inline-flex">
         <div className="flex flex-col justify-center items-center w-6 h-6">
           <input
@@ -49,7 +49,6 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
                   currentValue={data.value}
                   placeholder={data["placeholder"]}
                   onChange={(val) => {
-                    // Change this when changing to TextInput component
                     setData(
                       allData.map((item, j) => {
                         if (j != index) {

@@ -1,3 +1,4 @@
+import Button from "@components/atoms/Button"
 
 interface Props {
     title: string
@@ -45,11 +46,7 @@ export default function RequestCard( {title, description, img, current, onClick,
                 </div>
             }
             {!current &&
-                <button className="w-full px-4 pt-2 pb-[0.563rem] rounded border border-mbb-pink" onClick={onClick}>
-                    <div className="text-mbb-pink font-semibold">
-                        Request
-                    </div>
-                </button>
+                <Button text="Request"onClick={onClick}></Button>
             }
         </div>
     )

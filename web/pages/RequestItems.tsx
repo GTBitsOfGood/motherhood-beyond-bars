@@ -1,10 +1,10 @@
+import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
 import ItemCard from "@components/itemRequestsTable/ItemCard";
 import { useState } from "react";
 
 export default function RequestItems() {
   const [comments, setComments] = useState("");
-  const [other, setOther] = useState("");
   const [data, setData] = useState([
     {
       title: "Baby Clothing",
@@ -36,27 +36,10 @@ export default function RequestItems() {
         Motherhood Beyond Bars will deliver you supplies, so you’re ready for
         the child!
       </div>
-      <div className="sm:flex flex-row w-full">
+      <div className="sm:flex flex-wrap w-full justify-between">
         {data.map((item, i) => {
             return <ItemCard data={data[i]} allData={data} setData={setData} index={i}></ItemCard>
         })}
-        {/* <div className="w-full h-auto rounded shadow p-4 mt-6 sm:mt-0 sm:ml-3 sm:h-28">
-          <div className="justify-start items-center gap-1 inline-flex">
-            <div className="flex flex-col justify-center items-center w-6 h-6">
-              <input
-                type="checkbox"
-                className="w-4 h-4 bg-secondary-background rounded border border-light-gray"
-              ></input>
-            </div>
-            <div className="font-semibold">Other</div>
-          </div>
-          <div className="flex-col justify-start items-start gap-2 ml-7 mt-1">
-            <TextInput
-              placeholder="Enter items"
-              onChange={(e) => setOther(e)}
-            ></TextInput>
-          </div>
-        </div> */}
       </div>
       <div className="w-full h-[11.313rem] flex-col justify-start items-start gap-2 flex sm:h-auto sm:mt-5">
         <div className="justify-end items-center">
@@ -70,16 +53,11 @@ export default function RequestItems() {
       </div>
       <div className="w-full sm:flex sm:flex-col sm:justify-center sm:items-center sm:mt-2">
         <div className="flex-col justify-start items-start gap-3 flex">
-          {/* TODO change to Button component */}
-          <button
-            className="self-stretch px-4 pt-2 pb-[0.563rem] rounded border border-mbb-pink"
-            onClick={() => {
+          <Button text="Request" onClick={() => {
                 // TODO send to database
                 console.log(data);
-            }}
-        >
-            <div className="text-mbb-pink font-semibold">Request</div>
-          </button>
+            }}>
+          </Button>
           <div className="text-dark-gray text-sm">
             Expect a call from us to confirm the order details!
           </div>
