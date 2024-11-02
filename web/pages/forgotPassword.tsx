@@ -2,10 +2,17 @@ import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import HalfScreen from "@components/logos/HalfScreen";
+import { sendResetPasswordEmail } from "db/firebase/resetPassword";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+
+  const onReset = () => {
+    sendResetPasswordEmail(email);
+  };
 
   return (
     <>
@@ -19,13 +26,12 @@ export default function ForgotPasswordScreen() {
                 <div>No problem, we'll send you reset instructions.</div>
               </div>
               <div className="flex flex-col gap-5 max-w-lg w-full">
-                <TextInput label="Email" />
-                <Button
-                  text="Reset Password"
-                  onClick={() => {
-                    router.push("/resetPassword");
-                  }}
-                ></Button>
+                <TextInput
+                  label="Email"
+                  currentValue={email}
+                  onChange={setEmail}
+                />
+                <Button text="Reset Password" onClick={onReset}></Button>
               </div>
 
               <button

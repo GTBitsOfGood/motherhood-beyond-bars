@@ -5,25 +5,48 @@ import HalfScreen from "@components/logos/HalfScreen";
 import ErrorToast from "@components/Onboarding/ErrorToast";
 import { PasswordException } from "@lib/exceptions/passwordExceptions";
 import { validatePassword } from "@lib/utils/passwordCreation";
+import {
+  confirmPasswordReset,
+  getAuth,
+  verifyPasswordResetCode,
+} from "firebase/auth";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
+  const { oobCode } = router.query;
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const auth = getAuth();
+    if (oobCode) {
+      try {
+        verifyPasswordResetCode(auth, oobCode as string);
+      } catch (e) {
+        router.push("/login");
+      }
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
       validatePassword(newPassword, confirmPassword);
+      const auth = getAuth();
+      if (oobCode) {
+        await confirmPasswordReset(auth, oobCode as string, newPassword);
+      } else {
+        setError("Invalid reset link.");
+      }
     } catch (error) {
       if (error instanceof PasswordException) {
         setError(error.message);
       } else {
-        console.error(error);
+        router.push("/login");
       }
     }
   };
@@ -55,12 +78,14 @@ export default function ForgotPasswordScreen() {
               placeholder="Create a secure password"
               currentValue={newPassword}
               onChange={setNewPassword}
+              inputType="password"
             />
             <TextInput
               label="Confirm New Password"
               placeholder="Confirm your password"
               currentValue={confirmPassword}
               onChange={setConfirmPassword}
+              inputType="password"
             />
             <button type="submit">
               <Button text="Reset Password" />
@@ -69,7 +94,7 @@ export default function ForgotPasswordScreen() {
           <button
             className="flex leading-tight tracking-tight items-center gap-1 justify-center mb-10"
             onClick={() => {
-              router.push("login");
+              router.push("/login");
             }}
           >
             <LeftChevronIcon width={13.5} height={12} />
