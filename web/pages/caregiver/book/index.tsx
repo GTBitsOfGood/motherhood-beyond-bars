@@ -3,16 +3,19 @@ import { GetServerSideProps } from "next";
 import Button from "@components/atoms/Button";
 import LockIcon from "@components/Icons/LockIcon";
 import TitleTopBar from "@components/logos/TitleTopBar";
+import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
+import { Baby } from "@lib/types/baby";
+import { encrypt } from "@lib/utils/encryption";
 
 interface Props {
-  babies: any[];
   books: { name: string; birthday: string; bookLink: string }[];
 }
 
 // TODO add topbar and merge designs
 
-export default function BabyBookHome({ babies, books }: Props) {
-  if (babies.length === 0) {
+export default function BabyBookHome({ books }: Props) {
+  // TODO skip index screen if only one baby
+  if (books.length === 0) {
     return (
       <div className="w-full h-full">
         <TitleTopBar title="Baby Book" />
@@ -38,6 +41,7 @@ export default function BabyBookHome({ babies, books }: Props) {
     );
   }
 
+  // TODO update logic
   if (books.length === 0) {
     return (
       <div className="w-full h-full">
@@ -84,31 +88,28 @@ export default function BabyBookHome({ babies, books }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  query,
-}) => {
-  // TODO: implement actual book fetching here
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const caregiver = await getCurrentCaregiver(context);
+
+  if (!caregiver) {
+    return { props: { books: [] } };
+  }
+
+  const books = caregiver.babies.map((baby: Baby) => {
+    const { iv, content } = encrypt(baby.id);
+
+    return {
+      name: baby.firstName,
+      birthday: baby.dob,
+      bookLink: `/caregiver/book/${content}?iv=${iv}`,
+    };
+  });
+
   return {
     props: {
-      babies: [""],
-      books: [
-        {
-          name: "John",
-          birthday: "11/13/2204",
-          bookLink:
-            "/caregiver/book/bd89888ca382e490a04183167a810518f2aa9f39?iv=af3abe9304c706f681857b64fc4e6127",
-        },
-        {
-          name: "Joe",
-          birthday: "11/13/2104",
-          bookLink: "/link/link2",
-        },
-        {
-          name: "Joslyn",
-          birthday: "11/13/2004",
-          bookLink: "/link/link3",
-        },
-      ],
+      books: books,
     },
   };
 };
