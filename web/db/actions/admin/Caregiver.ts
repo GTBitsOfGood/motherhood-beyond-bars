@@ -28,6 +28,7 @@ import {
   FailedToFetchError,
 } from "@lib/exceptions/DatabaseExceptions";
 import { removeCaretakerFromBabies } from "../shared/babyCaregiver";
+import { getAuth } from "firebase-admin/auth";
 
 const docType = "caregiver";
 const path = CAREGIVERS_COLLECTION_PATH;
@@ -106,5 +107,22 @@ export const deleteCaretaker = async (caretaker: Caregiver) => {
     await deleteDoc(doc(db, path, caretakerID));
   } catch (error) {
     throw new FailedToDeleteError(docType);
+  }
+};
+
+export const caregiverFromAuthToken = async (token: string | undefined) => {
+  if (!token) return undefined;
+
+  try {
+    const decodedToken = await getAuth().verifyIdToken(token);
+    const caregiverId = decodedToken.uid;
+    const caregiver = (await getCaregiver(caregiverId).then((c) =>
+      c?.data()
+    )) as Caregiver;
+
+    return caregiver;
+  } catch (e) {
+    console.error("Failed to get caregiver from token", e);
+    return undefined;
   }
 };
