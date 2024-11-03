@@ -6,6 +6,7 @@ import { Item } from "@lib/types/items";
 
 import ItemCard from "@components/ItemRequests/ItemCard";
 import Button from "@components/atoms/Button";
+import BackButton from "@components/atoms/BackButton";
 
 type Props = {
   items: Item[];
@@ -21,12 +22,13 @@ export default function RequestItems({
   setRequestedItems,
 }: Props) {
   const [comments, setComments] = useState<string>("");
-  const [data, setData] = useState(
+  const [data, setData] = useState<Item[]>(
     items.filter((item) => !item.onboardingOnly)
   );
 
   return (
-    <div className="w-full p-6 flex-col justify-start items-start gap-[1.438rem] inline-flex sm:py-12 sm:px-24">
+    <div className="w-full p-6 flex-col justify-start items-start gap-[1.438rem] inline-flex sm:py-8 sm:px-24">
+      <BackButton darkerColor onClick={() => setShowRequestItems(false)} />
       <div className="flex-col justify-start items-start gap-3 flex">
         <div className="text-2xl font-bold">Request Items</div>
         Motherhood Beyond Bars will deliver you supplies, so you’re ready for
@@ -60,6 +62,7 @@ export default function RequestItems({
           <Button
             text="Request"
             onClick={() => {
+              // TODO if user makes two item requests, replaces most recent item with that request on frontend
               requestItems(caregiver, data as Item[], comments)
                 .then((allItems: Item[]) => {
                   setRequestedItems(allItems);

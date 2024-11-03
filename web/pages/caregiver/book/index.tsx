@@ -1,11 +1,12 @@
-import { GetServerSideProps } from "next";
+import { GetServerSidePropsContext } from "next";
 
+import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
+import { encrypt } from "@lib/utils/encryption";
+import { Baby } from "@lib/types/baby";
+
+import TitleTopBar from "@components/logos/TitleTopBar";
 import Button from "@components/atoms/Button";
 import LockIcon from "@components/Icons/LockIcon";
-import TitleTopBar from "@components/logos/TitleTopBar";
-import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
-import { Baby } from "@lib/types/baby";
-import { encrypt } from "@lib/utils/encryption";
 
 interface Props {
   books: { name: string; birthday: string; bookLink: string }[];
@@ -88,8 +89,8 @@ export default function BabyBookHome({ books }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
 ) => {
   const caregiver = await getCurrentCaregiver(context);
 
@@ -97,7 +98,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { props: { books: [] } };
   }
 
-  const books = caregiver.babies.map((baby: Baby) => {
+  const books = caregiver.babies.map((baby) => {
+    baby = baby as Baby;
     const { iv, content } = encrypt(baby.id);
 
     return {

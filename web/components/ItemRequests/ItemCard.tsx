@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, SetStateAction } from "react";
+
+import { AdditionalInfoField, Item } from "@lib/types/items";
 import TextInput from "@components/atoms/TextInput";
 
 interface Props {
-  data: object;
-  setData: (e) => void;
-  allData: Array<object>;
+  data: Item;
+  setData: (value: SetStateAction<Item[]>) => void;
+  allData: Item[];
   index: number;
 }
 
@@ -40,11 +42,10 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
       <div className="text-dark-gray ml-7 my-1">{data["description"]}</div>
       {(babyChecked || data["title"] == "Other") && (
         <div className="w-full pl-7 flex-row justify-start items-start inline-flex">
-          {data.additionalInfo.map((data, i) => {
+          {data.additionalInfo && data.additionalInfo.map((data: AdditionalInfoField, i: number) => {
             return (
               <div className="w-[8rem] flex flex-col pr-2">
-                {data["title"]}
-                {/* className="mt-1 px-2 py-2.5 bg-secondary-background rounded border border-light-gray" */}
+                {data.boxTitle}
                 <TextInput
                   currentValue={data.value}
                   placeholder={data["placeholder"]}
@@ -56,7 +57,7 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
                         } else {
                           return {
                             ...item,
-                            additionalInfo: item.additionalInfo.map(
+                            additionalInfo: item.additionalInfo ? item.additionalInfo.map(
                               (detail, k) => {
                                 if (k != i) {
                                   return detail;
@@ -64,7 +65,7 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
                                   return { ...detail, value: val };
                                 }
                               }
-                            ),
+                            ) : undefined,
                           };
                         }
                       })

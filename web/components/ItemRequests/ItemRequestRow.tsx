@@ -125,10 +125,10 @@ export default function ItemRequestRow({
           })}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {getDateString(row.itemsRequested.created)}
+          {row.itemsRequested.created ? getDateString(row.itemsRequested.created) : null}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {getDateString(row.itemsRequested.updated)}
+          {row.itemsRequested.updated ? getDateString(row.itemsRequested.updated) : null}
         </td>
 
         <td className="py-2 px-6 text-base items-center">

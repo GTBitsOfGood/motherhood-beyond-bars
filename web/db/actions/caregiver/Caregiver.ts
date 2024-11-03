@@ -44,6 +44,10 @@ export async function getCurrentCaregiver(context: GetServerSidePropsContext) {
         id: caregiverQuery.docs[0].id,
       };
 
+      if ("createdAt" in caregiver) {
+        delete caregiver.createdAt;
+      }
+
       for (let i = 0; i < caregiver.babies.length; i++) {
         const baby = await getDoc(
           caregiver.babies[i] as DocumentReference<DocumentData>

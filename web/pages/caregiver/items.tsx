@@ -62,11 +62,9 @@ export const getServerSideProps = async (
 
   if (caregiver) {
     caregiver.babies = [];
-    caregiver.createdAt = null;
     if (caregiver.itemsRequested) {
       caregiver.itemsRequested.created = null;
       caregiver.itemsRequested.updated = null;
-      console.log(caregiver.itemsRequested);
     }
   }
 
