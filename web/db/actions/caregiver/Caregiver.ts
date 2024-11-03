@@ -1,7 +1,17 @@
 import { GetServerSidePropsContext } from "next";
 import { getAuth } from "firebase-admin/auth";
-import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  DocumentReference,
+  DocumentData,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "db/firebase";
+import { Caregiver } from "@lib/types/users";
+import { Baby } from "@lib/types/baby";
 
 // ONLY use in getServerSideProps
 export async function getCurrentCaregiver(context: GetServerSidePropsContext) {
@@ -28,11 +38,17 @@ export async function getCurrentCaregiver(context: GetServerSidePropsContext) {
     );
 
     if (!caregiverQuery.empty) {
-      const caregiver = caregiverQuery.docs[0].data();
+      const caregiverData = caregiverQuery.docs[0].data() as Caregiver;
+      const caregiver = {
+        ...caregiverData,
+        id: caregiverQuery.docs[0].id,
+      };
 
       for (let i = 0; i < caregiver.babies.length; i++) {
-        const baby = await getDoc(caregiver.babies[i]);
-        const babyData: Array<object> = baby.data() as object[];
+        const baby = await getDoc(
+          caregiver.babies[i] as DocumentReference<DocumentData>
+        );
+        const babyData: Baby = baby.data() as Baby;
         caregiver.babies[i] = { ...babyData, id: caregiver.babies[i].id };
       }
 

@@ -1,6 +1,7 @@
-import { DocumentReference } from "firebase/firestore";
+import { DocumentReference, DocumentData } from "firebase/firestore";
 import { BrowserWaiver, Waiver } from "./common";
 import { ItemRequest } from "./items";
+import { Baby } from "./baby";
 
 export type Caregiver = {
   id: string;
@@ -19,7 +20,7 @@ export type Caregiver = {
   state: string;
   zipCode: string;
   contact: string;
-  babies: DocumentReference[];
+  babies: DocumentReference<DocumentData>[] | Baby[];
   babyCount: number;
 };
 

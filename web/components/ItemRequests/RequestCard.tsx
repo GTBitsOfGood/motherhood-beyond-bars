@@ -19,7 +19,7 @@ export default function RequestCard({
   data,
 }: Props) {
   return (
-    <div className="w-[20rem] px-6 py-[1.125rem] rounded shadow flex-col justify-start items-start mb-7 sm:mx-5 sm:w-[33rem] sm:mt-12">
+    <div className="w-[90%] px-6 py-[1.125rem] rounded shadow flex-col justify-start items-start sm:w-[45%]">
       <div className="w-6 h-6 inline-flex">
         <img src={img}></img>
       </div>
