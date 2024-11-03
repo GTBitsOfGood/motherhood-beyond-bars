@@ -27,7 +27,10 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
   };
 
   return (
-    <div className="w-full h-min rounded shadow p-4 sm:mx-1 sm:mb-4 sm:w-[48%]">
+    <div
+      className="w-full h-min rounded shadow p-4 sm:mx-1 sm:mb-4 sm:w-[48%] cursor-pointer"
+      onClick={checkBoxBaby}
+    >
       <div className="justify-start items-center gap-1 inline-flex">
         <div className="flex flex-col justify-center items-center w-6 h-6">
           <input
@@ -40,43 +43,45 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
         <div className="font-semibold">{data["title"]}</div>
       </div>
       <div className="text-dark-gray ml-7 my-1">{data["description"]}</div>
-      {(babyChecked || data["title"] == "Other") && (
-        <div className="w-full pl-7 flex-row justify-start items-start inline-flex">
-          {data.additionalInfo && data.additionalInfo.map((data: AdditionalInfoField, i: number) => {
-            return (
-              <div className="w-[8rem] flex flex-col pr-2">
-                {data.boxTitle}
-                <TextInput
-                  currentValue={data.value}
-                  placeholder={data["placeholder"]}
-                  onChange={(val) => {
-                    setData(
-                      allData.map((item, j) => {
-                        if (j != index) {
-                          return item;
-                        } else {
-                          return {
-                            ...item,
-                            additionalInfo: item.additionalInfo ? item.additionalInfo.map(
-                              (detail, k) => {
-                                if (k != i) {
-                                  return detail;
-                                } else {
-                                  return { ...detail, value: val };
-                                }
-                              }
-                            ) : undefined,
-                          };
-                        }
-                      })
-                    );
-                  }}
-                ></TextInput>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {(babyChecked || data["title"] == "Other") &&
+        data.additionalInfo &&
+        !!data.additionalInfo.length && (
+          <div className="w-full pl-7 flex-row justify-start items-start inline-flex">
+            {data.additionalInfo.map((data: AdditionalInfoField, i: number) => {
+              return (
+                <div className="w-[8rem] flex flex-col pr-2">
+                  {data.boxTitle}
+                  <TextInput
+                    currentValue={data.value}
+                    placeholder={data["placeholder"]}
+                    onChange={(val) => {
+                      setData(
+                        allData.map((item, j) => {
+                          if (j != index) {
+                            return item;
+                          } else {
+                            return {
+                              ...item,
+                              additionalInfo: item.additionalInfo
+                                ? item.additionalInfo.map((detail, k) => {
+                                    if (k != i) {
+                                      return detail;
+                                    } else {
+                                      return { ...detail, value: val };
+                                    }
+                                  })
+                                : undefined,
+                            };
+                          }
+                        })
+                      );
+                    }}
+                  ></TextInput>
+                </div>
+              );
+            })}
+          </div>
+        )}
     </div>
   );
 }

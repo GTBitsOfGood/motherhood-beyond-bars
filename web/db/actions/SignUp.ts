@@ -41,15 +41,19 @@ export async function createCaregiverAccount(
   userCredential: UserCredential | undefined,
   firstName: string,
   lastName: string,
-  phoneNumber: string
+  phoneNumber: string,
 ) {
   const authData = userCredential ? userCredential.user : undefined;
+
   try {
     const caregiverDoc = doc(db, "caregivers", authData?.uid as string);
     setDoc(caregiverDoc, {
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
+      email: authData?.email,
+      auth: authData?.uid,
+      babyCount: 0
     });
     return { success: true };
   } catch (error) {

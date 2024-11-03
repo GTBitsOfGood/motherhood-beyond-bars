@@ -32,14 +32,14 @@ export default function RequestCard({
               <div className="flex flex-col mb-2 text-primary-text">
                 {data["title"]}
                 <div className="flex flex-row text-dark-gray">
-                  {data["description"] && `${data["description"]} - `}
-                  {data.additionalInfo &&
+                  {data["description"] && `${data["description"]}`}
+                  {data.additionalInfo && !!data.additionalInfo.length && " - ".concat(
                     data.additionalInfo
                       .map(
                         (info: AdditionalInfoField) =>
                           `${info.boxTitle}: ${info.value}`
                       )
-                      .join(", ")}
+                      .join(", "))}
                 </div>
               </div>
             );
