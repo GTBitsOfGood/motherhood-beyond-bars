@@ -4,7 +4,7 @@ import { collection, doc, query, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "db/firebase";
 import { Caregiver } from "@lib/types/users";
 
-import ItemRequestsTable from "@components/itemRequestsTable/ItemRequestsTable";
+import ItemRequestsTable from "@components/ItemRequests/ItemRequestsTable";
 
 import Ellipse from "@components/Icons/Ellipse";
 import DownChevron from "@components/Icons/DownChevron";
