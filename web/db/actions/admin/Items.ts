@@ -5,7 +5,7 @@ import {
   FailedToDeleteError,
   FailedToEditError,
 } from "@lib/exceptions/DatabaseExceptions";
-import { Item } from "@lib/types/common";
+import { Item } from "@lib/types/items";
 import { db } from "db/firebase";
 import {
   addDoc,

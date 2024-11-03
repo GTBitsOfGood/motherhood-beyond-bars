@@ -1,4 +1,4 @@
-import { AdditionalInfoField, Item } from "@lib/types/common";
+import { AdditionalInfoField, Item } from "@lib/types/items";
 import { addItem, deleteItem, editItem } from "db/actions/admin/Items";
 import { getItems } from "db/actions/shared/Items";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";

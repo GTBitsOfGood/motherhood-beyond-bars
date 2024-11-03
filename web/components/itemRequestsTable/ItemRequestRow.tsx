@@ -115,11 +115,11 @@ export default function ItemRequestRow({
               <div
                 className={`p-2 rounded`}
                 style={{
-                  backgroundColor: generateColor(item.name),
+                  backgroundColor: generateColor(item.title),
                 }}
                 key={index}
               >
-                {item.name}
+                {item.title}
               </div>
             );
           })}

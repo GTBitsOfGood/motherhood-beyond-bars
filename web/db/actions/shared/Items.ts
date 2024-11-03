@@ -1,7 +1,7 @@
 // db/actions/shared/Items.ts
 
 import { FailedToFetchError } from "@lib/exceptions/DatabaseExceptions";
-import { Item } from "@lib/types/common";
+import { Item } from "@lib/types/items";
 import { db } from "db/firebase";
 import { doc, DocumentReference, getDoc } from "firebase/firestore";
 
