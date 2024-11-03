@@ -4,7 +4,7 @@ import { collection, doc, query, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "db/firebase";
 import { Caregiver } from "@lib/types/users";
 
-import ItemRequestsTable from "@components/itemRequestsTable/ItemRequestsTable";
+import ItemRequestsTable from "@components/ItemRequests/ItemRequestsTable";
 
 import Ellipse from "@components/Icons/Ellipse";
 import DownChevron from "@components/Icons/DownChevron";
@@ -81,11 +81,15 @@ export default function genItemRequestsTab() {
   }
 
   function compareCreated(c1: Caregiver, c2: Caregiver) {
-    return c1.itemsRequested.created > c2.itemsRequested.created
-      ? 1
-      : c1.itemsRequested.created < c2.itemsRequested.created
-        ? -1
-        : 0;
+    if (c1.itemsRequested.created && c2.itemsRequested.created) {
+      return c1.itemsRequested.created > c2.itemsRequested.created
+        ? 1
+        : c1.itemsRequested.created < c2.itemsRequested.created
+          ? -1
+          : 0;
+    } else {
+      return 0;
+    }
   }
 
   const sections = [

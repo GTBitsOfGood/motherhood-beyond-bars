@@ -40,17 +40,4 @@ export type PaginationReferencesType = Map<
   QueryDocumentSnapshot<DocumentData>
 >;
 
-export interface AdditionalInfoField {
-  boxTitle: string;
-  placeholder: string;
-}
-
-export interface Item {
-  id?: string; // Optional, since Firestore generates it
-  title: string;
-  description: string;
-  onboardingOnly: boolean;
-  additionalInfo?: AdditionalInfoField[];
-}
-
 export type TabType = typeof BABIES_TAB | typeof CAREGIVERS_TAB;

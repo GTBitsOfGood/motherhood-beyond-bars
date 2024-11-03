@@ -115,20 +115,20 @@ export default function ItemRequestRow({
               <div
                 className={`p-2 rounded`}
                 style={{
-                  backgroundColor: generateColor(item.name),
+                  backgroundColor: generateColor(item.title),
                 }}
                 key={index}
               >
-                {item.name}
+                {item.title}
               </div>
             );
           })}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {getDateString(row.itemsRequested.created)}
+          {row.itemsRequested.created ? getDateString(row.itemsRequested.created) : null}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {getDateString(row.itemsRequested.updated)}
+          {row.itemsRequested.updated ? getDateString(row.itemsRequested.updated) : null}
         </td>
 
         <td className="py-2 px-6 text-base items-center">
