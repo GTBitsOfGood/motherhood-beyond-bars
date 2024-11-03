@@ -137,7 +137,7 @@ const ItemManagement: React.FC = () => {
         item.id === itemId
           ? {
               ...item,
-              additionalInfo: item.additionalInfo.map((info, j) =>
+              additionalInfo: item.additionalInfo && item.additionalInfo.map((info, j) =>
                 j === infoIndex ? { ...info, [field]: value } : info
               ),
             }

@@ -2,16 +2,12 @@ import { DocumentReference } from "firebase/firestore";
 import { BrowserWaiver, Waiver } from "./common";
 import { ItemRequest } from "./items";
 
-export type Account = {
-  email: string;
-  password: string;
+export type Caregiver = {
+  id: string;
   firstName: string;
   lastName: string;
+  email: string;
   phoneNumber: string;
-};
-
-export type Caregiver = Account & {
-  id: string;
   numAdults: number;
   numChildren: number;
   agesOfChildren: string;
