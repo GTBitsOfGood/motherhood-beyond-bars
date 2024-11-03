@@ -22,7 +22,7 @@ const ITEMS_COLLECTION = "items";
 const APP_COLLECTION = "app";
 const APP_DOC_ID = "items"; // Updated with your actual app document ID
 
-export async function addItem(newItemData: Item): Promise<void> {
+export async function addItem(newItemData: Item): Promise<Item> {
   try {
     // Add new item to the items collection
     const itemsCollectionRef = collection(db, ITEMS_COLLECTION);
@@ -33,6 +33,9 @@ export async function addItem(newItemData: Item): Promise<void> {
     await updateDoc(appDocRef, {
       items: arrayUnion(newItemDocRef as DocumentReference),
     });
+
+    // Return the new item with the assigned id
+    return { ...newItemData, id: newItemDocRef.id };
   } catch (error) {
     throw new FailedToAddError("item");
   }

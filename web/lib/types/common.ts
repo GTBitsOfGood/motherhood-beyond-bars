@@ -50,7 +50,7 @@ export interface Item {
   title: string;
   description: string;
   onboardingOnly: boolean;
-  additionalInfo: AdditionalInfoField[];
+  additionalInfo?: AdditionalInfoField[];
 }
 
 export type TabType = typeof BABIES_TAB | typeof CAREGIVERS_TAB;
