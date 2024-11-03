@@ -20,6 +20,7 @@ export default function FAQ(props: {
   const [faqs, setFaqs] = useState<FAQEntry[]>();
   const [userChanges, setUserChanges] = useState<FAQEntry[]>([]);
   const router = useRouter();
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "resources", "faq"), (doc) => {
       setFaqs(doc.data()?.faqs || []);
@@ -200,17 +201,17 @@ export default function FAQ(props: {
       <div className="fixed bottom-0 w-full bg-white border-t-[1px] px-10 py-4 max-w-[calc(100vw-318px)]">
         <div className="flex items-center justify-between">
           <div
-            className="text-[#304CD1] font-semibold hover:cursor-pointer"
+            className="text-mbb-pink font-semibold hover:cursor-pointer"
             onClick={createTempFAQ}
           >
             + Add a question
           </div>
           <button
-            className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px]
+            className={`py-2 px-3 rounded font-semibold hover:cursor-pointer border-[1px] border-mbb-pink text-mbb-pink
               ${
                 props.getChangesMade()
-                  ? "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] hover:bg-[#304CD1] hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
-                  : "py-2 px-3 rounded border-[#304CD1] text-[#304CD1] border-[1px] font-semibold hover:cursor-pointer"
+                  ? "py-2 px-3 rounded hover:bg-mbb-pink hover:text-[#ffffff] border-[1px] font-semibold hover:cursor-pointer"
+                  : "py-2 px-3 rounded border-[1px] font-semibold hover:cursor-pointer"
               }`}
             onClick={saveChanges}
           >

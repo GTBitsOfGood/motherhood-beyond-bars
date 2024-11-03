@@ -1,5 +1,9 @@
-import { DocumentData, QueryDocumentSnapshot, Timestamp } from "firebase/firestore";
 import { BABIES_TAB, CAREGIVERS_TAB } from "@lib/utils/consts";
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  Timestamp,
+} from "firebase/firestore";
 
 export interface User {
   name: string;
@@ -14,7 +18,12 @@ export interface Waiver {
   lastUpdated: string | Timestamp;
   name: string;
   order: number;
+  onboarding: boolean;
 }
+
+export type BrowserWaiver = Omit<Waiver, "lastUpdated"> & {
+  lastUpdated: string;
+};
 
 export type AuthFormValues = {
   email: string;
@@ -22,10 +31,13 @@ export type AuthFormValues = {
 };
 
 export interface PaginationInfoType {
-  pageNumber: number,
-  startAfter: QueryDocumentSnapshot<DocumentData>
+  pageNumber: number;
+  startAfter: QueryDocumentSnapshot<DocumentData>;
 }
 
-export type PaginationReferencesType = Map<number, QueryDocumentSnapshot<DocumentData>>;
+export type PaginationReferencesType = Map<
+  number,
+  QueryDocumentSnapshot<DocumentData>
+>;
 
 export type TabType = typeof BABIES_TAB | typeof CAREGIVERS_TAB;

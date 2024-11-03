@@ -4,7 +4,8 @@ import RightChevronBlue from "@components/Icons/RightChevronBlue";
 import { useState } from "react";
 import { Timestamp, setDoc, doc } from "firebase/firestore";
 import { db } from "db/firebase";
-import { Caregiver, Item } from "pages/admin/item-requests";
+import { Caregiver } from "@lib/types/users";
+import { Item } from "@lib/types/items";
 
 export default function ItemRequestRow({
   row,
@@ -114,20 +115,20 @@ export default function ItemRequestRow({
               <div
                 className={`p-2 rounded`}
                 style={{
-                  backgroundColor: generateColor(item.name),
+                  backgroundColor: generateColor(item.title),
                 }}
                 key={index}
               >
-                {item.name}
+                {item.title}
               </div>
             );
           })}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {getDateString(row.itemsRequested.created)}
+          {row.itemsRequested.created ? getDateString(row.itemsRequested.created) : null}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {getDateString(row.itemsRequested.updated)}
+          {row.itemsRequested.updated ? getDateString(row.itemsRequested.updated) : null}
         </td>
 
         <td className="py-2 px-6 text-base items-center">

@@ -15,6 +15,7 @@ const Home = () => {
 
       <div className="text-lg m-auto font-opensans text-center">
         Please use the tabs on the left to navigate.
+        (This page probably shouldn't exist)
       </div>
     </div>
   );

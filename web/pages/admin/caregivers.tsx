@@ -1,27 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   addNewCaregiver,
   deleteCaretaker,
-  getCaregiverPage,
+  getCaregivers,
 } from "db/actions/admin/Caregiver";
 import PaginatedTable from "@components/tables/PaginatedTable";
-import { usePaginatedData } from "@components/molecules/Pagination/PaginationHooks";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
 import ButtonWithIcon from "@components/buttonWithIcon";
 import { FaPlus } from "react-icons/fa";
 import Modal from "@components/modal";
 import CaretakerModal from "@components/modals/CaretakerModal";
+import { PAGINATION_PAGE_SIZE } from "db/consts";
 
 const tab = CAREGIVERS_TAB;
 
 export default function genCaregiversTab() {
-  const {
-    data: caretakers,
-    totalRecords,
-    currPage,
-    setCurrPage,
-    refresh,
-  } = usePaginatedData(getCaregiverPage, tab);
+  const [caregivers, setCaregivers] = useState<any[]>([]);
+  const [filteredCaregivers, setFilteredCaregivers] = useState<any[]>([]);
+  const [currPage, setCurrPage] = useState(1);
 
   const columns = React.useMemo(
     () => [
@@ -34,28 +30,51 @@ export default function genCaregiversTab() {
   );
 
   const handleDelete = async (caregiver: any) => {
-    deleteCaretaker(caregiver).then(() => {
-      refresh();
-    });
+    deleteCaretaker(caregiver);
+    loadData();
   };
 
   const [addModal, toggleAddModal] = useState(false);
-  const paginatedProps = { totalRecords: totalRecords, pageNumber: currPage };
+
+  const paginatedProps = {
+    totalRecords: filteredCaregivers.length,
+    pageNumber: currPage,
+  };
+
   const tableProps = {
     columns: columns,
-    data: caretakers,
+    data: filteredCaregivers.slice(
+      (currPage - 1) * PAGINATION_PAGE_SIZE,
+      currPage * PAGINATION_PAGE_SIZE
+    ),
     onDelete: handleDelete,
   };
 
+  async function loadData() {
+    const caregivers = await getCaregivers();
+    setCaregivers(caregivers);
+    setFilteredCaregivers(caregivers);
+  }
+
+  const handleSearch = (input: string) => {
+    const filtered = caregivers.filter((caregiver) =>
+      caregiver.name.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredCaregivers(filtered);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <div>
-      <div className="absolute mt-20 border-t" />
-      <div className="pt-6 px-8 flex h-full flex-col justify-left">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row">
-            <h1 className="text-2xl mb-5 font-bold">Caregivers</h1>
-            <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
-              {totalRecords + " People"}
+      <div className="flex flex-col border-t">
+        <div className="flex flex-row justify-between mx-9 my-4">
+          <div className="flex flex-row gap-6 items-center">
+            <h1 className="text-2xl font-bold">Caregivers</h1>
+            <h2 className="text-sm text-slate-500">
+              {filteredCaregivers?.length + " People"}
             </h2>
           </div>
           <div>
@@ -66,13 +85,15 @@ export default function genCaregiversTab() {
             />
           </div>
         </div>
-        <div className="mt-4 overflow-auto w-full">
+        <hr className="border-t" />
+        <div className="m-6">
           <PaginatedTable
             type={tab}
             tableProps={tableProps}
             paginatedProps={paginatedProps}
             onNextPage={() => setCurrPage(currPage + 1)}
             onPrevPage={() => setCurrPage(currPage - 1)}
+            onSearch={handleSearch}
           />
         </div>
       </div>
@@ -85,10 +106,10 @@ export default function genCaregiversTab() {
               onSubmit={(caregiver) =>
                 addNewCaregiver(caregiver).then(() => {
                   toggleAddModal(false);
-                  refresh();
                   alert(
                     `${caregiver.firstName} ${caregiver.lastName} has been added!`
                   );
+                  loadData();
                 })
               }
             />
