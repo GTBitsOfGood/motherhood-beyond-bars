@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { db } from "db/firebase";
 
-import { Caregiver } from "pages/admin/item-requests";
+import { Caregiver } from "@lib/types/users";
 import NavBarLogo from "./logos/NavBarLogo";
 
 function SideBar(props: any) {
