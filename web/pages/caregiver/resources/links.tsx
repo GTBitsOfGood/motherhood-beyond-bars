@@ -1,25 +1,20 @@
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+
+import { doc, getDoc } from "@firebase/firestore";
+import { db } from "db/firebase";
 
 import BackButton from "@components/atoms/BackButton";
 import LinkCard from "@components/resources/LinkCard";
 import TitleTopBar from "@components/logos/TitleTopBar";
 
-export default function Links() {
-  // TODO fetch links from database
-  const [data, setData] = useState([
-    {
-      title: "Motherhood Beyond Bars",
-      description: "Official website for Motherhood Beyond Bars",
-      url: "motherhoodbeyondbars.org",
-    },
-    {
-      title: "Department of Family & Children Services",
-      description:
-        "Official website for Georgia Department of Human Services Division of Family & Children Services",
-      url: "https://dfcs.georgia.gov/",
-    },
-  ]);
+type Link = {
+  title: string;
+  description: string;
+  url: string;
+};
+
+export default function Links({ links }: { links: Link[] }) {
   const router = useRouter();
 
   return (
@@ -38,12 +33,12 @@ export default function Links() {
           Links
         </div>
         <div className="flex flex-col justify-center items-center">
-          {data.map((faq, i) => {
+          {links.map((link, i) => {
             return (
               <LinkCard
-                title={faq["title"]}
-                description={faq["description"]}
-                URL={faq["url"]}
+                title={link["title"]}
+                description={link["description"]}
+                URL={link["url"]}
               ></LinkCard>
             );
           })}
@@ -52,3 +47,9 @@ export default function Links() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<Link[]> = async () => {
+  return {
+    props: (await getDoc(doc(db, "resources", "links"))).data() as Link[],
+  };
+};
