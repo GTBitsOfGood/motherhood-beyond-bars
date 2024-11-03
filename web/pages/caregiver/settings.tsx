@@ -92,37 +92,37 @@ const Settings = () => {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="text-xl font-bold mb-6">Settings</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Settings</h1>
       {
         editingSection === "" ? (
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Account Information</h2>
-            <p>First Name: {caregiverData.firstName}</p>
-            <p>Last Name: {caregiverData.lastName}</p>
-            <p>Email: {caregiverData.email}</p>
-            <p>Phone Number: {caregiverData.phoneNumber}</p>
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-700">Account Information</h2>
+            <p className="text-gray-600">First Name: {caregiverData.firstName}</p>
+            <p className="text-gray-600">Last Name: {caregiverData.lastName}</p>
+            <p className="text-gray-600">Email: {caregiverData.email}</p>
+            <p className="text-gray-600">Phone Number: {caregiverData.phoneNumber}</p>
             <button
-              className="text-pink-500 mt-4"
+              className="text-pink-500 mt-4 font-semibold"
               onClick={() => setEditingSection('account')}
             >
               Edit Account
             </button>
                 
-            <h2 className="text-lg font-semibold mb-2">Address Information</h2>
-            <p>Street Address: {caregiverData.address.streetAddress}</p>
-            <p>City: {caregiverData.address.city}</p>
-            <p>State: {caregiverData.address.state}</p>
-            <p>Zip Code: {caregiverData.address.zipCode}</p>
+            <h2 className="text-xl font-semibold text-gray-700">Address Information</h2>
+            <p className="text-gray-600">Street Address: {caregiverData.address.streetAddress}</p>
+            <p className="text-gray-600">City: {caregiverData.address.city}</p>
+            <p className="text-gray-600">State: {caregiverData.address.state}</p>
+            <p className="text-gray-600">Zip Code: {caregiverData.address.zipCode}</p>
             <button
-                className="text-pink-500 mt-4"
+                className="text-pink-500 mt-4 font-semibold"
                 onClick={() => setEditingSection('address')}
             >
                 Edit Address
             </button>
           </div>
         ) : editingSection === "account" ? (
-          <div className="p-6 space-y-4">
-            <button className="text-pink-500 mb-4" onClick={goBack}>
+          <div className="p-6 bg-white shadow rounded-lg">
+            <button className="text-pink-500 mb-4 font-semibold" onClick={goBack}>
               &larr; Back
             </button>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -160,21 +160,21 @@ const Settings = () => {
                 </>
               <button
                 type="submit"
-                className="bg-pink-500 text-white py-2 px-4 rounded mt-4"
+                className="bg-pink-500 text-white font-semibold py-2 px-4 rounded w-full"
               >
                 Save Changes
               </button>
             </form>
             <button
-                      className="text-pink-500 mt-4"
-                      onClick={handleChangePassword}
-                  >
+              className="text-pink-500 mt-4 font-semibold"
+              onClick={handleChangePassword}
+            >
                       Change Password
             </button>
           </div>
         ) : editingSection === "password" ? (
-          <div className="p-6 space-y-4">
-            <button className="text-pink-500 mb-4" onClick={goBack}>
+          <div className="p-6 bg-white shadow rounded-lg">
+            <button className="text-pink-500 mb-4 font-semibold" onClick={goBack}>
               &larr; Back
             </button>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -213,15 +213,15 @@ const Settings = () => {
                 </>
               <button
                 type="submit"
-                className="bg-pink-500 text-white py-2 px-4 rounded mt-4"
+                className="bg-pink-500 text-white font-semibold py-2 px-4 rounded w-full"
               >
                 Save Changes
               </button>
             </form>
           </div>
         ) : (
-          <div>
-            <button className="text-pink-500 mb-4" onClick={goBack}>
+          <div className="p-6 bg-white shadow rounded-lg">
+            <button className="text-pink-500 mb-4 font-semibold" onClick={goBack}>
               &larr; Back
             </button>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -257,7 +257,7 @@ const Settings = () => {
                   />
               <button
                 type="submit"
-                className="bg-pink-500 text-white py-2 px-4 rounded mt-4"
+                className="bg-pink-500 text-white font-semibold py-2 px-4 rounded w-full"
               >
                 Save Changes
               </button>
