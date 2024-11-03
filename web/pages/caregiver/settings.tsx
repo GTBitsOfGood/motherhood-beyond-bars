@@ -1,45 +1,56 @@
 import TextInput from '@components/atoms/TextInput';
 import SignOutButton from '@components/SignOutButton';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { auth } from "db/firebase";
 import { updateCaregiver } from 'db/actions/shared/Caregiver';
 
 const Settings = () => {
   const [editingSection, setEditingSection] = useState<string>("");
+  const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-
-  const caregiverData = {
+  const [caregiverData, setCaregiverData] = useState({
     firstName: 'Debbie',
     lastName: 'Dolor',
     email: 'debbie.d@gmail.com',
     phoneNumber: '(470) 345-6789',
-    address: {
-        streetAddress: '423 Second Street',
+    password: '123123123',
+    address: '423 Second Street',
+    apartment: 'Apt 102',
+    city: 'Atlanta',
+    state: 'GA',
+    zipCode: '30332',
+  });
+
+  const { register, handleSubmit, reset, setValue, formState: {errors}, watch, getValues } = useForm({
+    mode: 'onChange'
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // TODO: fetch data
+      } catch (err) {
+        // catch error
+      }
+    };
+
+    fetchData();
+    setCaregiverData(
+      {
+        firstName: 'Debbie',
+        lastName: 'Dolor',
+        email: 'debbie.d@gmail.com',
+        phoneNumber: '(470) 345-6789',
+        password: '123123123',
+        address: '423 Second Street',
         apartment: 'Apt 102',
         city: 'Atlanta',
         state: 'GA',
         zipCode: '30332',
-    },
-  };
-
-  const { register, handleSubmit, reset, setValue, formState: {errors}, watch, getValues } = useForm({
-    mode: 'onChange',
-    defaultValues: {
-      firstName: caregiverData.firstName,
-      lastName: caregiverData.lastName,
-      email: caregiverData.email,
-      phoneNumber: caregiverData.phoneNumber,
-      oldPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-      streetAddress: caregiverData.address.streetAddress,
-      apartment: caregiverData.address.apartment,
-      city: caregiverData.address.city,
-      state: caregiverData.address.state,
-      zipCode: caregiverData.address.zipCode,
-    },
-  });
+      }
+    );
+  }, [reset]);
 
   const handleChangePassword = () => {
     setEditingSection("password");
@@ -86,46 +97,101 @@ const Settings = () => {
       setEditingSection('account'); // Go back to account editing
       reset(caregiverData);
     } else {
-      setEditingSection(""); // Go back to the main settings view
+      setShowModal(true);
+      // setEditingSection(""); // Go back to the main settings view
     }
   };
 
   return (
-    <div className="p-4 sm:p-8">
+    <div className="p-4 sm:p-8 w-full sm:max-w-md">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Settings</h1>
       {
+        showModal && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center sm:items-center items-end z-50">
+          <div className="bg-white rounded-t-lg sm:rounded-lg p-6 w-full sm:w-11/12 sm:max-w-md shadow-lg">
+            <h2 className="text-black text-lg font-bold mb-2">Your changes won’t be saved.</h2>
+            <p className="text-black text-base font-normal">
+              If you return to the previous screen, your changes will not be saved.
+            </p>
+            <div className="flex justify-end space-x-4 pt-[20.80px]">
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  setEditingSection("");
+                }}
+                className="text-mbb-pink bg-white rounded border border-mbb-pink px-4 pt-2 pb-[9px] text-base font-semibold w-1/2"
+              >
+                Don’t save
+              </button>
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                }}
+                className="text-mbb-pink bg-white rounded border border-white px-4 pt-2 pb-[9px] text-base font-semibold w-1/2"
+              >
+                Keep editing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {
         editingSection === "" ? (
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700">Account Information</h2>
-            <p className="text-gray-600">First Name: {caregiverData.firstName}</p>
-            <p className="text-gray-600">Last Name: {caregiverData.lastName}</p>
-            <p className="text-gray-600">Email: {caregiverData.email}</p>
-            <p className="text-gray-600">Phone Number: {caregiverData.phoneNumber}</p>
-            <button
-              className="text-pink-500 mt-4 font-semibold"
-              onClick={() => setEditingSection('account')}
-            >
-              Edit Account
-            </button>
-                
-            <h2 className="text-xl font-semibold text-gray-700">Address Information</h2>
-            <p className="text-gray-600">Street Address: {caregiverData.address.streetAddress}</p>
-            <p className="text-gray-600">City: {caregiverData.address.city}</p>
-            <p className="text-gray-600">State: {caregiverData.address.state}</p>
-            <p className="text-gray-600">Zip Code: {caregiverData.address.zipCode}</p>
-            <button
-                className="text-pink-500 mt-4 font-semibold"
-                onClick={() => setEditingSection('address')}
-            >
-                Edit Address
-            </button>
+          <div className="w-[230px] h-[496px] flex-col justify-start items-start gap-9 inline-flex">
+            <div className="self-stretch h-[315px] flex-col justify-start items-start gap-3 flex">
+              <div className="self-stretch justify-start items-center gap-3 inline-flex">
+                  <div className="text-black text-lg font-bold">Account Information</div>
+                  <button
+                    className="text-mbb-pink text-base font-semibold"
+                    onClick={() => setEditingSection('account')}
+                  >Edit</button>
+              </div>
+              <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
+                  <div className="self-stretch text-dark-gray text-sm font-semibold">First Name</div>
+                  <div className="self-stretch text-black text-base font-normal leading-normal">{caregiverData.firstName}</div>
+              </div>
+              <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
+                  <div className="self-stretch text-dark-gray text-sm font-semibold">Last Name</div>
+                  <div className="self-stretch text-black text-base font-normal leading-normal">{caregiverData.lastName}</div>
+              </div>
+              <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
+                  <div className="self-stretch text-dark-gray text-sm font-semibold">Email</div>
+                  <div className="self-stretch text-black text-base font-normal leading-normal">{caregiverData.email}</div>
+              </div>
+              <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
+                  <div className="self-stretch text-dark-gray text-sm font-semibold">Phone Number</div>
+                  <div className="self-stretch text-black text-base font-normal leading-normal">{caregiverData.phoneNumber}</div>
+              </div>
+              <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
+                  <div className="self-stretch text-dark-gray text-sm font-semibold">Password</div>
+                  <div className="self-stretch text-black text-base font-normal leading-normal">{'•'.repeat(caregiverData.password.length)}</div>
+              </div>
+            </div>
+            <div className="h-[87px] flex-col justify-start items-start gap-[18px] flex">
+                <div className="justify-start items-center gap-3 inline-flex">
+                    <div className="w-[72px] text-black text-lg font-bold">Address</div>
+                    <button
+                      className="text-mbb-pink text-base font-semibold"
+                      onClick={() => setEditingSection('address')}
+                    >Edit</button>
+                </div>
+                <div className="self-stretch text-black text-base font-normal">{caregiverData.address}, {caregiverData.apartment}<br/>{caregiverData.city}, {caregiverData.state} {caregiverData.zipCode}</div>
+            </div>
+            <div className="self-start">
+              <SignOutButton/>
+            </div>
           </div>
         ) : editingSection === "account" ? (
-          <div className="p-6 bg-white shadow rounded-lg">
-            <button className="text-pink-500 mb-4 font-semibold" onClick={goBack}>
-              &larr; Back
+          <div className="flex-col justify-start items-start gap-3 inline-flex w-full sm:max-w-md">
+            <button className="text-black mb-4 font-semibold flex items-center" onClick={goBack}>
+              {/* <img src={back_button} /> */}
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.25 19.5L9.75 13L16.25 6.5" stroke="black" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"/>
+              </svg>
+              <div className="text-black text-xl font-normal">Back</div>
             </button>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="text-black text-lg font-bold">Edit Account Information</div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex-col w-full sm:max-w-md">
                 <>
                   <TextInput
                     label='First Name'
@@ -143,14 +209,14 @@ const Settings = () => {
                     error={errors.lastName?.message as string}
                     onChange={(value) => setValue('lastName', value)}
                   />
-                  <TextInput
-                    label="Email"
-                    inputType="email"
-                    {...register('email', { required: 'Email is required' })}
-                    currentValue={caregiverData.email}
-                    error={errors.email?.message as string}
-                    onChange={(value) => setValue('email', value)}
-                  />
+                  <div className="self-stretch h-[51px] flex-col justify-start items-start gap-[3px] flex">
+                      <div className="self-stretch h-6 flex-col justify-start items-start gap-2 flex">
+                          <div className="w-[41px] h-6 justify-center items-center inline-flex">
+                              <div className="text-black text-base font-normal font-['Open Sans'] leading-normal">Email</div>
+                          </div>
+                      </div>
+                      <div className="self-stretch text-black text-base font-normal font-['Open Sans'] leading-normal">{caregiverData.email}</div>
+                  </div>
                   <TextInput
                     label="Phone Number"
                     {...register('phoneNumber')}
@@ -158,26 +224,38 @@ const Settings = () => {
                     onChange={(value) => setValue('phoneNumber', value)}
                   />
                 </>
-              <button
-                type="submit"
-                className="bg-pink-500 text-white font-semibold py-2 px-4 rounded w-full"
-              >
-                Save Changes
-              </button>
+              <div className="mt-4">
+                <button
+                  className="self-stretch text-mbb-pink text-base font-semibold"
+                  onClick={handleChangePassword}
+                >
+                          Change Password
+                </button>
+              </div>
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  className="text-mbb-pink text-base font-semibold leading-[25px] pt-2 px-4 pb-[9px] self-stretch bg-white rounded border border-mbb-pink gap-2 inline-flex w-full sm:max-w-md flex justify-center items-center text-center"
+                >
+                  Save Changes
+                </button>
+              </div>
             </form>
-            <button
-              className="text-pink-500 mt-4 font-semibold"
-              onClick={handleChangePassword}
-            >
-                      Change Password
-            </button>
+    {/* <div class="self-stretch h-[45px] px-4 pt-2 pb-[9px] bg-white rounded border border-[#b14378] justify-center items-center gap-2 inline-flex">
+        <div class="text-[#b14378] text-base font-semibold font-['Open Sans'] leading-[25px]">Save changes</div>
+    </div> */}
           </div>
         ) : editingSection === "password" ? (
-          <div className="p-6 bg-white shadow rounded-lg">
-            <button className="text-pink-500 mb-4 font-semibold" onClick={goBack}>
-              &larr; Back
+          <div className="flex-col justify-start items-start gap-3 inline-flex w-full sm:max-w-md">
+            <button className="text-pink-500 mb-4 font-semibold flex items-center" onClick={goBack}>
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.25 19.5L9.75 13L16.25 6.5" stroke="black" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"/>
+              </svg>
+              <div className="text-black text-xl font-normal">Back</div>
             </button>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="text-black text-lg font-bold">Edit Password</div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full sm:max-w-md">
+                {/* paragraph to prevent prefilling account values to password form */}
                 <p> </p>
                 <>
                   <TextInput
@@ -211,60 +289,70 @@ const Settings = () => {
                     onChange={(value) => setValue('confirmPassword', value)}
                 />
                 </>
-              <button
-                type="submit"
-                className="bg-pink-500 text-white font-semibold py-2 px-4 rounded w-full"
-              >
-                Save Changes
-              </button>
+                <button
+                  type="submit"
+                  className="text-mbb-pink text-base font-semibold leading-[25px] pt-2 px-4 pb-[9px] self-stretch bg-white rounded border border-mbb-pink gap-2 inline-flex w-full sm:max-w-md flex justify-center items-center text-center"
+                >
+                  Change Password
+                </button>
             </form>
           </div>
         ) : (
-          <div className="p-6 bg-white shadow rounded-lg">
-            <button className="text-pink-500 mb-4 font-semibold" onClick={goBack}>
-              &larr; Back
+          <div className="flex-col justify-start items-start gap-3 inline-flex w-full sm:max-w-md">
+            <button className="text-pink-500 mb-4 font-semibold flex items-center" onClick={goBack}>
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.25 19.5L9.75 13L16.25 6.5" stroke="black" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"/>
+              </svg>
+              <div className="text-black text-xl font-normal">Back</div>
             </button>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="text-black text-lg font-bold">Edit Address</div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full sm:max-w-md">
               <TextInput
                     label="Street Address"
-                    currentValue={caregiverData.address.streetAddress}
-                    {...register('streetAddress', {
+                    currentValue={caregiverData.address}
+                    {...register('address', {
                       required: 'Street address is required',
                     })}
-                    error={errors.streetAddress?.message as string}
-                    onChange={(value) => setValue('streetAddress', value)}
+                    error={errors.address?.message as string}
+                    onChange={(value) => setValue('address', value)}
+                  />
+                  <TextInput
+                    label="Apartment"
+                    currentValue={caregiverData.apartment}
+                    {...register('apartment')}
+                    error={errors.apartment?.message as string}
+                    onChange={(value) => setValue('apartment', value)}
                   />
                   <TextInput
                     label="City"
-                    currentValue={caregiverData.address.city}
+                    currentValue={caregiverData.city}
                     {...register('city', { required: 'City is required' })}
                     error={errors.city?.message as string}
                     onChange={(value) => setValue('city', value)}
                   />
                   <TextInput
                     label="State"
-                    currentValue={caregiverData.address.state}
+                    currentValue={caregiverData.state}
                     {...register('state', { required: 'State is required' })}
                     error={errors.state?.message as string}
                     onChange={(value) => setValue('state', value)}
                   />
                   <TextInput
                     label="Zip Code"
-                    currentValue={caregiverData.address.zipCode}
+                    currentValue={caregiverData.zipCode}
                     {...register('zipCode', { required: 'Zip code is required' })}
                     error={errors.zipCode?.message as string}
                     onChange={(value) => setValue('zipCode', value)}
                   />
               <button
                 type="submit"
-                className="bg-pink-500 text-white font-semibold py-2 px-4 rounded w-full"
+                className="text-mbb-pink text-base font-semibold leading-[25px] pt-2 px-4 pb-[9px] self-stretch bg-white rounded border border-mbb-pink gap-2 inline-flex w-full sm:max-w-md flex justify-center items-center text-center"
               >
                 Save Changes
               </button>
             </form>
           </div>
       )}
-      <SignOutButton />
     </div>
   );
 };

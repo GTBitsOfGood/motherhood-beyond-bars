@@ -28,10 +28,10 @@ export default function TextInput({
   const [value, setValue] = useState(currentValue);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col">
       {label && (
         <label
-          className="font-opensans text-base mb-2"
+          className="text-black text-base font-normal leading-normal"
           htmlFor={formValue ? formValue.name : undefined}
         >
           {label}
@@ -42,7 +42,7 @@ export default function TextInput({
         type={inputType}
         onFocus={(e) => keyboardScroll(e)}
         {...formValue}
-        className={`w-full py-2.5 px-2 bg-secondary-background items-center border rounded ${disabled ? "!bg-light-gray" : "!bg-secondary-background"} ${error ? "border-error-red" : "border-light-gray"}`}
+        className={`self-stretch w-full py-2.5 px-2 gap-2 bg-secondary-background items-center border rounded ${disabled ? "!bg-light-gray" : "!bg-secondary-background"} ${error ? "border-error-red" : "border-light-gray"}`}
         onChange={(event) => {
           setValue(event.target.value);
           if (onChange) {
@@ -52,7 +52,7 @@ export default function TextInput({
         placeholder={placeholder}
         value={value}
       />
-      <ErrorText error={error} />
+      {error && <ErrorText error={error} />}
     </div>
   );
 }
