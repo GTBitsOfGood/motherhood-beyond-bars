@@ -14,6 +14,7 @@ export type Caregiver = Account & {
   id: string;
   numAdults: number;
   numChildren: number;
+  agesOfChildren: string;
   signedWaivers: Waiver[];
   itemsRequested: ItemRequest;
   address: string;
