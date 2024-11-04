@@ -99,7 +99,7 @@ export default function LoginScreen() {
                     }}
                   />
                 </div>
-                <div className="mb-10">
+                <div className="mb-10 flex justify-center items-center">
                   <Button
                     text="Sign in with Google"
                     type="Google"

@@ -1,12 +1,18 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import NextNProgress from "nextjs-progressbar";
-import SideBar from "@components/SideBar";
-import SideBarItems from "@lib/SideBarItems";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import UserProvider from "@lib/contexts/userContext";
+import { useRouter } from "next/router";
+import type { AppProps } from "next/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+import Cookies from "js-cookie";
+import NextNProgress from "nextjs-progressbar";
+
+import "../styles/globals.css";
+
+import SideBar from "@components/SideBar";
 import MobileNavBar from "@components/molecules/MobileNavBar";
+
+import UserProvider from "@lib/contexts/userContext";
+import SideBarItems from "@lib/SideBarItems";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -26,6 +32,32 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (router.asPath.includes("admin")) setIsAdmin(true);
+  }, [router.asPath]);
+
+  useEffect(() => {
+    if (
+      router.asPath.includes("admin") ||
+      router.asPath.includes("/caregiver/")
+    ) {
+      const auth = getAuth();
+
+      // Refresh auth token 10 mins before token expires (aka with 50 mins left)
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          setInterval(
+            async () => {
+              const newToken = await user.getIdToken(true);
+              Cookies.set("authToken", newToken, {
+                path: "/",
+                secure: true,
+                sameSite: "Strict",
+              });
+            },
+            50 * 60 * 1000
+          );
+        }
+      });
+    }
   }, [router.asPath]);
 
   const hideNavBar =
