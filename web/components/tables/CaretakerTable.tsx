@@ -121,7 +121,8 @@ function CaretakerTable({ props }: any) {
                           <div className="flex flex-row">
                             <div
                               className="pr-2 pt-1 cursor-pointer"
-                              onClick={() => {
+                              onClick={(event) => {
+                                event.stopPropagation();
                                 setToDelete(row.original ?? null);
                                 toggleDeleteModal(true);
                               }}
