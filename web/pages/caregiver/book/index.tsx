@@ -1,4 +1,5 @@
 import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
 
 import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
 import { encrypt } from "@lib/utils/encryption";
@@ -15,6 +16,8 @@ interface Props {
 // TODO add topbar and merge designs
 
 export default function BabyBookHome({ books }: Props) {
+  const router = useRouter();
+
   // TODO skip index screen if only one baby
   if (books.length === 0) {
     return (
@@ -61,6 +64,10 @@ export default function BabyBookHome({ books }: Props) {
         </div>
       </div>
     );
+  }
+
+  if (books.length === 1) {
+    router.push(books[0].bookLink);
   }
 
   return (

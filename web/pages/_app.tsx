@@ -26,9 +26,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (router.asPath.includes("admin")) setIsAdmin(true);
-  }, []);
+  }, [router.asPath]);
 
-  const hideNavBar = router.asPath.includes("/login") || router.asPath.includes("/signup") || router.asPath.includes("/caregiver/onboarding");
+  const hideNavBar =
+    router.asPath.includes("/login") ||
+    router.asPath.includes("/signup") ||
+    router.asPath.includes("/caregiver/onboarding");
 
   return (
     <UserProvider>
