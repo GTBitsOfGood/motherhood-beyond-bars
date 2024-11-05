@@ -2,7 +2,7 @@ import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import HalfScreen from "@components/logos/HalfScreen";
-import { sendResetPasswordEmail } from "db/firebase/resetPassword";
+import { sendResetPasswordEmail } from "db/actions/resetPassword";
 import { useRouter } from "next/router";
 import { useState } from "react";
 

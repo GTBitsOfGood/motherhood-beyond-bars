@@ -77,7 +77,7 @@ export default function ItemRequestRow({
           row.itemsRequested.status == "Pending" ? "font-bold" : ""
         } ${
           selectedRows.includes(row.id)
-            ? "border-l-2 border-l-[#304CD1] bg-[#304CD10D]"
+            ? "border-l-2 border-l-mbb-pink bg-mbb-pink/5"
             : ""
         }`}
       >
@@ -151,7 +151,7 @@ export default function ItemRequestRow({
               {Object.keys(status).map((stat) => {
                 return (
                   <div
-                    className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10"
+                    className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-mbb-pink/10"
                     key={stat}
                     onClick={() => {
                       row.itemsRequested.status = stat;
@@ -165,7 +165,7 @@ export default function ItemRequestRow({
                 );
               })}
               <div
-                className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10 text-[#EB3B3B] border-t"
+                className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-mbb-pink/10 text-error-red border-t"
                 onClick={() => {
                   row.itemsRequested.status = "Deleted";
                   updateCaregiver(row);
@@ -180,11 +180,11 @@ export default function ItemRequestRow({
       </tr>
       <tr className={`${!rowExpanded ? "hidden" : ""}`}>
         <td colSpan={6} className="py-3">
-          <div className="bg-[#FAFBFC] border-[#D9D9D9] border-[1px] px-10 py-6 gap-y-4 flex flex-col">
+          <div className="bg-secondary-background border-light-gray border px-10 py-6 gap-y-4 flex flex-col">
             {dropDownData.map((data) => {
               return (
                 <div className="flex" key={data.header}>
-                  <div className="w-[20%] text-[#666666] text-[14px] tracking-[0.02em]">
+                  <div className="w-[20%] text-dark-gray text-sm tracking-[0.02em]">
                     {data.header}
                   </div>
                   <div>{data.value}</div>

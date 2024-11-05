@@ -175,7 +175,7 @@ export default function genItemRequestsTab() {
   return (
     <div className="w-full flex flex-col overflow-y-scroll">
       <div className="flex flex-row items-center py-6 border-b w-full px-10">
-        <h1 className="text-2xl font-bold w-full">Resource Library</h1>
+        <h1 className="text-2xl font-bold w-full">Item Requests</h1>
       </div>
       <section className="flex flex-col flex-grow relative px-10">
         <div className="border-b flex gap-x-1 mt-8 w-full justify-between">
@@ -185,7 +185,7 @@ export default function genItemRequestsTab() {
               <button
                 className={`py-3 px-6 font-medium rounded-t-md transition-colors border translate-y-px ${
                   selectedSectionIndex === i
-                    ? "bg-blue-700 text-white"
+                    ? "bg-mbb-pink text-white"
                     : "bg-gray-100 text-gray-400"
                 }`}
                 onClick={() => {
