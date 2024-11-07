@@ -65,12 +65,6 @@ const TopBar = ({
             icon={<DownloadIcon />}
             width="auto"
           />
-          <Button
-            onClick={copyLink}
-            text="Copy link"
-            icon={<LinkIcon />}
-            width="auto"
-          />
         </div>
       )}
     </div>

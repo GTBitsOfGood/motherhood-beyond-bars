@@ -63,6 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const hideNavBar =
     router.asPath.includes("/login") ||
     router.asPath.includes("/signup") ||
+    router.asPath.includes("/admin/book") ||
     router.asPath.includes("/caregiver/onboarding");
 
   return (

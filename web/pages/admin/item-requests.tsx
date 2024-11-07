@@ -197,6 +197,7 @@ export default function genItemRequestsTab() {
               </button>
             ))}
           </div>
+          {selectedRows.length != 0 &&
           <div className="flex flex-col items-center relative z-10">
             <div className="flex items-center gap-x-5">
               <div className="text-[#666666]">Mark as</div>
@@ -246,6 +247,7 @@ export default function genItemRequestsTab() {
               </div>
             </div>
           </div>
+          }
         </div>
         <div className="w-full">
           {data ? sections[selectedSectionIndex].component : <></>}
