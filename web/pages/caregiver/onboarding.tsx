@@ -145,7 +145,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         lastUpdated: (w.lastUpdated as Timestamp).toDate().toISOString(),
       })),
       items: items,
-      authId: authId
+      authId: authId,
     },
   };
 };

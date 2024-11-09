@@ -27,7 +27,7 @@ export default function DatePicker({
         selected={value}
         onChange={onChange}
         disabled={disabled}
-        className={`w-full mt-2 py-2.5 px-2 items-center border-[1px] rounded ${disabled ? "bg-light-gray" : "bg-secondary-background"} ${error ? "border-error-red" : "border-light-gray"}`}
+        className={`w-full py-2 px-2 items-center border-2 rounded ${disabled ? "bg-light-gray" : "bg-secondary-background"} ${error ? "border-error-red" : "border-light-gray"}`}
       />
       <ErrorText error={error} />
     </div>

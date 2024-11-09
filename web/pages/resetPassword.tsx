@@ -3,7 +3,6 @@ import TextInput from "@components/atoms/TextInput";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import HalfScreen from "@components/logos/HalfScreen";
 import ErrorToast from "@components/Onboarding/ErrorToast";
-import { PasswordException } from "@lib/exceptions/passwordExceptions";
 import { validatePassword } from "@lib/utils/passwordCreation";
 import {
   confirmPasswordReset,
@@ -29,25 +28,28 @@ export default function ForgotPasswordScreen() {
         router.push("/login");
       }
     }
-  }, []);
+  }, [oobCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
-      validatePassword(newPassword, confirmPassword);
+      const invalidReason = validatePassword({ newPassword, confirmPassword });
+
+      if (invalidReason) {
+        setError(invalidReason);
+        return;
+      }
+
       const auth = getAuth();
       if (oobCode) {
         await confirmPasswordReset(auth, oobCode as string, newPassword);
       } else {
         setError("Invalid reset link.");
       }
-    } catch (error) {
-      if (error instanceof PasswordException) {
-        setError(error.message);
-      } else {
-        router.push("/login");
-      }
+    } catch (err) {
+      console.error(err);
+      router.push("/login");
     }
   };
 
