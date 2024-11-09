@@ -1,13 +1,13 @@
+import LinkArrowIcon from "@components/Icons/LinkArrowIcon";
+import DeleteProfileModal from "@components/modals/DeleteProfileModal";
+import { Baby } from "@lib/types/baby";
+import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
+import Link from "next/link";
 import React from "react";
-import { useTable } from "react-table";
 import { HiOutlineTrash } from "react-icons/hi";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { useTable } from "react-table";
 import Tooltip from "../ToolTip";
-import Link from "next/link";
-import DeleteProfileModal from "@components/modals/DeleteProfileModal";
-import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
-import LinkArrowIcon from "@components/Icons/LinkArrowIcon";
-import { Baby } from "@lib/types/baby";
 
 function CaretakerTable({ props }: any) {
   if (!props) {
@@ -87,7 +87,7 @@ function CaretakerTable({ props }: any) {
                             return newOpen;
                           });
                         }}
-                        className="cursor-pointer"
+                        className="cursor-pointer hover:bg-mbb-pink/10"
                         {...row.getRowProps()}
                       >
                         <td className="border-t">

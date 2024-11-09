@@ -1,3 +1,4 @@
+import DatePicker from "@components/atoms/DatePicker";
 import SearchableDropdown from "@components/atoms/SearchInput";
 import { getCaregivers } from "db/actions/admin/Caregiver";
 import React, { useEffect, useState } from "react";
@@ -30,6 +31,17 @@ function ChildModal({
     formState: { errors, isSubmitting },
   } = useForm();
   const [caregivers, setCaregivers] = useState<any[]>([]);
+  const [selectedDate, setSelectedDate] = useState(
+    values?.birthday ? new Date(values.birthday) : undefined
+  );
+
+  useEffect(() => {
+    // Initialize the date from values if it exists
+    if (values?.birthday) {
+      setSelectedDate(new Date(values.birthday));
+      setValue("dob", values.birthday);
+    }
+  }, [values?.birthday, setValue]);
 
   const handleCaretakerChange = (selectedCaretaker: any) => {
     if (selectedCaretaker) {
@@ -58,6 +70,11 @@ function ChildModal({
   const defaultCaretaker = values?.caretakerID
     ? caregivers.find((c) => c.value.id === values.caretakerID)
     : null;
+
+  const handleDateChange = (date: any) => {
+    setSelectedDate(date);
+    setValue("dob", date); // Update form state
+  };
 
   useEffect(() => {
     fetchCaregivers();
@@ -114,21 +131,17 @@ function ChildModal({
                         </span>
                       )}
                     </div>
-                    <div className="form-group mb-3 mr-5">
-                      <p>Date of Birth</p>
-                      <input
-                        className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
-                        placeholder="MM/DD/YY"
-                        defaultValue={values?.birthday}
-                        {...register("dob", { required: false })}
+                    <div className="form-group mr-5">
+                      <DatePicker
+                        label="Date of Birth"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        error={
+                          errors.dob ? "This field is required" : undefined
+                        }
                       />
-                      {/* {errors.dob && (
-                      <span className="text-error-red">
-                        This field is required
-                      </span>
-                    )} */}
                     </div>
-                    <div className="form-group mb-3">
+                    <div className="form-group">
                       <p>Sex</p>
                       <select
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
