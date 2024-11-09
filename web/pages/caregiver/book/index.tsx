@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 
 import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
@@ -46,6 +46,7 @@ export default function BabyBookHome({
   const [showModal, setShowModal] = useState(false);
   const [notSigning, setNotSigning] = useState(false);
   const showForm = !signedMediaRelease && !notSigning;
+  const router = useRouter();
 
   if (books.length === 0) {
     return (
@@ -258,20 +259,25 @@ export default function BabyBookHome({
 
 const MEDIA_RELEASE_WAIVER_NAME = "Media Release";
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
 ) => {
   const caregiver = await getCurrentCaregiver(context);
 
   if (!caregiver) {
-    return { props: { books: [] } };
+    return {
+      props: {
+        books: [],
+        signedMediaRelease: false,
+        mediaReleaseWaiver: undefined,
+      },
+    };
   }
 
   const waivers = await getWaivers();
-  const mediaRelease = waivers.find(
+  const mediaReleaseWaiver = waivers.find(
     (w) => w.name === MEDIA_RELEASE_WAIVER_NAME
   );
-  const caregiver = await caregiverFromAuthToken(req.cookies.authToken);
   const signedMediaRelease =
     caregiver?.signedWaivers?.some(
       (w) => w.name === MEDIA_RELEASE_WAIVER_NAME
@@ -283,14 +289,23 @@ export const getServerSideProps = async (
 
     return {
       name: baby.firstName,
-      birthday: baby.dob,
+      birthday: baby.dob.toDate().toISOString(),
       bookLink: `/caregiver/book/${content}?iv=${iv}`,
     };
   });
 
   return {
     props: {
-      books: books,
+      books,
+      signedMediaRelease,
+      mediaReleaseWaiver: mediaReleaseWaiver
+        ? {
+            ...mediaReleaseWaiver,
+            lastUpdated: (mediaReleaseWaiver.lastUpdated as Timestamp)
+              .toDate()
+              .toISOString(),
+          }
+        : undefined,
     },
   };
 };
