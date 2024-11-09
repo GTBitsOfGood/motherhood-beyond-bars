@@ -7,6 +7,7 @@ import { Caregiver } from "@lib/types/users";
 import { db } from "db/firebase";
 import { useState } from "react";
 import { Baby } from "@lib/types/baby";
+import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 
 export default function ItemRequestRow({
   row,
@@ -21,11 +22,21 @@ export default function ItemRequestRow({
 }) {
   const [rowExpanded, setRowExpanded] = useState(false);
   const [statusExpanded, setStatusExpanded] = useState(false);
+  const [babies, setBabies] = useState<any>(null);
 
   const status: { [index: string]: string } = {
     Pending: "#FD8033",
     Approved: "#FFBE4C",
     Completed: "#13B461",
+  };
+
+  // Function to fetch babies for a specific caregiver
+  const getBabies = async () => {
+    const caregiverID = row.id;
+    const fetchedBabies = await getBabiesFromCaregiver(caregiverID); // Fetch babies by caregiver ID
+    if (fetchedBabies) {
+      setBabies(fetchedBabies);
+    }
   };
 
   const dropDownData = [
@@ -39,7 +50,7 @@ export default function ItemRequestRow({
     },
     {
       header: "CHILDREN NAMES",
-      value: row.babies && row.babies.map((baby) => (baby as Baby).firstName + " " + (baby as Baby).lastName).join(", "),
+      value: babies && (babies as Baby[]).map((baby) => baby.firstName + " " + baby.lastName).join(", "),
     },
     {
       header: "CARETAKER COMMENTS",
@@ -81,7 +92,10 @@ export default function ItemRequestRow({
             ? "border-l-2 border-l-mbb-pink bg-mbb-pink/5"
             : ""
         } cursor-pointer`}
-        onClick={() => setRowExpanded(!rowExpanded)} // Expand/collapse row on click
+        onClick={() => {
+          setRowExpanded(!rowExpanded);
+          getBabies();
+        }} // Expand/collapse row on click
       >
         <td className="py-2">
           <div className="flex gap-x-2">
