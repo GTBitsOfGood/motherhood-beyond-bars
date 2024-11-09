@@ -17,7 +17,7 @@ export default function PaginatedTable({
     <>
       <div className="flex flex-col gap-5 w-[75vw]">
         <SearchBar onSearch={onSearch} />
-        <div className="overflow-auto h-[68vh]">
+        <div className="overflow-auto h-full">
           {type == BABIES_TAB ? (
             <BabiesTable props={tableProps} />
           ) : type == CAREGIVERS_TAB ? (
@@ -30,6 +30,7 @@ export default function PaginatedTable({
           <Pagination
             totalRecords={paginatedProps.totalRecords}
             currPage={paginatedProps.pageNumber}
+            pageSize={paginatedProps.pageSize}
             onNextPage={onNextPage}
             onPrevPage={onPrevPage}
           />
