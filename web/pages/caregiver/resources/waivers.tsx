@@ -32,7 +32,7 @@ export default function Waivers({ waivers }: Props) {
       <hr style="border: 1px solid #ddd; margin: 20px 0;">
       <div style="display: flex; justify-content: space-between; font-size: 14px; color: #333;">
         <span>Date: ${new Date(waiver.lastUpdated).toLocaleDateString()}</span>
-        <span>Signature: ${waiver.caregiverName}</span>
+        <span>Signature: ${waiver?.caregiverName}</span>
       </div>
     </div>
   `;

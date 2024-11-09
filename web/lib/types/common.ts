@@ -23,7 +23,7 @@ export interface Waiver {
 
 export type BrowserWaiver = Omit<Waiver, "lastUpdated"> & {
   lastUpdated: string;
-  caregiverName: string;
+  caregiverName?: string;
 };
 
 export type AuthFormValues = {
