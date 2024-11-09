@@ -88,7 +88,7 @@ function CaretakerTable({ tableProps, open, setOpen }: any) {
                         }}
                         className="cursor-pointer hover:bg-mbb-pink/10"
                         {...row.getRowProps()}
-                        key={row.original.id}
+                        key={row.id}
                       >
                         <td className="border-t">
                           <RiArrowDropDownLine
