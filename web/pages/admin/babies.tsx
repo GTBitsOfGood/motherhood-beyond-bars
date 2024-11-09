@@ -26,16 +26,6 @@ export default function genChildrenAndBabyBooksTab() {
   const [currPage, setCurrPage] = useState(1);
   const [addModal, toggleAddModal] = useState(false);
 
-  const [paginationSize, setPaginationSize] = useState(5);
-
-  useEffect(() => {
-    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 72.5; 
-    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
-    const entryHeight = 97;
-    const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
-    setPaginationSize(numEntries);
-  })
-
   const columns = React.useMemo(
     () => [
       { Header: "Name", accessor: "name" },
@@ -47,6 +37,16 @@ export default function genChildrenAndBabyBooksTab() {
     ],
     []
   );
+
+  const [paginationSize, setPaginationSize] = useState(5);
+
+  useEffect(() => {
+    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 72.5; 
+    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    const entryHeight = 97;
+    const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
+    setPaginationSize(numEntries);
+  })
 
   const handleEdit = async (baby: any) => {
     await editBaby(baby);
