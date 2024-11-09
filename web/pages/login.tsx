@@ -7,29 +7,26 @@ import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
 import HalfScreen from "@components/logos/HalfScreen";
 import Banner from "@components/molecules/Banner";
+import { useForm } from "react-hook-form";
 
 export default function LoginScreen() {
   const router = useRouter();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const { register, formState, trigger, getValues } = useForm<{
+    email: string;
+    password: string;
+  }>();
   const [errorBannerMsg, setErrorBannerMsg] = useState("");
 
   return (
     <div className="flex absolute bg-white">
       <div className="h-screen w-screen">
         <div className="flex flex-col w-full h-full sm:flex-row">
-          <HalfScreen></HalfScreen>
+          <HalfScreen />
           <div className="flex flex-col w-full h-full justify-center items-center mt-8 sm:mt-0 sm:w-1/2">
             <div className={`flex flex-col w-[90%] sm:w-[60%] sm:items-center`}>
               {errorBannerMsg && (
                 <div className="hidden sm:inline">
-                  <Banner
-                    text={errorBannerMsg}
-                    onClose={() => setErrorBannerMsg("")}
-                  />
+                  <Banner text={errorBannerMsg} />
                 </div>
               )}
               <p
@@ -39,32 +36,29 @@ export default function LoginScreen() {
               </p>
               {errorBannerMsg && (
                 <div className="inline -mt-8 sm:hidden sm:mt-0">
-                  <Banner
-                    text={errorBannerMsg}
-                    onClose={() => setErrorBannerMsg("")}
-                  />
+                  <Banner text={errorBannerMsg} />
                 </div>
               )}
               <div className="flex flex-col w-full sm:order-2">
                 <div className="sm:mb-6">
                   <TextInput
                     label="Email"
-                    error={emailError}
-                    onChange={(event) => {
-                      setEmail(event);
-                      setEmailError("");
-                    }}
-                  ></TextInput>
+                    formValue={register("email", {
+                      validate: (v) =>
+                        !v ? "Email cannot be empty." : undefined,
+                    })}
+                    error={formState.errors.email?.message}
+                  />
                 </div>
                 <TextInput
                   label="Password"
                   inputType="password"
-                  error={passwordError}
-                  onChange={(event) => {
-                    setPassword(event);
-                    setPasswordError("");
-                  }}
-                ></TextInput>
+                  formValue={register("password", {
+                    validate: (v) =>
+                      !v ? "Password cannot be empty." : undefined,
+                  })}
+                  error={formState.errors.password?.message}
+                />
                 <div className="flex justify-end mb-9 sm:mb-10">
                   <button
                     className="w-auto text-center text-mbb-pink text-sm font-semibold font-opensans"
@@ -78,23 +72,28 @@ export default function LoginScreen() {
                 <div className="mb-5 sm:mb-7">
                   <Button
                     text="Log In"
-                    onClick={() => {
-                      if (email && password) {
-                        loginWithCredentials(email, password).then((e) => {
-                          if (e.success) {
-                            // Push to a generic route, let middleware handle role-based redirection
-                            router.push("/home");
-                          } else {
-                            setErrorBannerMsg("error" in e ? e.error : "");
-                          }
-                        });
-                      } else {
-                        if (!email) {
-                          setEmailError("Please enter email");
+                    onClick={async () => {
+                      setErrorBannerMsg("");
+                      const isValid = await trigger(undefined, {
+                        shouldFocus: true,
+                      });
+                      if (!isValid) return;
+
+                      const { email, password } = getValues();
+                      try {
+                        const res = await loginWithCredentials(email, password);
+
+                        if (res.success) {
+                          // Push to a generic route, let middleware handle role-based redirection
+                          router.push("/home");
+                        } else {
+                          setErrorBannerMsg("error" in res ? res.error : "");
                         }
-                        if (!password) {
-                          setPasswordError("Please enter password");
-                        }
+                      } catch (err) {
+                        console.error(err);
+                        setErrorBannerMsg(
+                          "An unknown error ocurred logging in. Check your internet connection."
+                        );
                       }
                     }}
                   />
