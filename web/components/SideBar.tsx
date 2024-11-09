@@ -42,7 +42,7 @@ function SideBar(props: any) {
 
   return (
     // TODO fix current tab highlight
-    <div className="fixed top-0 sm:top-auto sm:static h-full w-2/3 sm:w-1/5 bg-black text-white z-50 sm:z-0">
+    <div className="fixed top-0 sm:top-auto sm:static h-full w-2/3 sm:w-[18%] bg-black text-white z-50 sm:z-0">
       <div className="w-full flex-col justify-start z-50 sm:z-0">
         {/* TODO populate name */}
         <NavBarLogo isAdmin={props.isAdmin} caregiverName="Jane Care" />
