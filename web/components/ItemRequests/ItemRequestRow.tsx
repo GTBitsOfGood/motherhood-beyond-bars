@@ -73,7 +73,7 @@ export default function ItemRequestRow({
   return (
     <>
       <tr
-        className={`hover:bg-[#B143781A] border-t ${
+        className={`hover:bg-mbb-pink/10 border-t ${
           row.itemsRequested.status === "Pending" ? "font-bold" : ""
         } ${
           selectedRows.includes(row.id)

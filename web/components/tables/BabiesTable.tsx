@@ -90,7 +90,7 @@ function BabiesTable({ props }: any) {
                               return newOpen;
                             });
                           }}
-                          className="cursor-pointer hover:bg-[#B143781A]"
+                          className="cursor-pointer hover:bg-mbb-pink/10"
                           {...row.getRowProps()}
                         >
                           <td className="border-t">
