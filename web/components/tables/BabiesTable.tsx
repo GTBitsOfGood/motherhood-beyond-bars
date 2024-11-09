@@ -1,12 +1,12 @@
+import Modal from "@components/modal";
 import ChildModal from "@components/modals/ChildModal";
+import { getCaregiver } from "db/actions/admin/Caregiver";
 import Image from "next/image";
 import React, { useState } from "react";
-import { useTable } from "react-table";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { useTable } from "react-table";
 import book from "../../public/book.svg";
 import dots from "../../public/dots.png";
-import Modal from "@components/modal";
-import { getCaregiver } from "db/actions/admin/Caregiver";
 
 function BabiesTable({ props }: any) {
   if (!props) {
@@ -90,7 +90,7 @@ function BabiesTable({ props }: any) {
                               return newOpen;
                             });
                           }}
-                          className="cursor-pointer"
+                          className="cursor-pointer hover:bg-mbb-pink/10"
                           {...row.getRowProps()}
                         >
                           <td className="border-t">

@@ -22,12 +22,15 @@ interface RawBabyImage {
   caregiverID: DocumentReference;
 }
 
-export default async function handler(
+const getFilename = (url: string) =>
+  new URL(url).pathname.split("/").findLast(() => true);
+
+export default async function downloadSelected(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!req.query.content || !req.query.iv) {
-    res.status(200).json({ message: "baby ID and iv required." });
+  if (!req.query.content || !req.query.iv || !req.query.ids) {
+    res.status(200).json({ message: "baby ID, iv, and ids required." });
   } else {
     const babyId = decrypt({
       content: req.query.content as string,
@@ -40,21 +43,44 @@ export default async function handler(
       const data = doc.data();
 
       return {
-        id: (data.caption !== "" ? data.caption : v4()) + ".png",
+        id: doc.id,
+        name: (data.caption !== "" ? data.caption : v4()) + ".png",
         ...(data as RawBabyImage),
       };
     });
 
+    const ids = new Set(decodeURIComponent(req.query.ids as string).split(","));
+
     const responses = await Promise.all(
-      babyBooks.map((babyBook) =>
-        fetch(babyBook.imageURL)
-          .then((res) => res.arrayBuffer())
-          .then((data) => [babyBook, data] as const)
-      )
+      babyBooks
+        .filter((book) => ids.has(book.id))
+        .map((babyBook) =>
+          fetch(babyBook.imageURL)
+            .then((res) => res.arrayBuffer())
+            .then((data) => [babyBook, data] as const)
+        )
     );
+
+    if (responses.length === 1) {
+      // Only selected 1 image to download, so don't bother ZIPing
+      const [book, data] = responses[0];
+      const url = new URL(book.imageURL);
+      const fileExt = url.pathname.split(".").findLast(() => true);
+
+      res.setHeader("Content-Type", `image/${fileExt}`);
+      res.setHeader("Content-Length", data.byteLength);
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=${book.name}.${fileExt}`
+      );
+      res.write(Buffer.from(data), "binary");
+      res.end();
+      return;
+    }
+
     const zip = new JSZip();
     for (const [book, data] of responses) {
-      zip.file(book.id, data);
+      zip.file(book.name, data);
     }
 
     const content = await zip.generateAsync({
