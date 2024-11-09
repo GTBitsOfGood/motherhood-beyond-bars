@@ -55,7 +55,7 @@ export default function TextInput({
         placeholder={placeholder}
         value={value}
       />
-      {error && <ErrorText error={error} />}
+      {<ErrorText error={error} />}
     </div>
   );
 }
