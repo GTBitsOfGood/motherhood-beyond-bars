@@ -8,11 +8,8 @@ import { useTable } from "react-table";
 import book from "../../public/book.svg";
 import dots from "../../public/dots.png";
 
-function BabiesTable({ props }: any) {
-  if (!props) {
-    return <></>;
-  }
-  const { columns, data, onEdit, onDelete } = props;
+function BabiesTable({ tableProps, open, setOpen }: any) {
+  const { columns, data, onEdit, onDelete } = tableProps;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -22,7 +19,6 @@ function BabiesTable({ props }: any) {
   const [editModal, toggleEditModal] = useState(false);
   const [babyData, setBabyData] = useState({});
   const [selectedOptionsPanel, setSelectedOptionsPanel] = useState(-1);
-  const [open, setOpen] = useState(Array(data.length).fill(false));
   const [caretakerContacts, setCaretakerContacts] = useState<any[]>(
     Array(data.length).fill(null)
   );
@@ -84,7 +80,7 @@ function BabiesTable({ props }: any) {
                         <tr
                           onClick={() => {
                             getCaretakerContact(i);
-                            setOpen((prevOpen) => {
+                            setOpen((prevOpen: boolean[]) => {
                               const newOpen = [...prevOpen];
                               newOpen[i] = !newOpen[i];
                               return newOpen;

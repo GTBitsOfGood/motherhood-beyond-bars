@@ -12,6 +12,8 @@ export default function PaginatedTable({
   onNextPage,
   onPrevPage,
   onSearch,
+  open,
+  setOpen,
 }: any) {
   return (
     <>
@@ -19,9 +21,17 @@ export default function PaginatedTable({
         <SearchBar onSearch={onSearch} />
         <div className="overflow-auto h-[68vh]">
           {type == BABIES_TAB ? (
-            <BabiesTable props={tableProps} />
+            <BabiesTable
+              tableProps={tableProps}
+              open={open}
+              setOpen={setOpen}
+            />
           ) : type == CAREGIVERS_TAB ? (
-            <CaretakerTable props={tableProps} />
+            <CaretakerTable
+              tableProps={tableProps}
+              open={open}
+              setOpen={setOpen}
+            />
           ) : (
             <></>
           )}
