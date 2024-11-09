@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import {
   addNewChild,
@@ -25,6 +25,16 @@ export default function genChildrenAndBabyBooksTab() {
   const [filteredBabies, setFilteredBabies] = useState<any[]>([]); // Store filtered babies
   const [currPage, setCurrPage] = useState(1);
   const [addModal, toggleAddModal] = useState(false);
+
+  const [paginationSize, setPaginationSize] = useState(5);
+
+  useEffect(() => {
+    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 72.5; 
+    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    const entryHeight = 97;
+    const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
+    setPaginationSize(numEntries);
+  })
 
   const columns = React.useMemo(
     () => [
@@ -53,8 +63,8 @@ export default function genChildrenAndBabyBooksTab() {
   const tableProps = {
     columns: columns,
     data: filteredBabies.slice(
-      (currPage - 1) * PAGINATION_PAGE_SIZE,
-      currPage * PAGINATION_PAGE_SIZE
+      (currPage - 1) * paginationSize,
+      currPage * paginationSize
     ),
     onEdit: handleEdit,
     onDelete: handleDelete,
@@ -63,6 +73,7 @@ export default function genChildrenAndBabyBooksTab() {
   const paginatedProps = {
     totalRecords: filteredBabies.length, // Use filtered data for pagination
     pageNumber: currPage,
+    pageSize: paginationSize,
   };
 
   async function loadData() {
@@ -92,7 +103,7 @@ export default function genChildrenAndBabyBooksTab() {
 
   return (
     <div>
-      <div className="flex flex-col border-t">
+      <div className="w-full h-full flex flex-col border-t">
         <div className="flex flex-row justify-between mx-9 my-4">
           <div className="flex flex-row gap-6 items-center">
             <h1 className="text-2xl font-bold">Children</h1>
