@@ -119,6 +119,9 @@ function BabiesTable({ props }: any) {
                                 href={row.cells.slice(-1)[0].value}
                                 className="text-mbb-pink"
                                 target="_blank"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                }}
                               >
                                 Baby Book
                               </a>

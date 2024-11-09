@@ -48,12 +48,16 @@ export async function getCurrentCaregiver(context: GetServerSidePropsContext) {
         delete caregiver.createdAt;
       }
 
-      for (let i = 0; i < caregiver.babies.length; i++) {
-        const baby = await getDoc(
-          caregiver.babies[i] as DocumentReference<DocumentData>
-        );
-        const babyData: Baby = baby.data() as Baby;
-        caregiver.babies[i] = { ...babyData, id: caregiver.babies[i].id };
+      if (caregiver.babies) {
+        for (let i = 0; i < caregiver.babies.length; i++) {
+          const baby = await getDoc(
+            caregiver.babies[i] as DocumentReference<DocumentData>
+          );
+          const babyData: Baby = baby.data() as Baby;
+          caregiver.babies[i] = { ...babyData, id: caregiver.babies[i].id };
+        }
+      } else {
+        caregiver.babies = [];
       }
 
       return caregiver;

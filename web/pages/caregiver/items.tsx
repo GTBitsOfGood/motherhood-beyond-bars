@@ -3,6 +3,7 @@ import { GetServerSidePropsContext } from "next";
 
 import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
 import { getItems } from "db/actions/shared/Items";
+import { requestItems } from "db/actions/caregiver/Item";
 
 import { Caregiver } from "@lib/types/users";
 import { Item } from "@lib/types/items";
@@ -46,9 +47,18 @@ export default function Items({ items, caregiver }: Props) {
       ) : (
         <RequestItems
           items={items}
-          caregiver={caregiver}
           setShowRequestItems={setShowRequestItems}
-          setRequestedItems={setRequestedItems}
+          requestItems={(data: Item[], comments: string) => {
+            // TODO if user makes two item requests, replaces most recent item with that request on frontend
+            requestItems(caregiver, data, comments)
+              .then((allItems: Item[]) => {
+                setRequestedItems(allItems);
+                setShowRequestItems(false);
+              })
+              .catch(() => {
+                // TODO show error message
+              });
+          }}
         />
       )}
     </div>

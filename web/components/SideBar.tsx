@@ -15,7 +15,7 @@ function SideBar(props: any) {
 
   useEffect(() => {
     setRoute(window.location.pathname);
-  }, []);
+  });
 
   useEffect(() => {
     const q = query(collection(db, "caregivers"));

@@ -1,7 +1,5 @@
 import { useState, SetStateAction } from "react";
 
-import { requestItems } from "db/actions/caregiver/Item";
-import { Caregiver } from "@lib/types/users";
 import { Item } from "@lib/types/items";
 
 import ItemCard from "@components/ItemRequests/ItemCard";
@@ -10,26 +8,31 @@ import BackButton from "@components/atoms/BackButton";
 
 type Props = {
   items: Item[];
-  caregiver: Caregiver;
-  setShowRequestItems: (value: SetStateAction<boolean>) => void;
-  setRequestedItems: (value: SetStateAction<Item[]>) => void;
+  setShowRequestItems?: (value: SetStateAction<boolean>) => void;
+  requestItems?: (data: Item[], comments: string) => void;
+  onboarding?: boolean;
 };
 
 export default function RequestItems({
   items,
-  caregiver,
   setShowRequestItems,
-  setRequestedItems,
+  requestItems,
+  onboarding = false,
 }: Props) {
   const [comments, setComments] = useState<string>("");
   const [data, setData] = useState<Item[]>(
-    items.filter((item) => !item.onboardingOnly)
+    onboarding ? items : items.filter((item) => !item.onboardingOnly)
   );
 
   return (
     <div className="w-full p-6 flex-col justify-start items-start gap-[1.438rem] inline-flex sm:py-8 sm:px-24">
-      <BackButton darkerColor onClick={() => setShowRequestItems(false)} />
-      <div className="flex-col justify-start items-start gap-3 flex">
+      {setShowRequestItems && (
+        <BackButton darkerColor onClick={() => setShowRequestItems(false)} />
+      )}
+      <div
+        className={`flex-col items-start justify-start gap-3 flex
+          ${onboarding ? "sm:items-center sm:text-center sm:w-[60%] sm:self-center" : ""}`}
+      >
         <div className="text-2xl font-bold">Request Items</div>
         Motherhood Beyond Bars will deliver you supplies, so you’re ready for
         the child!
@@ -58,20 +61,12 @@ export default function RequestItems({
         ></textarea>
       </div>
       <div className="w-full sm:flex sm:flex-col sm:justify-center sm:items-center sm:mt-2">
-        <div className="flex-col justify-start items-start gap-3 flex">
+        <div
+          className={`justify-start items-start gap-3 flex ${onboarding ? "flex-col-reverse" : "flex-col"}`}
+        >
           <Button
-            text="Request"
-            onClick={() => {
-              // TODO if user makes two item requests, replaces most recent item with that request on frontend
-              requestItems(caregiver, data as Item[], comments)
-                .then((allItems: Item[]) => {
-                  setRequestedItems(allItems);
-                  setShowRequestItems(false);
-                })
-                .catch(() => {
-                  // TODO show error message
-                });
-            }}
+            text={onboarding ? "Next" : "Request"}
+            onClick={() => (requestItems ? requestItems(data, comments) : null)}
           ></Button>
           <div className="text-dark-gray text-sm">
             Expect a call from us to confirm the order details!

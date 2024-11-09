@@ -25,7 +25,7 @@ function SignOutButton() {
   return (
     <button
       onClick={logout}
-      className="self-stretch text-mbb-pink text-base font-semibold"
+      className="px-2 py-2 text-base font-semibold text-mbb-pink"
     >
       Log out
     </button>
