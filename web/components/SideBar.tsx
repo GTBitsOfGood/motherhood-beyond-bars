@@ -69,23 +69,27 @@ function SideBar(props: any) {
                       }
                     }}
                   >
-                    <div className={`${item.name === "Item Requests" ? "" : "flex-col"}`}>
+                    <div
+                      className={`${item.name === "Item Requests" ? "" : "flex-col"}`}
+                    >
                       <div className="flex items-center">
                         <Image src={item.icon} alt={item.name} />
                         <span className={`text-base font-semibold ml-4`}>
                           {item.name}
                         </span>
-                        {/* {item.name === "Item Requests" && (
-                          <span className="px-2 bg-red-500 text-white ml-2 rounded">
-                            {pendingCount} pending
-                          </span>
-                        )} */}
                       </div>
-                      {item.name === "Item Requests" && router.asPath.includes("/item") &&
-                        <button className={`ml-9 mt-1 focus:outline-none focus:border-none focus:ring-0 hover:text-white ${router.asPath.includes("/item-management") ? "text-white" : "text-navbar-gray-text"}`} onClick={() => router.push("/admin/item-management")}>
-                          Item Managment
-                        </button>
-                      }
+                      {item.name === "Item Requests" &&
+                        router.asPath.includes("/item") && (
+                          <button
+                            className={`ml-9 mt-1 focus:outline-none focus:border-none focus:ring-0 hover:text-white hover:font-semibold
+                              ${router.asPath.includes("/item-management") ? "text-white font-semibold" : "text-navbar-gray-text"}`}
+                            onClick={() =>
+                              router.push("/admin/item-management")
+                            }
+                          >
+                            Item Managment
+                          </button>
+                        )}
                     </div>
                   </li>
                 </Link>
