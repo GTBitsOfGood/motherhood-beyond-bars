@@ -1,9 +1,9 @@
+import { BABIES_TAB, CAREGIVERS_TAB } from "@lib/utils/consts";
 import {
   DocumentData,
   QueryDocumentSnapshot,
   Timestamp,
 } from "firebase/firestore";
-import { BABIES_TAB, CAREGIVERS_TAB } from "@lib/utils/consts";
 
 export interface User {
   name: string;

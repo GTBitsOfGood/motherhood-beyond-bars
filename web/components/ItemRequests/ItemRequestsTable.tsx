@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ItemRequestRow from "./ItemRequestRow";
-import { Caregiver } from "pages/admin/item-requests";
+import { Caregiver } from "@lib/types/users";
 
 function ItemRequestsTable({
   columns,

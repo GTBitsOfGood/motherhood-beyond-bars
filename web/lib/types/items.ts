@@ -1,14 +1,23 @@
 import { Timestamp } from "firebase/firestore";
 
+export interface AdditionalInfoField {
+  boxTitle: string;
+  placeholder: string;
+  value?: string;
+}
+
 export interface Item {
-  name: string;
-  gender?: string;
-  size?: string;
+  id?: string; // Optional, since Firestore generates it
+  title: string;
+  description: string;
+  onboardingOnly: boolean;
+  additionalInfo?: AdditionalInfoField[];
+  checked?: boolean;
 }
 
 export interface ItemRequest {
-  created: Timestamp;
-  updated: Timestamp;
+  created: Timestamp | null;
+  updated: Timestamp | null;
   additionalComments: string[];
   status: string;
   items: Item[];

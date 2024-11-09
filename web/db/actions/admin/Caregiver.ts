@@ -9,6 +9,8 @@ import {
   updateDoc,
   getDoc,
   orderBy,
+  DocumentReference,
+  DocumentData,
 } from "firebase/firestore";
 
 import { db } from "db/firebase";
@@ -103,7 +105,7 @@ export const deleteCaretaker = async (caretaker: Caregiver) => {
   const caretakerID = caretaker.id;
 
   try {
-    await removeCaretakerFromBabies(caretaker.babies);
+    await removeCaretakerFromBabies(caretaker.babies as DocumentReference<DocumentData>[]);
     await deleteDoc(doc(db, path, caretakerID));
   } catch (error) {
     throw new FailedToDeleteError(docType);

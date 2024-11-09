@@ -224,7 +224,7 @@ export default function SignUpScreen() {
                     ></Button>
                   </div>
                   {page === 1 && (
-                    <div className="mb-6 sm:mb-2">
+                    <div className="flex mb-6 sm:mb-2 items-center justify-center">
                       <Button
                         text="Sign up with Google"
                         type="Google"

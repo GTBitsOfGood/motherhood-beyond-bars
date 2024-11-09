@@ -15,6 +15,18 @@ html, body, #app, #app>div {
   input[type="radio"]:focus {
     @apply ring-mbb-pink;
   }
+
+  input[type="checkbox"] {
+    @apply accent-mbb-pink;
+  }
+
+  input:focus {
+    @apply ring-1 ring-primary-text border border-primary-text
+  }
+
+  button:focus {
+    @apply ring-1 ring-primary-text border border-primary-text
+  }
 }
 
 td {

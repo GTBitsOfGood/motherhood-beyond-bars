@@ -1,4 +1,9 @@
-import { GetServerSideProps } from "next";
+import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
+
+import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
+import { encrypt } from "@lib/utils/encryption";
+import { Baby } from "@lib/types/baby";
 
 import Button from "@components/atoms/Button";
 import LockIcon from "@components/Icons/LockIcon";
@@ -17,7 +22,6 @@ import { useState } from "react";
 import RightChevronIcon from "@components/Icons/RightChevronIcon";
 
 interface Props {
-  babies: any[];
   books: { name: string; birthday: string; bookLink: string }[];
   mediaReleaseWaiver?: BrowserWaiver;
   signedMediaRelease: boolean;
@@ -28,7 +32,6 @@ const mdRender = new MarkdownIt();
 // TODO add topbar and merge designs
 
 export default function BabyBookHome({
-  babies,
   books,
   mediaReleaseWaiver,
   signedMediaRelease,
@@ -44,7 +47,7 @@ export default function BabyBookHome({
   const [notSigning, setNotSigning] = useState(false);
   const showForm = !signedMediaRelease && !notSigning;
 
-  if (babies.length === 0) {
+  if (books.length === 0) {
     return (
       <div className="w-full h-full">
         <TitleTopBar title="Baby Book" />
@@ -70,6 +73,7 @@ export default function BabyBookHome({
     );
   }
 
+  // TODO update logic
   if (books.length === 0) {
     if (showForm) {
       if (!mediaReleaseWaiver) {
@@ -222,6 +226,10 @@ export default function BabyBookHome({
     );
   }
 
+  if (books.length === 1) {
+    router.push(books[0].bookLink);
+  }
+
   return (
     <div className="w-full h-full">
       <TitleTopBar title="Baby Book" />
@@ -250,10 +258,15 @@ export default function BabyBookHome({
 
 const MEDIA_RELEASE_WAIVER_NAME = "Media Release";
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  query,
-  req,
-}) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const caregiver = await getCurrentCaregiver(context);
+
+  if (!caregiver) {
+    return { props: { books: [] } };
+  }
+
   const waivers = await getWaivers();
   const mediaRelease = waivers.find(
     (w) => w.name === MEDIA_RELEASE_WAIVER_NAME
@@ -264,39 +277,20 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
       (w) => w.name === MEDIA_RELEASE_WAIVER_NAME
     ) ?? false;
 
-  const sampleBooks = [
-    {
-      name: "John",
-      birthday: "11/13/2204",
-      bookLink:
-        "/caregiver/book/bd89888ca382e490a04183167a810518f2aa9f39?iv=af3abe9304c706f681857b64fc4e6127",
-    },
-    {
-      name: "Joe",
-      birthday: "11/13/2104",
-      bookLink: "/link/link2",
-    },
-    {
-      name: "Joslyn",
-      birthday: "11/13/2004",
-      bookLink: "/link/link3",
-    },
-  ];
+  const books = caregiver.babies.map((baby) => {
+    baby = baby as Baby;
+    const { iv, content } = encrypt(baby.id);
 
-  // TODO: implement actual book fetching here
+    return {
+      name: baby.firstName,
+      birthday: baby.dob,
+      bookLink: `/caregiver/book/${content}?iv=${iv}`,
+    };
+  });
+
   return {
     props: {
-      babies: [""],
-      books: [],
-      signedMediaRelease,
-      mediaReleaseWaiver: mediaRelease
-        ? {
-            ...mediaRelease,
-            lastUpdated: (mediaRelease.lastUpdated as Timestamp)
-              ?.toDate()
-              ?.toISOString(),
-          }
-        : undefined,
+      books: books,
     },
   };
 };

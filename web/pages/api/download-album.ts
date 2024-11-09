@@ -40,7 +40,7 @@ export default async function handler(
       const data = doc.data();
 
       return {
-        id: data.caption !== "" ? data.caption : v4(),
+        id: (data.caption !== "" ? data.caption : v4()) + ".png" ,
         ...(data as RawBabyImage),
       };
     });

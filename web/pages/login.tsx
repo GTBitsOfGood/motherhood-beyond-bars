@@ -66,9 +66,14 @@ export default function LoginScreen() {
                   }}
                 ></TextInput>
                 <div className="flex justify-end mb-9 sm:mb-10">
-                  <div className="w-auto text-center text-mbb-pink text-sm font-semibold font-opensans">
+                  <button
+                    className="w-auto text-center text-mbb-pink text-sm font-semibold font-opensans"
+                    onClick={() => {
+                      router.push("/forgotPassword");
+                    }}
+                  >
                     Forgot Password
-                  </div>
+                  </button>
                 </div>
                 <div className="mb-5 sm:mb-7">
                   <Button
@@ -94,7 +99,7 @@ export default function LoginScreen() {
                     }}
                   />
                 </div>
-                <div className="mb-10">
+                <div className="mb-10 flex justify-center items-center">
                   <Button
                     text="Sign in with Google"
                     type="Google"

@@ -1,8 +1,8 @@
-const LeftChevronIcon = () => {
+const LeftChevronIcon = ({ width = 12, height = 20 }) => {
   return (
     <svg
-      width="12"
-      height="20"
+      width={width}
+      height={height}
       className="fill-current"
       viewBox="0 0 12 20"
       fill="none"

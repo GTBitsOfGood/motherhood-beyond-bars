@@ -138,28 +138,3 @@ export const deleteBaby = async (baby: any) => {
 
   removeBabyFromCaretaker(caretakerID, babyRef);
 };
-
-// If before this code is deployed, new babies are added, just call and run this function
-// To see all caregivers when sorting by baby count every caregiver needs a babycount
-// This sets it to 0 if there exist caregivers without baby counts
-// Can delete this function once this PR is merged into main
-async function resetBabyCountForCaregiversWithoutCount() {
-  const caregiversCollection = collection(db, "caregivers");
-  const batch = writeBatch(db);
-
-  try {
-    const snapshot = await getDocs(caregiversCollection);
-    snapshot.forEach((doc) => {
-      const caregiverRef = doc.ref;
-      if (!doc.data().babyCount) {
-        batch.set(caregiverRef, { babyCount: 0, babies: [] }, { merge: true });
-      }
-    });
-    await batch.commit();
-    console.log(
-      "Caregiver documents updated to have babyCount set to 0 where it was missing."
-    );
-  } catch (error) {
-    console.error("Error updating caregiver documents: ", error);
-  }
-}
