@@ -26,7 +26,7 @@ export default function Button({
     styles =
       "w-60 text-primary-text font-opensans text-start text-sm sm:text-base";
   } else {
-    styles = `text-mbb-pink px-4 pt-2 pb-[0.5625rem] text-base font-opensans border-mbb-pink rounded gap-2`;
+    styles = `text-mbb-pink px-4 pt-2 pb-[0.5625rem] text-base font-opensans border-mbb-pink rounded gap-2 hover:bg-mbb-pink-hover active:bg-mbb-pink active:text-white active:stroke-white`;
     if (type === "primary") {
       styles += " border";
     }

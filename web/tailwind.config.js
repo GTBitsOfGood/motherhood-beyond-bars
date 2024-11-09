@@ -30,6 +30,7 @@ module.exports = {
         background: "#FFFFFF",
         "secondary-background": "#FAFBFC",
         "mbb-pink": "#B14378",
+        "mbb-pink-hover": "#B1437833",
         "primary-text": "#000000",
         "secondary-text": "#1A1A1A",
         "light-gray": "#D9D9D9",

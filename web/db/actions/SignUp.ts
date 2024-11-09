@@ -41,7 +41,7 @@ export async function createCaregiverAccount(
   userCredential: UserCredential | undefined,
   firstName: string,
   lastName: string,
-  phoneNumber: string,
+  phoneNumber: string
 ) {
   const authData = userCredential ? userCredential.user : undefined;
 
@@ -53,7 +53,7 @@ export async function createCaregiverAccount(
       phoneNumber: phoneNumber,
       email: authData?.email,
       auth: authData?.uid,
-      babyCount: 0
+      babyCount: 0,
     });
     return { success: true };
   } catch (error) {
