@@ -1,6 +1,6 @@
 import { getAuth } from "firebase-admin/auth";
 import { NextApiRequest, NextApiResponse } from "next";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "db/firebase"; // Import Firestore db from your firebase setup
 import admin from "db/firebase/admin"; // Import initialized Firebase Admin SDK
 
@@ -32,12 +32,22 @@ export default async function handler(
         isAdmin = true;
       }
     }
+    let onboarding = false;
+    if (!isAdmin) {
+      const caregiverRef = doc(collection(db, "caregivers"), caregiverId);
+      const caregiverDoc = await getDoc(caregiverRef);
+      if (caregiverDoc && caregiverDoc.exists()) {
+        const caregiver = caregiverDoc.data();
+        onboarding = caregiver?.onboarding ?? false;
+      }
+    }
 
     // Return the caregiver ID and admin status
     return res.status(200).json({
       success: true,
       caregiverId: caregiverId,
       isAdmin: isAdmin, // Return the admin status based on Firestore
+      onboarding: onboarding,
     });
   } catch (error) {
     return res.status(401).json({ success: false, error: "Invalid token" });

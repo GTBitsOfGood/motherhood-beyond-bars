@@ -1,5 +1,3 @@
-import { doc, collection, getDoc } from "@firebase/firestore";
-import { db } from "db/firebase";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -78,23 +76,14 @@ export async function middleware(req: NextRequest) {
       req.nextUrl.pathname.startsWith("/caregiver") &&
       !req.nextUrl.pathname.includes("onboarding")
     ) {
-      const caregiverRef = doc(
-        collection(db, "caregivers"),
-        result.caregiverId
-      );
-      const caregiverDoc = await getDoc(caregiverRef);
-
-      if (caregiverDoc && caregiverDoc.exists()) {
-        const caregiver = caregiverDoc.data();
-        if (caregiver?.onboarding) {
-          return NextResponse.next();
-        } else {
-          url.pathname = caregiverOnboarding;
-          return NextResponse.redirect(url);
-        }
+      const isOnboarding = result.onboarding;
+      if (isOnboarding) {
+        return NextResponse.next();
+      } else {
+        url.pathname = caregiverOnboarding;
+        return NextResponse.redirect(url);
       }
     }
-
     return NextResponse.next(); // Token exists, allow access
   } catch (error) {
     url.pathname = "/login";
