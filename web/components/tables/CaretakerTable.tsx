@@ -80,7 +80,7 @@ function CaretakerTable({ tableProps, open, setOpen }: any) {
                       <tr
                         onClick={() => {
                           getBabies(i); // Fetch babies when caregiver row is clicked
-                          setOpen((prevOpen) => {
+                          setOpen((prevOpen: boolean[]) => {
                             const newOpen = [...prevOpen];
                             newOpen[i] = !newOpen[i];
                             return newOpen;

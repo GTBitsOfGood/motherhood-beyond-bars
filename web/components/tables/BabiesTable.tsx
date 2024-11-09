@@ -80,7 +80,7 @@ function BabiesTable({ tableProps, open, setOpen }: any) {
                         <tr
                           onClick={() => {
                             getCaretakerContact(i);
-                            setOpen((prevOpen) => {
+                            setOpen((prevOpen: boolean[]) => {
                               const newOpen = [...prevOpen];
                               newOpen[i] = !newOpen[i];
                               return newOpen;
