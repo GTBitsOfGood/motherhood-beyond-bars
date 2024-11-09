@@ -8,17 +8,17 @@ import {
 } from "db/actions/admin/Baby";
 
 import PaginatedTable from "@components/tables/PaginatedTable";
-import ButtonWithIcon from "@components/buttonWithIcon";
 import Modal from "@components/modal";
 import ChildModal from "@components/modals/ChildModal";
 import { BABIES_TAB } from "@lib/utils/consts";
 import { PAGINATION_PAGE_SIZE } from "db/consts";
 import { useRouter } from "next/router";
 import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
+import Button from "@components/atoms/Button";
 
 const tab = BABIES_TAB;
 
-export default function genChildrenAndBabyBooksTab() {
+export default function GenChildrenAndBabyBooksTab() {
   const router = useRouter();
   const { caregiver } = router.query;
   const [babies, setBabies] = useState<any[]>([]);
@@ -101,7 +101,7 @@ export default function genChildrenAndBabyBooksTab() {
             </h2>
           </div>
           <div>
-            <ButtonWithIcon
+            <Button
               icon={<FaPlus />}
               text="Add a child"
               onClick={() => toggleAddModal(true)}

@@ -1,3 +1,4 @@
+import Button from "@components/atoms/Button";
 import DatePicker from "@components/atoms/DatePicker";
 import SearchableDropdown from "@components/atoms/SearchInput";
 import { getCaregivers } from "db/actions/admin/Caregiver";
@@ -186,22 +187,19 @@ function ChildModal({
                         {...register("hospitalName", { required: false })}
                       />
                     </div>
-                    <div className="form-group flex justify-end w-full col-span-2 mt-5">
-                      <button
-                        className="px-4 py-2 rounded-md text-md text-mbb-pink font-semibold"
+                    <div className="form-group flex justify-end w-full col-span-2 mt-5 gap-4">
+                      <Button
+                        text="Cancel"
+                        type="secondary"
                         onClick={closeModal}
-                      >
-                        Cancel
-                      </button>
-                      <button
+                        width="auto"
+                      />
+                      <Button
                         disabled={isSubmitting}
-                        type="submit"
-                        className={`"bg-transparent hover:bg-mbb-pink text-mbb-pink font-semibold hover:text-white py-2 px-4 border border-mbb-pink hover:border-transparent rounded" ${
-                          isSubmitting && "opacity-50 cursor-not-allowed"
-                        }`}
-                      >
-                        {buttonText}
-                      </button>
+                        submit
+                        text={buttonText}
+                        width="auto"
+                      />
                     </div>
                     {values && values.id && (
                       <input
