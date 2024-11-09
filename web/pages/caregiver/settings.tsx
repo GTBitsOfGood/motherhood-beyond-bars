@@ -15,7 +15,12 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
   const [editingSection, setEditingSection] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [caregiverData, setCaregiverData] = useState(caregiver);
+  const [formData, setFormData] = useState({
+    ...caregiver,
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   const {
     register,
@@ -27,7 +32,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
     getValues,
   } = useForm({
     mode: "onChange",
-    defaultValues: caregiverData,
+    defaultValues: formData,
   });
 
   const handleChangePassword = () => {
@@ -39,17 +44,25 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
     let updateData: any; // Declare updateData once
 
     if (editingSection === "password") {
-      updateData = getValues(["newPassword"]); // Pass the required fields as an array
+      const newPassword = getValues(["newPassword"]);
+      updateData = {
+        password: newPassword,
+      }
     } else if (editingSection === "account") {
-      updateData = getValues(["firstName", "lastName", "email", "phoneNumber"]);
+      updateData = {
+        firstName: getValues(["firstName"])[0],
+        lastName: getValues(["lastName"])[0],
+        email: getValues(["email"])[0],
+        phoneNumber: getValues(["phoneNumber"])[0],
+      }
     } else if (editingSection === "address") {
-      updateData = getValues([
-        "streetAddress",
-        "apartment",
-        "city",
-        "state",
-        "zipCode",
-      ]);
+      updateData = {
+        address: getValues(["address"])[0],
+        apartment: getValues(["apartment"])[0],
+        city: getValues(["city"])[0],
+        state: getValues(["state"])[0],
+        zipCode: getValues(["zipCode"])[0],
+      };
     }
 
     setEditingSection("");
@@ -57,6 +70,19 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
     setSubmitting(true);
     try {
       await updateCaregiver(auth.currentUser?.uid, updateData);
+
+      setFormData((prevData) => ({
+        ...prevData,
+        ...updateData,
+      }));
+  
+      reset({
+        ...formData,
+        ...updateData,
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -66,7 +92,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
     // Navigate to the appropriate screen when back button is clicked
     if (editingSection === "password") {
       setEditingSection("account"); // Go back to account editing
-      reset(caregiverData);
+      reset(formData);
     } else {
       setShowModal(true);
       // setEditingSection(""); // Go back to the main settings view
@@ -129,7 +155,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                   First Name
                 </div>
                 <div className="self-stretch text-black text-base font-normal leading-normal">
-                  {caregiverData.firstName}
+                  {formData.firstName}
                 </div>
               </div>
               <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
@@ -137,7 +163,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                   Last Name
                 </div>
                 <div className="self-stretch text-black text-base font-normal leading-normal">
-                  {caregiverData.lastName}
+                  {formData.lastName}
                 </div>
               </div>
               <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
@@ -145,7 +171,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                   Email
                 </div>
                 <div className="self-stretch text-black text-base font-normal leading-normal">
-                  {caregiverData.email}
+                  {formData.email}
                 </div>
               </div>
               <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
@@ -153,7 +179,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                   Phone Number
                 </div>
                 <div className="self-stretch text-black text-base font-normal leading-normal">
-                  {caregiverData.phoneNumber}
+                  {formData.phoneNumber}
                 </div>
               </div>
               <div className="h-[46px] flex-col justify-start items-start gap-[3px] flex">
@@ -178,10 +204,10 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                 </button>
               </div>
               <div className="self-stretch text-black text-base font-normal">
-                {caregiverData.address}, {caregiverData.apartment}
+                {formData.address}, {formData.apartment}
                 <br />
-                {caregiverData.city}, {caregiverData.state}{" "}
-                {caregiverData.zipCode}
+                {formData.city}, {formData.state}{" "}
+                {formData.zipCode}
               </div>
             </div>
             <div className="self-start">
@@ -226,7 +252,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                     required: "First name is required",
                   })}
                   placeholder="First Name"
-                  currentValue={caregiverData.firstName}
+                  currentValue={formData.firstName}
                   error={errors.firstName?.message as string}
                   onChange={(value) => setValue("firstName", value)}
                 />
@@ -236,7 +262,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                     required: "Last name is required",
                   })}
                   placeholder="Last Name"
-                  currentValue={caregiverData.lastName}
+                  currentValue={formData.lastName}
                   error={errors.lastName?.message as string}
                   onChange={(value) => setValue("lastName", value)}
                 />
@@ -249,13 +275,13 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
                     </div>
                   </div>
                   <div className="self-stretch text-black text-base font-normal font-['Open Sans'] leading-normal">
-                    {caregiverData.email}
+                    {formData.email}
                   </div>
                 </div>
                 <TextInput
                   label="Phone Number"
                   {...register("phoneNumber")}
-                  currentValue={caregiverData.phoneNumber}
+                  currentValue={formData.phoneNumber}
                   onChange={(value) => setValue("phoneNumber", value)}
                 />
               </>
@@ -385,7 +411,7 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
             >
               <TextInput
                 label="Street Address"
-                currentValue={caregiverData.address}
+                currentValue={formData.address}
                 {...register("address", {
                   required: "Street address is required",
                 })}
@@ -394,14 +420,14 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
               />
               <TextInput
                 label="Apartment"
-                currentValue={caregiverData.apartment}
+                currentValue={formData.apartment}
                 {...register("apartment")}
                 error={errors.apartment?.message as string}
                 onChange={(value) => setValue("apartment", value)}
               />
               <TextInput
                 label="City"
-                currentValue={caregiverData.city}
+                currentValue={formData.city}
                 {...register("city", { required: "City is required" })}
                 error={errors.city?.message as string}
                 onChange={(value) => setValue("city", value)}
@@ -409,14 +435,14 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
               {/* TODO change to Dropdown with states like in Onboarding */}
               <TextInput
                 label="State"
-                currentValue={caregiverData.state}
+                currentValue={formData.state}
                 {...register("state", { required: "State is required" })}
                 error={errors.state?.message as string}
                 onChange={(value) => setValue("state", value)}
               />
               <TextInput
                 label="Zip Code"
-                currentValue={caregiverData.zipCode}
+                currentValue={formData.zipCode}
                 {...register("zipCode", { required: "Zip code is required" })}
                 error={errors.zipCode?.message as string}
                 onChange={(value) => setValue("zipCode", value)}
