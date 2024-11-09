@@ -23,7 +23,7 @@ import RightChevronIcon from "@components/Icons/RightChevronIcon";
 
 interface Props {
   books: { name: string; birthday: string; bookLink: string }[];
-  mediaReleaseWaiver?: BrowserWaiver;
+  mediaReleaseWaiver: BrowserWaiver | null;
   signedMediaRelease: boolean;
 }
 
@@ -269,7 +269,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       props: {
         books: [],
         signedMediaRelease: false,
-        mediaReleaseWaiver: undefined,
+        mediaReleaseWaiver: null,
       },
     };
   }
@@ -305,7 +305,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
               .toDate()
               .toISOString(),
           }
-        : undefined,
+        : null,
     },
   };
 };
