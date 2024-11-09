@@ -12,6 +12,7 @@ import NavBarLogo from "./logos/NavBarLogo";
 function SideBar(props: any) {
   const [pendingCount, setPendingCount] = useState();
   const [route, setRoute] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     setRoute(window.location.pathname);
@@ -52,7 +53,10 @@ function SideBar(props: any) {
           ).map((item: any, idx: number) => (
             <ul
               key={idx}
-              className={`px-8 py-2 flex-col justify-center items-center ${item.route === route ? "bg-gray-600 text-white" : "text-navbar-gray-text hover:text-white"}`}
+              className={`px-8 py-2 flex-col justify-center items-center  
+                ${item.route === route ? "bg-gray-600 text-white" : "text-navbar-gray-text hover:text-white"}
+                ${item.name === "Item Requests" && router.asPath.includes("/item-management") ? "bg-gray-600" : ""}
+              `}
             >
               <div className="my-auto" key={idx}>
                 <Link href={item.route} key={idx}>
@@ -65,16 +69,23 @@ function SideBar(props: any) {
                       }
                     }}
                   >
-                    <div className="flex items-center">
-                      <Image src={item.icon} alt={item.name} />
-                      <span className={`text-base font-semibold ml-4`}>
-                        {item.name}
-                      </span>
-                      {/* {item.name === "Item Requests" && (
-                        <span className="px-2 bg-red-500 text-white ml-2 rounded">
-                          {pendingCount} pending
+                    <div className={`${item.name === "Item Requests" ? "" : "flex-col"}`}>
+                      <div className="flex items-center">
+                        <Image src={item.icon} alt={item.name} />
+                        <span className={`text-base font-semibold ml-4`}>
+                          {item.name}
                         </span>
-                      )} */}
+                        {/* {item.name === "Item Requests" && (
+                          <span className="px-2 bg-red-500 text-white ml-2 rounded">
+                            {pendingCount} pending
+                          </span>
+                        )} */}
+                      </div>
+                      {item.name === "Item Requests" && router.asPath.includes("/item") &&
+                        <button className={`ml-9 mt-1 focus:outline-none focus:border-none focus:ring-0 hover:text-white ${router.asPath.includes("/item-management") ? "text-white" : "text-navbar-gray-text"}`} onClick={() => router.push("/admin/item-management")}>
+                          Item Managment
+                        </button>
+                      }
                     </div>
                   </li>
                 </Link>
