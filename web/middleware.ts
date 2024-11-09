@@ -1,3 +1,5 @@
+import { doc, collection, getDoc } from "@firebase/firestore";
+import { db } from "db/firebase";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -8,6 +10,7 @@ export async function middleware(req: NextRequest) {
 
   const caregiverHome = "caregiver/book";
   const adminHome = "admin/caregivers";
+  const caregiverOnboarding = "caregiver/onboarding";
 
   // If referer exists, parse it and extract the pathname
   let refererPathname = null;
@@ -54,7 +57,7 @@ export async function middleware(req: NextRequest) {
 
     // Handle Onboarding route
     if (req.nextUrl.pathname === "/onboarding") {
-      url.pathname = isAdmin ? adminHome : "/caregiver/onboarding";
+      url.pathname = isAdmin ? adminHome : caregiverOnboarding;
       return NextResponse.redirect(url);
     }
 
@@ -67,6 +70,29 @@ export async function middleware(req: NextRequest) {
     if (!isAdmin && req.nextUrl.pathname.startsWith("/admin")) {
       url.pathname = caregiverHome;
       return NextResponse.redirect(url);
+    }
+
+    // Don't allow caregiver to access caregiver pages unless completed onboarding
+    if (
+      !isAdmin &&
+      req.nextUrl.pathname.startsWith("/caregiver") &&
+      !req.nextUrl.pathname.includes("onboarding")
+    ) {
+      const caregiverRef = doc(
+        collection(db, "caregivers"),
+        result.caregiverId
+      );
+      const caregiverDoc = await getDoc(caregiverRef);
+
+      if (caregiverDoc && caregiverDoc.exists()) {
+        const caregiver = caregiverDoc.data();
+        if (caregiver?.onboarding) {
+          return NextResponse.next();
+        } else {
+          url.pathname = caregiverOnboarding;
+          return NextResponse.redirect(url);
+        }
+      }
     }
 
     return NextResponse.next(); // Token exists, allow access

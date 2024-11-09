@@ -80,14 +80,15 @@ export default function LoginScreen() {
                     text="Log In"
                     onClick={() => {
                       if (email && password) {
-                        loginWithCredentials(email, password).then((e) => {
-                          if (e.success) {
-                            // Push to a generic route, let middleware handle role-based redirection
-                            router.push("/home");
-                          } else {
-                            setErrorBannerMsg("error" in e ? e.error : "");
+                        loginWithCredentials(email, password).then(
+                          async (e) => {
+                            if (e.success) {
+                              router.push("/home");
+                            } else {
+                              setErrorBannerMsg("error" in e ? e.error : "");
+                            }
                           }
-                        });
+                        );
                       } else {
                         if (!email) {
                           setEmailError("Please enter email");
@@ -107,10 +108,8 @@ export default function LoginScreen() {
                       loginWithGoogle().then((e) => {
                         if (e.success) {
                           if ("isNewUser" in e && e.isNewUser) {
-                            // Redirect new users to the onboarding page
-                            router.push("/onboarding");
+                            router.push("/caregiver/onboarding");
                           } else {
-                            // Push to a generic route, let middleware handle role-based redirection
                             router.push("/home");
                           }
                         } else {

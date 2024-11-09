@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import { UserCredential } from "firebase/auth";
 
 import { loginWithGoogle } from "db/actions/Login";
-import { createAccount, createCaregiverAccount } from "db/actions/SignUp";
+import {
+  createAccount,
+  createCaregiverAccount,
+  isUniqueEmail,
+} from "db/actions/SignUp";
 
 import TextInput from "@components/atoms/TextInput";
 import Button from "@components/atoms/Button";
@@ -152,20 +156,14 @@ export default function SignUpScreen() {
                             password &&
                             password === confirmPassword
                           ) {
-                            setAcc(
-                              await createAccount(email, password).then((e) => {
-                                if (e.success) {
-                                  setPage(2);
-                                  return "userCredential" in e
-                                    ? e.userCredential
-                                    : undefined;
-                                } else {
-                                  setErrorBannerMsg(
-                                    "Something went wrong, please try again."
-                                  );
-                                }
-                              })
-                            );
+                            const isUnique = await isUniqueEmail(email);
+                            if (!isUnique) {
+                              setErrorBannerMsg(
+                                "Account already exists. Please log in instead."
+                              );
+                            } else {
+                              setPage(2);
+                            }
                           } else {
                             if (!email) {
                               setEmailError("Please enter a email");
@@ -188,20 +186,34 @@ export default function SignUpScreen() {
                         } else {
                           // TODO fix error checking for phone number
                           if (firstName && lastName && phoneNumber) {
-                            createCaregiverAccount(
-                              acc,
-                              firstName,
-                              lastName,
-                              phoneNumber
-                            ).then((e) => {
-                              if (e.success) {
+                            const accountResult = await createAccount(
+                              email,
+                              password
+                            );
+                            if (
+                              accountResult.success &&
+                              "userCredential" in accountResult
+                            ) {
+                              setAcc(accountResult.userCredential);
+                              const caregiverResult =
+                                await createCaregiverAccount(
+                                  accountResult.userCredential,
+                                  firstName,
+                                  lastName,
+                                  phoneNumber
+                                );
+                              if (caregiverResult.success) {
                                 router.push("/caregiver/onboarding");
                               } else {
                                 setErrorBannerMsg(
                                   "Something went wrong, please try again."
                                 );
                               }
-                            });
+                            } else {
+                              setErrorBannerMsg(
+                                "Something went wrong, please try again."
+                              );
+                            }
                           } else {
                             if (!firstName) {
                               setFirstNameError("Please enter a first name");
@@ -232,7 +244,7 @@ export default function SignUpScreen() {
                           loginWithGoogle().then((e) => {
                             if (e.success) {
                               if ("isNewUser" in e && !e.isNewUser) {
-                                router.push("/caregiver/babyBook");
+                                router.push("/caregiver/book");
                               } else {
                                 setPage(2);
                               }

@@ -12,11 +12,10 @@ import { auth, db } from "db/firebase";
 import Cookies from "js-cookie";
 
 export const isUniqueEmail = async (email: string) => {
-  (
-    await getDocs(
-      query(collection(db, "caregivers"), where("email", "==", email))
-    )
-  ).empty;
+  const docs = await getDocs(
+    query(collection(db, "caregivers"), where("email", "==", email))
+  );
+  return docs.empty;
 };
 
 export async function createAccount(email: string, password: string) {
@@ -41,7 +40,7 @@ export async function createCaregiverAccount(
   userCredential: UserCredential | undefined,
   firstName: string,
   lastName: string,
-  phoneNumber: string,
+  phoneNumber: string
 ) {
   const authData = userCredential ? userCredential.user : undefined;
 
@@ -53,7 +52,8 @@ export async function createCaregiverAccount(
       phoneNumber: phoneNumber,
       email: authData?.email,
       auth: authData?.uid,
-      babyCount: 0
+      babyCount: 0,
+      onboarding: false,
     });
     return { success: true };
   } catch (error) {
