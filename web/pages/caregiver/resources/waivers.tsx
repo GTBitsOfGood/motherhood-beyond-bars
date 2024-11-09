@@ -8,13 +8,7 @@ import { getWaivers } from "db/actions/shared/Waiver";
 import { Timestamp } from "firebase-admin/firestore";
 import MarkdownIt from "markdown-it";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-
-const html2pdf = dynamic(
-  () => import("html2pdf.js").then((mod) => mod.default),
-  { ssr: false }
-);
 
 interface Props {
   waivers: BrowserWaiver[];
