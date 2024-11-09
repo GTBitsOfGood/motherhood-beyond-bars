@@ -6,6 +6,7 @@ import { Timestamp, setDoc, doc } from "firebase/firestore";
 import { db } from "db/firebase";
 import { Caregiver } from "@lib/types/users";
 import { Item } from "@lib/types/items";
+import { Baby } from "@lib/types/baby";
 
 export default function ItemRequestRow({
   row,
@@ -30,7 +31,7 @@ export default function ItemRequestRow({
   const dropDownData = [
     {
       header: "ADDRESS",
-      value: row.address,
+      value: row.address + (row.apartment && row.apartment !== "" ? ", " + row.apartment : "") + ", " + row.city + ", " + row.state + " " + row.zipCode,
     },
     {
       header: "CONTACT",
@@ -38,7 +39,7 @@ export default function ItemRequestRow({
     },
     {
       header: "CHILDREN NAMES",
-      value: "",
+      value: row.babies && row.babies.map((baby) => (baby as Baby).firstName + " " + (baby as Baby).lastName).join(", "),
     },
     {
       header: "CARETAKER COMMENTS",
