@@ -10,8 +10,11 @@ export default function ForgotPasswordScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
 
-  const onReset = () => {
-    sendResetPasswordEmail(email);
+  const onReset = async () => {
+    const hasReset = await sendResetPasswordEmail(email);
+    if (hasReset) {
+      router.push("emailSent");
+    }
   };
 
   return (
