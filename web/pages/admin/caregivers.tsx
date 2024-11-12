@@ -21,6 +21,7 @@ export default function GenCaregiversTab() {
   const [caregivers, setCaregivers] = useState<any[]>([]);
   const [filteredCaregivers, setFilteredCaregivers] = useState<any[]>([]);
   const [currPage, setCurrPage] = useState(1);
+  const [open, setOpen] = React.useState<any[]>([]);
 
   const columns = React.useMemo(
     () => [
@@ -57,6 +58,7 @@ export default function GenCaregiversTab() {
     const caregivers = await getCaregivers();
     setCaregivers(caregivers);
     setFilteredCaregivers(caregivers);
+    setOpen(Array(caregivers.length).fill(false));
   }
 
   const handleSearch = (input: string) => {
@@ -69,6 +71,16 @@ export default function GenCaregiversTab() {
   useEffect(() => {
     loadData();
   }, []);
+
+  const onNextPage = () => {
+    setCurrPage(currPage + 1);
+    setOpen(Array(caregivers.length).fill(false));
+  };
+
+  const onPrevPage = () => {
+    setCurrPage(currPage - 1);
+    setOpen(Array(caregivers.length).fill(false));
+  };
 
   return (
     <div>
@@ -91,11 +103,13 @@ export default function GenCaregiversTab() {
         <hr className="border-t" />
         <div className="m-6">
           <PaginatedTable
+            open={open}
+            setOpen={setOpen}
             type={tab}
             tableProps={tableProps}
             paginatedProps={paginatedProps}
-            onNextPage={() => setCurrPage(currPage + 1)}
-            onPrevPage={() => setCurrPage(currPage - 1)}
+            onNextPage={onNextPage}
+            onPrevPage={onPrevPage}
             onSearch={handleSearch}
           />
         </div>

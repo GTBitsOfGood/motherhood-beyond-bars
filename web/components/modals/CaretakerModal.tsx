@@ -59,6 +59,7 @@ function CaretakerModal({
                         <label>
                           {field.charAt(0).toUpperCase() +
                             field.slice(1).replace(/([A-Z])/g, " $1")}
+                          <span className="text-asterisks-red text-sm">*</span>
                         </label>
                         <input
                           type="text"
