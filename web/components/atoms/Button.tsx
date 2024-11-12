@@ -41,7 +41,7 @@ export default function Button({
       style={{ width }}
       title={text}
     >
-      {icon ? <span className="mr-2">{icon}</span> : null}
+      {icon ? <span>{icon}</span> : null}
       {type === "Google" && (
         <div className="flex justify-end w-1/5 -ml-8">
           <img
