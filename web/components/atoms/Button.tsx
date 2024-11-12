@@ -26,8 +26,10 @@ export default function Button({
     styles =
       "w-60 text-primary-text font-opensans text-start text-sm sm:text-base";
   } else {
-    styles =
-      "text-mbb-pink px-4 pt-2 pb-[0.5625rem] text-base font-opensans border border-mbb-pink rounded gap-2";
+    styles = `text-mbb-pink px-4 pt-2 pb-[0.5625rem] text-base font-opensans border-mbb-pink rounded gap-2 hover:bg-mbb-pink-hover active:bg-mbb-pink active:text-white active:stroke-white`;
+    if (type === "primary") {
+      styles += " border";
+    }
   }
 
   return (
@@ -39,7 +41,7 @@ export default function Button({
       style={{ width }}
       title={text}
     >
-      {icon ? <span className="mr-2">{icon}</span> : null}
+      {icon ? <span>{icon}</span> : null}
       {type === "Google" && (
         <div className="flex justify-end w-1/5 -ml-8">
           <img

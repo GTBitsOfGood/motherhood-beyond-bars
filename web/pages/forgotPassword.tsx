@@ -23,7 +23,7 @@ export default function ForgotPasswordScreen() {
             <div className="flex flex-col justify-center mx-6 mt-8 gap-10 sm:w-1/2 sm:items-center sm:mx-0">
               <div className="flex flex-col gap-3 justify-center sm:items-center">
                 <div className="text-2xl font-bold">Forgot Password?</div>
-                <div>No problem, we'll send you reset instructions.</div>
+                <div>No problem, we&apos;ll send you reset instructions.</div>
               </div>
               <div className="flex flex-col gap-5 max-w-lg w-full">
                 <TextInput

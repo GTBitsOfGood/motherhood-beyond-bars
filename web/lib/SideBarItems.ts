@@ -57,7 +57,7 @@ const CaregiverSideBarItems = [
 
 const SideBarItems = {
   AdminSideBarItems,
-  CaregiverSideBarItems
+  CaregiverSideBarItems,
 };
 
 export default SideBarItems;

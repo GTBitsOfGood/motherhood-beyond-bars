@@ -4,13 +4,16 @@ import {
   deleteCaretaker,
   getCaregivers,
 } from "db/actions/admin/Caregiver";
-import PaginatedTable from "@components/tables/PaginatedTable";
+
+import { PAGINATION_PAGE_SIZE } from "db/consts";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
-import ButtonWithIcon from "@components/buttonWithIcon";
-import { FaPlus } from "react-icons/fa";
+
 import Modal from "@components/modal";
 import CaretakerModal from "@components/modals/CaretakerModal";
-import { PAGINATION_PAGE_SIZE } from "db/consts";
+import PaginatedTable from "@components/tables/PaginatedTable";
+
+import Button from "@components/atoms/Button";
+import PlusIcon from "@components/Icons/PlusIcon";
 
 const tab = CAREGIVERS_TAB;
 
@@ -90,8 +93,8 @@ export default function GenCaregiversTab() {
             </h2>
           </div>
           <div>
-            <ButtonWithIcon
-              icon={<FaPlus />}
+            <Button
+              icon={<PlusIcon small={true} />}
               text="Add a caregiver"
               onClick={() => toggleAddModal(true)}
             />

@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { useRouter } from "next/router";
+
 import {
   addNewChild,
   editBaby,
   deleteBaby,
   getBabies,
 } from "db/actions/admin/Baby";
+import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 
-import PaginatedTable from "@components/tables/PaginatedTable";
-import ButtonWithIcon from "@components/buttonWithIcon";
+import { PAGINATION_PAGE_SIZE } from "db/consts";
+import { BABIES_TAB } from "@lib/utils/consts";
+
 import Modal from "@components/modal";
 import ChildModal from "@components/modals/ChildModal";
-import { BABIES_TAB } from "@lib/utils/consts";
-import { PAGINATION_PAGE_SIZE } from "db/consts";
-import { useRouter } from "next/router";
-import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
+import PaginatedTable from "@components/tables/PaginatedTable";
+
+import Button from "@components/atoms/Button";
+import PlusIcon from "@components/Icons/PlusIcon";
 
 const tab = BABIES_TAB;
 
@@ -113,8 +116,8 @@ export default function GenChildrenAndBabyBooksTab() {
             </h2>
           </div>
           <div>
-            <ButtonWithIcon
-              icon={<FaPlus />}
+            <Button
+              icon={<PlusIcon small={true} />}
               text="Add a child"
               onClick={() => toggleAddModal(true)}
             />

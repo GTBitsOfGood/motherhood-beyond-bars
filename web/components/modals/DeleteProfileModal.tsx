@@ -1,3 +1,4 @@
+import Button from "@components/atoms/Button";
 import React from "react";
 import { FaTimes } from "react-icons/fa";
 
@@ -35,20 +36,8 @@ function DeleteProfileModal({
             <div className="p-5">
               <h3> Are you sure you want to delete this profile? </h3>
               <div className="form-group flex justify-end w-full col-span-2 mt-5 text-mbb-pink font-semibold">
-                <button
-                  type="button"
-                  className="px-4 py-2 rounded-md text-md"
-                  onClick={onClose}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className={`bg-transparent hover:bg-mbb-pink hover:text-white py-2 px-4 border border-mbb-pink hover:border-transparent rounded`}
-                  onClick={onDelete}
-                >
-                  Remove profile
-                </button>
+                <Button type="secondary" onClick={onClose} text="Cancel" />
+                <Button submit text="Remove profile" onClick={onDelete} />
               </div>
             </div>
           </div>

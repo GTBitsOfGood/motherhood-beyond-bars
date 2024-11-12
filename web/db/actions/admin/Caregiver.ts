@@ -104,7 +104,9 @@ export const deleteCaretaker = async (caretaker: Caregiver) => {
   const caretakerID = caretaker.id;
 
   try {
-    await removeCaretakerFromBabies(caretaker.babies as DocumentReference<DocumentData>[]);
+    await removeCaretakerFromBabies(
+      caretaker.babies as DocumentReference<DocumentData>[]
+    );
     await deleteDoc(doc(db, path, caretakerID));
   } catch (error) {
     throw new FailedToDeleteError(docType);
