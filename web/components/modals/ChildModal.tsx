@@ -105,7 +105,10 @@ function ChildModal({
                 <div className="block p-6 rounded-lg shadow-lg  max-w-md">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="form-group mr-3 mb-3">
-                      <p>First Name</p>
+                      <p>
+                        First Name
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <input
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                         defaultValue={values?.firstName}
@@ -118,7 +121,10 @@ function ChildModal({
                       )}
                     </div>
                     <div className="form-group mb-3">
-                      <p>Last Name</p>
+                      <p>
+                        Last Name
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <input
                         type="text"
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
@@ -139,10 +145,14 @@ function ChildModal({
                         error={
                           errors.dob ? "This field is required" : undefined
                         }
+                        required={true}
                       />
                     </div>
                     <div className="form-group">
-                      <p>Sex</p>
+                      <p>
+                        Sex
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <select
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                         defaultValue={values?.sex || "select"}
@@ -163,7 +173,10 @@ function ChildModal({
                       />
                     </div>
                     <div className="form-group mb-3 w-full col-span-2">
-                      <p>Mother Name</p>
+                      <p>
+                        Mother Name
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <input
                         type={"text"}
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"

@@ -1,11 +1,13 @@
-import DownChevron from "@components/Icons/DownChevron";
-import Ellipse from "@components/Icons/Ellipse";
-import RightChevronBlue from "@components/Icons/RightChevronBlue";
 import { Timestamp, doc, setDoc } from "@firebase/firestore";
+import { useState } from "react";
+
+import { db } from "db/firebase";
 import { Item } from "@lib/types/items";
 import { Caregiver } from "@lib/types/users";
-import { db } from "db/firebase";
-import { useState } from "react";
+
+import { RiArrowDropDownLine } from "react-icons/ri";
+import DownChevron from "@components/Icons/DownChevron";
+import Ellipse from "@components/Icons/Ellipse";
 
 export default function ItemRequestRow({
   row,
@@ -82,11 +84,11 @@ export default function ItemRequestRow({
         } cursor-pointer`}
         onClick={() => setRowExpanded(!rowExpanded)} // Expand/collapse row on click
       >
-        <td className="py-2">
+        <td className="p-0 pl-0 pr-2 py-5">
           <div className="flex gap-x-2">
-            <div className={`${rowExpanded ? "rotate-90" : ""}`}>
-              <RightChevronBlue />
-            </div>
+            <RiArrowDropDownLine
+              className={`text-3xl duration-300 cursor-pointer text-mbb-pink ${rowExpanded ? "rotate-180" : ""}`}
+            />
             <input
               type="checkbox"
               className="cursor-pointer"
@@ -105,20 +107,8 @@ export default function ItemRequestRow({
         <td className="py-2 text-base text-black whitespace-nowrap">
           {row.firstName + " " + row.lastName}
         </td>
-        <td className="py-2 px-6 text-base font-normal text-black whitespace-nowrap flex flex-wrap gap-3">
-          {row.itemsRequested.items.map((item: Item, index: number) => {
-            return (
-              <div
-                className="p-2 rounded"
-                style={{
-                  backgroundColor: generateColor(item.title),
-                }}
-                key={index}
-              >
-                {item.title}
-              </div>
-            );
-          })}
+        <td className="text-ellipsis font-normal text-base text-primary-text">
+          {row.itemsRequested.items.map(item => item.title).join(", ")}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
           {row.itemsRequested.created

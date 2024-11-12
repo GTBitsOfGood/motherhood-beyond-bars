@@ -40,6 +40,7 @@ module.exports = {
         "icon-light-gray": "#DFE3E8",
         "empty-gray": "#E3E3E3",
         "error-red": "#E50606",
+        "asterisks-red": "#E50606",
         "light-black": "#191919",
         "light-orange": "#FFE3B3",
         "light-blue": "#DEEBFF",

@@ -92,6 +92,7 @@ export default function SignUpScreen() {
                       validate: validateEmail,
                     })}
                     error={formState.errors.email?.message}
+                    required={true}
                   />
                 ) : (
                   <TextInput
@@ -101,6 +102,7 @@ export default function SignUpScreen() {
                       validate: validateNotEmpty("First name"),
                     })}
                     error={formState.errors.firstName?.message}
+                    required={true}
                   />
                 )}
                 {page === 1 ? (
@@ -113,6 +115,7 @@ export default function SignUpScreen() {
                         validatePass(pass, confirmPassword),
                     })}
                     error={formState.errors.password?.message}
+                    required={true}
                   />
                 ) : (
                   <div>
@@ -123,6 +126,7 @@ export default function SignUpScreen() {
                         validate: validateNotEmpty("Last name"),
                       })}
                       error={formState.errors.lastName?.message}
+                      required={true}
                     />
                   </div>
                 )}
@@ -135,6 +139,7 @@ export default function SignUpScreen() {
                       validate: validateNotEmpty("Confirm password"),
                     })}
                     error={formState.errors.confirmPassword?.message}
+                    required={true}
                   />
                 ) : (
                   <TextInput
@@ -144,6 +149,7 @@ export default function SignUpScreen() {
                       validate: validatePhone,
                     })}
                     error={formState.errors.phoneNumber?.message}
+                    required={true}
                   />
                 )}
                 <div>

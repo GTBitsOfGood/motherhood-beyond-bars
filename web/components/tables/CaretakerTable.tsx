@@ -10,7 +10,6 @@ import { useTable } from "react-table";
 import Tooltip from "../ToolTip";
 
 function CaretakerTable({ tableProps, open, setOpen }: any) {
-
   const { columns, data, onDelete } = tableProps;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
@@ -92,7 +91,7 @@ function CaretakerTable({ tableProps, open, setOpen }: any) {
                       >
                         <td className="border-t">
                           <RiArrowDropDownLine
-                            className={`text-2xl duration-300 cursor-pointer ${
+                            className={`text-3xl duration-300 cursor-pointer text-mbb-pink ${
                               open[i] && "rotate-180"
                             }`}
                           />

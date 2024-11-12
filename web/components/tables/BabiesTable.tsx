@@ -91,7 +91,7 @@ function BabiesTable({ tableProps, open, setOpen }: any) {
                         >
                           <td className="border-t">
                             <RiArrowDropDownLine
-                              className={`text-2xl duration-300 cursor-pointer ${
+                              className={`text-3xl duration-300 cursor-pointer text-mbb-pink ${
                                 open[i] && "rotate-180"
                               }`}
                             />
@@ -124,21 +124,24 @@ function BabiesTable({ tableProps, open, setOpen }: any) {
                             </div>
                           </td>
                           <td className="border-t">
-                            <div className="p-4">
+                            <div className="px-1 py-2">
                               <div className="group relative">
-                                <button>
-                                  <Image
-                                    src={dots}
-                                    onClick={() => {
-                                      if (i === selectedOptionsPanel)
-                                        setSelectedOptionsPanel(-1);
-                                      else setSelectedOptionsPanel(i);
-                                    }}
-                                  />
+                                <button
+                                  className="px-3 py-2"
+                                  onClick={(e) => {
+                                    if (i === selectedOptionsPanel) {
+                                      setSelectedOptionsPanel(-1);
+                                    } else {
+                                      setSelectedOptionsPanel(i);
+                                    }
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  <Image src={dots} />
                                 </button>
                                 <nav
                                   tabIndex={0}
-                                  className="absolute w-[127px] rounded-b bg-white border shadow-xl right-1 mt-1 shadow-slate-200 transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100"
+                                  className="absolute w-[127px] rounded-b bg-white border shadow-xl right-1 mt-1 shadow-slate-200 transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 z-10"
                                   hidden={selectedOptionsPanel !== i}
                                 >
                                   <ul className="py-1">
