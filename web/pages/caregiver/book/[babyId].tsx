@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   collection,
   doc,
@@ -13,12 +14,12 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 
 import { db } from "db/firebase";
-import { uploadPhoto } from "db/actions/caregiver/Photo";
 
 import { Baby } from "@lib/types/baby";
 import { decrypt } from "@lib/utils/encryption";
 import { monthIndexToString } from "@lib/utils/date";
 
+import BabyModal from "@components/BabyBook/BabyModal";
 import SmileIcon from "@components/Icons/SmileIcon";
 import PlusIcon from "@components/Icons/PlusIcon";
 import TitleTopBar from "@components/logos/TitleTopBar";
@@ -30,87 +31,104 @@ export default function BabyBook({
   content,
   iv,
 }: Props) {
-  // TODO add TopBar when done
+  const [showBabyModal, setShowBabyModal] = useState<boolean>(false);
+  const [babyPhoto, setBabyPhoto] = useState<File | string>("");
+  const [editBabyPhoto, setEditBabyPhoto] = useState<boolean>(false);
 
   return (
     <div className="w-full h-full">
       <TitleTopBar title="Baby Book" />
-      <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
-        <div className="self-start">
-          <h1 className="text-2xl sm:text-3xl font-bold text-primary-text">
-            {baby.firstName} {baby.lastName}
-            {baby.lastName[baby.lastName.length - 1] === "s" ? "'" : "'s"} Album
-          </h1>
-          <p className="text-dark-gray sm:text-xl">Birthday: {baby.birthday}</p>
-        </div>
-        {totImages === 0 ? (
-          <>
-            <div className="rounded-full w-[160px] h-[160px] flex items-center justify-center bg-[#F2F2F2]">
-              <SmileIcon />
-            </div>
-            <p className="text-lg sm:text-2xl font-bold text-dark-gray">
-              No Photos Yet
+      {showBabyModal ? (
+        babyPhoto && <BabyModal image={babyPhoto} edit={editBabyPhoto} babyId={baby.id} caregiverId={baby.caregiverId} showBabyModal={setShowBabyModal}/>
+      ) : (
+        <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
+          <div className="self-start">
+            <h1 className="text-2xl sm:text-3xl font-bold text-primary-text">
+              {baby.firstName} {baby.lastName}
+              {baby.lastName[baby.lastName.length - 1] === "s"
+                ? "'"
+                : "'s"}{" "}
+              Album
+            </h1>
+            <p className="text-dark-gray sm:text-xl">
+              Birthday: {baby.birthday}
             </p>
-            <p className="sm:text-xl text-center text-dark-gray">
-              Get started by adding a photo of {baby.firstName} here!
-            </p>
-          </>
-        ) : (
-          babyBook.flatMap(({ year, months }) =>
-            months.map(({ month, images }) => (
-              <div
-                key={`${year}${month}`}
-                className="flex flex-col self-stretch"
-              >
-                <h2 className="sm:text-lg font-semibold text-dark-gray">
-                  {monthIndexToString(month)} {year}
-                </h2>
-                <div className="grid grid-cols-4 gap-[0.375rem] md:gap-x-4 md:gap-y-2">
-                  {images.map(({ imageUrl, date }) => (
-                    <>
-                      <div
-                        key={imageUrl}
-                        className="h-[160px] md:h-[240px] overflow-hidden relative shadow-lg cursor-pointer"
-                        onClick={() => {
-                          // TODO: view single image
-                        }}
-                      >
-                        <Image
-                          key={imageUrl}
-                          src={imageUrl}
-                          alt={`Baby image from ${new Date(date.seconds * 1000).toLocaleDateString()}`}
-                          layout={"fill"}
-                          objectFit={"cover"}
-                        />
-                      </div>
-                    </>
-                  ))}
-                </div>
+          </div>
+          {totImages === 0 ? (
+            <>
+              <div className="rounded-full w-[160px] h-[160px] flex items-center justify-center bg-[#F2F2F2]">
+                <SmileIcon />
               </div>
-            ))
-          )
-        )}
-        <label
-          className="flex items-center justify-center fixed cursor-pointer rounded-full w-[3.75rem] h-[3.75rem] bottom-6 right-6 bg-mbb-pink"
-          title="Upload Photo"
-          aria-roledescription="input"
-        >
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              const results = uploadPhoto(e);
-              if (results.success) {
-                // TODO show upload photo page
-              } else {
-                // TODO handle error
-              }
-            }}
-          />
-          <PlusIcon />
-        </label>
-      </div>
+              <p className="text-lg sm:text-2xl font-bold text-dark-gray">
+                No Photos Yet
+              </p>
+              <p className="sm:text-xl text-center text-dark-gray">
+                Get started by adding a photo of {baby.firstName} here!
+              </p>
+            </>
+          ) : (
+            babyBook.flatMap(({ year, months }) =>
+              months.map(({ month, images }) => (
+                <div
+                  key={`${year}${month}`}
+                  className="flex flex-col self-stretch"
+                >
+                  <h2 className="sm:text-lg font-semibold text-dark-gray">
+                    {monthIndexToString(month)} {year}
+                  </h2>
+                  <div className="grid grid-cols-4 gap-[0.375rem] md:gap-x-4 md:gap-y-2">
+                    {images.map(({ imageUrl, date }) => (
+                      <>
+                        <div
+                          key={imageUrl}
+                          className="h-[160px] md:h-[240px] overflow-hidden relative shadow-lg cursor-pointer"
+                          onClick={() => {
+                            // TODO: view single image
+                            setBabyPhoto(imageUrl);
+                            setShowBabyModal(true);
+                            setEditBabyPhoto(false);
+                          }}
+                        >
+                          <Image
+                            key={imageUrl}
+                            src={imageUrl}
+                            alt={`Baby image from ${new Date(date.seconds * 1000).toLocaleDateString()}`}
+                            layout={"fill"}
+                            objectFit={"cover"}
+                          />
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )
+          )}
+          <label
+            className="flex items-center justify-center fixed cursor-pointer rounded-full w-[3.75rem] h-[3.75rem] bottom-6 right-6 bg-mbb-pink"
+            title="Upload Photo"
+            aria-roledescription="input"
+          >
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const files = e.target.files;
+
+                if (files) {
+                  setBabyPhoto(files[files.length - 1]);
+                  setShowBabyModal(true);
+                  setEditBabyPhoto(true);
+                } else {
+                  // TODO show error
+                }
+              }}
+            />
+            <PlusIcon />
+          </label>
+        </div>
+      )}
     </div>
   );
 }
@@ -123,6 +141,8 @@ interface Props {
     lastName: string;
     mother: string;
     birthday: string;
+    id: string;
+    caregiverId: string;
   };
   content: string;
   iv: string;
@@ -162,7 +182,7 @@ export const getServerSideProps: GetServerSideProps<
   const props: Props = {
     babyBook: [],
     totImages: 0,
-    baby: { firstName: "", lastName: "", mother: "", birthday: "" },
+    baby: { firstName: "", lastName: "", mother: "", birthday: "", id: "", caregiverId: "" },
     content: "",
     iv: "",
   };
@@ -182,7 +202,10 @@ export const getServerSideProps: GetServerSideProps<
     lastName: babyData.lastName,
     mother: babyData.motherName,
     birthday: babyData.dob.toString(),
+    id: babyId,
+    caregiverId: babyData.caretakerID,
   };
+
   const babyBookRef = doQuery(
     collection(db, `babies/${babyId}/book`),
     orderBy("date", "desc")
