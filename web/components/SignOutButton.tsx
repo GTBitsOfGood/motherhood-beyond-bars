@@ -23,7 +23,7 @@ function SignOutButton() {
       });
   };
 
-  return <Button text="Log out" onClick={logout} />;
+  return <Button text="Log out" type="tertiary" onClick={logout} />;
 }
 
 export default SignOutButton;
