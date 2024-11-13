@@ -12,16 +12,26 @@ export default function PaginatedTable({
   onNextPage,
   onPrevPage,
   onSearch,
+  open,
+  setOpen,
 }: any) {
   return (
     <>
       <div className="flex flex-col gap-5 w-[75vw]">
         <SearchBar onSearch={onSearch} />
-        <div className="overflow-auto h-[68vh]">
+        <div className="overflow-auto h-full">
           {type == BABIES_TAB ? (
-            <BabiesTable props={tableProps} />
+            <BabiesTable
+              tableProps={tableProps}
+              open={open}
+              setOpen={setOpen}
+            />
           ) : type == CAREGIVERS_TAB ? (
-            <CaretakerTable props={tableProps} />
+            <CaretakerTable
+              tableProps={tableProps}
+              open={open}
+              setOpen={setOpen}
+            />
           ) : (
             <></>
           )}
@@ -30,6 +40,7 @@ export default function PaginatedTable({
           <Pagination
             totalRecords={paginatedProps.totalRecords}
             currPage={paginatedProps.pageNumber}
+            pageSize={paginatedProps.pageSize}
             onNextPage={onNextPage}
             onPrevPage={onPrevPage}
           />

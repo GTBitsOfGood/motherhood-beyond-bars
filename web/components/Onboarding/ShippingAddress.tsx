@@ -36,6 +36,7 @@ export default function ShippingAddressPage({ setPage, form }: Props) {
         formValue={form.register("address", {
           validate: (v) => (!v ? "Address cannot be empty" : true),
         })}
+        required={true}
       />
       <TextInput
         label={
@@ -53,6 +54,7 @@ export default function ShippingAddressPage({ setPage, form }: Props) {
         formValue={form.register("city", {
           validate: (v) => (!v ? "City cannot be empty" : true),
         })}
+        required={true}
       />
       <Controller
         control={form.control}
@@ -67,6 +69,7 @@ export default function ShippingAddressPage({ setPage, form }: Props) {
             value={value}
             error={form.formState.errors.state?.message}
             onChange={(opt) => onChange(opt.value)}
+            required={true}
           />
         )}
       />
@@ -76,6 +79,7 @@ export default function ShippingAddressPage({ setPage, form }: Props) {
         formValue={form.register("zipCode", {
           validate: (v) => (!v ? "Zip Code cannot be empty" : true),
         })}
+        required={true}
       />
       <div className="mb-4">
         <Controller
