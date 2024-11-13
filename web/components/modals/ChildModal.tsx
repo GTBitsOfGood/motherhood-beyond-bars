@@ -1,3 +1,4 @@
+import Button from "@components/atoms/Button";
 import DatePicker from "@components/atoms/DatePicker";
 import SearchableDropdown from "@components/atoms/SearchInput";
 import { getCaregivers } from "db/actions/admin/Caregiver";
@@ -105,7 +106,10 @@ function ChildModal({
                 <div className="block p-6 rounded-lg shadow-lg  max-w-md">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="form-group mr-3 mb-3">
-                      <p>First Name</p>
+                      <p>
+                        First Name
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <input
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                         defaultValue={values?.firstName}
@@ -118,7 +122,10 @@ function ChildModal({
                       )}
                     </div>
                     <div className="form-group mb-3">
-                      <p>Last Name</p>
+                      <p>
+                        Last Name
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <input
                         type="text"
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
@@ -139,10 +146,14 @@ function ChildModal({
                         error={
                           errors.dob ? "This field is required" : undefined
                         }
+                        required={true}
                       />
                     </div>
                     <div className="form-group">
-                      <p>Sex</p>
+                      <p>
+                        Sex
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <select
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
                         defaultValue={values?.sex || "select"}
@@ -163,7 +174,10 @@ function ChildModal({
                       />
                     </div>
                     <div className="form-group mb-3 w-full col-span-2">
-                      <p>Mother Name</p>
+                      <p>
+                        Mother Name
+                        <span className="text-asterisks-red text-sm">*</span>
+                      </p>
                       <input
                         type={"text"}
                         className="w-full bg-secondary-background border-light-gray border-2 rounded py-2 px-2 focus:outline-0 min-h-[40px]"
@@ -186,22 +200,19 @@ function ChildModal({
                         {...register("hospitalName", { required: false })}
                       />
                     </div>
-                    <div className="form-group flex justify-end w-full col-span-2 mt-5">
-                      <button
-                        className="px-4 py-2 rounded-md text-md text-mbb-pink font-semibold"
+                    <div className="form-group flex justify-end w-full col-span-2 mt-5 gap-4">
+                      <Button
+                        text="Cancel"
+                        type="secondary"
                         onClick={closeModal}
-                      >
-                        Cancel
-                      </button>
-                      <button
+                        width="auto"
+                      />
+                      <Button
                         disabled={isSubmitting}
-                        type="submit"
-                        className={`"bg-transparent hover:bg-mbb-pink text-mbb-pink font-semibold hover:text-white py-2 px-4 border border-mbb-pink hover:border-transparent rounded" ${
-                          isSubmitting && "opacity-50 cursor-not-allowed"
-                        }`}
-                      >
-                        {buttonText}
-                      </button>
+                        submit
+                        text={buttonText}
+                        width="auto"
+                      />
                     </div>
                     {values && values.id && (
                       <input

@@ -9,19 +9,14 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { useTable } from "react-table";
 import Tooltip from "../ToolTip";
 
-function CaretakerTable({ props }: any) {
-  if (!props) {
-    return <></>;
-  }
-
-  const { columns, data, onDelete } = props;
+function CaretakerTable({ tableProps, open, setOpen }: any) {
+  const { columns, data, onDelete } = tableProps;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
     });
 
-  const [open, setOpen] = React.useState(Array(data.length).fill(false));
   const [openDeleteModal, toggleDeleteModal] = React.useState(false);
   const [toDelete, setToDelete] = React.useState<object | null>(null);
   const [babies, setBabies] = React.useState<any[]>(
@@ -50,7 +45,6 @@ function CaretakerTable({ props }: any) {
       }
     }
   };
-
   return (
     <div className="flex flex-col">
       <div>
@@ -59,13 +53,17 @@ function CaretakerTable({ props }: any) {
             <table {...getTableProps()} className="w-full">
               <thead>
                 {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
+                  <tr
+                    {...headerGroup.getHeaderGroupProps()}
+                    key={headerGroup.id}
+                  >
                     <th></th>
                     {headerGroup.headers.map((column) => (
                       <th
                         scope="col"
                         className="py-3 px-6 text-base font-normal tracking-wider text-dark-400 text-center"
                         {...column.getHeaderProps()}
+                        key={column.id}
                       >
                         {column.render("Header")}
                       </th>
@@ -81,7 +79,7 @@ function CaretakerTable({ props }: any) {
                       <tr
                         onClick={() => {
                           getBabies(i); // Fetch babies when caregiver row is clicked
-                          setOpen((prevOpen) => {
+                          setOpen((prevOpen: boolean[]) => {
                             const newOpen = [...prevOpen];
                             newOpen[i] = !newOpen[i];
                             return newOpen;
@@ -89,10 +87,11 @@ function CaretakerTable({ props }: any) {
                         }}
                         className="cursor-pointer hover:bg-mbb-pink/10"
                         {...row.getRowProps()}
+                        key={row.id}
                       >
                         <td className="border-t">
                           <RiArrowDropDownLine
-                            className={`text-2xl duration-300 cursor-pointer ${
+                            className={`text-3xl duration-300 cursor-pointer text-mbb-pink ${
                               open[i] && "rotate-180"
                             }`}
                           />
@@ -101,6 +100,7 @@ function CaretakerTable({ props }: any) {
                           <td
                             className="py-4 px-6 text-base border-t text-black whitespace-nowrap"
                             {...cell.getCellProps()}
+                            key={cell.column.id}
                           >
                             {cell.column.id === "assigned" ? (
                               <span
@@ -148,13 +148,10 @@ function CaretakerTable({ props }: any) {
                                   const val = data[(metadata as any)[key]];
                                   return val ? (
                                     <>
-                                      <div
-                                        key={key}
-                                        className="uppercase text-dark-400 font-semibold text-sm"
-                                      >
+                                      <div className="uppercase text-dark-400 font-semibold text-sm">
                                         {key}
                                       </div>
-                                      <div key={key} className="col-span-2">
+                                      <div className="col-span-2">
                                         {key === "Liability Waiver" ? (
                                           <Link href={`/admin/waivers/${val}`}>
                                             <a className="text-sm text-mbb-pink">

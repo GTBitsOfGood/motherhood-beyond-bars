@@ -9,6 +9,7 @@ interface Props {
   onChange?: (newDate: Date | null) => void;
   disabled?: boolean;
   error?: string;
+  required?: boolean;
 }
 
 export default function DatePicker({
@@ -17,10 +18,14 @@ export default function DatePicker({
   onChange,
   disabled,
   error,
+  required = false,
 }: Props) {
   return (
     <div className="flex flex-col">
-      <label htmlFor={label}>{label}</label>
+      <label htmlFor={label}>
+        {label}
+        {required && <span className="text-asterisks-red text-sm">*</span>}
+      </label>
       <ReactDatePicker
         name={label}
         onFocus={(e) => keyboardScroll(e)}

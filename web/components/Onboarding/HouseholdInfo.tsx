@@ -40,6 +40,7 @@ export default function HouseholdInfoPage({ setPage, form }: Props) {
               return !isNaN(value) ? true : "Adults must be a valid number";
             },
           })}
+          required={true}
         />
         <TextInput
           label="Number of Children (current)"
@@ -50,6 +51,7 @@ export default function HouseholdInfoPage({ setPage, form }: Props) {
             validate: (value) =>
               !value || !isNaN(value) ? true : "Children must be a number",
           })}
+          required={true}
         />
         <TextInput
           label="Ages of Children"

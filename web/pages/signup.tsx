@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import { UserCredential } from "firebase/auth";
 
 import { loginWithGoogle } from "db/actions/Login";
-import { createAccount, createCaregiverAccount } from "db/actions/SignUp";
+import {
+  createAccount,
+  createCaregiverAccount,
+  isUniqueEmail,
+} from "db/actions/SignUp";
 
 import TextInput from "@components/atoms/TextInput";
 import Button from "@components/atoms/Button";
@@ -92,6 +96,7 @@ export default function SignUpScreen() {
                       validate: validateEmail,
                     })}
                     error={formState.errors.email?.message}
+                    required={true}
                   />
                 ) : (
                   <TextInput
@@ -101,6 +106,7 @@ export default function SignUpScreen() {
                       validate: validateNotEmpty("First name"),
                     })}
                     error={formState.errors.firstName?.message}
+                    required={true}
                   />
                 )}
                 {page === 1 ? (
@@ -113,6 +119,7 @@ export default function SignUpScreen() {
                         validatePass(pass, confirmPassword),
                     })}
                     error={formState.errors.password?.message}
+                    required={true}
                   />
                 ) : (
                   <div>
@@ -123,6 +130,7 @@ export default function SignUpScreen() {
                         validate: validateNotEmpty("Last name"),
                       })}
                       error={formState.errors.lastName?.message}
+                      required={true}
                     />
                   </div>
                 )}
@@ -135,6 +143,7 @@ export default function SignUpScreen() {
                       validate: validateNotEmpty("Confirm password"),
                     })}
                     error={formState.errors.confirmPassword?.message}
+                    required={true}
                   />
                 ) : (
                   <TextInput
@@ -144,6 +153,7 @@ export default function SignUpScreen() {
                       validate: validatePhone,
                     })}
                     error={formState.errors.phoneNumber?.message}
+                    required={true}
                   />
                 )}
                 <div>
@@ -162,22 +172,16 @@ export default function SignUpScreen() {
                           );
                           if (!isValid) return;
 
-                          const { email, password } = getValues();
+                          const { email } = getValues();
                           try {
-                            setAcc(
-                              await createAccount(email, password).then((e) => {
-                                if (e.success) {
-                                  setPage(2);
-                                  return "userCredential" in e
-                                    ? e.userCredential
-                                    : undefined;
-                                } else {
-                                  setErrorBannerMsg(
-                                    "Something went wrong, please try again."
-                                  );
-                                }
-                              })
-                            );
+                            const isUnique = await isUniqueEmail(email);
+                            if (!isUnique) {
+                              setErrorBannerMsg(
+                                "Account already exists. Please log in instead."
+                              );
+                            } else {
+                              setPage(2);
+                            }
                           } catch (err) {
                             console.error(err);
                             setErrorBannerMsg(
@@ -194,23 +198,38 @@ export default function SignUpScreen() {
 
                           if (!isValid) return;
 
-                          const { firstName, lastName, phoneNumber } =
-                            getValues();
+                          const {
+                            email,
+                            password,
+                            firstName,
+                            lastName,
+                            phoneNumber,
+                          } = getValues();
 
                           try {
-                            const res = await createCaregiverAccount(
-                              acc,
-                              firstName,
-                              lastName,
-                              phoneNumber
+                            const accountResult = await createAccount(
+                              email,
+                              password
                             );
-
-                            if (res.success) {
-                              router.push("/caregiver/onboarding");
-                            } else {
-                              setErrorBannerMsg(
-                                "Something went wrong, please try again."
-                              );
+                            if (
+                              accountResult.success &&
+                              "userCredential" in accountResult
+                            ) {
+                              setAcc(accountResult.userCredential);
+                              const caregiverResult =
+                                await createCaregiverAccount(
+                                  accountResult.userCredential,
+                                  firstName,
+                                  lastName,
+                                  phoneNumber
+                                );
+                              if (caregiverResult.success) {
+                                router.push("/caregiver/onboarding");
+                              } else {
+                                setErrorBannerMsg(
+                                  "Something went wrong, please try again."
+                                );
+                              }
                             }
                           } catch (err) {
                             console.error(err);
@@ -231,7 +250,7 @@ export default function SignUpScreen() {
                           loginWithGoogle().then((e) => {
                             if (e.success) {
                               if ("isNewUser" in e && !e.isNewUser) {
-                                router.push("/caregiver/babyBook");
+                                router.push("/caregiver/book");
                               } else {
                                 setPage(2);
                               }
