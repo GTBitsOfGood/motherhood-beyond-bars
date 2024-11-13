@@ -7,7 +7,7 @@ import { FaTimes } from "react-icons/fa";
 function CaretakerModal({
   setModal,
   onSubmit,
-  buttonText = "Add caretaker",
+  buttonText = "Add caregiver",
   header = "Add a Caregiver",
   values = {},
 }: {

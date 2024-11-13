@@ -127,7 +127,6 @@ function RootNavigator() {
   const authData = useContext(UserContext);
   const { contact } = useContext(SettingsContext) ?? { context: null };
 
-  // TODO: add navigation items to this flow
   // The users should only have to complete onboarding if they're a new user.
   return (
     <KeyboardAvoidingView

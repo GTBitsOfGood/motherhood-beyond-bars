@@ -32,7 +32,7 @@ export default function GenChildrenAndBabyBooksTab() {
   const columns = React.useMemo(
     () => [
       { Header: "Name", accessor: "name" },
-      { Header: "Caretaker's Name", accessor: "caretakerName" },
+      { Header: "Caregiver's Name", accessor: "caretakerName" },
       { Header: "Mother's Name", accessor: "motherName" },
       { Header: "Date of Birth", accessor: "birthday" },
       { Header: "Sex", accessor: "sex" },
