@@ -1,14 +1,14 @@
 import { Timestamp, doc, setDoc } from "@firebase/firestore";
 import { useState } from "react";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 import { db } from "db/firebase";
-import { Item } from "@lib/types/items";
-import { Caregiver } from "@lib/types/users";
-
-import { Baby } from "@lib/types/baby";
 import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 
-import { RiArrowDropDownLine } from "react-icons/ri";
+import { Item } from "@lib/types/items";
+import { Caregiver } from "@lib/types/users";
+import { Baby } from "@lib/types/baby";
+
 import DownChevron from "@components/Icons/DownChevron";
 import Ellipse from "@components/Icons/Ellipse";
 
@@ -25,7 +25,7 @@ export default function ItemRequestRow({
 }) {
   const [rowExpanded, setRowExpanded] = useState(false);
   const [statusExpanded, setStatusExpanded] = useState(false);
-  const [babies, setBabies] = useState<any>(null);
+  const [babies, setBabies] = useState<Array<Baby>>([]);
 
   const status: { [index: string]: string } = {
     Pending: "#FD8033",
@@ -33,19 +33,28 @@ export default function ItemRequestRow({
     Completed: "#13B461",
   };
 
+  // TODO look into more efficient way to do this
   // Function to fetch babies for a specific caregiver
   const getBabies = async () => {
     const caregiverID = row.id;
     const fetchedBabies = await getBabiesFromCaregiver(caregiverID); // Fetch babies by caregiver ID
     if (fetchedBabies) {
-      setBabies(fetchedBabies);
+      setBabies(fetchedBabies as unknown as Array<Baby>);
     }
   };
 
   const dropDownData = [
     {
       header: "ADDRESS",
-      value: row.address + (row.apartment && row.apartment !== "" ? ", " + row.apartment : "") + ", " + row.city + ", " + row.state + " " + row.zipCode,
+      value:
+        row.address +
+        (row.apartment && row.apartment !== "" ? ", " + row.apartment : "") +
+        ", " +
+        row.city +
+        ", " +
+        row.state +
+        " " +
+        row.zipCode,
     },
     {
       header: "CONTACT",
@@ -53,13 +62,12 @@ export default function ItemRequestRow({
     },
     {
       header: "CHILDREN NAMES",
-      value: babies && (babies as Baby[]).map((baby) => baby.firstName + " " + baby.lastName).join(", "),
-    },
-    {
-      header: "CARETAKER COMMENTS",
-      value: row.itemsRequested.additionalComments
-        ? row.itemsRequested.additionalComments.join(", ")
-        : "",
+      value:
+        babies && babies.length
+          ? babies
+              .map((baby) => baby.firstName + " " + baby.lastName)
+              .join(", ")
+          : "N/A",
     },
   ];
 
@@ -73,16 +81,6 @@ export default function ItemRequestRow({
 
   function updateCaregiver(row: Caregiver) {
     setDoc(doc(db, "caregivers", row.id), row);
-  }
-
-  function generateColor(target: string) {
-    let sum = 0;
-    for (let i = 0; i < target.length; i++) {
-      sum += (i + 1) * target.charCodeAt(i);
-    }
-
-    sum = sum % 360;
-    return `hsla(${sum}deg 100% 70% / 40%)`;
   }
 
   return (
@@ -124,7 +122,7 @@ export default function ItemRequestRow({
           {row.firstName + " " + row.lastName}
         </td>
         <td className="text-ellipsis font-normal text-base text-primary-text">
-          {row.itemsRequested.items.map(item => item.title).join(", ")}
+          {row.itemsRequested.items.map((item) => item.title).join(", ")}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
           {row.itemsRequested.created
