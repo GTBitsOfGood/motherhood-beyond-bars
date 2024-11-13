@@ -23,6 +23,7 @@ export type Caregiver = {
   babies: DocumentReference<DocumentData>[] | Baby[];
   babyCount: number;
   auth: string;
+  onboarding: boolean;
 };
 
 export type OnboardingFormData = Omit<
