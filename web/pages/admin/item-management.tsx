@@ -308,7 +308,7 @@ const ItemManagement: React.FC = () => {
   };
 
   return (
-    <div className="p-6 flex flex-col w-full h-screen overflow-y-auto mx-auto">
+    <div className="p-6 flex flex-col w-full h-screen overflow-y-auto mx-auto sm:w-[82%]">
       <h2 className="text-2xl font-bold mb-8">Item Management</h2>
 
       {items.map((item) => (
