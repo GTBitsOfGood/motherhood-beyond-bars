@@ -4,8 +4,6 @@ import {
   deleteCaretaker,
   getCaregivers,
 } from "db/actions/admin/Caregiver";
-
-import { PAGINATION_PAGE_SIZE } from "db/consts";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
 
 import Modal from "@components/modal";
@@ -33,6 +31,17 @@ export default function GenCaregiversTab() {
     []
   );
 
+  const [paginationSize, setPaginationSize] = useState(5);
+
+  useEffect(() => {
+    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 48.5; 
+    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    // TODO check if better way than hardcoding
+    const entryHeight = 65;
+    const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
+    setPaginationSize(numEntries);
+  })
+
   const handleDelete = async (caregiver: any) => {
     deleteCaretaker(caregiver);
     loadData();
@@ -43,13 +52,14 @@ export default function GenCaregiversTab() {
   const paginatedProps = {
     totalRecords: filteredCaregivers.length,
     pageNumber: currPage,
+    pageSize: paginationSize,
   };
 
   const tableProps = {
     columns: columns,
     data: filteredCaregivers.slice(
-      (currPage - 1) * PAGINATION_PAGE_SIZE,
-      currPage * PAGINATION_PAGE_SIZE
+      (currPage - 1) * paginationSize,
+      currPage * paginationSize
     ),
     onDelete: handleDelete,
   };

@@ -8,8 +8,6 @@ import {
   getBabies,
 } from "db/actions/admin/Baby";
 import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
-
-import { PAGINATION_PAGE_SIZE } from "db/consts";
 import { BABIES_TAB } from "@lib/utils/consts";
 
 import Modal from "@components/modal";
@@ -43,6 +41,17 @@ export default function GenChildrenAndBabyBooksTab() {
     []
   );
 
+  const [paginationSize, setPaginationSize] = useState(5);
+
+  useEffect(() => {
+    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 72.5; 
+    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    // TODO check if better way than hardcoding
+    const entryHeight = 97;
+    const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
+    setPaginationSize(numEntries);
+  })
+
   const handleEdit = async (baby: any) => {
     await editBaby(baby);
     alert("Baby has been updated!");
@@ -58,8 +67,8 @@ export default function GenChildrenAndBabyBooksTab() {
   const tableProps = {
     columns: columns,
     data: filteredBabies.slice(
-      (currPage - 1) * PAGINATION_PAGE_SIZE,
-      currPage * PAGINATION_PAGE_SIZE
+      (currPage - 1) * paginationSize,
+      currPage * paginationSize
     ),
     onEdit: handleEdit,
     onDelete: handleDelete,
@@ -68,6 +77,7 @@ export default function GenChildrenAndBabyBooksTab() {
   const paginatedProps = {
     totalRecords: filteredBabies.length, // Use filtered data for pagination
     pageNumber: currPage,
+    pageSize: paginationSize,
   };
 
   async function loadData() {
@@ -107,7 +117,7 @@ export default function GenChildrenAndBabyBooksTab() {
   };
   return (
     <div>
-      <div className="flex flex-col border-t">
+      <div className="w-full h-full flex flex-col border-t">
         <div className="flex flex-row justify-between mx-9 my-4">
           <div className="flex flex-row gap-6 items-center">
             <h1 className="text-2xl font-bold">Children</h1>

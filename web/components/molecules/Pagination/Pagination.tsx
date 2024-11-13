@@ -1,13 +1,13 @@
-import { PAGINATION_PAGE_SIZE } from "db/consts";
 import React from "react";
 
-const pageSize = PAGINATION_PAGE_SIZE;
-
-const getFirstRecordOnPage = (currPage: number) =>
+const getFirstRecordOnPage = (currPage: number, pageSize: number) =>
   (currPage - 1) * pageSize + 1;
 
-const getLastRecordOnPage = (firstRecordOnPage: number, totalRecords: number) =>
-  Math.min(firstRecordOnPage + pageSize - 1, totalRecords);
+const getLastRecordOnPage = (
+  firstRecordOnPage: number,
+  pageSize: number,
+  totalRecords: number
+) => Math.min(firstRecordOnPage + pageSize - 1, totalRecords);
 
 const isValidPage = (firstRecordOnPage: number, totalRecords: number) =>
   firstRecordOnPage > 0 && firstRecordOnPage <= totalRecords;
@@ -46,6 +46,7 @@ const getArrows = (
   firstRecordOnPage: number,
   totalRecords: number,
   currPage: number,
+  pageSize: number,
   onNextPage: any,
   onPrevPage: any
 ) => [
@@ -85,16 +86,22 @@ const ArrowButton = ({
 function Pagination({
   totalRecords,
   currPage,
+  pageSize,
   onNextPage,
   onPrevPage,
 }: {
   totalRecords: number;
   currPage: number;
+  pageSize: number;
   onNextPage: any;
   onPrevPage: any;
 }) {
-  const firstRecordOnPage = getFirstRecordOnPage(currPage);
-  const lastRecordOnPage = getLastRecordOnPage(firstRecordOnPage, totalRecords);
+  const firstRecordOnPage = getFirstRecordOnPage(currPage, pageSize);
+  const lastRecordOnPage = getLastRecordOnPage(
+    firstRecordOnPage,
+    pageSize,
+    totalRecords
+  );
 
   if (!isValidPage(firstRecordOnPage, totalRecords)) {
     return null;
@@ -104,6 +111,7 @@ function Pagination({
     firstRecordOnPage,
     totalRecords,
     currPage,
+    pageSize,
     onNextPage,
     onPrevPage
   );
