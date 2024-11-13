@@ -1,7 +1,4 @@
-import { PAGINATION_PAGE_SIZE } from "db/consts";
 import React from "react";
-
-// const pageSize = PAGINATION_PAGE_SIZE;
 
 const getFirstRecordOnPage = (currPage: number, pageSize: number) =>
   (currPage - 1) * pageSize + 1;

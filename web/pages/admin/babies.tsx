@@ -8,8 +8,6 @@ import {
   getBabies,
 } from "db/actions/admin/Baby";
 import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
-
-import { PAGINATION_PAGE_SIZE } from "db/consts";
 import { BABIES_TAB } from "@lib/utils/consts";
 
 import Modal from "@components/modal";
@@ -48,6 +46,7 @@ export default function GenChildrenAndBabyBooksTab() {
   useEffect(() => {
     const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 72.5; 
     // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    // TODO check if better way than hardcoding
     const entryHeight = 97;
     const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
     setPaginationSize(numEntries);
