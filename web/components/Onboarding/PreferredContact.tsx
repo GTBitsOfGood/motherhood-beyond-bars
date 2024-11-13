@@ -59,8 +59,9 @@ export default function PreferredContactPage({ form, createCaregiver }: Props) {
             .then(() => {
               router.push("/caregiver/book");
             })
-            .catch(() => {
+            .catch((err) => {
               // TODO show if there's an error
+              console.log("ERROR" + err)
             })
             .finally(() => {
               setSubmitting(true);

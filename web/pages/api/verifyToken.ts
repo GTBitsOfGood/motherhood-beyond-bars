@@ -1,8 +1,18 @@
-import { getAuth } from "firebase-admin/auth";
 import { NextApiRequest, NextApiResponse } from "next";
-import { collection, doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase-admin/auth";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+
 import { db } from "db/firebase"; // Import Firestore db from your firebase setup
 import admin from "db/firebase/admin"; // Import initialized Firebase Admin SDK
+
+import { Caregiver } from "@lib/types/users";
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,12 +42,17 @@ export default async function handler(
         isAdmin = true;
       }
     }
+
     let onboarding = false;
     if (!isAdmin) {
-      const caregiverRef = doc(collection(db, "caregivers"), caregiverId);
-      const caregiverDoc = await getDoc(caregiverRef);
-      if (caregiverDoc && caregiverDoc.exists()) {
-        const caregiver = caregiverDoc.data();
+      const caregiverQuery = await getDocs(
+        query(
+          collection(db, "caregivers"),
+          where("auth", "==", decodedToken.uid)
+        )
+      );
+      if (!caregiverQuery.empty) {
+        const caregiver = caregiverQuery.docs[0].data() as Caregiver;
         onboarding = caregiver?.onboarding ?? false;
       }
     }
