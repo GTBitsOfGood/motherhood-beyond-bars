@@ -1,6 +1,6 @@
 interface Props {
   text: string;
-  type?: "primary" | "secondary" | "Google";
+  type?: "primary" | "secondary" | "tertiary" | "Google";
   onClick?: () => any;
   submit?: boolean;
   icon?: React.ReactNode;
@@ -29,6 +29,9 @@ export default function Button({
     styles = `text-mbb-pink px-4 pt-2 pb-[0.5625rem] text-base font-opensans border-mbb-pink rounded gap-2 hover:bg-mbb-pink-hover active:bg-mbb-pink active:text-white active:stroke-white`;
     if (type === "primary") {
       styles += " border";
+    } else if (type === "tertiary") {
+      styles +=
+        " pl-0 hover:bg-transparent hover:font-bold active:text-mbb-pink/60 active:bg-transparent";
     }
   }
 

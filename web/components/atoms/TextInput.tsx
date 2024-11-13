@@ -30,10 +30,10 @@ export default function TextInput({
   const [value, setValue] = useState(currentValue);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col">
       {label && (
         <label
-          className="font-opensans text-base mb-2"
+          className="text-black text-base font-normal leading-normal"
           htmlFor={formValue ? formValue.name : undefined}
         >
           {label}
@@ -58,7 +58,7 @@ export default function TextInput({
         placeholder={placeholder}
         value={value}
       />
-      <ErrorText error={error} />
+      {<ErrorText error={error} />}
     </div>
   );
 }
