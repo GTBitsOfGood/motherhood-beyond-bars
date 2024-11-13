@@ -69,7 +69,7 @@ function ResourceLibraryPage({ waivers }: Props) {
           setChangesMade={setChangesMade}
         />
       ),
-    }
+    },
   ];
 
   return (

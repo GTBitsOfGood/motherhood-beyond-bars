@@ -197,57 +197,57 @@ export default function genItemRequestsTab() {
               </button>
             ))}
           </div>
-          {selectedRows.length != 0 &&
-          <div className="flex flex-col items-center relative z-10">
-            <div className="flex items-center gap-x-5">
-              <div className="text-[#666666]">Mark as</div>
-              <div className="w-[200px]">
+          {selectedRows.length != 0 && (
+            <div className="flex flex-col items-center relative z-10">
+              <div className="flex items-center gap-x-5">
+                <div className="text-[#666666]">Mark as</div>
+                <div className="w-[200px]">
+                  <div
+                    className="flex items-center gap-x-2 cursor-pointer relative z-1 border-[#D9D9D9] border-[1px] py-2 px-2 bg-[#FAFBFC] rounded w-full justify-between"
+                    onClick={() => {
+                      setStatusExpanded(!statusExpanded);
+                    }}
+                  >
+                    <div className="text-[#8C8C8C]">Status</div>
+                    <DownChevron></DownChevron>
+                  </div>
+                  <div
+                    className={`${
+                      statusExpanded == true ? "flex" : "hidden"
+                    } shadow-md flex-col font-normal bg-white absolute w-[200px] py-2`}
+                  >
+                    {Object.keys(status).map((stat: string) => {
+                      return (
+                        <div
+                          className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10"
+                          key={stat}
+                          onClick={() => {
+                            changeStatus(stat);
+                            setStatusExpanded(false);
+                            setSelectedRows([]);
+                          }}
+                        >
+                          <Ellipse color={status[stat]}></Ellipse>
+                          <div>{stat}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <Line31 />
                 <div
-                  className="flex items-center gap-x-2 cursor-pointer relative z-1 border-[#D9D9D9] border-[1px] py-2 px-2 bg-[#FAFBFC] rounded w-full justify-between"
+                  className="cursor-pointer"
                   onClick={() => {
-                    setStatusExpanded(!statusExpanded);
+                    changeStatus("Deleted");
+                    setStatusExpanded(false);
+                    setSelectedRows([]);
                   }}
                 >
-                  <div className="text-[#8C8C8C]">Status</div>
-                  <DownChevron></DownChevron>
+                  <TrashCan />
                 </div>
-                <div
-                  className={`${
-                    statusExpanded == true ? "flex" : "hidden"
-                  } shadow-md flex-col font-normal bg-white absolute w-[200px] py-2`}
-                >
-                  {Object.keys(status).map((stat: string) => {
-                    return (
-                      <div
-                        className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-[#304CD1]/10"
-                        key={stat}
-                        onClick={() => {
-                          changeStatus(stat);
-                          setStatusExpanded(false);
-                          setSelectedRows([]);
-                        }}
-                      >
-                        <Ellipse color={status[stat]}></Ellipse>
-                        <div>{stat}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <Line31 />
-              <div
-                className="cursor-pointer"
-                onClick={() => {
-                  changeStatus("Deleted");
-                  setStatusExpanded(false);
-                  setSelectedRows([]);
-                }}
-              >
-                <TrashCan />
               </div>
             </div>
-          </div>
-          }
+          )}
         </div>
         <div className="w-full">
           {data ? sections[selectedSectionIndex].component : <></>}

@@ -4,20 +4,22 @@ import {
   deleteCaretaker,
   getCaregivers,
 } from "db/actions/admin/Caregiver";
-import PaginatedTable from "@components/tables/PaginatedTable";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
-import ButtonWithIcon from "@components/buttonWithIcon";
-import { FaPlus } from "react-icons/fa";
+
 import Modal from "@components/modal";
 import CaretakerModal from "@components/modals/CaretakerModal";
-import { PAGINATION_PAGE_SIZE } from "db/consts";
+import PaginatedTable from "@components/tables/PaginatedTable";
+
+import Button from "@components/atoms/Button";
+import PlusIcon from "@components/Icons/PlusIcon";
 
 const tab = CAREGIVERS_TAB;
 
-export default function genCaregiversTab() {
+export default function GenCaregiversTab() {
   const [caregivers, setCaregivers] = useState<any[]>([]);
   const [filteredCaregivers, setFilteredCaregivers] = useState<any[]>([]);
   const [currPage, setCurrPage] = useState(1);
+  const [open, setOpen] = React.useState<any[]>([]);
 
   const columns = React.useMemo(
     () => [
@@ -29,6 +31,17 @@ export default function genCaregiversTab() {
     []
   );
 
+  const [paginationSize, setPaginationSize] = useState(5);
+
+  useEffect(() => {
+    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 48.5; 
+    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    // TODO check if better way than hardcoding
+    const entryHeight = 65;
+    const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
+    setPaginationSize(numEntries);
+  })
+
   const handleDelete = async (caregiver: any) => {
     deleteCaretaker(caregiver);
     loadData();
@@ -39,13 +52,14 @@ export default function genCaregiversTab() {
   const paginatedProps = {
     totalRecords: filteredCaregivers.length,
     pageNumber: currPage,
+    pageSize: paginationSize,
   };
 
   const tableProps = {
     columns: columns,
     data: filteredCaregivers.slice(
-      (currPage - 1) * PAGINATION_PAGE_SIZE,
-      currPage * PAGINATION_PAGE_SIZE
+      (currPage - 1) * paginationSize,
+      currPage * paginationSize
     ),
     onDelete: handleDelete,
   };
@@ -54,6 +68,7 @@ export default function genCaregiversTab() {
     const caregivers = await getCaregivers();
     setCaregivers(caregivers);
     setFilteredCaregivers(caregivers);
+    setOpen(Array(caregivers.length).fill(false));
   }
 
   const handleSearch = (input: string) => {
@@ -67,6 +82,16 @@ export default function genCaregiversTab() {
     loadData();
   }, []);
 
+  const onNextPage = () => {
+    setCurrPage(currPage + 1);
+    setOpen(Array(caregivers.length).fill(false));
+  };
+
+  const onPrevPage = () => {
+    setCurrPage(currPage - 1);
+    setOpen(Array(caregivers.length).fill(false));
+  };
+
   return (
     <div>
       <div className="flex flex-col border-t">
@@ -78,8 +103,8 @@ export default function genCaregiversTab() {
             </h2>
           </div>
           <div>
-            <ButtonWithIcon
-              icon={<FaPlus />}
+            <Button
+              icon={<PlusIcon small={true} />}
               text="Add a caregiver"
               onClick={() => toggleAddModal(true)}
             />
@@ -88,11 +113,13 @@ export default function genCaregiversTab() {
         <hr className="border-t" />
         <div className="m-6">
           <PaginatedTable
+            open={open}
+            setOpen={setOpen}
             type={tab}
             tableProps={tableProps}
             paginatedProps={paginatedProps}
-            onNextPage={() => setCurrPage(currPage + 1)}
-            onPrevPage={() => setCurrPage(currPage - 1)}
+            onNextPage={onNextPage}
+            onPrevPage={onPrevPage}
             onSearch={handleSearch}
           />
         </div>

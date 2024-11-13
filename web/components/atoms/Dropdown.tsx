@@ -13,6 +13,7 @@ interface Props {
   disabled?: boolean;
   value?: string | Option;
   onChange?: (value: Option) => void;
+  required?: boolean;
 }
 
 export default function Dropdown({
@@ -23,10 +24,14 @@ export default function Dropdown({
   value,
   error,
   placeholder = "Select",
+  required = false,
 }: Props) {
   return (
     <div className="flex flex-col w-full" onFocus={(e) => keyboardScroll(e)}>
-      <label>{label}</label>
+      <label>
+        {label}
+        {required && <span className="text-asterisks-red text-sm">*</span>}
+      </label>
       <ReactDropdown
         options={options}
         value={value}
