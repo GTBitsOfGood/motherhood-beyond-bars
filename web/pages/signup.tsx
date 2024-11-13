@@ -10,25 +10,48 @@ import Button from "@components/atoms/Button";
 import HalfScreen from "@components/logos/HalfScreen";
 import BackButton from "@components/atoms/BackButton";
 import Banner from "@components/molecules/Banner";
+import { useForm } from "react-hook-form";
+import { validatePassword } from "@lib/utils/passwordCreation";
+
+const validateNotEmpty = (name: string) => (v: unknown) =>
+  !v ? `${name} cannot be empty.` : undefined;
+
+const validatePass = (pass?: string, confirm?: string) => {
+  return !pass
+    ? "Password cannot be empty."
+    : validatePassword({ newPassword: pass, confirmPassword: confirm });
+};
+
+const EMAIL_RE = /^[\w.-]+@(?:[\w-]+\.)+[\w-]{2,4}$/;
+const validateEmail = (v?: string) =>
+  !v
+    ? "Email cannot be empty."
+    : !EMAIL_RE.test(v)
+      ? "Email must be valid."
+      : undefined;
+
+// Allows for country code, parens around area code, separation by '-' and ' ' characters
+const PHONE_RE =
+  /^(?:\+[0-9] ?)?(?:\([0-9]{3}\)|[0-9]{3})(?:-| )?[0-9]{3}(?:-| )?[0-9]{4}$/;
+const validatePhone = (v?: string) => {
+  return !v
+    ? "Phone number cannot be empty."
+    : !PHONE_RE.test(v)
+      ? "Invalid phone number. Only use numbers."
+      : undefined;
+};
 
 export default function SignUpScreen() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-
-  const [firstNameError, setFirstNameError] = useState("");
-  const [lastNameError, setLastNameError] = useState("");
-  const [phoneNumberError, setPhoneNumberError] = useState("");
+  const { register, formState, trigger, getValues } = useForm<{
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    confirmPassword: string;
+    phoneNumber: string;
+  }>();
 
   const [page, setPage] = useState(1);
   const [acc, setAcc] = useState<UserCredential>();
@@ -49,10 +72,7 @@ export default function SignUpScreen() {
               </div>
               {errorBannerMsg && (
                 <div className="hidden sm:inline mt-0 sm:-mt-4">
-                  <Banner
-                    text={errorBannerMsg}
-                    onClose={() => setErrorBannerMsg("")}
-                  />
+                  <Banner text={errorBannerMsg} />
                 </div>
               )}
               <p className="text-primary-text text-2xl font-bold font-opensans mb-4 sm:mb-8">
@@ -60,10 +80,7 @@ export default function SignUpScreen() {
               </p>
               {errorBannerMsg && (
                 <div className="inline -mt-2 sm:hidden sm:mt-0">
-                  <Banner
-                    text={errorBannerMsg}
-                    onClose={() => setErrorBannerMsg("")}
-                  />
+                  <Banner text={errorBannerMsg} />
                 </div>
               )}
               <div className="flex flex-col w-full gap-2 sm:gap-6">
@@ -71,48 +88,45 @@ export default function SignUpScreen() {
                   <TextInput
                     key="email"
                     label="Email"
-                    currentValue={email}
-                    error={emailError}
-                    onChange={(event) => {
-                      setEmail(event);
-                      setEmailError("");
-                    }}
+                    formValue={register("email", {
+                      validate: validateEmail,
+                    })}
+                    error={formState.errors.email?.message}
+                    required={true}
                   />
                 ) : (
                   <TextInput
                     key="firstName"
                     label="First Name"
-                    currentValue={firstName}
-                    error={firstNameError}
-                    onChange={(event) => {
-                      setFirstName(event);
-                      setFirstNameError("");
-                    }}
+                    formValue={register("firstName", {
+                      validate: validateNotEmpty("First name"),
+                    })}
+                    error={formState.errors.firstName?.message}
+                    required={true}
                   />
                 )}
                 {page === 1 ? (
                   <TextInput
                     key="password"
                     label="Password"
-                    currentValue={password}
                     inputType="password"
-                    error={passwordError}
-                    onChange={(event) => {
-                      setPassword(event);
-                      setPasswordError("");
-                    }}
+                    formValue={register("password", {
+                      validate: (pass, { confirmPassword }) =>
+                        validatePass(pass, confirmPassword),
+                    })}
+                    error={formState.errors.password?.message}
+                    required={true}
                   />
                 ) : (
                   <div>
                     <TextInput
                       key="lastName"
                       label="Last Name"
-                      currentValue={lastName}
-                      error={lastNameError}
-                      onChange={(event) => {
-                        setLastName(event);
-                        setLastNameError("");
-                      }}
+                      formValue={register("lastName", {
+                        validate: validateNotEmpty("Last name"),
+                      })}
+                      error={formState.errors.lastName?.message}
+                      required={true}
                     />
                   </div>
                 )}
@@ -120,24 +134,22 @@ export default function SignUpScreen() {
                   <TextInput
                     key="confirmPassword"
                     label="Confirm Password"
-                    currentValue={confirmPassword}
                     inputType="password"
-                    error={confirmPasswordError}
-                    onChange={(event) => {
-                      setConfirmPassword(event);
-                      setConfirmPasswordError("");
-                    }}
+                    formValue={register("confirmPassword", {
+                      validate: validateNotEmpty("Confirm password"),
+                    })}
+                    error={formState.errors.confirmPassword?.message}
+                    required={true}
                   />
                 ) : (
                   <TextInput
                     key="phoneNumber"
                     label="Phone Number"
-                    currentValue={phoneNumber}
-                    error={phoneNumberError}
-                    onChange={(event) => {
-                      setPhoneNumber(event);
-                      setPhoneNumberError("");
-                    }}
+                    formValue={register("phoneNumber", {
+                      validate: validatePhone,
+                    })}
+                    error={formState.errors.phoneNumber?.message}
+                    required={true}
                   />
                 )}
                 <div>
@@ -145,13 +157,19 @@ export default function SignUpScreen() {
                     <Button
                       text={`${page === 1 ? "Continue" : "Get started"}`}
                       onClick={async () => {
-                        // TODO update backend so creates account at end
+                        setErrorBannerMsg("");
+
                         if (page === 1) {
-                          if (
-                            email &&
-                            password &&
-                            password === confirmPassword
-                          ) {
+                          const isValid = await trigger(
+                            ["email", "password", "confirmPassword"],
+                            {
+                              shouldFocus: true,
+                            }
+                          );
+                          if (!isValid) return;
+
+                          const { email, password } = getValues();
+                          try {
                             setAcc(
                               await createAccount(email, password).then((e) => {
                                 if (e.success) {
@@ -166,58 +184,45 @@ export default function SignUpScreen() {
                                 }
                               })
                             );
-                          } else {
-                            if (!email) {
-                              setEmailError("Please enter a email");
-                            }
-                            if (!password) {
-                              setPasswordError("Please enter a password");
-                            } else if (password.length < 10) {
-                              setPasswordError(
-                                "Password must contain at least 10 characters"
-                              );
-                            }
-                            if (!confirmPassword) {
-                              setConfirmPasswordError(
-                                "Please enter a password"
-                              );
-                            } else if (password !== confirmPassword) {
-                              setConfirmPasswordError("Passwords must match");
-                            }
+                          } catch (err) {
+                            console.error(err);
+                            setErrorBannerMsg(
+                              "Something went wrong, please try again."
+                            );
                           }
                         } else {
-                          // TODO fix error checking for phone number
-                          if (firstName && lastName && phoneNumber) {
-                            createCaregiverAccount(
+                          const isValid = await trigger(
+                            ["firstName", "lastName", "phoneNumber"],
+                            {
+                              shouldFocus: true,
+                            }
+                          );
+
+                          if (!isValid) return;
+
+                          const { firstName, lastName, phoneNumber } =
+                            getValues();
+
+                          try {
+                            const res = await createCaregiverAccount(
                               acc,
                               firstName,
                               lastName,
                               phoneNumber
-                            ).then((e) => {
-                              if (e.success) {
-                                router.push("/caregiver/onboarding");
-                              } else {
-                                setErrorBannerMsg(
-                                  "Something went wrong, please try again."
-                                );
-                              }
-                            });
-                          } else {
-                            if (!firstName) {
-                              setFirstNameError("Please enter a first name");
-                            }
-                            if (!lastName) {
-                              setLastNameError("Please enter a last name");
-                            }
-                            if (!phoneNumber) {
-                              setPhoneNumberError(
-                                "Please enter a phone number"
-                              );
-                            } else if (/[^0-9]/.test(phoneNumber)) {
-                              setPhoneNumberError(
-                                "Phone number should only contain numbers"
+                            );
+
+                            if (res.success) {
+                              router.push("/caregiver/onboarding");
+                            } else {
+                              setErrorBannerMsg(
+                                "Something went wrong, please try again."
                               );
                             }
+                          } catch (err) {
+                            console.error(err);
+                            setErrorBannerMsg(
+                              "Something went wrong, please try again."
+                            );
                           }
                         }
                       }}

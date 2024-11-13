@@ -1,30 +1,35 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+
 import {
   addNewChild,
   editBaby,
   deleteBaby,
   getBabies,
 } from "db/actions/admin/Baby";
+import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 
-import PaginatedTable from "@components/tables/PaginatedTable";
-import ButtonWithIcon from "@components/buttonWithIcon";
+import { PAGINATION_PAGE_SIZE } from "db/consts";
+import { BABIES_TAB } from "@lib/utils/consts";
+
 import Modal from "@components/modal";
 import ChildModal from "@components/modals/ChildModal";
-import { BABIES_TAB } from "@lib/utils/consts";
-import { PAGINATION_PAGE_SIZE } from "db/consts";
-import { useRouter } from "next/router";
-import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
+import PaginatedTable from "@components/tables/PaginatedTable";
+
+import Button from "@components/atoms/Button";
+import PlusIcon from "@components/Icons/PlusIcon";
 
 const tab = BABIES_TAB;
 
-export default function genChildrenAndBabyBooksTab() {
+export default function GenChildrenAndBabyBooksTab() {
   const router = useRouter();
   const { caregiver } = router.query;
   const [babies, setBabies] = useState<any[]>([]);
   const [filteredBabies, setFilteredBabies] = useState<any[]>([]); // Store filtered babies
   const [currPage, setCurrPage] = useState(1);
   const [addModal, toggleAddModal] = useState(false);
+  const [open, setOpen] = React.useState<any[]>([]);
+
 
   const columns = React.useMemo(
     () => [
@@ -86,6 +91,7 @@ export default function genChildrenAndBabyBooksTab() {
     }
     setBabies(babies);
     setFilteredBabies(babies);
+    setOpen(Array(babies.length).fill(false));
   }
 
   // TODO add some intuitive way to either go back or clear search
@@ -101,6 +107,15 @@ export default function genChildrenAndBabyBooksTab() {
     loadData();
   }, [caregiver]);
 
+  const onNextPage = () => {
+    setCurrPage(currPage + 1);
+    setOpen(Array(babies.length).fill(false));
+  };
+
+  const onPrevPage = () => {
+    setCurrPage(currPage - 1);
+    setOpen(Array(babies.length).fill(false));
+  };
   return (
     <div>
       <div className="w-full h-full flex flex-col border-t">
@@ -112,8 +127,8 @@ export default function genChildrenAndBabyBooksTab() {
             </h2>
           </div>
           <div>
-            <ButtonWithIcon
-              icon={<FaPlus />}
+            <Button
+              icon={<PlusIcon small={true} />}
               text="Add a child"
               onClick={() => toggleAddModal(true)}
             />
@@ -127,9 +142,11 @@ export default function genChildrenAndBabyBooksTab() {
             tableProps={tableProps}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            onNextPage={() => setCurrPage(currPage + 1)}
-            onPrevPage={() => setCurrPage(currPage - 1)}
+            onNextPage={onNextPage}
+            onPrevPage={onPrevPage}
             onSearch={handleSearch}
+            setOpen={setOpen}
+            open={open}
           />
         </div>
       </div>

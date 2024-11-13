@@ -16,14 +16,32 @@ const isValidPage = (firstRecordOnPage: number, totalRecords: number) =>
   firstRecordOnPage > 0 && firstRecordOnPage <= totalRecords;
 
 const LeftArrow = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M15.1599 7.41L10.5799 12L15.1599 16.59L13.7499 18L7.74991 12L13.7499 6L15.1599 7.41Z" fill="currentColor"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      d="M15.1599 7.41L10.5799 12L15.1599 16.59L13.7499 18L7.74991 12L13.7499 6L15.1599 7.41Z"
+      fill="currentColor"
+    />
   </svg>
 );
 
 const RightArrow = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M8.84009 7.41L13.4201 12L8.84009 16.59L10.2501 18L16.2501 12L10.2501 6L8.84009 7.41Z" fill="currentColor"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      d="M8.84009 7.41L13.4201 12L8.84009 16.59L10.2501 18L16.2501 12L10.2501 6L8.84009 7.41Z"
+      fill="currentColor"
+    />
   </svg>
 );
 
@@ -35,14 +53,22 @@ const getArrows = (
   onNextPage: any,
   onPrevPage: any
 ) => [
-  { symbol: <LeftArrow/>, disabled: firstRecordOnPage <= pageSize, onClick: onPrevPage },
-  { symbol: <RightArrow/>, disabled: totalRecords <= currPage * pageSize, onClick: onNextPage },
+  {
+    symbol: <LeftArrow />,
+    disabled: firstRecordOnPage <= pageSize,
+    onClick: onPrevPage,
+  },
+  {
+    symbol: <RightArrow />,
+    disabled: totalRecords <= currPage * pageSize,
+    onClick: onNextPage,
+  },
 ];
 
 const ArrowButton = ({
   symbol,
   disabled,
-  onClick
+  onClick,
 }: {
   symbol: JSX.Element;
   disabled: boolean;
@@ -50,7 +76,9 @@ const ArrowButton = ({
 }) => (
   <div
     className={`w-8 h-8 rounded border flex justify-center items-center font-bold text-xl ${
-      disabled ? "text-gray-300 cursor-not-allowed" : "text-black cursor-pointer"
+      disabled
+        ? "text-gray-300 cursor-not-allowed"
+        : "text-black cursor-pointer"
     }`}
     onClick={!disabled ? onClick : undefined}
   >
@@ -63,7 +91,7 @@ function Pagination({
   currPage,
   pageSize,
   onNextPage,
-  onPrevPage
+  onPrevPage,
 }: {
   totalRecords: number;
   currPage: number;
@@ -82,7 +110,14 @@ function Pagination({
     return null;
   }
 
-  const arrows = getArrows(firstRecordOnPage, totalRecords, currPage, pageSize, onNextPage, onPrevPage);
+  const arrows = getArrows(
+    firstRecordOnPage,
+    totalRecords,
+    currPage,
+    pageSize,
+    onNextPage,
+    onPrevPage
+  );
 
   return (
     <div className="flex items-center gap-3 justify-end">
@@ -91,7 +126,12 @@ function Pagination({
       </h1>
       <div className="flex items-center gap-2">
         {arrows.map(({ symbol, disabled, onClick }, index) => (
-          <ArrowButton key={index} symbol={symbol} disabled={disabled} onClick={onClick} />
+          <ArrowButton
+            key={index}
+            symbol={symbol}
+            disabled={disabled}
+            onClick={onClick}
+          />
         ))}
       </div>
     </div>

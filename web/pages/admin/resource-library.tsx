@@ -69,11 +69,11 @@ function ResourceLibraryPage({ waivers }: Props) {
           setChangesMade={setChangesMade}
         />
       ),
-    }
+    },
   ];
 
   return (
-    <div className="w-full flex flex-col overflow-y-scroll">
+    <div className="w-full flex flex-col overflow-y-scroll sm:w-[82%]">
       <div className="flex flex-row items-center py-6 border-b w-full px-10">
         <h1 className="text-2xl font-bold w-full">Resource Library</h1>
       </div>

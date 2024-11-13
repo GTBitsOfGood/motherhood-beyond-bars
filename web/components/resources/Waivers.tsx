@@ -17,6 +17,7 @@ import MdEditor from "react-markdown-editor-lite";
 import MarkdownIt from "markdown-it";
 import "react-markdown-editor-lite/lib/index.css";
 import { formatDoc } from "db/firebase/getDoc";
+import Button from "@components/atoms/Button";
 
 const mdParser = new MarkdownIt();
 
@@ -70,6 +71,7 @@ function Waivers({
 
   const updateSelectedWaiver = (field: keyof Waiver, value: any) => {
     if (!selectedWaiver) return;
+    setChangesMade(true);
     setSelectedWaiver(
       (prevWaiver) =>
         ({
@@ -98,7 +100,7 @@ function Waivers({
         lastUpdated: new Date().toISOString(),
         description: "Waiver Description",
         order: localWaivers.length,
-        onboarding: true
+        onboarding: true,
       };
       setLocalWaivers([...localWaivers, newWaiver]);
       setSelectedWaiver(newWaiver);
@@ -234,19 +236,12 @@ function Waivers({
               >
                 Delete waiver
               </button>
-              <button
-                className={`py-2 px-4 font-semibold border rounded-md ${
-                  // TODO disable button when no changes
-                  // getChangesMade()
-                  true
-                    ? "border-mbb-pink text-mbb-pink hover:bg-mbb-pink hover:text-white"
-                    : "border-gray-400 text-gray-400"
-                }`}
+              <Button
+                text="Save changes"
                 onClick={handleSaveWaiver}
-                disabled={loading || saved}
-              >
-                Save changes
-              </button>
+                disabled={loading || saved || !getChangesMade()}
+                width="auto"
+              />
             </div>
           </>
         ) : (

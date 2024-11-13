@@ -1,11 +1,13 @@
-import Ellipse from "@components/Icons/Ellipse";
-import DownChevron from "@components/Icons/DownChevron";
-import RightChevronBlue from "@components/Icons/RightChevronBlue";
+import { Timestamp, doc, setDoc } from "@firebase/firestore";
 import { useState } from "react";
-import { Timestamp, setDoc, doc } from "firebase/firestore";
+
 import { db } from "db/firebase";
-import { Caregiver } from "@lib/types/users";
 import { Item } from "@lib/types/items";
+import { Caregiver } from "@lib/types/users";
+
+import { RiArrowDropDownLine } from "react-icons/ri";
+import DownChevron from "@components/Icons/DownChevron";
+import Ellipse from "@components/Icons/Ellipse";
 
 export default function ItemRequestRow({
   row,
@@ -73,127 +75,111 @@ export default function ItemRequestRow({
   return (
     <>
       <tr
-        className={`border-t ${
-          row.itemsRequested.status == "Pending" ? "font-bold" : ""
+        className={`hover:bg-mbb-pink/10 border-t ${
+          row.itemsRequested.status === "Pending" ? "font-bold" : ""
         } ${
           selectedRows.includes(row.id)
             ? "border-l-2 border-l-mbb-pink bg-mbb-pink/5"
             : ""
-        }`}
+        } cursor-pointer`}
+        onClick={() => setRowExpanded(!rowExpanded)} // Expand/collapse row on click
       >
-        <td className="py-2">
-          <div className="flex gap-x-2 ">
-            <div
-              className={`${rowExpanded ? "rotate-90" : ""} cursor-pointer`}
-              onClick={() => {
-                setRowExpanded(!rowExpanded);
-              }}
-            >
-              <RightChevronBlue></RightChevronBlue>
-            </div>
+        <td className="p-0 pl-0 pr-2 py-5">
+          <div className="flex gap-x-2">
+            <RiArrowDropDownLine
+              className={`text-3xl duration-300 cursor-pointer text-mbb-pink ${rowExpanded ? "rotate-180" : ""}`}
+            />
             <input
               type="checkbox"
               className="cursor-pointer"
               checked={selectedRows.includes(row.id)}
+              onClick={(event) => event.stopPropagation()} // Prevent row click event
               onChange={() => {
                 const tempSelected = selectedRows;
                 tempSelected.includes(row.id)
                   ? tempSelected.splice(tempSelected.indexOf(row.id), 1)
                   : tempSelected.push(row.id);
-
                 setSelectedRows([...tempSelected]);
               }}
-            ></input>
+            />
           </div>
         </td>
-        <td className={`py-2 text-base text-black whitespace-nowrap`}>
+        <td className="py-2 text-base text-black whitespace-nowrap">
           {row.firstName + " " + row.lastName}
         </td>
-        <td className="py-2 px-6 text-base font-normal text-black whitespace-nowrap flex flex-wrap gap-3">
-          {row.itemsRequested.items.map((item: Item, index: number) => {
-            return (
-              <div
-                className={`p-2 rounded`}
-                style={{
-                  backgroundColor: generateColor(item.title),
-                }}
-                key={index}
-              >
-                {item.title}
-              </div>
-            );
-          })}
+        <td className="text-ellipsis font-normal text-base text-primary-text">
+          {row.itemsRequested.items.map(item => item.title).join(", ")}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {row.itemsRequested.created ? getDateString(row.itemsRequested.created) : null}
+          {row.itemsRequested.created
+            ? getDateString(row.itemsRequested.created)
+            : null}
         </td>
         <td className="py-2 px-6 text-base border-t text-black whitespace-nowrap">
-          {row.itemsRequested.updated ? getDateString(row.itemsRequested.updated) : null}
+          {row.itemsRequested.updated
+            ? getDateString(row.itemsRequested.updated)
+            : null}
         </td>
-
         <td className="py-2 px-6 text-base items-center">
-          <div>
-            <div
-              className="flex items-center gap-x-2 cursor-pointer relative z-1"
-              onClick={() => {
-                setStatusExpanded(!statusExpanded);
-              }}
-            >
-              <Ellipse color={status[row.itemsRequested.status]}></Ellipse>
-              <div>{row.itemsRequested.status}</div>
-              <DownChevron />
-            </div>
-            <div
-              className={`${
-                statusExpanded == true ? "flex" : "hidden"
-              } shadow-md flex-col font-normal absolute bg-white z-10`}
-            >
-              {Object.keys(status).map((stat) => {
-                return (
-                  <div
-                    className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-mbb-pink/10"
-                    key={stat}
-                    onClick={() => {
-                      row.itemsRequested.status = stat;
-                      updateCaregiver(row);
-                      setStatusExpanded(false);
-                    }}
-                  >
-                    <Ellipse color={status[stat]}></Ellipse>
-                    <div>{stat}</div>
-                  </div>
-                );
-              })}
+          <div
+            className="flex items-center gap-x-2 cursor-pointer relative z-1"
+            onClick={(event) => {
+              event.stopPropagation(); // Prevent row click event
+              setStatusExpanded(!statusExpanded);
+            }}
+          >
+            <Ellipse color={status[row.itemsRequested.status]} />
+            <div>{row.itemsRequested.status}</div>
+            <DownChevron />
+          </div>
+          <div
+            className={`${
+              statusExpanded ? "flex" : "hidden"
+            } shadow-md flex-col font-normal absolute bg-white z-10`}
+          >
+            {Object.keys(status).map((stat) => (
               <div
-                className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-mbb-pink/10 text-error-red border-t"
+                className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-mbb-pink/10"
+                key={stat}
                 onClick={() => {
-                  row.itemsRequested.status = "Deleted";
+                  row.itemsRequested.status = stat;
                   updateCaregiver(row);
                   setStatusExpanded(false);
                 }}
               >
-                Delete Request
+                <Ellipse color={status[stat]} />
+                <div>{stat}</div>
               </div>
+            ))}
+            <div
+              className="flex items-center gap-x-2 cursor-pointer px-3 py-1 hover:bg-mbb-pink/10 text-error-red border-t"
+              onClick={() => {
+                row.itemsRequested.status = "Deleted";
+                updateCaregiver(row);
+                setStatusExpanded(false);
+              }}
+            >
+              Delete Request
             </div>
           </div>
         </td>
       </tr>
-      <tr className={`${!rowExpanded ? "hidden" : ""}`}>
-        <td colSpan={6} className="py-3">
-          <div className="bg-secondary-background border-light-gray border px-10 py-6 gap-y-4 flex flex-col">
-            {dropDownData.map((data) => {
-              return (
+      {rowExpanded && (
+        <tr>
+          <td colSpan={6} className="py-3">
+            <div className="bg-secondary-background border-light-gray border px-10 py-6 gap-y-4 flex flex-col">
+              {dropDownData.map((data) => (
                 <div className="flex" key={data.header}>
                   <div className="w-[20%] text-dark-gray text-sm tracking-[0.02em]">
                     {data.header}
                   </div>
                   <div>{data.value}</div>
                 </div>
-              );
-            })}
-          </div>
-        </td>
-      </tr>
+              ))}
+            </div>
+          </td>
+        </tr>
+      )}
     </>
   );
 }

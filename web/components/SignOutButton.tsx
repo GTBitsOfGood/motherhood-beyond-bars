@@ -3,6 +3,7 @@ import { auth } from "db/firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie"; // For clearing cookies
+import Button from "./atoms/Button";
 
 function SignOutButton() {
   const router = useRouter();
@@ -22,14 +23,7 @@ function SignOutButton() {
       });
   };
 
-  return (
-    <button
-      onClick={logout}
-      className="px-2 py-2 text-base font-semibold text-mbb-pink"
-    >
-      Log out
-    </button>
-  );
+  return <Button text="Log out" onClick={logout} />;
 }
 
 export default SignOutButton;

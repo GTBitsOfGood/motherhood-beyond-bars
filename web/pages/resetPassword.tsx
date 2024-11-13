@@ -3,8 +3,10 @@ import TextInput from "@components/atoms/TextInput";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import HalfScreen from "@components/logos/HalfScreen";
 import ErrorToast from "@components/Onboarding/ErrorToast";
-import { PasswordException } from "@lib/exceptions/passwordExceptions";
-import { validatePassword } from "@lib/utils/passwordCreation";
+import {
+  MIN_PASSWORD_LEN,
+  validatePassword,
+} from "@lib/utils/passwordCreation";
 import {
   confirmPasswordReset,
   getAuth,
@@ -29,25 +31,28 @@ export default function ForgotPasswordScreen() {
         router.push("/login");
       }
     }
-  }, []);
+  }, [oobCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
-      validatePassword(newPassword, confirmPassword);
+      const invalidReason = validatePassword({ newPassword, confirmPassword });
+
+      if (invalidReason) {
+        setError(invalidReason);
+        return;
+      }
+
       const auth = getAuth();
       if (oobCode) {
         await confirmPasswordReset(auth, oobCode as string, newPassword);
       } else {
         setError("Invalid reset link.");
       }
-    } catch (error) {
-      if (error instanceof PasswordException) {
-        setError(error.message);
-      } else {
-        router.push("/login");
-      }
+    } catch (err) {
+      console.error(err);
+      router.push("/login");
     }
   };
 
@@ -63,7 +68,7 @@ export default function ForgotPasswordScreen() {
             <div className="max-w-lg w-full flex flex-col gap-6 sm:mt-[calc(60px)]">
               <div className="flex flex-col gap-3 sm:items-center">
                 <h1 className="text-2xl font-bold">Set New Password?</h1>
-                <p>Password must be at least 8 characters.</p>
+                <p>Password must be at least {MIN_PASSWORD_LEN} characters.</p>
               </div>
             </div>
             <div className="sm:absolute sm:top-12 sm:left-3/4 sm:transform sm:-translate-x-1/2 w-full sm:max-w-lg">

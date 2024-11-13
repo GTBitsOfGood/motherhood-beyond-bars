@@ -1,19 +1,19 @@
-import {
-  PasswordLengthError,
-  PasswordMismatchError,
-  SameAsOldPasswordError,
-} from "@lib/exceptions/passwordExceptions";
+export const MIN_PASSWORD_LEN = 10;
 
-export function validatePassword(
-  newPassword: string,
-  confirmPassword: string,
-  oldPassword?: string
-) {
-  if (newPassword.length < 8) {
-    throw new PasswordLengthError();
+export function validatePassword({
+  newPassword,
+  confirmPassword,
+  oldPassword,
+}: {
+  newPassword: string;
+  confirmPassword?: string;
+  oldPassword?: string;
+}) {
+  if (newPassword.length < MIN_PASSWORD_LEN) {
+    return `Password must be at least ${MIN_PASSWORD_LEN} characters.`;
   } else if (newPassword !== confirmPassword) {
-    throw new PasswordMismatchError();
+    return "Passwords must match.";
   } else if (oldPassword && newPassword === oldPassword) {
-    throw new SameAsOldPasswordError();
+    return "New password must be different from old password.";
   }
 }
