@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export type UseMapWrapper<K, V> = {
   set: (key: K, value: V) => void;
