@@ -33,7 +33,7 @@ interface Props {
 export default function CaregiverOnboarding({ waivers, items, authId }: Props) {
   // Page 0 - Let's Get Started, Page 1 - Household Information, Page 2 - Liability Waiver,
   // Page 3 - Request Items, Page 4 - Shipping Address, Page 5 - Contact Page
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(3);
   const form = useForm<OnboardingFormData>({
     mode: "all",
     defaultValues: {

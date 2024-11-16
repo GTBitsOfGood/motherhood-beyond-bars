@@ -1,16 +1,19 @@
-import { useState, SetStateAction } from "react";
+import { useState, SetStateAction, useEffect } from "react";
 
 import { Item } from "@lib/types/items";
 
 import ItemCard from "@components/ItemRequests/ItemCard";
 import Button from "@components/atoms/Button";
 import BackButton from "@components/atoms/BackButton";
+import PopUpModal from "@components/modals/PopUpModal";
 
 type Props = {
   items: Item[];
   setShowRequestItems?: (value: SetStateAction<boolean>) => void;
   requestItems?: (data: Item[], comments: string) => void;
   onboarding?: boolean;
+  showCarModal?: boolean;
+  setShowCarModal?: (value: boolean) => void;
 };
 
 export default function RequestItems({
@@ -18,6 +21,8 @@ export default function RequestItems({
   setShowRequestItems,
   requestItems,
   onboarding = false,
+  showCarModal,
+  setShowCarModal
 }: Props) {
   const [comments, setComments] = useState<string>("");
   const [data, setData] = useState<Item[]>(
@@ -28,6 +33,15 @@ export default function RequestItems({
     <div className="w-full p-6 flex-col justify-start items-start gap-[1.438rem] inline-flex sm:py-8 sm:px-24">
       {setShowRequestItems && (
         <BackButton darkerColor onClick={() => setShowRequestItems(false)} />
+      )}
+      {onboarding && showCarModal && setShowCarModal && (
+        <PopUpModal 
+        title="Do you have your own car seat?"
+        description="Please confirm that you have a car seat suitable for the baby. You won't be able to take them home without it!"
+        leftButton="Yep, I do!"
+        rightButton="No, I don't"
+        onClickLeft={() => setShowCarModal(false)}
+        onClickRight={() => setShowCarModal(false)}/>
       )}
       <div
         className={`flex-col items-start justify-start gap-3 flex
@@ -66,7 +80,10 @@ export default function RequestItems({
         >
           <Button
             text={onboarding ? "Next" : "Request"}
-            onClick={() => (requestItems ? requestItems(data, comments) : null)}
+            onClick={() => {
+              console.log(data);
+              (requestItems ? requestItems(data, comments) 
+              : null)}}
           ></Button>
           <div className="text-dark-gray text-sm">
             Expect a call from us to confirm the order details!
