@@ -10,7 +10,7 @@ import PopUpModal from "@components/modals/PopUpModal";
 type Props = {
   items: Item[];
   setShowRequestItems?: (value: SetStateAction<boolean>) => void;
-  requestItems?: (data: Item[], comments: string) => void;
+  requestItems?: (data: Item[], comments: string, carSeat?: boolean) => void;
   onboarding?: boolean;
   showCarModal?: boolean;
   setShowCarModal?: (value: boolean) => void;
@@ -22,7 +22,7 @@ export default function RequestItems({
   requestItems,
   onboarding = false,
   showCarModal,
-  setShowCarModal
+  setShowCarModal,
 }: Props) {
   const [comments, setComments] = useState<string>("");
   const [data, setData] = useState<Item[]>(
@@ -35,13 +35,25 @@ export default function RequestItems({
         <BackButton darkerColor onClick={() => setShowRequestItems(false)} />
       )}
       {onboarding && showCarModal && setShowCarModal && (
-        <PopUpModal 
-        title="Do you have your own car seat?"
-        description="Please confirm that you have a car seat suitable for the baby. You won't be able to take them home without it!"
-        leftButton="Yep, I do!"
-        rightButton="No, I don't"
-        onClickLeft={() => setShowCarModal(false)}
-        onClickRight={() => setShowCarModal(false)}/>
+        <PopUpModal
+          title="Do you have your own car seat?"
+          description="Please confirm that you have a car seat suitable for the baby. You won't be able to take them home without it!"
+          leftButton="Yep, I do!"
+          rightButton="No, I don't"
+          onClickLeft={() =>
+            requestItems ? requestItems(data, comments, true) : null
+          }
+          onClickRight={() => {
+            for (let i = 0; i < data.length; i++) {
+              let item = data[i];
+              if (item.title === "Car Seat") {
+                data[i].checked = true;
+                break;
+              }
+            }
+            requestItems ? requestItems(data, comments, true) : null;
+          }}
+        />
       )}
       <div
         className={`flex-col items-start justify-start gap-3 flex
@@ -82,8 +94,8 @@ export default function RequestItems({
             text={onboarding ? "Next" : "Request"}
             onClick={() => {
               console.log(data);
-              (requestItems ? requestItems(data, comments) 
-              : null)}}
+              requestItems ? requestItems(data, comments) : null;
+            }}
           ></Button>
           <div className="text-dark-gray text-sm">
             Expect a call from us to confirm the order details!

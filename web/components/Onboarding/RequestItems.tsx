@@ -17,7 +17,7 @@ export default function RequestItemsPage({ items, setPage, form }: Props) {
   // TODO update form data
   // TODO add modal for Car Seat
   // TODO feed in filled out information in case user goes back
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <RequestItems
@@ -25,16 +25,24 @@ export default function RequestItemsPage({ items, setPage, form }: Props) {
       onboarding={true}
       showCarModal={showModal}
       setShowCarModal={setShowModal}
-      requestItems={(data: Item[], comments: string) => {
+      requestItems={(
+        data: Item[],
+        comments: string,
+        carSeat: boolean | undefined
+      ) => {
         const requestedItems = data.filter((item) => item.checked);
-        let carSeatChecked = false
-        for (let item of data) {
-          if (item.title === "Car Seat") {
-            carSeatChecked = true
+        if (!carSeat) {
+          let carSeatChecked = false;
+          for (let item of data) {
+            if (item.title === "Car Seat" && item.checked) {
+              carSeatChecked = true;
+              break;
+            }
           }
-        }
-        if (!carSeatChecked) {
-          setShowModal(true)
+          if (!carSeatChecked) {
+            setShowModal(true);
+            return;
+          }
         }
 
         const request: ItemRequest = {
