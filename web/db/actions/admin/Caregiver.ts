@@ -60,6 +60,7 @@ export const addNewCaregiver = async (caregiver: Caregiver) => {
       babies: [],
       babyCount: 0,
       createdAt: serverTimestamp(),
+      auth: null,
     });
 
     return newCaregiver;
