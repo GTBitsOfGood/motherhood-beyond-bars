@@ -20,9 +20,9 @@ export default function LoginScreen() {
   return (
     <div className="flex absolute bg-white">
       <div className="h-screen w-screen">
-        <div className="flex flex-col w-full h-full sm:flex-row">
+        <div className="flex flex-col w-full sm:flex-row">
           <HalfScreen />
-          <div className="flex flex-col w-full h-full justify-center items-center mt-8 sm:mt-0 sm:w-1/2">
+          <div className="flex flex-col w-full h-auto justify-center items-center mt-8 sm:mt-0 sm:w-1/2">
             <div className={`flex flex-col w-[90%] sm:w-[60%] sm:items-center`}>
               {errorBannerMsg && (
                 <div className="hidden sm:inline">

@@ -13,7 +13,7 @@ export default function HalfScreen({
 }: Props) {
   return (
     <div
-      className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} flex-col bg-custom-background w-full h-[20%] justify-center items-center sm:w-1/2 sm:h-full`}
+      className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} flex-col bg-custom-background w-full h-[20%] justify-center items-center sm:w-1/2 sm:h-auto sm:min-h-screen`}
     >
       {backButtonFunction && (
         <div className="flex sm:hidden flex-start w-[90%] mt-2 -mb-5">

@@ -41,7 +41,7 @@ export default function BabyBook({
       {showBabyModal ? (
         babyPhoto && <BabyModal image={babyPhoto} edit={editBabyPhoto} babyId={baby.id} caregiverId={baby.caregiverId} showBabyModal={setShowBabyModal}/>
       ) : (
-        <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
+        <div className="flex flex-col py-6 md:my-15 px-4 md:px-10 items-center gap-[1.125rem] w-full">
           <div className="self-start">
             <h1 className="text-2xl sm:text-3xl font-bold text-primary-text">
               {baby.firstName} {baby.lastName}

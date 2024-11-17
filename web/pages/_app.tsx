@@ -68,7 +68,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <UserProvider>
-      <div className="flex flex-col sm:flex-row flex-no-wrap h-screen">
+      <div className="flex flex-col sm:flex-row flex-no-wrap">
         {!hideNavBar &&
           (isMobile ? (
             <MobileNavBar isAdmin={isAdmin} items={SideBarItems} />

@@ -34,10 +34,10 @@ export default function GenCaregiversTab() {
   const [paginationSize, setPaginationSize] = useState(5);
 
   useEffect(() => {
-    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 48.5; 
-    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 48.5 - 6; 
+    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height, Table scroll bar height
     // TODO check if better way than hardcoding
-    const entryHeight = 65;
+    const entryHeight = 71;
     const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
     setPaginationSize(numEntries);
   })
@@ -93,7 +93,7 @@ export default function GenCaregiversTab() {
   };
 
   return (
-    <div>
+    <div className="h-auto">
       <div className="flex flex-col border-t">
         <div className="flex flex-row justify-between mx-9 my-4">
           <div className="flex flex-row gap-6 items-center">
