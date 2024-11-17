@@ -16,21 +16,26 @@ import Image from "next/image";
 import { db } from "db/firebase";
 
 import { Baby } from "@lib/types/baby";
-import { decrypt } from "@lib/utils/encryption";
-import { monthIndexToString } from "@lib/utils/date";
+import { decrypt, encrypt } from "@lib/utils/encryption";
+import { monthIndexToString, numberFormatDate } from "@lib/utils/date";
 
 import BabyModal from "@components/BabyBook/BabyModal";
 import SmileIcon from "@components/Icons/SmileIcon";
 import PlusIcon from "@components/Icons/PlusIcon";
 import TitleTopBar from "@components/logos/TitleTopBar";
+import { useRouter } from "next/router";
+import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
+import Dropdown from "@components/atoms/Dropdown";
 
 export default function BabyBook({
   babyBook,
   totImages,
   baby,
+  babyLinks,
   content,
   iv,
 }: Props) {
+  const router = useRouter();
   const [showBabyModal, setShowBabyModal] = useState<boolean>(false);
   const [babyPhoto, setBabyPhoto] = useState<File | string>("");
   const [editBabyPhoto, setEditBabyPhoto] = useState<boolean>(false);
@@ -39,7 +44,15 @@ export default function BabyBook({
     <div className="w-full h-full">
       <TitleTopBar title="Baby Book" />
       {showBabyModal ? (
-        babyPhoto && <BabyModal image={babyPhoto} edit={editBabyPhoto} babyId={baby.id} caregiverId={baby.caregiverId} showBabyModal={setShowBabyModal}/>
+        babyPhoto && (
+          <BabyModal
+            image={babyPhoto}
+            edit={editBabyPhoto}
+            babyId={baby.id}
+            caregiverId={baby.caregiverId}
+            showBabyModal={setShowBabyModal}
+          />
+        )
       ) : (
         <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
           <div className="self-start">
@@ -53,6 +66,18 @@ export default function BabyBook({
             <p className="text-dark-gray sm:text-xl">
               Birthday: {baby.birthday}
             </p>
+            {babyLinks.length > 0 && (
+              <Dropdown
+                label=""
+                options={babyLinks.map(({ firstName, lastName, url }) => ({
+                  label: `${firstName} ${lastName}`,
+                  value: url,
+                }))}
+                onChange={(opt) => {
+                  router.push(opt.value);
+                }}
+              />
+            )}
           </div>
           {totImages === 0 ? (
             <>
@@ -135,6 +160,7 @@ export default function BabyBook({
 
 interface Props {
   babyBook: BabyBookYear[];
+  babyLinks: { url: string; firstName: string; lastName: string }[];
   totImages: number;
   baby: {
     firstName: string;
@@ -178,16 +204,27 @@ interface RawBabyImage {
 export const getServerSideProps: GetServerSideProps<
   Props,
   { babyId?: string }
-> = async ({ params, query }) => {
+> = async (context) => {
+  const { params, query } = context;
   const props: Props = {
     babyBook: [],
     totImages: 0,
-    baby: { firstName: "", lastName: "", mother: "", birthday: "", id: "", caregiverId: "" },
+    babyLinks: [],
+    baby: {
+      firstName: "",
+      lastName: "",
+      mother: "",
+      birthday: "",
+      id: "",
+      caregiverId: "",
+    },
     content: "",
     iv: "",
   };
 
+  const caregiver = await getCurrentCaregiver(context);
   if (!params || !params.babyId || !query.iv) return { props };
+  if (!caregiver) return { props };
 
   props.content = params?.babyId as string;
   props.iv = query.iv as string;
@@ -201,10 +238,24 @@ export const getServerSideProps: GetServerSideProps<
     firstName: babyData.firstName,
     lastName: babyData.lastName,
     mother: babyData.motherName,
-    birthday: babyData.dob.toString(),
+    birthday: !(babyData.dob instanceof Timestamp)
+      ? ((babyData.dob as string) ?? "")
+      : numberFormatDate(babyData.dob.toDate()),
     id: babyId,
     caregiverId: babyData.caretakerID,
   };
+
+  props.babyLinks = (caregiver.babies as Baby[])
+    .filter((baby) => baby.id !== props.baby.id)
+    .map((baby) => {
+      console.log(baby);
+      const { iv, content } = encrypt(baby.id);
+      return {
+        url: `/caregiver/book/${content}?iv=${iv}`,
+        firstName: baby.firstName,
+        lastName: baby.lastName,
+      };
+    });
 
   const babyBookRef = doQuery(
     collection(db, `babies/${babyId}/book`),
@@ -215,6 +266,8 @@ export const getServerSideProps: GetServerSideProps<
     props.totImages = props.totImages + 1;
     const raw = book.data() as RawBabyImage;
     const date = raw.date.toDate();
+
+    if (!raw.imageURL) return;
 
     const currYear = date.getFullYear();
     if (
