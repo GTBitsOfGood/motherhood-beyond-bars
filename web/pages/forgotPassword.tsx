@@ -2,6 +2,9 @@ import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
 import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
 import HalfScreen from "@components/logos/HalfScreen";
+import ErrorToast from "@components/Onboarding/ErrorToast";
+import { isValidEmail } from "@lib/utils/contactInfo";
+import { doesCaregiverWithEmailExist } from "db/actions/admin/Caregiver";
 import { sendResetPasswordEmail } from "db/actions/resetPassword";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -9,11 +12,23 @@ import { useState } from "react";
 export default function ForgotPasswordScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
   const onReset = async () => {
+    if (!isValidEmail(email)) {
+      setError("Email is not valid.");
+      return;
+    }
+    const caregiverExists = await doesCaregiverWithEmailExist(email);
+    if (!caregiverExists) {
+      setError("Caregiver does not exist.");
+      return;
+    }
     const hasReset = await sendResetPasswordEmail(email);
     if (hasReset) {
       router.push("emailSent");
+    } else {
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -24,6 +39,16 @@ export default function ForgotPasswordScreen() {
           <div className="flex flex-col h-full sm:flex-row">
             <HalfScreen />
             <div className="flex flex-col justify-center mx-6 mt-8 gap-10 sm:w-1/2 sm:items-center sm:mx-0">
+              <div className="sm:absolute sm:top-12 sm:left-3/4 sm:transform sm:-translate-x-1/2 w-full sm:max-w-lg">
+                {error && (
+                  <ErrorToast
+                    text={error}
+                    onClose={() => {
+                      setError("");
+                    }}
+                  />
+                )}
+              </div>
               <div className="flex flex-col gap-3 justify-center sm:items-center">
                 <div className="text-2xl font-bold">Forgot Password?</div>
                 <div>No problem, we&apos;ll send you reset instructions.</div>
