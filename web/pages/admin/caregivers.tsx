@@ -12,6 +12,7 @@ import PaginatedTable from "@components/tables/PaginatedTable";
 
 import Button from "@components/atoms/Button";
 import PlusIcon from "@components/Icons/PlusIcon";
+import { isUniqueEmail } from "db/actions/SignUp";
 
 const tab = CAREGIVERS_TAB;
 
@@ -34,13 +35,14 @@ export default function GenCaregiversTab() {
   const [paginationSize, setPaginationSize] = useState(5);
 
   useEffect(() => {
-    const tableHeight = window.innerHeight - (44 + 16 * 2) - (24 * 2) - (20 * 2) - (42) - (32) - 48.5; 
+    const tableHeight =
+      window.innerHeight - (44 + 16 * 2) - 24 * 2 - 20 * 2 - 42 - 32 - 48.5;
     // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
     // TODO check if better way than hardcoding
     const entryHeight = 65;
     const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
     setPaginationSize(numEntries);
-  })
+  });
 
   const handleDelete = async (caregiver: any) => {
     deleteCaretaker(caregiver);
@@ -76,6 +78,7 @@ export default function GenCaregiversTab() {
       caregiver.name.toLowerCase().includes(input.toLowerCase())
     );
     setFilteredCaregivers(filtered);
+    setCurrPage(1);
   };
 
   useEffect(() => {
@@ -131,12 +134,18 @@ export default function GenCaregiversTab() {
             <CaretakerModal
               setModal={toggleAddModal}
               onSubmit={(caregiver) =>
-                addNewCaregiver(caregiver).then(() => {
-                  toggleAddModal(false);
-                  alert(
-                    `${caregiver.firstName} ${caregiver.lastName} has been added!`
-                  );
-                  loadData();
+                isUniqueEmail(caregiver.email).then((isUnique) => {
+                  isUnique
+                    ? addNewCaregiver(caregiver).then(() => {
+                        toggleAddModal(false);
+                        alert(
+                          `${caregiver.firstName} ${caregiver.lastName} has been added!`
+                        );
+                        loadData();
+                      })
+                    : alert(
+                        `Caregiver with email ${caregiver.email} already exists.`
+                      );
                 })
               }
             />
