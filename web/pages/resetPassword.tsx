@@ -58,10 +58,10 @@ export default function ForgotPasswordScreen() {
 
   return (
     <div className="flex absolute bg-white w-screen h-screen">
-      <div className="flex flex-col h-full sm:flex-row w-full">
+      <div className="flex flex-col sm:flex-row w-full">
         <HalfScreen />
         <form
-          className="flex flex-col justify-center mx-6 mt-8 gap-10 sm:w-1/2 sm:items-center sm:mx-0"
+          className="flex flex-col justify-center mx-6 mt-8 gap-10 sm:w-1/2 sm:items-center sm:mx-0 h-auto"
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col gap-2">

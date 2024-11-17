@@ -64,12 +64,12 @@ export default function SignUpScreen() {
   return (
     <div className="flex absolute bg-white">
       <div className="h-screen w-screen">
-        <div className="flex flex-col w-full h-full sm:flex-row">
+        <div className="flex flex-col w-full sm:flex-row">
           <HalfScreen
             caregiver={true}
             backButtonFunction={page == 2 ? () => setPage(1) : undefined}
           />
-          <div className="flex flex-col w-full h-full justify-center items-center mt-6 sm:mt-0 sm:w-1/2">
+          <div className="flex flex-col w-full h-auto justify-center items-center mt-6 sm:mt-0 sm:w-1/2">
             <div className="flex flex-col w-[90%] sm:w-[60%] sm:items-center">
               <div className="hidden sm:flex w-full justify-start sm:mb-8">
                 {page === 2 && <BackButton onClick={() => setPage(1)} />}

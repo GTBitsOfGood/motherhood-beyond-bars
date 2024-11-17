@@ -80,9 +80,9 @@ export default function CaregiverOnboarding({ waivers, items, authId }: Props) {
   }
 
   return (
-    <div className="flex flex-col sm:flex-row absolute items-center sm:justify-center w-screen h-screen">
+    <div className="flex flex-col sm:flex-row absolute items-center sm:justify-center w-screen">
       <HalfScreen caregiver={true} hiddenOnMobile={page != 0} />
-      <div className="flex flex-col sm:w-1/2 items-center sm:justify-center h-screen grow">
+      <div className="flex flex-col sm:w-1/2 items-center sm:justify-center h-auto grow">
         {page > 0 && (
           <div className="flex bg-white w-full sm:w-[60%] sticky top-0 items-center justify-between px-7 py-[1.125rem] sm:mt-6">
             <BackButton
