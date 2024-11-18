@@ -11,6 +11,7 @@ import TextInput from "@components/atoms/TextInput";
 import SignOutButton from "@components/SignOutButton";
 import TitleTopBar from "@components/logos/TitleTopBar";
 import BackButton from "@components/atoms/BackButton";
+import PopUpModal from "@components/modals/PopUpModal";
 
 // TODO fix code
 
@@ -107,36 +108,17 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
     <div className="w-full h-full">
       <TitleTopBar title="Settings" />
       {showModal && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center sm:items-center items-end z-50">
-          <div className="bg-white rounded-t-lg sm:rounded-lg p-6 w-full sm:w-11/12 sm:max-w-md shadow-lg">
-            <h2 className="text-black text-lg font-bold mb-2">
-              Your changes won’t be saved.
-            </h2>
-            <p className="text-black text-base font-normal">
-              If you return to the previous screen, your changes will not be
-              saved.
-            </p>
-            <div className="flex justify-end space-x-4 pt-[20.80px]">
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setEditingSection("");
-                }}
-                className="text-mbb-pink bg-white rounded border border-mbb-pink px-4 pt-2 pb-[9px] text-base font-semibold w-1/2"
-              >
-                Don’t save
-              </button>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                }}
-                className="text-mbb-pink bg-white rounded border border-white px-4 pt-2 pb-[9px] text-base font-semibold w-1/2"
-              >
-                Keep editing
-              </button>
-            </div>
-          </div>
-        </div>
+        <PopUpModal
+          title="Your changes won’t be saved."
+          description="If you return to the previous screen, your changes will not be saved."
+          leftButton="Don't save"
+          rightButton="Keep editing"
+          onClickLeft={() => {
+            setShowModal(false);
+            setEditingSection("");
+          }}
+          onClickRight={() => setShowModal(false)}
+        ></PopUpModal>
       )}
       {editingSection === "" ? (
         <div className="px-8 py-6 sm:px-16 sm:py-14 w-full sm:max-w-md">

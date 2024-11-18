@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Timestamp } from "@firebase/firestore";
 
@@ -17,12 +17,33 @@ export default function RequestItemsPage({ items, setPage, form }: Props) {
   // TODO update form data
   // TODO add modal for Car Seat
   // TODO feed in filled out information in case user goes back
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <RequestItems
       items={items}
       onboarding={true}
-      requestItems={(data: Item[], comments: string) => {
+      showCarModal={showModal}
+      setShowCarModal={setShowModal}
+      requestItems={(
+        data: Item[],
+        comments: string,
+        carSeat: boolean | undefined
+      ) => {
         const requestedItems = data.filter((item) => item.checked);
+        if (!carSeat) {
+          let carSeatChecked = false;
+          for (let item of data) {
+            if (item.title === "Car Seat" && item.checked) {
+              carSeatChecked = true;
+              break;
+            }
+          }
+          if (!carSeatChecked) {
+            setShowModal(true);
+            return;
+          }
+        }
 
         const request: ItemRequest = {
           created: Timestamp.now(),
