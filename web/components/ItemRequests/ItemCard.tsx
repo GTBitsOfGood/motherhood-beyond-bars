@@ -28,7 +28,7 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
 
   return (
     <div
-      className="w-full h-min rounded shadow p-4 sm:mx-1 sm:mb-4 sm:w-[48%] cursor-pointer focus-within:outline focus-within:outline-mbb-pink focus-within:outline-2"
+      className="w-full h-min rounded shadow p-4 sm:mx-1 sm:mb-4 sm:w-[48%] cursor-pointer focus-within:outline focus-within:outline-mbb-pink focus-within:outline-1"
       onClick={checkBoxBaby}
     >
       <div className="justify-start items-center gap-1 inline-flex">

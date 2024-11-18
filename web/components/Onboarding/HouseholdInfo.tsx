@@ -61,11 +61,6 @@ export default function HouseholdInfoPage({ setPage, form }: Props) {
           formValue={form.register("agesOfChildren", {
             validate: (value, { numChildren }) => {
               const agePattern = /^(\d+)?(,\s*\d+)*$/;
-              console.log({
-                numChildren,
-                value,
-                valies: value.trim().split(","),
-              });
 
               if (value === "" && Number(numChildren) === 0) {
                 // Special case for empty string
@@ -75,7 +70,7 @@ export default function HouseholdInfoPage({ setPage, form }: Props) {
               return agePattern.test(value)
                 ? Number(numChildren) === value.trim().split(",").length
                   ? true
-                  : "Number of ages must match number of children"
+                  : "Number of ages must match number of children and be separated by commas"
                 : "Ages must be a number separated by commas";
             },
           })}
