@@ -30,25 +30,17 @@ function ItemRequestsTable({
           </tr>
         </thead>
         <tbody>
-          {/* TODO see how Deleting requests works and if this needs to be updated */}
-          {data
-            .reduce<Array<Caregiver>>((arr, row) => {
-              if (row.itemsRequested && row.itemsRequested.items.length) {
-                arr.push(row);
-              }
-              return arr;
-            }, [])
-            .map((row, index) => {
-              return (
-                <ItemRequestRow
-                  row={row}
-                  key={row.id}
-                  index={index}
-                  selectedRows={selectedRows}
-                  setSelectedRows={setSelectedRows}
-                ></ItemRequestRow>
-              );
-            })}
+          {data.map((row, index) => {
+            return (
+              <ItemRequestRow
+                row={row}
+                key={row.id}
+                index={index}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+              ></ItemRequestRow>
+            );
+          })}
         </tbody>
       </table>
     </div>
