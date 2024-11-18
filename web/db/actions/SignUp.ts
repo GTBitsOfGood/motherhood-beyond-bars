@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 import { createUserWithEmailAndPassword, UserCredential } from "firebase/auth";
 import {
   collection,
@@ -7,18 +9,34 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
-
 import { auth, db } from "db/firebase";
-import Cookies from "js-cookie";
 
-export const isUniqueEmail = async (email: string) => {
+import { Caregiver } from "@lib/types/users";
+
+export const isUniqueEmail = async (
+  email: string,
+  returnName: boolean = false
+) => {
   const docs = await getDocs(
     query(
       collection(db, "caregivers"),
       where("email", "==", email.toLowerCase())
     )
   );
-  return docs.empty;
+
+  if (!returnName) {
+    return docs.empty;
+  } else {
+    if (docs.empty) {
+      return { isUnique: true };
+    } else {
+      const foundCaregiver = docs.docs[0].data() as Caregiver;
+      return {
+        isUnique: false,
+        caregiverName: foundCaregiver.firstName + " " + foundCaregiver.lastName,
+      };
+    }
+  }
 };
 
 export async function createAccount(email: string, password: string) {

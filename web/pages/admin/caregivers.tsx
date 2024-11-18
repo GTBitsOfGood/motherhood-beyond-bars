@@ -4,6 +4,7 @@ import {
   deleteCaretaker,
   getCaregivers,
 } from "db/actions/admin/Caregiver";
+import { isUniqueEmail } from "db/actions/SignUp";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
 
 import Modal from "@components/modal";
@@ -12,7 +13,6 @@ import PaginatedTable from "@components/tables/PaginatedTable";
 
 import Button from "@components/atoms/Button";
 import PlusIcon from "@components/Icons/PlusIcon";
-import { isUniqueEmail } from "db/actions/SignUp";
 
 const tab = CAREGIVERS_TAB;
 
@@ -134,8 +134,8 @@ export default function GenCaregiversTab() {
             <CaretakerModal
               setModal={toggleAddModal}
               onSubmit={(caregiver) =>
-                isUniqueEmail(caregiver.email).then((isUnique) => {
-                  isUnique
+                isUniqueEmail(caregiver.email, true).then((results) => {
+                  results && typeof results === "object" && results.isUnique
                     ? addNewCaregiver(caregiver).then(() => {
                         toggleAddModal(false);
                         alert(
@@ -143,8 +143,10 @@ export default function GenCaregiversTab() {
                         );
                         loadData();
                       })
-                    : alert(
-                        `Caregiver with email ${caregiver.email} already exists.`
+                    : typeof results === "object" &&
+                      "caregiverName" in results &&
+                      alert(
+                        `Caregiver with email ${caregiver.email} already exists under the name ${results.caregiverName}, search for this Caregiver then edit as needed.`
                       );
                 })
               }
