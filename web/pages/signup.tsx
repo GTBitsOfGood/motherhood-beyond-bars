@@ -4,6 +4,7 @@ import { UserCredential } from "firebase/auth";
 
 import { loginWithGoogle } from "db/actions/Login";
 import {
+  checkAdminCreatedAccount,
   createAccount,
   createCaregiverAccount,
   isUniqueEmail,
@@ -207,6 +208,16 @@ export default function SignUpScreen() {
                           } = getValues();
 
                           try {
+                            const adminCreated = await checkAdminCreatedAccount(
+                              email,
+                              firstName,
+                              lastName,
+                              phoneNumber
+                            );
+                            if (!adminCreated.success) {
+                              setErrorBannerMsg(adminCreated.error);
+                              return;
+                            }
                             const accountResult = await createAccount(
                               email,
                               password
@@ -221,14 +232,14 @@ export default function SignUpScreen() {
                                   accountResult.userCredential,
                                   firstName,
                                   lastName,
-                                  phoneNumber
+                                  phoneNumber,
+                                  adminCreated.matchedCaregiver
                                 );
                               if (caregiverResult.success) {
                                 router.push("/caregiver/onboarding");
                               } else {
-                                setErrorBannerMsg(
-                                  "Something went wrong, please try again."
-                                );
+                                caregiverResult?.error &&
+                                  setErrorBannerMsg(caregiverResult.error);
                               }
                             }
                           } catch (err) {
