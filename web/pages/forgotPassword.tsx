@@ -1,32 +1,39 @@
-import Button from "@components/atoms/Button";
-import TextInput from "@components/atoms/TextInput";
-import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
-import HalfScreen from "@components/logos/HalfScreen";
-import ErrorToast from "@components/Onboarding/ErrorToast";
-import { isValidEmail } from "@lib/utils/contactInfo";
-import { doesCaregiverWithEmailExist } from "db/actions/admin/Caregiver";
-import { sendResetPasswordEmail } from "db/actions/resetPassword";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { doesCaregiverWithEmailExist } from "db/actions/admin/Caregiver";
+import { sendResetPasswordEmail } from "db/actions/resetPassword";
+
+import { isValidEmail } from "@lib/utils/contactInfo";
+
+import HalfScreen from "@components/logos/HalfScreen";
+import ErrorToast from "@components/Onboarding/ErrorToast";
+import Button from "@components/atoms/Button";
+import TextInput from "@components/atoms/TextInput";
+import LeftChevronIcon from "@components/Icons/LeftChevronIcon";
+
 export default function ForgotPasswordScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(
+    "query" in router ? (router.query.email as string) : ""
+  );
   const [error, setError] = useState("");
 
   const onReset = async () => {
     if (!isValidEmail(email)) {
-      setError("Email is not valid.");
+      setError("Please enter a valid email address.");
       return;
     }
     const caregiverExists = await doesCaregiverWithEmailExist(email);
     if (!caregiverExists) {
-      setError("Caregiver does not exist.");
+      setError(
+        "Unable to find account, check the email entered or create an account."
+      );
       return;
     }
     const hasReset = await sendResetPasswordEmail(email);
     if (hasReset) {
-      router.push("emailSent");
+      router.push(`emailSent?email=${encodeURIComponent(email)}`);
     } else {
       setError("Something went wrong. Please try again.");
     }
