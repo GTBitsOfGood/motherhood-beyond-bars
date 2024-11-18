@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+
 import {
   addNewCaregiver,
   deleteCaretaker,
@@ -6,6 +8,7 @@ import {
 } from "db/actions/admin/Caregiver";
 import { isUniqueEmail } from "db/actions/SignUp";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
+import { Caregiver } from "@lib/types/users";
 
 import Modal from "@components/modal";
 import CaretakerModal from "@components/modals/CaretakerModal";
@@ -21,6 +24,9 @@ export default function GenCaregiversTab() {
   const [filteredCaregivers, setFilteredCaregivers] = useState<any[]>([]);
   const [currPage, setCurrPage] = useState(1);
   const [open, setOpen] = React.useState<any[]>([]);
+
+  const router = useRouter();
+  const { search } = router.query;
 
   const columns = React.useMemo(
     () => [
@@ -69,21 +75,33 @@ export default function GenCaregiversTab() {
   async function loadData() {
     const caregivers = await getCaregivers();
     setCaregivers(caregivers);
-    setFilteredCaregivers(caregivers);
-    setOpen(Array(caregivers.length).fill(false));
+
+    if (!search) {
+      setFilteredCaregivers(caregivers);
+      setOpen([true, ...Array(caregivers.length - 1).fill(false)]);
+    } else {
+      const decodedString = decodeURIComponent(search as string);
+      handleSearch(decodedString, caregivers);
+      setOpen(Array(caregivers.length).fill(true));
+    }
   }
 
-  const handleSearch = (input: string) => {
-    const filtered = caregivers.filter((caregiver) =>
-      caregiver.name.toLowerCase().includes(input.toLowerCase())
+  const handleSearch = (input: string, caregiverList?: Array<object>) => {
+    if (!caregiverList) caregiverList = caregivers;
+    const filtered = caregiverList.filter(
+      (caregiver: object) =>
+        "name" in caregiver &&
+        typeof caregiver.name === "string" &&
+        caregiver.name.toLowerCase().includes(input.toLowerCase())
     );
     setFilteredCaregivers(filtered);
+    setOpen(Array(caregivers.length).fill(false));
     setCurrPage(1);
   };
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [search]);
 
   const onNextPage = () => {
     setCurrPage(currPage + 1);
