@@ -1,6 +1,6 @@
-import { db, storage } from "../../firebase"; // import firebase storage
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db, storage } from "../../firebase"; // import firebase storage
 
 interface returnType {
   success: boolean;
@@ -13,6 +13,7 @@ interface Props {
   caption: string;
   babyId: string;
   caregiverId: string;
+  mediaRelease: boolean;
 }
 
 export async function uploadPhoto({
@@ -20,6 +21,7 @@ export async function uploadPhoto({
   caption,
   babyId,
   caregiverId,
+  mediaRelease,
 }: Props) {
   try {
     const extension = file.name.split(".").pop();
@@ -45,6 +47,7 @@ export async function uploadPhoto({
             caption: caption,
             date: Timestamp.now(),
             caregiverId: caregiverId,
+            mediaRelease: mediaRelease ?? false,
           });
         } catch (error) {
           return { success: false, error: `Upload failed: ${error}` };

@@ -1,14 +1,14 @@
-import { useState } from "react";
 import {
   collection,
   doc,
   DocumentReference,
+  query as doQuery,
   getDoc,
   getDocs,
   orderBy,
-  query as doQuery,
   Timestamp,
 } from "firebase/firestore";
+import { useState } from "react";
 
 import { GetServerSideProps } from "next";
 import Image from "next/image";
@@ -16,12 +16,12 @@ import Image from "next/image";
 import { db } from "db/firebase";
 
 import { Baby } from "@lib/types/baby";
-import { decrypt } from "@lib/utils/encryption";
 import { monthIndexToString } from "@lib/utils/date";
+import { decrypt } from "@lib/utils/encryption";
 
 import BabyModal from "@components/BabyBook/BabyModal";
-import SmileIcon from "@components/Icons/SmileIcon";
 import PlusIcon from "@components/Icons/PlusIcon";
+import SmileIcon from "@components/Icons/SmileIcon";
 import TitleTopBar from "@components/logos/TitleTopBar";
 
 export default function BabyBook({
@@ -39,7 +39,15 @@ export default function BabyBook({
     <div className="w-full h-full">
       <TitleTopBar title="Baby Book" />
       {showBabyModal ? (
-        babyPhoto && <BabyModal image={babyPhoto} edit={editBabyPhoto} babyId={baby.id} caregiverId={baby.caregiverId} showBabyModal={setShowBabyModal}/>
+        babyPhoto && (
+          <BabyModal
+            image={babyPhoto}
+            edit={editBabyPhoto}
+            babyId={baby.id}
+            caregiverId={baby.caregiverId}
+            showBabyModal={setShowBabyModal}
+          />
+        )
       ) : (
         <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
           <div className="self-start">
@@ -182,7 +190,14 @@ export const getServerSideProps: GetServerSideProps<
   const props: Props = {
     babyBook: [],
     totImages: 0,
-    baby: { firstName: "", lastName: "", mother: "", birthday: "", id: "", caregiverId: "" },
+    baby: {
+      firstName: "",
+      lastName: "",
+      mother: "",
+      birthday: "",
+      id: "",
+      caregiverId: "",
+    },
     content: "",
     iv: "",
   };

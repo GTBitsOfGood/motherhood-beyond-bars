@@ -1,26 +1,26 @@
+import Button from "@components/atoms/Button";
 import PictureArray from "@components/BabyBook/PictureArray";
 import PictureModal from "@components/BabyBook/PictureModal";
 import SideBar from "@components/BabyBook/Sidebar";
 import TopBar from "@components/BabyBook/Topbar";
+import DownloadIcon from "@components/Icons/DownloadIcon";
+import XIcon from "@components/Icons/XIcon";
+import { useMap } from "@lib/hooks/useMap";
+import { Baby } from "@lib/types/baby";
+import { decrypt } from "@lib/utils/encryption";
 import { db } from "db/firebase";
 import {
   collection,
   doc,
   DocumentReference,
+  query as doQuery,
   getDoc,
   getDocs,
   orderBy,
-  query as doQuery,
   Timestamp,
 } from "firebase/firestore";
 import { GetServerSideProps } from "next";
-import { Baby } from "@lib/types/baby";
 import { useState } from "react";
-import { decrypt } from "@lib/utils/encryption";
-import { useMap } from "@lib/hooks/useMap";
-import Button from "@components/atoms/Button";
-import DownloadIcon from "@components/Icons/DownloadIcon";
-import XIcon from "@components/Icons/XIcon";
 
 export default function BabyBook({
   babyBook,
@@ -166,6 +166,7 @@ export interface BabyImage {
   };
   imageUrl: string;
   caregiverId: string;
+  mediaRelease?: boolean;
 }
 
 interface RawBabyImage {
