@@ -109,15 +109,16 @@ const Settings = ({ caregiver }: { caregiver: Caregiver }) => {
       <TitleTopBar title="Settings" />
       {showModal && (
         <PopUpModal
-        title="Your changes won’t be saved."
-        description="If you return to the previous screen, your changes will not be saved."
-        leftButton="Don't save"
-        rightButton="Keep editing"
-        onClickLeft={() => {
-          setShowModal(false)
-          setEditingSection("")
-        }}
-        onClickRight={() => setShowModal(false)}></PopUpModal>
+          title="Your changes won’t be saved."
+          description="If you return to the previous screen, your changes will not be saved."
+          leftButton="Don't save"
+          rightButton="Keep editing"
+          onClickLeft={() => {
+            setShowModal(false);
+            setEditingSection("");
+          }}
+          onClickRight={() => setShowModal(false)}
+        ></PopUpModal>
       )}
       {editingSection === "" ? (
         <div className="px-8 py-6 sm:px-16 sm:py-14 w-full sm:max-w-md">

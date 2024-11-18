@@ -1,4 +1,4 @@
-import { useState, SetStateAction, useEffect } from "react";
+import { useState, SetStateAction } from "react";
 
 import { Item } from "@lib/types/items";
 
@@ -93,7 +93,6 @@ export default function RequestItems({
           <Button
             text={onboarding ? "Next" : "Request"}
             onClick={() => {
-              console.log(data);
               requestItems ? requestItems(data, comments) : null;
             }}
           ></Button>
