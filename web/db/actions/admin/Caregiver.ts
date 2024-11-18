@@ -11,6 +11,7 @@ import {
   orderBy,
   DocumentReference,
   DocumentData,
+  where,
 } from "firebase/firestore";
 
 import { db } from "db/firebase";
@@ -39,6 +40,14 @@ export async function getCaregiver(caretakerID: string) {
   const caregiverRef = doc(collection(db, path), caretakerID); // "caregivers" is the collection
   const caregiverDoc = await getDoc(caregiverRef);
   return caregiverDoc;
+}
+
+export async function doesCaregiverWithEmailExist(email: string) {
+  if (!email) return null;
+  const caregiverQuery = await getDocs(
+    query(collection(db, path), where("email", "==", email))
+  );
+  return !caregiverQuery.empty;
 }
 
 export async function getCaregivers() {
