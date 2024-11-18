@@ -87,7 +87,6 @@ export default function BabyModal({
                   babyId,
                   caregiverId,
                 });
-                debugger
 
                 if (results.success) {
                   showBabyModal(false);

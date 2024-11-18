@@ -11,6 +11,7 @@ import {
   orderBy,
   DocumentReference,
   DocumentData,
+  where,
 } from "firebase/firestore";
 
 import { db } from "db/firebase";
@@ -41,6 +42,14 @@ export async function getCaregiver(caretakerID: string) {
   return caregiverDoc;
 }
 
+export async function doesCaregiverWithEmailExist(email: string) {
+  if (!email) return null;
+  const caregiverQuery = await getDocs(
+    query(collection(db, path), where("email", "==", email))
+  );
+  return !caregiverQuery.empty;
+}
+
 export async function getCaregivers() {
   try {
     const constraint = orderBy(COLLECTION_ORDER_KEYS[path]);
@@ -57,6 +66,7 @@ export const addNewCaregiver = async (caregiver: Caregiver) => {
   try {
     const newCaregiver = await addDoc(collection(db, path), {
       ...caregiver,
+      email: caregiver.email.toLowerCase(),
       babies: [],
       babyCount: 0,
       createdAt: serverTimestamp(),

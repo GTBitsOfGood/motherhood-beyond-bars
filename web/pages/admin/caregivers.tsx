@@ -6,6 +6,7 @@ import {
   deleteCaretaker,
   getCaregivers,
 } from "db/actions/admin/Caregiver";
+import { isUniqueEmail } from "db/actions/SignUp";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
 import { Caregiver } from "@lib/types/users";
 
@@ -95,6 +96,7 @@ export default function GenCaregiversTab() {
     );
     setFilteredCaregivers(filtered);
     setOpen(Array(caregivers.length).fill(false));
+    setCurrPage(1);
   };
 
   useEffect(() => {
@@ -150,12 +152,20 @@ export default function GenCaregiversTab() {
             <CaretakerModal
               setModal={toggleAddModal}
               onSubmit={(caregiver) =>
-                addNewCaregiver(caregiver).then(() => {
-                  toggleAddModal(false);
-                  alert(
-                    `${caregiver.firstName} ${caregiver.lastName} has been added!`
-                  );
-                  loadData();
+                isUniqueEmail(caregiver.email, true).then((results) => {
+                  results && typeof results === "object" && results.isUnique
+                    ? addNewCaregiver(caregiver).then(() => {
+                        toggleAddModal(false);
+                        alert(
+                          `${caregiver.firstName} ${caregiver.lastName} has been added!`
+                        );
+                        loadData();
+                      })
+                    : typeof results === "object" &&
+                      "caregiverName" in results &&
+                      alert(
+                        `Caregiver with email ${caregiver.email} already exists under the name ${results.caregiverName}, search for this Caregiver then edit as needed.`
+                      );
                 })
               }
             />
