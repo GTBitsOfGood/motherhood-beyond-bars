@@ -66,6 +66,7 @@ export const addNewCaregiver = async (caregiver: Caregiver) => {
   try {
     const newCaregiver = await addDoc(collection(db, path), {
       ...caregiver,
+      email: caregiver.email.toLowerCase(),
       babies: [],
       babyCount: 0,
       createdAt: serverTimestamp(),

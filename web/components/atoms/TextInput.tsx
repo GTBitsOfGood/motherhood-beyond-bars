@@ -30,7 +30,7 @@ export default function TextInput({
   const [value, setValue] = useState(currentValue);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       {label && (
         <label
           className="text-black text-base font-normal leading-normal"
@@ -58,7 +58,7 @@ export default function TextInput({
         placeholder={placeholder}
         value={value}
       />
-      {<ErrorText error={error} />}
+      <ErrorText error={error} />
     </div>
   );
 }
