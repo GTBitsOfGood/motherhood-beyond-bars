@@ -13,7 +13,10 @@ import Cookies from "js-cookie";
 
 export const isUniqueEmail = async (email: string) => {
   const docs = await getDocs(
-    query(collection(db, "caregivers"), where("email", "==", email))
+    query(
+      collection(db, "caregivers"),
+      where("email", "==", email.toLowerCase())
+    )
   );
   return docs.empty;
 };
@@ -50,7 +53,7 @@ export async function createCaregiverAccount(
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
-      email: authData?.email,
+      email: authData?.email?.toLowerCase(),
       auth: authData?.uid,
       babyCount: 0,
       onboarding: false,
