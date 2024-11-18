@@ -43,33 +43,38 @@ export default function ItemRequestRow({
     }
   };
 
-  const dropDownData = [
-    {
-      header: "ADDRESS",
-      value:
-        row.address +
-        (row.apartment && row.apartment !== "" ? ", " + row.apartment : "") +
-        ", " +
-        row.city +
-        ", " +
-        row.state +
-        " " +
-        row.zipCode,
-    },
-    {
-      header: "CONTACT",
-      value: `${row.email ?? ""}, ${row.phoneNumber ?? ""}`,
-    },
-    {
-      header: "CHILDREN NAMES",
-      value:
-        babies && babies.length
-          ? babies
-              .map((baby) => baby.firstName + " " + baby.lastName)
-              .join(", ")
-          : "N/A",
-    },
-  ];
+  const dropDownData = row.itemsRequested?.items?.map((item) => ({
+    header: item.title,
+    value: item.additionalInfo?.map((info) => (info.boxTitle + ": " + (info.value ? info.value : info.placeholder))).join(", ") || "N/A",
+  })) || [];
+
+  // const dropDownData = [
+  //   {
+  //     header: "ADDRESS",
+  //     value:
+  //       row.address +
+  //       (row.apartment && row.apartment !== "" ? ", " + row.apartment : "") +
+  //       ", " +
+  //       row.city +
+  //       ", " +
+  //       row.state +
+  //       " " +
+  //       row.zipCode,
+  //   },
+  //   {
+  //     header: "CONTACT",
+  //     value: `${row.email ?? ""}, ${row.phoneNumber ?? ""}`,
+  //   },
+  //   {
+  //     header: "CHILDREN NAMES",
+  //     value:
+  //       babies && babies.length
+  //         ? babies
+  //             .map((baby) => baby.firstName + " " + baby.lastName)
+  //             .join(", ")
+  //         : "N/A",
+  //   },
+  // ];
 
   function getDateString(time: Timestamp) {
     return `${time.toDate().getMonth() + 1}/${time.toDate().getDate()}/${time
