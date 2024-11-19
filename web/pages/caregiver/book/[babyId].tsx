@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -40,6 +40,12 @@ export default function BabyBook({
   const [showBabyModal, setShowBabyModal] = useState<boolean>(false);
   const [babyPhoto, setBabyPhoto] = useState<File | string>("");
   const [editBabyPhoto, setEditBabyPhoto] = useState<boolean>(false);
+  const [photos, setPhotos] = useState<BabyBookYear[]>(babyBook);
+  const [totalImages, setTotalImages] = useState<number>(totImages);
+
+  useEffect(() => {
+    setPhotos(babyBook);
+  }, [router.query.babyId]);
 
   return (
     <div className="w-full h-full">
@@ -52,6 +58,8 @@ export default function BabyBook({
             babyId={baby.id}
             caregiverId={baby.caregiverId}
             showBabyModal={setShowBabyModal}
+            setPhotos={setPhotos}
+            setTotalImages={setTotalImages}
           />
         )
       ) : (
@@ -82,7 +90,7 @@ export default function BabyBook({
               />
             )}
           </div>
-          {totImages === 0 ? (
+          {totalImages === 0 ? (
             <>
               <div className="rounded-full w-[160px] h-[160px] flex items-center justify-center bg-[#F2F2F2]">
                 <SmileIcon />
@@ -95,8 +103,8 @@ export default function BabyBook({
               </p>
             </>
           ) : (
-            babyBook.flatMap(({ year, months }) =>
-              months.map(({ month, images }) => (
+            photos.flatMap(({ year, months }) => {
+              return months.map(({ month, images }) => (
                 <div
                   key={`${year}${month}`}
                   className="flex flex-col self-stretch"
@@ -105,21 +113,20 @@ export default function BabyBook({
                     {monthIndexToString(month)} {year}
                   </h2>
                   <div className="grid grid-cols-4 gap-[0.375rem] md:gap-x-4 md:gap-y-2">
-                    {images.map(({ imageUrl, date }) => (
+                    {images.map(({ imageURL, date }) => (
                       <>
                         <div
-                          key={imageUrl}
+                          key={imageURL}
                           className="h-[160px] md:h-[240px] overflow-hidden relative shadow-lg cursor-pointer"
                           onClick={() => {
-                            // TODO: view single image
-                            setBabyPhoto(imageUrl);
+                            setBabyPhoto(imageURL);
                             setShowBabyModal(true);
                             setEditBabyPhoto(false);
                           }}
                         >
                           <Image
-                            key={imageUrl}
-                            src={imageUrl}
+                            key={imageURL}
+                            src={imageURL}
                             alt={`Baby image from ${new Date(date.seconds * 1000).toLocaleDateString()}`}
                             layout={"fill"}
                             objectFit={"cover"}
@@ -129,8 +136,8 @@ export default function BabyBook({
                     ))}
                   </div>
                 </div>
-              ))
-            )
+              ));
+            })
           )}
           <label
             className="flex items-center justify-center fixed cursor-pointer rounded-full w-[3.75rem] h-[3.75rem] bottom-6 right-6 bg-mbb-pink"
@@ -193,7 +200,7 @@ export interface BabyImage {
     seconds: number;
     nanoseconds: number;
   };
-  imageUrl: string;
+  imageURL: string;
   caregiverId: string;
 }
 
@@ -288,7 +295,7 @@ export const getServerSideProps: GetServerSideProps<
       year.months.push({ month: currMonth, images: [] });
     year.months[year.months.length - 1].images.push({
       caption: raw.caption || "",
-      imageUrl: raw.imageURL,
+      imageURL: raw.imageURL,
       caregiverId: raw.caregiverID?.id || "",
       date: {
         seconds: raw.date.seconds,
