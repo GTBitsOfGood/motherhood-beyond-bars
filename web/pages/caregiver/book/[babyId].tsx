@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import Image from "next/image";
+
 import {
   collection,
   doc,
@@ -10,22 +14,19 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-import { GetServerSideProps } from "next";
-import Image from "next/image";
-
 import { db } from "db/firebase";
+import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
 
 import { Baby } from "@lib/types/baby";
 import { decrypt, encrypt } from "@lib/utils/encryption";
 import { monthIndexToString, numberFormatDate } from "@lib/utils/date";
 
 import BabyModal from "@components/BabyBook/BabyModal";
+import TitleTopBar from "@components/logos/TitleTopBar";
+import Dropdown from "@components/atoms/Dropdown";
+
 import SmileIcon from "@components/Icons/SmileIcon";
 import PlusIcon from "@components/Icons/PlusIcon";
-import TitleTopBar from "@components/logos/TitleTopBar";
-import { useRouter } from "next/router";
-import { getCurrentCaregiver } from "db/actions/caregiver/Caregiver";
-import Dropdown from "@components/atoms/Dropdown";
 
 export default function BabyBook({
   babyBook,
@@ -67,6 +68,7 @@ export default function BabyBook({
               Birthday: {baby.birthday}
             </p>
             {babyLinks.length > 0 && (
+              // TODO add styles so looks like Figma
               <Dropdown
                 label=""
                 options={babyLinks.map(({ firstName, lastName, url }) => ({
@@ -76,6 +78,7 @@ export default function BabyBook({
                 onChange={(opt) => {
                   router.push(opt.value);
                 }}
+                value={`${baby.firstName} ${baby.lastName}`}
               />
             )}
           </div>
@@ -248,8 +251,8 @@ export const getServerSideProps: GetServerSideProps<
   props.babyLinks = (caregiver.babies as Baby[])
     .filter((baby) => baby.id !== props.baby.id)
     .map((baby) => {
-      console.log(baby);
       const { iv, content } = encrypt(baby.id);
+
       return {
         url: `/caregiver/book/${content}?iv=${iv}`,
         firstName: baby.firstName,
