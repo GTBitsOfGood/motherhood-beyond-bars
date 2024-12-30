@@ -3,13 +3,17 @@ import { AdditionalInfoField, Item } from "@lib/types/items";
 import { addItem, deleteItem, editItem } from "db/actions/admin/Items";
 import { getItems } from "db/actions/shared/Items";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { BiCheckbox } from "react-icons/bi";
-import { FiCheck, FiCheckSquare, FiEdit, FiPlus, FiTrash } from "react-icons/fi";
+import { FiCheck, FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 
 interface EditableItem extends Item {
   isEditing?: boolean;
   isNew?: boolean;
 }
+
+// TODO fix wrong highlight color on edit button
+// Fix wrong highlight color on textboxes (also double check styles)
+// Fix margin when 3 options
+// Fix checkbox staying checked (plus turn into component)
 
 const ItemManagement: React.FC = () => {
   const [items, setItems] = useState<EditableItem[]>([]);
