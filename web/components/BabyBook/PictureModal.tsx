@@ -17,8 +17,8 @@ const PictureModal = ({
   const downloadImage = async () => {
     if (image) {
       const a = document.createElement("a");
-      a.href = `/api/download?imageUrl=${encodeURIComponent(
-        image.imageUrl
+      a.href = `/api/download?imageURL=${encodeURIComponent(
+        image.imageURL
       )}&name=${image.caption.length === 0 ? v4() : image.caption}`;
       document.body.appendChild(a);
       a.click();
@@ -63,7 +63,7 @@ const PictureModal = ({
             <LeftChevronIcon />
           </button>
           <div className="relative flex-grow h-full">
-            <Image src={image.imageUrl} layout={"fill"} objectFit={"contain"} />
+            <Image src={image.imageURL} layout={"fill"} objectFit={"contain"} />
           </div>
           <button
             onClick={() =>

@@ -1,27 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+
 import {
   addNewCaregiver,
   deleteCaretaker,
-  getCaregiverPage,
+  getCaregivers,
 } from "db/actions/admin/Caregiver";
-import PaginatedTable from "@components/tables/PaginatedTable";
-import { usePaginatedData } from "@components/molecules/Pagination/PaginationHooks";
+import { isUniqueEmail } from "db/actions/SignUp";
 import { CAREGIVERS_TAB } from "@lib/utils/consts";
-import ButtonWithIcon from "@components/buttonWithIcon";
-import { FaPlus } from "react-icons/fa";
+import { Caregiver } from "@lib/types/users";
+
 import Modal from "@components/modal";
 import CaretakerModal from "@components/modals/CaretakerModal";
+import PaginatedTable from "@components/tables/PaginatedTable";
+
+import Button from "@components/atoms/Button";
+import PlusIcon from "@components/Icons/PlusIcon";
 
 const tab = CAREGIVERS_TAB;
 
-export default function genCaregiversTab() {
-  const {
-    data: caretakers,
-    totalRecords,
-    currPage,
-    setCurrPage,
-    refresh,
-  } = usePaginatedData(getCaregiverPage, tab);
+export default function GenCaregiversTab() {
+  const [caregivers, setCaregivers] = useState<any[]>([]);
+  const [filteredCaregivers, setFilteredCaregivers] = useState<any[]>([]);
+  const [currPage, setCurrPage] = useState(1);
+  const [open, setOpen] = React.useState<any[]>([]);
+
+  const router = useRouter();
+  const { search } = router.query;
 
   const columns = React.useMemo(
     () => [
@@ -33,46 +38,110 @@ export default function genCaregiversTab() {
     []
   );
 
+  const [paginationSize, setPaginationSize] = useState(5);
+
+  useEffect(() => {
+    const tableHeight =
+      window.innerHeight - (44 + 16 * 2) - 24 * 2 - 20 * 2 - 42 - 32 - 48.5;
+    // Header and its margin, margin of PaginatedTable, gaps within PaginatedTable, SearchBar height, Pagination height, Table Header row height
+    // TODO check if better way than hardcoding
+    const entryHeight = 65;
+    const numEntries = Math.max(Math.floor(tableHeight / entryHeight), 3);
+    setPaginationSize(numEntries);
+  });
+
   const handleDelete = async (caregiver: any) => {
-    deleteCaretaker(caregiver).then(() => {
-      refresh();
-    });
+    deleteCaretaker(caregiver);
+    loadData();
   };
 
   const [addModal, toggleAddModal] = useState(false);
-  const paginatedProps = { totalRecords: totalRecords, pageNumber: currPage };
+
+  const paginatedProps = {
+    totalRecords: filteredCaregivers.length,
+    pageNumber: currPage,
+    pageSize: paginationSize,
+  };
+
   const tableProps = {
     columns: columns,
-    data: caretakers,
+    data: filteredCaregivers.slice(
+      (currPage - 1) * paginationSize,
+      currPage * paginationSize
+    ),
     onDelete: handleDelete,
+  };
+
+  async function loadData() {
+    const caregivers = await getCaregivers();
+    setCaregivers(caregivers);
+
+    if (!search) {
+      setFilteredCaregivers(caregivers);
+      setOpen([true, ...Array(caregivers.length - 1).fill(false)]);
+    } else {
+      const decodedString = decodeURIComponent(search as string);
+      handleSearch(decodedString, caregivers);
+      setOpen(Array(caregivers.length).fill(true));
+    }
+  }
+
+  const handleSearch = (input: string, caregiverList?: Array<object>) => {
+    if (!caregiverList) caregiverList = caregivers;
+    const filtered = caregiverList.filter(
+      (caregiver: object) =>
+        "name" in caregiver &&
+        typeof caregiver.name === "string" &&
+        caregiver.name.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredCaregivers(filtered);
+    setOpen(Array(caregivers.length).fill(false));
+    setCurrPage(1);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [search]);
+
+  const onNextPage = () => {
+    setCurrPage(currPage + 1);
+    setOpen(Array(caregivers.length).fill(false));
+  };
+
+  const onPrevPage = () => {
+    setCurrPage(currPage - 1);
+    setOpen(Array(caregivers.length).fill(false));
   };
 
   return (
     <div>
-      <div className="absolute mt-20 border-t" />
-      <div className="pt-6 px-8 flex h-full flex-col justify-left">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row">
-            <h1 className="text-2xl mb-5 font-bold">Caregivers</h1>
-            <h2 className="pl-4 pt-2 pb-8 text-sm text-slate-500">
-              {totalRecords + " People"}
+      <div className="flex flex-col border-t">
+        <div className="flex flex-row justify-between mx-9 my-4">
+          <div className="flex flex-row gap-6 items-center">
+            <h1 className="text-2xl font-bold">Caregivers</h1>
+            <h2 className="text-sm text-slate-500">
+              {filteredCaregivers?.length + " People"}
             </h2>
           </div>
           <div>
-            <ButtonWithIcon
-              icon={<FaPlus />}
+            <Button
+              icon={<PlusIcon small={true} />}
               text="Add a caregiver"
               onClick={() => toggleAddModal(true)}
             />
           </div>
         </div>
-        <div className="mt-4 overflow-auto w-full">
+        <hr className="border-t" />
+        <div className="m-6">
           <PaginatedTable
+            open={open}
+            setOpen={setOpen}
             type={tab}
             tableProps={tableProps}
             paginatedProps={paginatedProps}
-            onNextPage={() => setCurrPage(currPage + 1)}
-            onPrevPage={() => setCurrPage(currPage - 1)}
+            onNextPage={onNextPage}
+            onPrevPage={onPrevPage}
+            onSearch={handleSearch}
           />
         </div>
       </div>
@@ -83,12 +152,20 @@ export default function genCaregiversTab() {
             <CaretakerModal
               setModal={toggleAddModal}
               onSubmit={(caregiver) =>
-                addNewCaregiver(caregiver).then(() => {
-                  toggleAddModal(false);
-                  refresh();
-                  alert(
-                    `${caregiver.firstName} ${caregiver.lastName} has been added!`
-                  );
+                isUniqueEmail(caregiver.email, true).then((results) => {
+                  results && typeof results === "object" && results.isUnique
+                    ? addNewCaregiver(caregiver).then(() => {
+                        toggleAddModal(false);
+                        alert(
+                          `${caregiver.firstName} ${caregiver.lastName} has been added!`
+                        );
+                        loadData();
+                      })
+                    : typeof results === "object" &&
+                      "caregiverName" in results &&
+                      alert(
+                        `Caregiver with email ${caregiver.email} already exists under the name ${results.caregiverName}, search for this Caregiver then edit as needed.`
+                      );
                 })
               }
             />

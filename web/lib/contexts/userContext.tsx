@@ -13,6 +13,8 @@ export const UserContext = React.createContext<UserContextType>({
   admin: null,
 });
 
+// TODO revitalize to fix constant fetching
+
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user] = useAuthState(auth);
   const [admin, setAdmin] = useState<boolean | null>(null);

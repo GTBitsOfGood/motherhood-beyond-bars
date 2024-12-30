@@ -1,5 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
-import { Controller, UseFormReturn } from "react-hook-form";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import {
+  Controller,
+  useFieldArray,
+  UseFieldArrayReturn,
+  UseFormReturn,
+} from "react-hook-form";
 
 import { OnboardingFormData } from "@lib/types/users";
 
@@ -8,102 +13,128 @@ import DatePicker from "@components/atoms/DatePicker";
 import TextInput from "@components/atoms/TextInput";
 import CheckboxText from "@components/molecules/CheckboxText";
 import ErrorToast from "./ErrorToast";
+import { BrowserWaiver } from "@lib/types/common";
+import MarkdownIt from "markdown-it";
 
 interface Props {
   setPage: Dispatch<SetStateAction<number>>;
   form: UseFormReturn<OnboardingFormData>;
+  waiverFields: UseFieldArrayReturn<OnboardingFormData, "waivers", "id">;
 }
 
-export default function LiabilityWaiverPage({ setPage, form }: Props) {
-  const agreeError = form.getFieldState("agreedToWaiver").error;
-  const dateError = form.getFieldState("agreedDate").error;
-  const signatureError = form.getFieldState("agreedSignature").error;
-  const hasError = !!(agreeError || dateError || signatureError);
+const mdRender = new MarkdownIt();
+
+export default function LiabilityWaiverPage({
+  setPage,
+  form,
+  waiverFields: { fields },
+}: Props) {
+  // Checks if any of the waivers has an error to prevent submission
+  const hasError = fields.some(
+    (_, i) =>
+      form.getFieldState(`waivers.${i}.agreedToWaiver`).error ||
+      form.getFieldState(`waivers.${i}.agreedDate`).error ||
+      form.getFieldState(`waivers.${i}.agreedSignature`).error
+  );
 
   return (
-    <div className="flex flex-col px-6 gap-3 flex-grow sm:items-center mb-8">
-      {/* TODO replace with Error banner and fix formatting */}
-      {agreeError && <ErrorToast text="Must agree to the Liability Waiver" />}
-      <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center sm:mt-8">
-        Liability Waiver
-      </h1>
-      {/* TODO Pull waivers from database */}
-      <div className="bg-secondary-background border border-light-gray overflow-auto shrink-0 pt-2 px-3 max-h-[300px] sm:w-[80%]">
-        <p>
-          PARTICIPANT RELEASE AND WAIVER OF LIABILITY In consideration for the
-          willingness of Motherhood Beyond Bars (“Organization”) to accept the
-          individual signing below (“Participant”), as a participant in its
-          Infant and Caregiver Support program or Reentry and Reunification
-          program (the “Program”), and in consideration for Participant
-          accepting the Donated Items (as defined below), and for other good and
-          valuable consideration, the receipt and sufficiency of which are
-          acknowledged, Participant does freely, voluntarily and without duress
-          execute the following Release for and on behalf of him or herself and
-          his or her heirs, successors, beneficiaries and assigns: 1. Donated
-          Items. Participant acknowledges receipt from Organization of items,
-          including those described in the attached document, which may be
-          provided at any time during the Program (“Donated Items”).
-          Organization is providing the Donated Items at no charge. Participant
-          voluntarily accepts the Donated Items “As-Is.”
-        </p>
-      </div>
-      <Controller
-        control={form.control}
-        name="agreedToWaiver"
-        defaultValue={false}
-        rules={{
-          validate: (v) => (!v ? "Must aggree to the Liability Waiver" : true),
-        }}
-        render={({ field: { name, onBlur, onChange, ref, value } }) => (
-          <CheckboxText
-            label="I agree to the Liability Waiver"
-            value={value}
-            onChange={(v) => onChange(v)}
-          />
-        )}
-      />
-      <div className="sm:w-[60%]">
-        <div className="mb-2">
-          <TextInput
-            label="Signature"
-            error={form.formState.errors.agreedSignature?.message}
-            formValue={form.register("agreedSignature", {
-              validate: (v) => (!v ? "Address cannot be empty" : true),
-            })}
-          />
-        </div>
-        <div className="mb-2">
-          {/* TODO set default date to today */}
-          <Controller
-            control={form.control}
-            name="agreedDate"
-            rules={{
-              validate: (v) => (!v ? "Date cannot be empty" : true),
-            }}
-            render={({ field: { name, onBlur, onChange, ref, value } }) => (
-              <DatePicker
-                label="Date"
-                value={value}
-                onChange={(v) => onChange(v)}
-                error={form.formState.errors.agreedDate?.message}
+    <div className="flex flex-col px-6 gap-3 flex-grow sm:items-center mb-8 overflow-hidden">
+      <div className="overflow-auto flex flex-col gap-4 p-4">
+        {fields.map(({ id, waiver, ...values }, i) => {
+          const agreeError = form.getFieldState(
+            `waivers.${i}.agreedToWaiver`
+          ).error;
+
+          return (
+            <div
+              key={id}
+              className="flex flex-col items-stretch gap-2 border p-4 rounded"
+            >
+              {agreeError && <ErrorToast text="Must agree to the waiver" />}
+              <h1 className="text-primary-text text-2xl font-bold font-opensans sm:text-center">
+                {waiver.name}
+              </h1>
+              <div
+                className="bg-secondary-background border border-light-gray overflow-auto shrink-0 py-2 px-3 max-h-[300px]"
+                dangerouslySetInnerHTML={{
+                  __html: mdRender.render(waiver.content),
+                }}
               />
-            )}
-          />
-        </div>
-
-        <Button
-          text="Next"
-          disabled={!!hasError}
-          onClick={async () => {
-            const isValid = await form.trigger(undefined, {
-              shouldFocus: true,
-            });
-            if (!isValid) return;
-
-            setPage((prev) => prev + 1);
-          }}
-        />
+              <div className="self-center">
+                <Controller
+                  control={form.control}
+                  name={`waivers.${i}.agreedToWaiver`}
+                  defaultValue={false}
+                  rules={{
+                    validate: (v) => (!v ? "Must agree to the waiver" : true),
+                  }}
+                  render={({
+                    field: { name, onBlur, onChange, ref, value },
+                  }) => (
+                    <CheckboxText
+                      label="I agree to the waiver"
+                      value={value}
+                      onChange={(v) => onChange(v)}
+                    />
+                  )}
+                />
+              </div>
+              <div className="sm:w-[60%]">
+                <div className="mb-2">
+                  <TextInput
+                    label="Signature"
+                    error={
+                      form.formState.errors.waivers?.[i]?.agreedSignature
+                        ?.message
+                    }
+                    formValue={form.register(`waivers.${i}.agreedSignature`, {
+                      validate: (v) =>
+                        !v ? "Signature cannot be empty" : true,
+                    })}
+                    required={true}
+                  />
+                </div>
+                <div className="mb-2">
+                  <Controller
+                    control={form.control}
+                    name={`waivers.${i}.agreedDate`}
+                    rules={{
+                      validate: (v) => (!v ? "Date cannot be empty" : true),
+                    }}
+                    render={({
+                      field: { name, onBlur, onChange, ref, value },
+                    }) => (
+                      <DatePicker
+                        label="Date"
+                        value={value}
+                        onChange={onChange}
+                        disabled
+                        error={
+                          form.formState.errors.waivers?.[i]?.agreedDate
+                            ?.message
+                        }
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
+
+      <Button
+        text="Next"
+        disabled={hasError}
+        onClick={async () => {
+          const isValid = await form.trigger(undefined, {
+            shouldFocus: true,
+          });
+          if (!isValid) return;
+
+          setPage((prev) => prev + 1);
+        }}
+      />
     </div>
   );
 }

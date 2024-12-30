@@ -14,6 +14,8 @@ module.exports = {
       backgroundImage: {
         "custom-background":
           "radial-gradient(115.79% 108.31% at 24.4% 30.17%, #EDB1CB 0.01%, #B14378 92.53%)",
+        "navbar-background":
+          "radial-gradient(69.03% 159.84% at 14.6% -7.47%, #EDB1CB 0%, #B14378 100%)",
         "onboarding-background":
           "radial-gradient(147.14% 98.02% at 24.4% 30.17%, #EDB1CB 0%, #B14378 100%)",
         "onboarding-background2":
@@ -28,18 +30,22 @@ module.exports = {
         background: "#FFFFFF",
         "secondary-background": "#FAFBFC",
         "mbb-pink": "#B14378",
+        "mbb-pink-hover": "#B1437833",
         "primary-text": "#000000",
         "secondary-text": "#1A1A1A",
         "light-gray": "#D9D9D9",
         "medium-gray": "#8C8C8C",
         "dark-gray": "#666666",
+        "navbar-gray-text": "#C2C2C2",
         "icon-gray": "#BFBFBF",
         "icon-light-gray": "#DFE3E8",
         "empty-gray": "#E3E3E3",
         "error-red": "#E50606",
+        "asterisks-red": "#E50606",
         "light-black": "#191919",
         "light-orange": "#FFE3B3",
         "light-blue": "#DEEBFF",
+        "image-gray": "#f2f2f2",
         dark: {
           100: "#BFBFBF",
           400: "#666666",

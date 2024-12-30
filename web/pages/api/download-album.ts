@@ -3,11 +3,8 @@ import { decrypt } from "@lib/utils/encryption";
 import { db } from "db/firebase";
 import {
   collection,
-  doc,
   DocumentReference,
-  getDoc,
   getDocs,
-  orderBy,
   query,
   Timestamp,
 } from "firebase/firestore";
@@ -40,7 +37,7 @@ export default async function handler(
       const data = doc.data();
 
       return {
-        id: data.caption !== "" ? data.caption : v4(),
+        id: (data.caption !== "" ? data.caption : v4()) + ".png",
         ...(data as RawBabyImage),
       };
     });
@@ -48,16 +45,15 @@ export default async function handler(
     const responses = await Promise.all(
       babyBooks.map((babyBook) =>
         fetch(babyBook.imageURL)
-          .then((res) => res.blob())
-          .then((resBlob) => resBlob.arrayBuffer())
+          .then((res) => res.arrayBuffer())
+          .then((data) => [babyBook, data] as const)
       )
     );
     const zip = new JSZip();
-    for (let i = 0; i < responses.length; i++) {
-      const response = responses[i];
-      const babyBook = babyBooks[i];
-      zip.file(babyBook.id, response);
+    for (const [book, data] of responses) {
+      zip.file(book.id, data);
     }
+
     const content = await zip.generateAsync({
       type: "blob",
     });

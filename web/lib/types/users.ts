@@ -1,19 +1,17 @@
-import { DocumentReference } from "firebase/firestore";
-import { Waiver } from "./common";
+import { DocumentReference, DocumentData } from "firebase/firestore";
+import { BrowserWaiver, Waiver } from "./common";
 import { ItemRequest } from "./items";
+import { Baby } from "./baby";
 
-export type Account = {
-  email: string;
-  password: string;
+export type Caregiver = {
+  id: string;
   firstName: string;
   lastName: string;
+  email: string;
   phoneNumber: string;
-};
-
-export type Caregiver = Account & {
-  id: string;
   numAdults: number;
   numChildren: number;
+  agesOfChildren: string;
   signedWaivers: Waiver[];
   itemsRequested: ItemRequest;
   address: string;
@@ -22,8 +20,10 @@ export type Caregiver = Account & {
   state: string;
   zipCode: string;
   contact: string;
-  babies: DocumentReference[];
+  babies: DocumentReference<DocumentData>[] | Baby[];
   babyCount: number;
+  auth: string;
+  onboarding: boolean;
 };
 
 export type OnboardingFormData = Omit<
@@ -37,7 +37,10 @@ export type OnboardingFormData = Omit<
   | "babies"
 > & {
   saveAddress: boolean;
-  agreedToWaiver: boolean;
-  agreedDate: Date;
-  agreedSignature: string;
+  waivers: {
+    agreedToWaiver: boolean;
+    agreedDate: Date;
+    agreedSignature: string;
+    waiver: BrowserWaiver;
+  }[];
 };

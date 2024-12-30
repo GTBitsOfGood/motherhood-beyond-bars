@@ -1,3 +1,4 @@
+// TODO use this screen
 export default function LoadingScreen() {
   return (
     <div className="flex flex-col bg-custom-background w-full h-screen justify-center items-center">

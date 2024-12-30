@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #app, #app>div {
+html,
+body,
+#app,
+#app > div {
   height: 100vh;
   width: 100vw;
 }
@@ -14,6 +17,18 @@ html, body, #app, #app>div {
 
   input[type="radio"]:focus {
     @apply ring-mbb-pink;
+  }
+
+  input[type="checkbox"] {
+    @apply accent-mbb-pink;
+  }
+
+  input:focus {
+    @apply ring-0 border border-mbb-pink outline-none;
+  }
+
+  button:focus {
+    @apply ring-1 ring-mbb-pink outline-none;
   }
 }
 

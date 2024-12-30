@@ -1,21 +1,32 @@
-import ErrorTriangle from "@components/Icons/ErrorTriangle";
 import { useState } from "react";
+import ErrorTriangle from "@components/Icons/ErrorTriangle";
 
 interface Props {
   text?: string;
+  onClose?: any;
 }
 
-export default function ErrorToast({ text }: Props) {
+export default function ErrorToast({ text, onClose }: Props) {
   const [closed, setClosed] = useState(false);
+
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setClosed(true);
+    }
+  };
 
   return (
     <>
       {!closed && (
-        <div className="flex p-2 items-center justify-between rounded border border-[#E60606]">
-          <ErrorTriangle />
-          <p className="text-[#E60606]">
-            {text || "Please fill in all required fields."}
-          </p>
+        <div className="flex p-2 gap-2 items-center justify-between rounded border border-error-red">
+          <div className="flex items-center gap-2">
+            <ErrorTriangle />
+            <p className="text-error-red text-sm">
+              {text || "Please fill in all required fields."}
+            </p>
+          </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="10"
@@ -23,7 +34,7 @@ export default function ErrorToast({ text }: Props) {
             viewBox="0 0 10 10"
             fill="none"
             className="cursor-pointer"
-            onClick={() => setClosed(true)}
+            onClick={handleClose}
           >
             <path
               fillRule="evenodd"

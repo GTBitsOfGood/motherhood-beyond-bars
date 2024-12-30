@@ -1,6 +1,5 @@
 import DownloadIcon from "@components/Icons/DownloadIcon";
 import ImageIcon from "@components/Icons/ImageIcon";
-import LinkIcon from "@components/Icons/LinkIcon";
 import PersonIcon from "@components/Icons/PersonIcon";
 import { useState } from "react";
 import Button from "@components/atoms/Button";
@@ -63,12 +62,6 @@ const TopBar = ({
             onClick={downloadAlbum}
             text="Download album"
             icon={<DownloadIcon />}
-            width="auto"
-          />
-          <Button
-            onClick={copyLink}
-            text="Copy link"
-            icon={<LinkIcon />}
             width="auto"
           />
         </div>

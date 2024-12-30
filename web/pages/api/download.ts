@@ -1,15 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { blob } from "stream/consumers";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!req.query.imageUrl || !req.query.name) {
+  if (!req.query.imageURL || !req.query.name) {
     res.status(200).json({ message: "Image URL and name required." });
   } else {
-    const response = await fetch(req.query.imageUrl as string);
+    const response = await fetch(req.query.imageURL as string);
     // get the file information from image url
     const resBlob = await response.blob();
     const resBufferArray = await resBlob.arrayBuffer();

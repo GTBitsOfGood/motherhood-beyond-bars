@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { changePassword } from "db/actions/ChangePassword";
+import SignOutButton from "@components/SignOutButton";
 
 type PasswordForm = {
   currentPassword: string;
@@ -9,7 +10,8 @@ type PasswordForm = {
   confirmPassword: string;
 };
 
-function SettingsPage() {
+// TODO fix styles
+export default function SettingsPage() {
   const {
     register,
     handleSubmit,
@@ -136,4 +138,8 @@ function SettingsPage() {
   );
 }
 
-export default SettingsPage;
+//     <div>
+//       <SignOutButton />
+//     </div>
+//   );
+// }

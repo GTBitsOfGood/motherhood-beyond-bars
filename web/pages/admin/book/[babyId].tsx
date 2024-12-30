@@ -118,7 +118,15 @@ export default function BabyBook({
               text="Download selected"
               width="auto"
               onClick={() => {
-                // TODO: implement download only selected images in zip
+                const ids = Array.from(selectedForDownload.entries()).map(
+                  ([, img]) => img.id
+                );
+
+                const a = document.createElement("a");
+                a.href = `/api/download-selected?content=${content}&iv=${iv}&ids=${encodeURIComponent(ids.join(","))}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
               }}
             />
           </div>
@@ -150,12 +158,13 @@ export interface BabyBookMonth {
 }
 
 export interface BabyImage {
+  id: string;
   caption: string;
   date: {
     seconds: number;
     nanoseconds: number;
   };
-  imageUrl: string;
+  imageURL: string;
   caregiverId: string;
 }
 
@@ -217,8 +226,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     )
       year.months.push({ month: currMonth, images: [] });
     year.months[year.months.length - 1].images.push({
+      id: book.id,
       caption: raw.caption || "",
-      imageUrl: raw.imageURL,
+      imageURL: raw.imageURL,
       caregiverId: raw.caregiverID?.id || "",
       date: {
         seconds: raw.date.seconds,

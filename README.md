@@ -28,6 +28,7 @@ The project was originally two parts: a web app in React and a mobile app in Rea
 ```bash
 cd web
 npm install
+npm run secrets:windows # or secrets:linux for Mac or Linux users
 npm run dev
 ```
 
@@ -35,11 +36,17 @@ npm run dev
 
 In order for the jszip library to function properly, node version >=18.12.1 must be used
 
-### Firebase
+## Getting Started: Docker
+
+Both the application (web & mobile) can be ran directly in a development environment via `docker-compose`. This may simplify build environment setup as only Docker & Docker-compose need to be installed.
+
+To run both the mobile & web appplications, simply type `docker-compose up` in the root directory.
+
+## Firebase [Outdated]
 
 Normally, we'd use Firebase emulator so that way we don't touch the production database. However, this is a brand new project, so for now we'll use the global database.
 
-## Getting Started: Functions
+### Getting Started: Functions
 
 We're using firebase functions for a couple of small things — mainly custom claims for whitelisted emails as described [here](https://stackoverflow.com/questions/46552886/firebase-authentication-with-whitelisted-email-addresses). Otherwise, we'll be writing to firebase using client-side packages and validating the data with firestore security rules.
 
@@ -51,12 +58,6 @@ firebase emulators:start --only functions
 ```
 
 Use another terminal session to make requests, or use Postman.
-
-## Getting Started: Docker
-
-Both the application (web & mobile) can be ran directly in a development environment via `docker-compose`. This may simplify build environment setup as only Docker & Docker-compose need to be installed.
-
-To run both the mobile & web appplications, simply type `docker-compose up` in the root directory.
 
 ## Getting Started: Mobile (Caretaker) [OUTDATED]
 

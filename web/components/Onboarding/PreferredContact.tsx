@@ -1,8 +1,6 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
-
-import { updateCaregiver } from "db/actions/shared/Caregiver";
-import { auth } from "db/firebase";
 
 import { OnboardingFormData } from "@lib/types/users";
 
@@ -10,9 +8,11 @@ import Button from "@components/atoms/Button";
 
 interface Props {
   form: UseFormReturn<OnboardingFormData>;
+  createCaregiver: () => Promise<void>;
 }
 
-export default function PreferredContactPage({ form }: Props) {
+export default function PreferredContactPage({ form, createCaregiver }: Props) {
+  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
 
   return (
@@ -50,27 +50,22 @@ export default function PreferredContactPage({ form }: Props) {
           <label htmlFor="text">Text</label>
         </div>
       </div>
-      {/* TODO make sure this works with all info */}
       <Button
         text="Finish"
         disabled={submitting}
-        onClick={async () => {
-          const {
-            saveAddress,
-            agreedToWaiver,
-            agreedDate,
-            agreedSignature,
-            ...caregiverUpdate
-          } = form.getValues();
-
-          if (!auth.currentUser) return;
-
+        onClick={() => {
           setSubmitting(true);
-          try {
-            await updateCaregiver(auth.currentUser?.uid, caregiverUpdate);
-          } finally {
-            setSubmitting(false);
-          }
+          createCaregiver()
+            .then(() => {
+              router.push("/caregiver/book");
+            })
+            .catch((err) => {
+              // TODO show if there's an error
+              console.log("ERROR" + err)
+            })
+            .finally(() => {
+              setSubmitting(true);
+            });
         }}
       />
     </div>
