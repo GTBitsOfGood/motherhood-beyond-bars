@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { loginWithCredentials, loginWithGoogle } from "db/actions/Login";
 
+import HalfScreen from "@components/logos/HalfScreen";
 import Button from "@components/atoms/Button";
 import TextInput from "@components/atoms/TextInput";
-import HalfScreen from "@components/logos/HalfScreen";
 import Banner from "@components/molecules/Banner";
-import { useForm } from "react-hook-form";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -63,7 +63,13 @@ export default function LoginScreen() {
                   <button
                     className="w-auto text-center text-mbb-pink text-sm font-semibold font-opensans"
                     onClick={() => {
-                      router.push("/forgotPassword");
+                      const email = getValues().email;
+
+                      router.push(
+                        email
+                          ? `/forgotPassword?email=${encodeURIComponent(email)}`
+                          : "/forgotPassword"
+                      );
                     }}
                   >
                     Forgot Password

@@ -1,16 +1,17 @@
 import { Timestamp, doc, setDoc } from "@firebase/firestore";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
 import { db } from "db/firebase";
 import { getBabiesFromCaregiver } from "db/actions/shared/babyCaregiver";
 
-import { Item } from "@lib/types/items";
 import { Caregiver } from "@lib/types/users";
 import { Baby } from "@lib/types/baby";
 
 import DownChevron from "@components/Icons/DownChevron";
 import Ellipse from "@components/Icons/Ellipse";
+import LinkArrowIcon from "@components/Icons/LinkArrowIcon";
 
 export default function ItemRequestRow({
   row,
@@ -26,6 +27,8 @@ export default function ItemRequestRow({
   const [rowExpanded, setRowExpanded] = useState(false);
   const [statusExpanded, setStatusExpanded] = useState(false);
   const [babies, setBabies] = useState<Array<Baby>>([]);
+
+  const router = useRouter();
 
   const status: { [index: string]: string } = {
     Pending: "#FD8033",
@@ -43,33 +46,17 @@ export default function ItemRequestRow({
     }
   };
 
-  const dropDownData = [
-    {
-      header: "ADDRESS",
+  const dropDownData =
+    row.itemsRequested?.items?.map((item) => ({
+      header: item.title,
       value:
-        row.address +
-        (row.apartment && row.apartment !== "" ? ", " + row.apartment : "") +
-        ", " +
-        row.city +
-        ", " +
-        row.state +
-        " " +
-        row.zipCode,
-    },
-    {
-      header: "CONTACT",
-      value: `${row.email ?? ""}, ${row.phoneNumber ?? ""}`,
-    },
-    {
-      header: "CHILDREN NAMES",
-      value:
-        babies && babies.length
-          ? babies
-              .map((baby) => baby.firstName + " " + baby.lastName)
-              .join(", ")
-          : "N/A",
-    },
-  ];
+        item.additionalInfo
+          ?.map(
+            (info) =>
+              info.boxTitle + ": " + (info.value ? info.value : "No preference")
+          )
+          .join(", ") || "No additional details",
+    })) || [];
 
   function getDateString(time: Timestamp) {
     return `${time.toDate().getMonth() + 1}/${time.toDate().getDate()}/${time
@@ -182,12 +169,33 @@ export default function ItemRequestRow({
         <tr>
           <td colSpan={6} className="py-3">
             <div className="bg-secondary-background border-light-gray border px-10 py-6 gap-y-4 flex flex-col">
+              <div
+                className="flex align-center items-center"
+                key={"Caregiver Information"}
+              >
+                <div className="w-52 text-dark-gray text-sm tracking-tight uppercase font-semibold">
+                  Caregiver Information
+                </div>
+                <button
+                  className="flex flex-row text-mbb-pink font-semibold text-base items-center align-center"
+                  onClick={() => {
+                    router.push(
+                      `/admin/caregivers?search=${encodeURIComponent(row.firstName + " " + row.lastName)}`
+                    );
+                  }}
+                >
+                  View caregiver
+                  <LinkArrowIcon />
+                </button>
+              </div>
               {dropDownData.map((data) => (
-                <div className="flex" key={data.header}>
-                  <div className="w-[20%] text-dark-gray text-sm tracking-[0.02em]">
+                <div className="flex" key={row.id + data.header}>
+                  <div className="w-52 text-dark-gray text-sm tracking-tight uppercase font-semibold">
                     {data.header}
                   </div>
-                  <div>{data.value}</div>
+                  <div className="text-primary-text text-sm font-normal">
+                    {data.value}
+                  </div>
                 </div>
               ))}
             </div>

@@ -1,3 +1,4 @@
+import CheckboxText from "@components/molecules/CheckboxText";
 import { AdditionalInfoField, Item } from "@lib/types/items";
 import { addItem, deleteItem, editItem } from "db/actions/admin/Items";
 import { getItems } from "db/actions/shared/Items";
@@ -9,15 +10,29 @@ interface EditableItem extends Item {
   isNew?: boolean;
 }
 
+// TODO fix wrong highlight color on edit button
+// Fix wrong highlight color on textboxes (also double check styles)
+// Fix margin when 3 options
+// Fix checkbox staying checked (plus turn into component)
+
 const ItemManagement: React.FC = () => {
   const [items, setItems] = useState<EditableItem[]>([]);
   const nextId = useRef(0); // To generate unique temporary IDs for new items
 
+  const sortItemsOnOnboarding = (items: EditableItem[]) => {
+    return [
+      ...items.filter((item) => item.onboardingOnly === true), 
+      ...items.filter((item) => item.onboardingOnly === false)
+    ]
+  };
+
   useEffect(() => {
     const fetchItems = async () => {
       const fetchedItems = await getItems();
+
+      const sortedFetchedItems = sortItemsOnOnboarding(fetchedItems);
       // Initialize items without editing flags
-      setItems(fetchedItems.map((item) => ({ ...item, isEditing: false })));
+      setItems(sortedFetchedItems.map((item) => ({ ...item, isEditing: false })));
     };
     fetchItems();
   }, []);
@@ -58,7 +73,7 @@ const ItemManagement: React.FC = () => {
       const { isEditing, isNew, id, ...newItemData } = itemToSave;
       const newItem = await addItem(newItemData);
       // Update the item in the state with the new id and reset flags
-      setItems(
+      setItems(sortItemsOnOnboarding(
         items.map((item) =>
           item.id === itemId
             ? {
@@ -68,16 +83,16 @@ const ItemManagement: React.FC = () => {
                 isNew: false,
               }
             : item
-        )
+        ))
       );
     } else {
       // Edit existing item
       const { isEditing, ...updatedItemData } = itemToSave;
       await editItem(itemId, updatedItemData);
-      setItems(
+      setItems(sortItemsOnOnboarding(
         items.map((item) =>
           item.id === itemId ? { ...item, isEditing: false } : item
-        )
+        ))
       );
     }
   };
@@ -126,6 +141,17 @@ const ItemManagement: React.FC = () => {
     );
   };
 
+  const handleOnboardingBooleanChange = (
+    value: boolean,
+    itemId: string
+  ) => {
+    setItems(
+      items.map((item) =>
+        item.id === itemId ? { ...item, ["onboardingOnly"]: value } : item
+      )
+    );
+  }
+
   const handleAdditionalInfoChange = (
     itemId: string,
     infoIndex: number,
@@ -147,6 +173,19 @@ const ItemManagement: React.FC = () => {
       )
     );
   };
+
+  const handleDeleteInputBox = (itemId: string, infoIndex: number) => {
+    setItems(
+      items.map((item) =>
+        item.id == itemId ? {
+          ...item,
+          additionalInfo:
+            item.additionalInfo &&
+            item.additionalInfo.filter((info, j) => j !== infoIndex)
+        } : item
+      )
+    )
+  }
 
   const handleAddInputBox = (itemId: string) => {
     setItems(
@@ -184,7 +223,7 @@ const ItemManagement: React.FC = () => {
             className="w-64 bg-gray-100 border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-10 rounded-md px-3"
           />
         </div>
-        <div className="flex items-center space-x-4 mb-4">
+        <div className="flex items-center space-x-4 mb-10">
           <label className="text-md font-medium text-gray-700">Subtitle</label>
           <input
             type="text"
@@ -194,7 +233,7 @@ const ItemManagement: React.FC = () => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-6 mb-10">
           {item.additionalInfo?.map((info, infoIndex) => (
             <div key={infoIndex}>
               <div className="flex items-center space-x-4 mb-4">
@@ -214,6 +253,12 @@ const ItemManagement: React.FC = () => {
                   }
                   className="w-64 bg-gray-100 border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-10 rounded-md px-3"
                 />
+                <button
+                  onClick={() => handleDeleteInputBox(item.id!, infoIndex)}
+                  className="text-gray-500 hover:text-red-600 p-2 rounded-md"
+                >
+                  <FiTrash size={20} />
+                </button>
               </div>
               <div className="flex items-center space-x-4 mb-4">
                 <label className="text-md font-medium text-gray-700">
@@ -235,6 +280,15 @@ const ItemManagement: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="justify-start items-center gap-[19px] inline-flex mb-6">
+          <div className="text-black text-base font-normal font-['Open Sans']">Show In Onboarding Only?</div>
+              <CheckboxText 
+                onChange={(e) => handleOnboardingBooleanChange(e, item.id!)}
+                label="Yes"
+                value={item.onboardingOnly || false}
+              />
         </div>
 
         <button

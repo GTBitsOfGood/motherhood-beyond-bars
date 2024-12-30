@@ -164,7 +164,7 @@ export interface BabyImage {
     seconds: number;
     nanoseconds: number;
   };
-  imageUrl: string;
+  imageURL: string;
   caregiverId: string;
 }
 
@@ -228,7 +228,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     year.months[year.months.length - 1].images.push({
       id: book.id,
       caption: raw.caption || "",
-      imageUrl: raw.imageURL,
+      imageURL: raw.imageURL,
       caregiverId: raw.caregiverID?.id || "",
       date: {
         seconds: raw.date.seconds,
