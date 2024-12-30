@@ -1,27 +1,17 @@
-<<<<<<< Updated upstream
-=======
-import { deleteDoc, doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
 } from "firebase/storage";
->>>>>>> Stashed changes
 import { db, storage } from "../../firebase"; // import firebase storage
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 
 interface Props {
   file: File;
   caption: string;
   babyId: string;
   caregiverId: string;
-}
-
-interface PhotoPath {
-  firestorePath: string; // Path to the Firestore document
-  storagePath: string; // Path to the file in Firebase Storage
 }
 
 export async function uploadPhoto({
@@ -75,6 +65,7 @@ export async function uploadPhoto({
   }
 }
 
+// TODO check if this works when connecting to frontend
 export async function deletePhoto(
   babyId: string,
   docId: string
