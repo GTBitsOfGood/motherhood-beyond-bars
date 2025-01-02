@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import { uploadPhoto } from "db/actions/caregiver/Photo";
+
+import { BabyBookYear } from "pages/caregiver/book/[babyId]";
 
 import TextInput from "@components/atoms/TextInput";
 import Button from "@components/atoms/Button";
@@ -10,7 +12,9 @@ interface Props {
   edit: boolean;
   caregiverId: string;
   babyId: string;
-  showBabyModal: (arg0: boolean) => void;
+  showBabyModal: Dispatch<SetStateAction<boolean>>;
+  setPhotos: Dispatch<SetStateAction<BabyBookYear[]>>;
+  setTotalImages: Dispatch<SetStateAction<number>>;
 }
 
 // TODO add edit and delete button (ask Annie for designs if not already)
@@ -20,7 +24,9 @@ export default function BabyModal({
   edit,
   caregiverId,
   babyId,
-  showBabyModal
+  showBabyModal,
+  setPhotos,
+  setTotalImages,
 }: Props) {
   const [newDescription, setNewDescription] = useState("");
   const [photo, setPhoto] = useState<string>(
@@ -87,10 +93,53 @@ export default function BabyModal({
                   babyId,
                   caregiverId,
                 });
-                debugger
 
-                if (results.success) {
+                if (results.success && !results.error) {
                   showBabyModal(false);
+                  setTotalImages((prevTotal) => prevTotal + 1);
+                  // Add baby photo to array
+                  if (!("data" in results)) return;
+                  const date = results.data.date.toDate();
+                  const photoYear = date.getFullYear();
+                  const photoMonth = date.getMonth();
+                  setPhotos((prevPhotos) => {
+                    if (!prevPhotos.length) {
+                      return [
+                        {
+                          year: photoYear,
+                          months: [
+                            {
+                              month: photoMonth,
+                              images: [results.data],
+                            },
+                          ],
+                        },
+                      ];
+                    }
+
+                    const photos = [...prevPhotos];
+                    if (photos[0].year === photoYear) {
+                      if (photos[0].months[0].month === photoMonth) {
+                        photos[0].months[0].images.unshift(results.data);
+                      } else {
+                        photos[0].months.unshift({
+                          month: photoMonth,
+                          images: [results.data],
+                        });
+                      }
+                    } else {
+                      photos.unshift({
+                        year: photoYear,
+                        months: [
+                          {
+                            month: photoMonth,
+                            images: [results.data],
+                          },
+                        ],
+                      });
+                    }
+                    return photos;
+                  });
                 } else {
                   // TODO show error
                 }

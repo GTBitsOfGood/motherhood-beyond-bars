@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 import { createUserWithEmailAndPassword, UserCredential } from "firebase/auth";
 import {
   collection,
@@ -10,21 +12,34 @@ import {
   QueryDocumentSnapshot,
   DocumentData,
 } from "firebase/firestore";
-
 import { auth, db } from "db/firebase";
-import Cookies from "js-cookie";
 
-export const isUniqueEmail = async (email: string): Promise<boolean> => {
-  const querySnapshot = await getDocs(
-    query(collection(db, "caregivers"), where("email", "==", email))
+import { Caregiver } from "@lib/types/users";
+
+export const isUniqueEmail = async (
+  email: string,
+  returnName: boolean = false
+) => {
+  const docs = await getDocs(
+    query(
+      collection(db, "caregivers"),
+      where("email", "==", email.toLowerCase())
+    )
   );
 
-  if (querySnapshot.empty) {
-    return true;
+  if (!returnName) {
+    return docs.empty;
+  } else {
+    if (docs.empty) {
+      return { isUnique: true };
+    } else {
+      const foundCaregiver = docs.docs[0].data() as Caregiver;
+      return {
+        isUnique: false,
+        caregiverName: foundCaregiver.firstName + " " + foundCaregiver.lastName,
+      };
+    }
   }
-
-  const firstDoc = querySnapshot.docs[0]?.data();
-  return !firstDoc?.auth;
 };
 
 export async function checkAdminCreatedAccount(
@@ -125,7 +140,7 @@ export async function createCaregiverAccount(
         firstName,
         lastName,
         phoneNumber,
-        email: authData.email,
+        email: authData.email?.toLowerCase(),
         auth: authData.uid,
         babyCount: 0,
         onboarding: false,

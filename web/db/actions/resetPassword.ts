@@ -2,9 +2,9 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 export const sendResetPasswordEmail = async (email: string) => {
   const auth = getAuth();
-  sendPasswordResetEmail(auth, email)
+  return sendPasswordResetEmail(auth, email)
     .then(() => {
-      console.log("Password reset email sent!");
+      return true;
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -14,5 +14,6 @@ export const sendResetPasswordEmail = async (email: string) => {
         errorCode,
         errorMessage
       );
+      return false;
     });
 };
