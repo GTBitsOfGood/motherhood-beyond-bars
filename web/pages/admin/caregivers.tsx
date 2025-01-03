@@ -152,7 +152,7 @@ export default function GenCaregiversTab() {
             <CaretakerModal
               setModal={toggleAddModal}
               onSubmit={(caregiver) =>
-                isUniqueEmail(caregiver.email, true).then((results) => {
+                isUniqueEmail(caregiver.email).then((results) => {
                   results && typeof results === "object" && results.isUnique
                     ? addNewCaregiver(caregiver).then(() => {
                         toggleAddModal(false);

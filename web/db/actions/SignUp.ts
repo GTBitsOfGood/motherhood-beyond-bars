@@ -15,11 +15,9 @@ import {
 import { auth, db } from "db/firebase";
 
 import { Caregiver } from "@lib/types/users";
+import { cleanPhoneNumber } from "@lib/utils/contactInfo";
 
-export const isUniqueEmail = async (
-  email: string,
-  returnName: boolean = false
-) => {
+export const isUniqueEmail = async (email: string) => {
   const docs = await getDocs(
     query(
       collection(db, "caregivers"),
@@ -27,63 +25,51 @@ export const isUniqueEmail = async (
     )
   );
 
-  if (!returnName) {
-    return docs.empty;
+  if (docs.empty) {
+    return { isUnique: true };
   } else {
-    if (docs.empty) {
-      return { isUnique: true };
-    } else {
-      const foundCaregiver = docs.docs[0].data() as Caregiver;
-      return {
-        isUnique: false,
-        caregiverName: foundCaregiver.firstName + " " + foundCaregiver.lastName,
-      };
-    }
+    const foundCaregiver = docs.docs[0].data() as Caregiver;
+    return {
+      isUnique: false,
+      caregiverName: foundCaregiver.firstName + " " + foundCaregiver.lastName,
+      caregiverDoc: docs.docs[0],
+      isAuthNull: foundCaregiver.auth === null,
+    };
   }
 };
 
 export async function checkAdminCreatedAccount(
-  email: string,
   firstName: string,
   lastName: string,
-  phoneNumber: string
+  phoneNumber: string,
+  matchedCaregiver: QueryDocumentSnapshot<DocumentData> | undefined
 ): Promise<
   | {
       success: true;
-      matchedCaregiver: QueryDocumentSnapshot<DocumentData> | null;
+      matchedCaregiver: QueryDocumentSnapshot<DocumentData>;
     }
   | { success: false; error: string }
 > {
   try {
-    const caregiverQuery = query(
-      collection(db, "caregivers"),
-      where("email", "==", email)
-    );
-    const caregiverSnapshot = await getDocs(caregiverQuery);
+    if (!matchedCaregiver) {
+      throw Error;
+    }
 
-    if (!caregiverSnapshot.empty) {
-      let matchedCaregiver = null;
+    const data = matchedCaregiver.data();
 
-      for (const doc of caregiverSnapshot.docs) {
-        const data = doc.data();
-        if (
-          data.firstName === firstName &&
-          data.lastName === lastName &&
-          data.phoneNumber === phoneNumber
-        ) {
-          matchedCaregiver = doc;
-          break;
-        }
-      }
-      if (matchedCaregiver && matchedCaregiver.ref) {
-        return { success: true, matchedCaregiver: matchedCaregiver };
-      }
+    phoneNumber = cleanPhoneNumber(phoneNumber);
+
+    if (
+      data.firstName === firstName &&
+      data.lastName === lastName &&
+      data.phoneNumber === phoneNumber
+    ) {
+      return { success: true, matchedCaregiver };
+    } else {
       return {
         success: false,
         error: "Details do not match. Please contact MBB for support.",
       };
-    } else {
-      return { success: true, matchedCaregiver: null };
     }
   } catch (e) {
     return { success: false, error: "Something went wrong, please try again." };
@@ -139,7 +125,7 @@ export async function createCaregiverAccount(
       await setDoc(caregiverDoc, {
         firstName,
         lastName,
-        phoneNumber,
+        phoneNumber: cleanPhoneNumber(phoneNumber),
         email: authData.email?.toLowerCase(),
         auth: authData.uid,
         babyCount: 0,

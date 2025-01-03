@@ -6,8 +6,18 @@ export const isValidPhoneNumber = (phone: string) => {
   return /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(phone);
 };
 
+export const cleanPhoneNumber = (phoneNumberString: string) => {
+  const cleanNumber = ("" + phoneNumberString).replace(/\D/g, "");
+  // Add 1 as the area code if none present
+  if (cleanNumber.length === 10) {
+    return "1" + cleanNumber;
+  } else {
+    return cleanNumber;
+  }
+};
+
 export const formatPhoneNumber = (phoneNumberString: string) => {
-  const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+  const cleaned = cleanPhoneNumber(phoneNumberString);
   const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
 
   if (match) {
