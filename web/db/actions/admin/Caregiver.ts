@@ -31,6 +31,7 @@ import {
   FailedToFetchError,
 } from "@lib/exceptions/DatabaseExceptions";
 import { removeCaretakerFromBabies } from "../shared/babyCaregiver";
+import { cleanPhoneNumber } from "@lib/utils/contactInfo";
 
 const docType = "caregiver";
 const path = CAREGIVERS_COLLECTION_PATH;
@@ -67,9 +68,11 @@ export const addNewCaregiver = async (caregiver: Caregiver) => {
     const newCaregiver = await addDoc(collection(db, path), {
       ...caregiver,
       email: caregiver.email.toLowerCase(),
+      phoneNumber: cleanPhoneNumber(caregiver.phoneNumber),
       babies: [],
       babyCount: 0,
       createdAt: serverTimestamp(),
+      auth: null,
     });
 
     return newCaregiver;
@@ -103,6 +106,19 @@ export async function getCaregiverPage(
 
 export async function updateCaregiver(uid: string, caregiver: any) {
   const caregiverDoc = doc(db, path, uid);
+
+  if ("phoneNumber" in caregiver) {
+    caregiver = {
+      ...caregiver,
+      phoneNumber: cleanPhoneNumber(caregiver.phoneNumber),
+    };
+  }
+
+  // I don't think we allow this anywhere but just in case
+  if ("email" in caregiver) {
+    caregiver = { ...caregiver, email: caregiver.email.toLowerCase() };
+  }
+
   try {
     await updateDoc(caregiverDoc, caregiver as Partial<Caregiver>);
   } catch (error) {

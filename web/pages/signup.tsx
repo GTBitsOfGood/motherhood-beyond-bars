@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { UserCredential } from "firebase/auth";
+import { QueryDocumentSnapshot, DocumentData } from "@firebase/firestore";
 
 import { loginWithGoogle } from "db/actions/Login";
 import {
+  checkAdminCreatedAccount,
   createAccount,
   createCaregiverAccount,
   isUniqueEmail,
@@ -59,6 +61,7 @@ export default function SignUpScreen() {
 
   const [page, setPage] = useState(1);
   const [acc, setAcc] = useState<UserCredential>();
+  const [doc, setDoc] = useState<QueryDocumentSnapshot<DocumentData>>();
   const [errorBannerMsg, setErrorBannerMsg] = useState("");
 
   return (
@@ -174,12 +177,21 @@ export default function SignUpScreen() {
 
                           const { email } = getValues();
                           try {
-                            const isUnique = await isUniqueEmail(email);
-                            if (!isUnique) {
+                            const results = await isUniqueEmail(email);
+                            if (!results.isUnique && !results.isAuthNull) {
+                              // Account exists and has been used
                               setErrorBannerMsg(
                                 "Account already exists. Please log in instead."
                               );
+                            } else if (
+                              !results.isUnique &&
+                              results.isAuthNull
+                            ) {
+                              // Account created by admin and user signing in for first time
+                              setDoc(results.caregiverDoc);
+                              setPage(2);
                             } else {
+                              // Account is fully new
                               setPage(2);
                             }
                           } catch (err) {
@@ -207,6 +219,22 @@ export default function SignUpScreen() {
                           } = getValues();
 
                           try {
+                            let adminCreated;
+
+                            if (doc) {
+                              adminCreated = await checkAdminCreatedAccount(
+                                firstName,
+                                lastName,
+                                phoneNumber,
+                                doc
+                              );
+
+                              if (!adminCreated.success) {
+                                setErrorBannerMsg(adminCreated.error);
+                                return;
+                              }
+                            }
+
                             const accountResult = await createAccount(
                               email,
                               password
@@ -221,14 +249,16 @@ export default function SignUpScreen() {
                                   accountResult.userCredential,
                                   firstName,
                                   lastName,
-                                  phoneNumber
+                                  phoneNumber,
+                                  adminCreated
+                                    ? adminCreated.matchedCaregiver
+                                    : null
                                 );
                               if (caregiverResult.success) {
                                 router.push("/caregiver/onboarding");
                               } else {
-                                setErrorBannerMsg(
-                                  "Something went wrong, please try again."
-                                );
+                                caregiverResult?.error &&
+                                  setErrorBannerMsg(caregiverResult.error);
                               }
                             }
                           } catch (err) {
