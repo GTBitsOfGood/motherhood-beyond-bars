@@ -174,6 +174,7 @@ interface RawBabyImage {
   date: Timestamp;
   imageURL: string;
   caregiverID: DocumentReference;
+  mediaRelease: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
@@ -235,6 +236,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         seconds: raw.date.seconds,
         nanoseconds: raw.date.nanoseconds,
       },
+      mediaRelease: raw.mediaRelease ?? false,
     });
   });
 
