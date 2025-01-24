@@ -8,6 +8,8 @@ import { Baby } from "@lib/types/baby";
 import TitleTopBar from "@components/logos/TitleTopBar";
 import Button from "@components/atoms/Button";
 import LockIcon from "@components/Icons/LockIcon";
+import { Timestamp } from "@firebase/firestore";
+import { numberFormatDate } from "@lib/utils/date";
 
 interface Props {
   books: { name: string; birthday: string; bookLink: string }[];
@@ -111,7 +113,10 @@ export const getServerSideProps = async (
 
     return {
       name: baby.firstName,
-      birthday: baby.dob,
+      // Handle (probably mistaken) case where dob is a string
+      birthday: !(baby.dob instanceof Timestamp)
+        ? (baby.dob as string)
+        : numberFormatDate(baby.dob.toDate()),
       bookLink: `/caregiver/book/${content}?iv=${iv}`,
     };
   });

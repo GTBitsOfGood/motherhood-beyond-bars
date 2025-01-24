@@ -1,5 +1,5 @@
-import ErrorTriangle from "@components/Icons/ErrorTriangle";
 import { useState } from "react";
+import ErrorTriangle from "@components/Icons/ErrorTriangle";
 
 interface Props {
   text?: string;
@@ -23,10 +23,7 @@ export default function ErrorToast({ text, onClose }: Props) {
         <div className="flex p-2 gap-2 items-center justify-between rounded border border-error-red">
           <div className="flex items-center gap-2">
             <ErrorTriangle />
-            <p
-              className="text-error-red"
-              style={{ fontSize: "min(1em, 2.5vw)", width: "fit-content" }}
-            >
+            <p className="text-error-red text-sm">
               {text || "Please fill in all required fields."}
             </p>
           </div>

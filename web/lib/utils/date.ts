@@ -14,6 +14,10 @@ export function formatDate(date: string) {
   return dateString;
 }
 
+export function numberFormatDate(date: Date, separator = "/") {
+  return `${date.getUTCMonth() + 1}${separator}${date.getUTCDate()}${separator}${date.getUTCFullYear()}`;
+}
+
 export function monthIndexToString(index: number | string) {
   const number = parseInt(index as string);
   if (isNaN(number) || number < 0 || number > 11) return "Not a Month";

@@ -175,7 +175,7 @@ export const BabyBookImage = ({
       className={`group w-[200px] h-[300px] overflow-hidden relative shadow-lg rounded mx-3 my-3 cursor-pointer ${borderClasses}`}
       onClick={onClick}
     >
-      <Image src={image.imageUrl} layout={"fill"} objectFit={"cover"} />
+      <Image src={image.imageURL} layout={"fill"} objectFit={"cover"} />
       {image.caption && (
         <p className="absolute bottom-0 left-0 right-0 line-clamp-3 text-ellipsis bg-white min-h-[4rem] p-3">
           {image.caption}

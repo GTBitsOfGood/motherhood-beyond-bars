@@ -11,6 +11,7 @@ import {
   orderBy,
   DocumentReference,
   DocumentData,
+  where,
 } from "firebase/firestore";
 
 import { db } from "db/firebase";
@@ -30,6 +31,7 @@ import {
   FailedToFetchError,
 } from "@lib/exceptions/DatabaseExceptions";
 import { removeCaretakerFromBabies } from "../shared/babyCaregiver";
+import { cleanPhoneNumber } from "@lib/utils/contactInfo";
 
 const docType = "caregiver";
 const path = CAREGIVERS_COLLECTION_PATH;
@@ -39,6 +41,14 @@ export async function getCaregiver(caretakerID: string) {
   const caregiverRef = doc(collection(db, path), caretakerID); // "caregivers" is the collection
   const caregiverDoc = await getDoc(caregiverRef);
   return caregiverDoc;
+}
+
+export async function doesCaregiverWithEmailExist(email: string) {
+  if (!email) return null;
+  const caregiverQuery = await getDocs(
+    query(collection(db, path), where("email", "==", email))
+  );
+  return !caregiverQuery.empty;
 }
 
 export async function getCaregivers() {
@@ -57,9 +67,12 @@ export const addNewCaregiver = async (caregiver: Caregiver) => {
   try {
     const newCaregiver = await addDoc(collection(db, path), {
       ...caregiver,
+      email: caregiver.email.toLowerCase(),
+      phoneNumber: cleanPhoneNumber(caregiver.phoneNumber),
       babies: [],
       babyCount: 0,
       createdAt: serverTimestamp(),
+      auth: null,
     });
 
     return newCaregiver;
@@ -93,6 +106,19 @@ export async function getCaregiverPage(
 
 export async function updateCaregiver(uid: string, caregiver: any) {
   const caregiverDoc = doc(db, path, uid);
+
+  if ("phoneNumber" in caregiver) {
+    caregiver = {
+      ...caregiver,
+      phoneNumber: cleanPhoneNumber(caregiver.phoneNumber),
+    };
+  }
+
+  // I don't think we allow this anywhere but just in case
+  if ("email" in caregiver) {
+    caregiver = { ...caregiver, email: caregiver.email.toLowerCase() };
+  }
+
   try {
     await updateDoc(caregiverDoc, caregiver as Partial<Caregiver>);
   } catch (error) {
