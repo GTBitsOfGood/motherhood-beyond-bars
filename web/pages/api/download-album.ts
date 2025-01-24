@@ -3,11 +3,8 @@ import { decrypt } from "@lib/utils/encryption";
 import { db } from "db/firebase";
 import {
   collection,
-  doc,
   DocumentReference,
-  getDoc,
   getDocs,
-  orderBy,
   query,
   Timestamp,
 } from "firebase/firestore";

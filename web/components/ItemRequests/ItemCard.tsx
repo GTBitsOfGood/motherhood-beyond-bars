@@ -28,16 +28,15 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
 
   return (
     <div
-      className={`w-full h-min rounded shadow p-4 sm:mx-1 sm:mb-4 sm:w-[48%] ${!babyChecked ? "cursor-pointer" : ""}`}
-      onClick={!babyChecked ? checkBoxBaby : undefined}
+      className="w-full h-min rounded shadow p-4 sm:mx-1 sm:mb-4 sm:w-[48%] cursor-pointer focus-within:outline focus-within:outline-mbb-pink focus-within:outline-1"
+      onClick={checkBoxBaby}
     >
       <div className="justify-start items-center gap-1 inline-flex">
         <div className="flex flex-col justify-center items-center w-6 h-6">
           <input
             type="checkbox"
-            className="w-4 h-4 bg-secondary-background rounded border border-light-gray"
+            className="w-4 h-4 bg-secondary-background rounded border border-light-gray cursor-pointer"
             checked={babyChecked}
-            onChange={checkBoxBaby}
           ></input>
         </div>
         <div className="font-semibold">{data["title"]}</div>
@@ -49,7 +48,10 @@ export default function ItemCard({ data, allData, setData, index }: Props) {
           <div className="w-full pl-7 flex-row justify-start items-start inline-flex">
             {data.additionalInfo.map((data: AdditionalInfoField, i: number) => {
               return (
-                <div className="w-[8rem] flex flex-col pr-2">
+                <div
+                  key={data.boxTitle}
+                  className="w-[8rem] flex flex-col pr-2"
+                >
                   {data.boxTitle}
                   <TextInput
                     currentValue={data.value}

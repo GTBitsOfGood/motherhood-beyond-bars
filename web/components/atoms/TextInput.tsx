@@ -12,6 +12,7 @@ interface Props {
   error?: string;
   inputType?: string;
   key?: string;
+  required?: boolean;
 }
 
 export default function TextInput({
@@ -24,6 +25,7 @@ export default function TextInput({
   error = "",
   inputType = "text",
   key = "",
+  required = false,
 }: Props) {
   const [value, setValue] = useState(currentValue);
 
@@ -31,10 +33,11 @@ export default function TextInput({
     <div className="flex flex-col w-full">
       {label && (
         <label
-          className="font-opensans text-base mb-2"
+          className="text-black text-base font-normal leading-normal"
           htmlFor={formValue ? formValue.name : undefined}
         >
           {label}
+          {required && <span className="text-asterisks-red text-sm">*</span>}
         </label>
       )}
       <input

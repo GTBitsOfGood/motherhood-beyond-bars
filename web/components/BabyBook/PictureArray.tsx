@@ -151,7 +151,7 @@ const PictureArray = ({ babyBook, select, selectedForDownload }: Props) => {
   );
 };
 
-const BabyBookImage = ({
+export const BabyBookImage = ({
   image,
   onClick,
   onCheckboxClick,
@@ -162,14 +162,20 @@ const BabyBookImage = ({
   selected: boolean;
   onCheckboxClick: () => void;
 }) => {
-  const borderClasses = `border hover:border-mbb-pink ${selected ? "!border-mbb-pink" : ""}`;
+  const borderClasses = `border hover:border-mbb-pink ${
+    selected ? "!border-mbb-pink" : ""
+  }`;
+
+  // Check if mediaRelease is missing or false
+  const showMediaReleaseWarning =
+    image.mediaRelease === false || image.mediaRelease === undefined;
 
   return (
     <div
       className={`group w-[200px] h-[300px] overflow-hidden relative shadow-lg rounded mx-3 my-3 cursor-pointer ${borderClasses}`}
       onClick={onClick}
     >
-      <Image src={image.imageUrl} layout={"fill"} objectFit={"cover"} />
+      <Image src={image.imageURL} layout={"fill"} objectFit={"cover"} />
       {image.caption && (
         <p className="absolute bottom-0 left-0 right-0 line-clamp-3 text-ellipsis bg-white min-h-[4rem] p-3">
           {image.caption}
@@ -178,12 +184,22 @@ const BabyBookImage = ({
       <input
         type="checkbox"
         checked={selected}
-        className={`absolute hidden top-2 left-2 w-6 h-6 group-hover:block ${selected ? "!block" : ""}`}
+        className={`absolute hidden top-2 left-2 w-6 h-6 group-hover:block ${
+          selected ? "!block" : ""
+        }`}
         onClick={(e) => {
           e.stopPropagation();
           onCheckboxClick();
         }}
       />
+      {showMediaReleaseWarning && (
+        <div className="absolute top-2 right-2 flex flex-col items-center group">
+          <span className="text-red-600 font-bold text-lg">⚠</span>
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-red-600 text-white text-xs rounded px-2 py-1 mt-1">
+            Media release not approved
+          </div>
+        </div>
+      )}
     </div>
   );
 };

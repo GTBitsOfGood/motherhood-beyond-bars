@@ -8,11 +8,8 @@ import { useTable } from "react-table";
 import book from "../../public/book.svg";
 import dots from "../../public/dots.png";
 
-function BabiesTable({ props }: any) {
-  if (!props) {
-    return <></>;
-  }
-  const { columns, data, onEdit, onDelete } = props;
+function BabiesTable({ tableProps, open, setOpen }: any) {
+  const { columns, data, onEdit, onDelete } = tableProps;
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -22,7 +19,6 @@ function BabiesTable({ props }: any) {
   const [editModal, toggleEditModal] = useState(false);
   const [babyData, setBabyData] = useState({});
   const [selectedOptionsPanel, setSelectedOptionsPanel] = useState(-1);
-  const [open, setOpen] = useState(Array(data.length).fill(false));
   const [caretakerContacts, setCaretakerContacts] = useState<any[]>(
     Array(data.length).fill(null)
   );
@@ -84,7 +80,7 @@ function BabiesTable({ props }: any) {
                         <tr
                           onClick={() => {
                             getCaretakerContact(i);
-                            setOpen((prevOpen) => {
+                            setOpen((prevOpen: boolean[]) => {
                               const newOpen = [...prevOpen];
                               newOpen[i] = !newOpen[i];
                               return newOpen;
@@ -95,7 +91,7 @@ function BabiesTable({ props }: any) {
                         >
                           <td className="border-t">
                             <RiArrowDropDownLine
-                              className={`text-2xl duration-300 cursor-pointer ${
+                              className={`text-3xl duration-300 cursor-pointer text-mbb-pink ${
                                 open[i] && "rotate-180"
                               }`}
                             />
@@ -128,21 +124,24 @@ function BabiesTable({ props }: any) {
                             </div>
                           </td>
                           <td className="border-t">
-                            <div className="p-4">
+                            <div className="px-1 py-2">
                               <div className="group relative">
-                                <button>
-                                  <Image
-                                    src={dots}
-                                    onClick={() => {
-                                      if (i === selectedOptionsPanel)
-                                        setSelectedOptionsPanel(-1);
-                                      else setSelectedOptionsPanel(i);
-                                    }}
-                                  />
+                                <button
+                                  className="px-3 py-2"
+                                  onClick={(e) => {
+                                    if (i === selectedOptionsPanel) {
+                                      setSelectedOptionsPanel(-1);
+                                    } else {
+                                      setSelectedOptionsPanel(i);
+                                    }
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  <Image src={dots} />
                                 </button>
                                 <nav
                                   tabIndex={0}
-                                  className="absolute w-[127px] rounded-b bg-white border shadow-xl right-1 mt-1 shadow-slate-200 transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100"
+                                  className="absolute w-[127px] rounded-b bg-white border shadow-xl right-1 mt-1 shadow-slate-200 transition-all opacity-0 group-focus-within:visible group-focus-within:opacity-100 z-10"
                                   hidden={selectedOptionsPanel !== i}
                                 >
                                   <ul className="py-1">

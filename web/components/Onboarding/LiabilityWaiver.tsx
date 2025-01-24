@@ -91,6 +91,7 @@ export default function LiabilityWaiverPage({
                       validate: (v) =>
                         !v ? "Signature cannot be empty" : true,
                     })}
+                    required={true}
                   />
                 </div>
                 <div className="mb-2">

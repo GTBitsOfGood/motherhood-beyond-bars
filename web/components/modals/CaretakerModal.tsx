@@ -1,3 +1,4 @@
+import Button from "@components/atoms/Button";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { BiLoaderCircle } from "react-icons/bi";
@@ -6,7 +7,7 @@ import { FaTimes } from "react-icons/fa";
 function CaretakerModal({
   setModal,
   onSubmit,
-  buttonText = "Add caretaker",
+  buttonText = "Add caregiver",
   header = "Add a Caregiver",
   values = {},
 }: {
@@ -58,6 +59,7 @@ function CaretakerModal({
                         <label>
                           {field.charAt(0).toUpperCase() +
                             field.slice(1).replace(/([A-Z])/g, " $1")}
+                          <span className="text-asterisks-red text-sm">*</span>
                         </label>
                         <input
                           type="text"
@@ -73,21 +75,19 @@ function CaretakerModal({
                       </div>
                     )
                   )}
-                  <div className="form-group flex justify-end w-full col-span-2 mt-3">
-                    <button
-                      type="button"
-                      className="px-4 py-2 rounded-md text-md text-mbb-pink font-semibold"
+                  <div className="form-group flex justify-end w-full col-span-2 mt-3 gap-4">
+                    <Button
+                      text="Cancel"
+                      type="secondary"
                       onClick={handleClose}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
+                      width="auto"
+                    />
+                    <Button
+                      submit
                       disabled={isSubmitting}
-                      className={`bg-transparent hover:bg-mbb-pink text-mbb-pink font-semibold hover:text-white py-2 px-4 border border-mbb-pink hover:border-transparent rounded ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-                    >
-                      {buttonText}
-                    </button>
+                      text={buttonText}
+                      width="auto"
+                    />
                   </div>
                   {values?.id && (
                     <input

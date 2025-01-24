@@ -4,7 +4,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import Cookies from "js-cookie"; // For setting cookies
-import { db, auth } from "db/firebase";
+import { auth } from "db/firebase";
 
 // Login with Email and Password
 export const loginWithCredentials = async (email: string, password: string) => {

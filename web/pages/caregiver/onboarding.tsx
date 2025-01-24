@@ -74,6 +74,7 @@ export default function CaregiverOnboarding({ waivers, items, authId }: Props) {
     await updateCaregiver(authId, {
       ...caregiverUpdate,
       // May need to convert the timestamp here to another format because it is in ISO on the browser
+      onboarding: true,
       signedWaivers: waivers.map((waiver) => waiver.waiver),
     });
   }

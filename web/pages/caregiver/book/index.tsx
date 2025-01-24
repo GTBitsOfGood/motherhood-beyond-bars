@@ -20,6 +20,7 @@ import TextInput from "@components/atoms/TextInput";
 import { caregiverFromAuthToken } from "db/actions/admin/Caregiver";
 import { useState } from "react";
 import RightChevronIcon from "@components/Icons/RightChevronIcon";
+import { numberFormatDate } from "@lib/utils/date";
 
 interface Props {
   books: { name: string; birthday: string; bookLink: string }[];
@@ -289,7 +290,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
     return {
       name: baby.firstName,
-      birthday: baby.dob.toDate().toISOString(),
+      // Handle (probably mistaken) case where dob is a string
+      birthday: !(baby.dob instanceof Timestamp)
+        ? (baby.dob as string)
+        : numberFormatDate(baby.dob.toDate()),
       bookLink: `/caregiver/book/${content}?iv=${iv}`,
     };
   });
