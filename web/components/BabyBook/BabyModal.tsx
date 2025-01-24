@@ -12,12 +12,12 @@ interface Props {
   edit: boolean;
   caregiverId: string;
   babyId: string;
+  mediaReleaseSigned?: boolean; // Whether the Caregiver signed the Media Release Form
   showBabyModal: Dispatch<SetStateAction<boolean>>;
   setPhotos: Dispatch<SetStateAction<BabyBookYear[]>>;
   setTotalImages: Dispatch<SetStateAction<number>>;
 }
 
-// TODO add edit and delete button (ask Annie for designs if not already)
 export default function BabyModal({
   image,
   description,
@@ -27,6 +27,7 @@ export default function BabyModal({
   showBabyModal,
   setPhotos,
   setTotalImages,
+  mediaReleaseSigned = false, // Default to false if not provided
 }: Props) {
   const [newDescription, setNewDescription] = useState("");
   const [photo, setPhoto] = useState<string>(
@@ -35,6 +36,7 @@ export default function BabyModal({
   const [photoFile, setPhotoFile] = useState<File | undefined>(
     typeof image === "object" ? image : undefined
   );
+  const [mediaRelease, setMediaRelease] = useState(mediaReleaseSigned);
 
   return (
     <div className="flex flex-col w-full h-full items-center sm:flex-row">
@@ -45,7 +47,7 @@ export default function BabyModal({
           <img
             src={photo}
             className={`sm:w-[21rem] sm:max-h-[30rem] ${edit ? "max-h-[22rem]" : "w-4/5 object-cover"}`}
-          ></img>
+          />
           {edit && (
             <label className="bg-primary-text/70 rounded-[999px] text-white text-sm font-semibold py-1 px-3 mt-5 self-end sm:static absolute bottom-3 right-3 cursor-pointer">
               <input
@@ -74,15 +76,21 @@ export default function BabyModal({
             Add a Description
           </div>
           <div className="w-full h-32">
-            {/* TODO convert to text area */}
             <TextInput
               onChange={(event) => {
                 setNewDescription(event);
               }}
               placeholder="How the baby is doing, what they did today, etc."
-            ></TextInput>
+            />
           </div>
-          {/* TODO add "Allow for Media Release checkbox" */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={mediaRelease}
+              onChange={() => setMediaRelease(!mediaRelease)}
+            />
+            <label>Allow for Media Release</label>
+          </div>
           <Button
             text="Upload"
             onClick={async () => {
@@ -92,6 +100,7 @@ export default function BabyModal({
                   caption: newDescription,
                   babyId,
                   caregiverId,
+                  mediaRelease, // Include the mediaRelease field
                 });
 
                 if (results.success && !results.error) {

@@ -7,10 +7,10 @@ import {
   collection,
   doc,
   DocumentReference,
+  query as doQuery,
   getDoc,
   getDocs,
   orderBy,
-  query as doQuery,
   Timestamp,
 } from "firebase/firestore";
 
