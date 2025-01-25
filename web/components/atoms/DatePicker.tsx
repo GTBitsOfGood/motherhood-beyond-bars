@@ -21,7 +21,7 @@ export default function DatePicker({
   required = false,
 }: Props) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <label htmlFor={label}>
         {label}
         {required && <span className="text-asterisks-red text-sm">*</span>}

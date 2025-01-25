@@ -64,34 +64,31 @@ export default function BabyBookHome({
     }
 
     return (
-      <div className="w-full h-full relative">
+      <div className="sm:w-full relative">
         {showModal && (
           <div
-            className="absolute z-10 top-0 left-0 right-0 bottom-0 flex items-end sm:items-center sm:justify-center bg-[#00000040]"
+            className="absolute z-10 top-0 left-0 right-0 bottom-0 flex items-end sm:items-center sm:justify-center bg-primary-text/25"
             onClick={(e) => {
               // If click didn't originate in this element, ignore it
               if (e.target !== e.currentTarget) return;
               setShowModal(false);
             }}
           >
-            <div className="bg-white w-full md:w-[500px] sm:rounded p-4">
-              <p className="self-start text-lg sm:text-2xl font-bold text-primary-text">
+            <div className="bg-white w-full sm:max-w-[600px] sm:rounded p-6 sm:p-12 sm:text-center">
+              <p className="self-start text-xl sm:text-2xl font-bold text-primary-text">
                 Don&apos;t Share?
               </p>
-              <p className="mt-2">
+              <p className="mt-2 sm:mt-4">
                 Proceeding without agreeing to the Media Release Form restricts
                 Motherood Beyond Bars from sharing any photos for media use.
               </p>
-              <p className="mt-2 font-bold">
+              <p className="mt-2 sm:mt-4 font-semibold">
                 You can agree to this form at any time in the Resource Library.
               </p>
-              <div className="flex gap-4 mt-2">
+              <div className="flex gap-4 mt-4 sm:mt-8 sm:px-[10%]">
                 <Button
-                  text="Agree to Form"
-                  onClick={() => setShowModal(false)}
-                />
-                <button
-                  className="text-mbb-pink font-bold w-full"
+                  text="Continue"
+                  type="tertiary"
                   onClick={async () => {
                     const waiver: WaiverHeader = {
                       waiverName: MEDIA_RELEASE_WAIVER_NAME,
@@ -112,20 +109,22 @@ export default function BabyBookHome({
                       }
                     }
                   }}
-                >
-                  Continue
-                </button>
+                />
+                <Button
+                  text="Agree to Form"
+                  onClick={() => setShowModal(false)}
+                />
               </div>
             </div>
           </div>
         )}
         <TitleTopBar title="Baby Book" />
         <div className="p-4">
-          <p className="self-start text-2lg sm:text-3xl font-bold text-primary-text">
+          <p className="self-start text-2xl sm:text-center font-bold text-primary-text sm:mt-8">
             Media Release Form
           </p>
           <div className="flex flex-col w-full items-center mt-4">
-            <div className="flex flex-col items-center md:max-w-[800px] gap-2">
+            <div className="flex flex-col items-center md:max-w-[800px] gap-2 sm:gap-4">
               <div
                 className="bg-secondary-background border border-light-gray overflow-auto shrink-0 py-2 px-3 max-h-[300px]"
                 dangerouslySetInnerHTML={{
@@ -143,7 +142,7 @@ export default function BabyBookHome({
                   />
                 )}
               />
-              <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-4 w-full">
                 <TextInput
                   label="Signature"
                   error={form.formState.errors.signature?.message}
@@ -168,43 +167,45 @@ export default function BabyBookHome({
                   )}
                 />
               </div>
+              <div className="w-full sm:w-auto">
+                <Button
+                  text="Next"
+                  onClick={async () => {
+                    const isValid = await form.trigger(undefined, {
+                      shouldFocus: true,
+                    });
+
+                    if (!isValid) return;
+
+                    const formValues = form.getValues();
+
+                    const waiver: WaiverHeader = {
+                      waiverName: MEDIA_RELEASE_WAIVER_NAME,
+                      agreedToWaiver: true,
+                      agreedDate: formValues.date.toISOString(),
+                      agreedSignature: formValues.signature,
+                    };
+
+                    const res = await signWaiver(caregiverId, waiver);
+
+                    if (res.success) {
+                      setShowForm(false);
+
+                      if (books.length === 1) {
+                        router.push(books[0].bookLink);
+                      }
+                    }
+                  }}
+                />
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="flex items-center gap-2 mt-4 sm:mt-8 sm:px-16 text-base sm:text-base w-full sm:w-auto justify-center"
+                >
+                  Continue without signing Media Release
+                  <RightChevronIcon color="black" />
+                </button>
+              </div>
             </div>
-            <Button
-              text="Next"
-              width="auto"
-              onClick={async () => {
-                const isValid = await form.trigger(undefined, {
-                  shouldFocus: true,
-                });
-
-                if (!isValid) return;
-
-                const formValues = form.getValues();
-
-                const waiver: WaiverHeader = {
-                  waiverName: MEDIA_RELEASE_WAIVER_NAME,
-                  agreedToWaiver: true,
-                  agreedDate: formValues.date.toISOString(),
-                  agreedSignature: formValues.signature,
-                };
-
-                const res = await signWaiver(caregiverId, waiver);
-
-                if (res.success) {
-                  setShowForm(false);
-
-                  if (books.length === 1) {
-                    router.push(books[0].bookLink);
-                  }
-                }
-              }}
-            />
-            <button
-              onClick={() => setShowModal(true)}
-              className="flex items-center gap-2 font-semibold mt-4"
-            >
-              Continue without signing <RightChevronIcon color="black" />
-            </button>
           </div>
         </div>
       </div>
