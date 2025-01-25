@@ -1,21 +1,22 @@
-import { doc, arrayUnion, Timestamp, setDoc } from "firebase/firestore";
+import { doc, arrayUnion, setDoc } from "firebase/firestore";
 import { db } from "db/firebase";
 
-import { Caregiver } from "@lib/types/users";
-import { Waiver } from "@lib/types/common";
+import { WaiverHeader } from "@lib/types/common";
 
-// TODO add error checking
-export async function setSignedWaivers(caregiver: Caregiver, waiver: Waiver) {
-  const caregiverDoc = doc(db, "caregivers", caregiver.id);
+export async function signWaiver(caregiverId: string, waiver: WaiverHeader) {
+  const caregiverDoc = doc(db, "caregivers", caregiverId);
 
-  setDoc(
+  return await setDoc(
     caregiverDoc,
     {
-      signedWaivers: arrayUnion({
-        id: waiver.id,
-        timestamp: Timestamp.now(),
-      }),
+      signedWaivers: arrayUnion(waiver),
     },
     { merge: true }
-  );
+  )
+    .then(() => {
+      return { success: true };
+    })
+    .catch(() => {
+      return { success: false };
+    });
 }

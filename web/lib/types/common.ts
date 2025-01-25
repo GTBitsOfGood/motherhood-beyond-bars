@@ -26,6 +26,13 @@ export type BrowserWaiver = Omit<Waiver, "lastUpdated"> & {
   caregiverName?: string;
 };
 
+export type WaiverHeader = {
+  waiverName: string;
+  agreedToWaiver: boolean;
+  agreedDate: string;
+  agreedSignature: string;
+};
+
 export type AuthFormValues = {
   email: string;
   password: string;
