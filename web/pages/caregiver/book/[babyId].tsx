@@ -101,6 +101,23 @@ export default function BabyBook({
               <p className="sm:text-xl text-center text-dark-gray">
                 Get started by adding a photo of {baby.firstName} here!
               </p>
+              {/* TODO fix this page */}
+              {/* <div className="w-full h-full">
+                <TitleTopBar title="Baby Book" />
+                <div className="flex flex-col my-[3.75rem] mx-auto px-[3.5rem] items-center gap-[1.75rem] max-w-[530px]">
+                  <p className="self-start text-2lg sm:text-3xl font-bold text-primary-text">
+                    Start a Baby Book
+                  </p>
+                  <p className="sm:text-xl">
+                    The Baby Book is a place where you can document the
+                    baby&#39;s journey by uploading images and descriptions.
+                    Motherhood Behind Bars will then deliver the images to the
+                    mothers, so they can stay updated on their baby&#39;s
+                    growth.
+                  </p>
+                  <Button text="Get Started" />
+                </div>
+              </div> */}
             </>
           ) : (
             photos.flatMap(({ year, months }) => {

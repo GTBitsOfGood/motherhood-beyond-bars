@@ -23,7 +23,6 @@ export const loginWithCredentials = async (email: string, password: string) => {
         path: "/",
         secure: true, // Enable this in production
         sameSite: "Strict",
-        httpOnly: true,
       });
 
       return { success: true }; // No need to return admin status here
