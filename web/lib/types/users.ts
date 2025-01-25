@@ -1,5 +1,5 @@
 import { DocumentReference, DocumentData } from "firebase/firestore";
-import { BrowserWaiver, Waiver } from "./common";
+import { BrowserWaiver, WaiverHeader } from "./common";
 import { ItemRequest } from "./items";
 import { Baby } from "./baby";
 
@@ -12,7 +12,7 @@ export type Caregiver = {
   numAdults: number;
   numChildren: number;
   agesOfChildren: string;
-  signedWaivers: Waiver[];
+  signedWaivers: WaiverHeader[];
   itemsRequested: ItemRequest;
   address: string;
   apartment?: string;

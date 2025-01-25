@@ -1,4 +1,4 @@
-const RightChevronIcon = () => {
+const RightChevronIcon = ({ color = "white" }: { color?: string }) => {
   return (
     <svg
       width="12"
@@ -9,10 +9,10 @@ const RightChevronIcon = () => {
     >
       <path
         d="M2.25 2.5L9.75 10L2.25 17.5"
-        stroke="white"
-        stroke-width="3"
-        stroke-linecap="square"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="3"
+        strokeLinecap="square"
+        strokeLinejoin="round"
       />
     </svg>
   );

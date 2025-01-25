@@ -31,6 +31,7 @@ import {
   FailedToFetchError,
 } from "@lib/exceptions/DatabaseExceptions";
 import { removeCaretakerFromBabies } from "../shared/babyCaregiver";
+import { getAuth } from "firebase-admin/auth";
 import { cleanPhoneNumber } from "@lib/utils/contactInfo";
 
 const docType = "caregiver";

@@ -79,6 +79,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     ? caregiver.firstName + " " + caregiver.lastName
     : "John Smith";
 
+  // TODO use caregiver.signedWaivers to personalize
+
   return {
     props: {
       waivers: waivers.map((w) => ({
