@@ -33,13 +33,18 @@ export default function BabyBook({
   totImages,
   baby,
   babyLinks,
-  content,
-  iv,
+  mediaFormSigned,
 }: Props) {
   const router = useRouter();
+
   const [showBabyModal, setShowBabyModal] = useState<boolean>(false);
   const [babyPhoto, setBabyPhoto] = useState<File | string>("");
+  const [photoDescription, setPhotoDescription] = useState<string>("");
+  const [mediaReleaseChecked, setMediaReleaseChecked] =
+    useState<boolean>(false);
+  const [photoId, setPhotoId] = useState<string>("");
   const [editBabyPhoto, setEditBabyPhoto] = useState<boolean>(false);
+
   const [photos, setPhotos] = useState<BabyBookYear[]>(babyBook);
   const [totalImages, setTotalImages] = useState<number>(totImages);
 
@@ -48,13 +53,17 @@ export default function BabyBook({
   }, [router.query.babyId]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-screen">
       <TitleTopBar title="Baby Book" />
       {showBabyModal ? (
         babyPhoto && (
           <BabyModal
             image={babyPhoto}
-            edit={editBabyPhoto}
+            description={photoDescription}
+            editing={editBabyPhoto}
+            photoId={photoId}
+            mediaReleaseChecked={mediaReleaseChecked}
+            mediaFormSigned={mediaFormSigned}
             babyId={baby.id}
             caregiverId={baby.caregiverId}
             showBabyModal={setShowBabyModal}
@@ -63,7 +72,7 @@ export default function BabyBook({
           />
         )
       ) : (
-        <div className="flex flex-col my-6 md:my-15 mx-4 md:mx-10 items-center gap-[1.125rem] w-full">
+        <div className="flex flex-col py-6 sm:py-15 px-4 sm:px-10 items-center gap-[1.125rem] w-full h-[85%]">
           <div className="self-start">
             <h1 className="text-2xl sm:text-3xl font-bold text-primary-text">
               {baby.firstName} {baby.lastName}
@@ -91,7 +100,7 @@ export default function BabyBook({
             )}
           </div>
           {totalImages === 0 ? (
-            <>
+            <div className="flex flex-col w-full self-center items-center gap-2 p-8 pt-[10%] h-full">
               <div className="rounded-full w-[160px] h-[160px] flex items-center justify-center bg-[#F2F2F2]">
                 <SmileIcon />
               </div>
@@ -101,24 +110,11 @@ export default function BabyBook({
               <p className="sm:text-xl text-center text-dark-gray">
                 Get started by adding a photo of {baby.firstName} here!
               </p>
-              {/* TODO fix this page */}
-              {/* <div className="w-full h-full">
-                <TitleTopBar title="Baby Book" />
-                <div className="flex flex-col my-[3.75rem] mx-auto px-[3.5rem] items-center gap-[1.75rem] max-w-[530px]">
-                  <p className="self-start text-2lg sm:text-3xl font-bold text-primary-text">
-                    Start a Baby Book
-                  </p>
-                  <p className="sm:text-xl">
-                    The Baby Book is a place where you can document the
-                    baby&#39;s journey by uploading images and descriptions.
-                    Motherhood Behind Bars will then deliver the images to the
-                    mothers, so they can stay updated on their baby&#39;s
-                    growth.
-                  </p>
-                  <Button text="Get Started" />
-                </div>
-              </div> */}
-            </>
+              <img
+                src="/SwirlArrow.svg"
+                className="absolute right-20 bottom-20"
+              ></img>
+            </div>
           ) : (
             photos.flatMap(({ year, months }) => {
               return months.map(({ month, images }) => (
@@ -130,13 +126,16 @@ export default function BabyBook({
                     {monthIndexToString(month)} {year}
                   </h2>
                   <div className="grid grid-cols-4 gap-[0.375rem] md:gap-x-4 md:gap-y-2">
-                    {images.map(({ imageURL, date }) => (
+                    {images.map(({ imageURL, date, caption, mediaRelease, photoId }) => (
                       <>
                         <div
                           key={imageURL}
                           className="h-[160px] md:h-[240px] overflow-hidden relative shadow-lg cursor-pointer"
                           onClick={() => {
                             setBabyPhoto(imageURL);
+                            setPhotoDescription(caption);
+                            setMediaReleaseChecked(mediaRelease ?? false);
+                            setPhotoId(photoId);
                             setShowBabyModal(true);
                             setEditBabyPhoto(false);
                           }}
@@ -170,6 +169,9 @@ export default function BabyBook({
 
                 if (files) {
                   setBabyPhoto(files[files.length - 1]);
+                  setPhotoDescription("");
+                  setMediaReleaseChecked(false);
+                  setPhotoId("");
                   setShowBabyModal(true);
                   setEditBabyPhoto(true);
                 } else {
@@ -197,8 +199,7 @@ interface Props {
     id: string;
     caregiverId: string;
   };
-  content: string;
-  iv: string;
+  mediaFormSigned: boolean;
 }
 
 export interface BabyBookYear {
@@ -218,7 +219,8 @@ export interface BabyImage {
     nanoseconds: number;
   };
   imageURL: string;
-  caregiverId: string;
+  mediaRelease?: boolean;
+  photoId: string;
 }
 
 interface RawBabyImage {
@@ -226,6 +228,7 @@ interface RawBabyImage {
   date: Timestamp;
   imageURL: string;
   caregiverID: DocumentReference;
+  mediaRelease?: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps<
@@ -245,16 +248,20 @@ export const getServerSideProps: GetServerSideProps<
       id: "",
       caregiverId: "",
     },
-    content: "",
-    iv: "",
+    mediaFormSigned: false,
   };
 
   const caregiver = await getCurrentCaregiver(context);
   if (!params || !params.babyId || !query.iv) return { props };
   if (!caregiver) return { props };
 
-  props.content = params?.babyId as string;
-  props.iv = query.iv as string;
+  for (const waiver of caregiver.signedWaivers) {
+    if (waiver.waiverName === "Media Release" && waiver.agreedToWaiver) {
+      props.mediaFormSigned = true;
+      break;
+    }
+  }
+
   const babyId = decrypt({ iv: query.iv as string, content: params.babyId });
 
   const babyRef = doc(db, "babies", babyId);
@@ -288,6 +295,7 @@ export const getServerSideProps: GetServerSideProps<
     collection(db, `babies/${babyId}/book`),
     orderBy("date", "desc")
   );
+
   const babyBookDocs = await getDocs(babyBookRef);
   babyBookDocs.docs.forEach((book) => {
     props.totImages = props.totImages + 1;
@@ -313,11 +321,12 @@ export const getServerSideProps: GetServerSideProps<
     year.months[year.months.length - 1].images.push({
       caption: raw.caption || "",
       imageURL: raw.imageURL,
-      caregiverId: raw.caregiverID?.id || "",
       date: {
         seconds: raw.date.seconds,
         nanoseconds: raw.date.nanoseconds,
       },
+      mediaRelease: raw.mediaRelease ?? false,
+      photoId: book.id,
     });
   });
 

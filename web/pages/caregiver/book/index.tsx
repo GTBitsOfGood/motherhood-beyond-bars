@@ -50,75 +50,31 @@ export default function BabyBookHome({
   const [showModal, setShowModal] = useState(false);
   const [notSigning, setNotSigning] = useState(false);
   const [showForm, setShowForm] = useState(!signedMediaRelease && !notSigning);
+  const [showIntroPage, setShowIntroPage] = useState(true);
   const router = useRouter();
 
-  // First check if Media Release Form should be shown
-  if (showForm) {
-    if (!mediaReleaseWaiver) {
-      return (
-        <div className="w-full h-full relative">
-          <TitleTopBar title="Baby Book" />
-          <p>Could not get Media Release Form!</p>
-        </div>
-      );
-    }
-
+  function IntroPage() {
     return (
-      <div className="sm:w-full relative">
-        {showModal && (
-          <div
-            className="absolute z-10 top-0 left-0 right-0 bottom-0 flex items-end sm:items-center sm:justify-center bg-primary-text/25"
-            onClick={(e) => {
-              // If click didn't originate in this element, ignore it
-              if (e.target !== e.currentTarget) return;
-              setShowModal(false);
-            }}
-          >
-            <div className="bg-white w-full sm:max-w-[600px] sm:rounded p-6 sm:p-12 sm:text-center">
-              <p className="self-start text-xl sm:text-2xl font-bold text-primary-text">
-                Don&apos;t Share?
-              </p>
-              <p className="mt-2 sm:mt-4">
-                Proceeding without agreeing to the Media Release Form restricts
-                Motherood Beyond Bars from sharing any photos for media use.
-              </p>
-              <p className="mt-2 sm:mt-4 font-semibold">
-                You can agree to this form at any time in the Resource Library.
-              </p>
-              <div className="flex gap-4 mt-4 sm:mt-8 sm:px-[10%]">
-                <Button
-                  text="Continue"
-                  type="tertiary"
-                  onClick={async () => {
-                    const waiver: WaiverHeader = {
-                      waiverName: MEDIA_RELEASE_WAIVER_NAME,
-                      agreedToWaiver: false,
-                      agreedDate: "",
-                      agreedSignature: "",
-                    };
+      <div className="flex items-center sm:justify-center w-full sm:h-[75%]">
+        <div className="flex flex-col sm:my-[3.75rem] p-8 sm:items-center gap-6 max-w-[530px] text-left sm:text-center">
+          <p className="text-2xl sm:text-2xl font-bold text-primary-text">
+            Start a Baby Book
+          </p>
+          <p className="sm:text-lg">
+            The Baby Book is a place where you can document the baby&#39;s
+            journey by uploading images and descriptions. Motherhood Behind Bars
+            will then deliver the images to the mothers, so they can stay
+            updated on their baby&#39;s growth.
+          </p>
+          <Button text="Get Started" onClick={() => setShowIntroPage(false)} />
+        </div>
+      </div>
+    );
+  }
 
-                    const res = await signWaiver(caregiverId, waiver);
-
-                    if (res.success) {
-                      setShowModal(false);
-                      setNotSigning(true);
-                      setShowForm(false);
-
-                      if (books.length === 1) {
-                        router.push(books[0].bookLink);
-                      }
-                    }
-                  }}
-                />
-                <Button
-                  text="Agree to Form"
-                  onClick={() => setShowModal(false)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-        <TitleTopBar title="Baby Book" />
+  function MediaReleaseWaiver() {
+    if (mediaReleaseWaiver) {
+      return (
         <div className="p-4">
           <p className="self-start text-2xl sm:text-center font-bold text-primary-text sm:mt-8">
             Media Release Form
@@ -208,12 +164,82 @@ export default function BabyBookHome({
             </div>
           </div>
         </div>
+      );
+    } else {
+      return (
+        <div className="w-full h-full relative">
+          <p>Could not get Media Release Form!</p>
+        </div>
+      );
+    }
+  }
+
+  function MediaReleaseModal() {
+    return (
+      <div
+        className="absolute z-10 top-0 left-0 right-0 bottom-0 flex items-end sm:items-center sm:justify-center bg-primary-text/25"
+        onClick={(e) => {
+          // If click didn't originate in this element, ignore it
+          if (e.target !== e.currentTarget) return;
+          setShowModal(false);
+        }}
+      >
+        <div className="bg-white w-full sm:max-w-[600px] sm:rounded p-6 sm:p-12 sm:text-center">
+          <p className="self-start text-xl sm:text-2xl font-bold text-primary-text">
+            Don&apos;t Share?
+          </p>
+          <p className="mt-2 sm:mt-4">
+            Proceeding without agreeing to the Media Release Form restricts
+            Motherood Beyond Bars from sharing any photos for media use.
+          </p>
+          <p className="mt-2 sm:mt-4 font-semibold">
+            You can agree to this form at any time in the Resource Library.
+          </p>
+          <div className="flex gap-4 mt-4 sm:mt-8 sm:px-[10%]">
+            <Button
+              text="Continue"
+              type="tertiary"
+              onClick={async () => {
+                const waiver: WaiverHeader = {
+                  waiverName: MEDIA_RELEASE_WAIVER_NAME,
+                  agreedToWaiver: false,
+                  agreedDate: "",
+                  agreedSignature: "",
+                };
+
+                const res = await signWaiver(caregiverId, waiver);
+
+                if (res.success) {
+                  setShowModal(false);
+                  setNotSigning(true);
+                  setShowForm(false);
+
+                  if (books.length === 1) {
+                    router.push(books[0].bookLink);
+                  }
+                }
+              }}
+            />
+            <Button text="Agree to Form" onClick={() => setShowModal(false)} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // First check if Media Release Form should be shown
+  if (showForm) {
+    return (
+      <div className="sm:w-full relative">
+        <TitleTopBar title="Baby Book" />
+        {showModal && <MediaReleaseModal />}
+        {showIntroPage ? <IntroPage /> : <MediaReleaseWaiver />}
       </div>
     );
   }
 
   // Next check if there is only one child, if so the user should be routed to that page
-  if (books.length === 1 && !showForm) {
+  if (typeof window !== "undefined" && books.length === 1 && !showForm) {
     router.push(books[0].bookLink);
     return null;
   }
@@ -235,7 +261,10 @@ export default function BabyBookHome({
             <br />
             <br />
             Once the child is in your care,{" "}
-            <a className="no-underline text-mbb-pink font-semibold">
+            <a
+              className="no-underline text-mbb-pink font-semibold"
+              href="resources"
+            >
               contact us
             </a>{" "}
             to set up account features for you and the child.

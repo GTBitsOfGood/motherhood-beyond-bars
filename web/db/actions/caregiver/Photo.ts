@@ -43,7 +43,6 @@ export async function uploadPhoto({
             imageURL: downloadURL,
             caption: caption,
             date: Timestamp.now(),
-            caregiverId: caregiverId,
             mediaRelease: mediaRelease ?? false,
           });
         } catch (error) {
@@ -56,7 +55,7 @@ export async function uploadPhoto({
             imageURL: URL.createObjectURL(file),
             caption: caption,
             date: Timestamp.now(),
-            caregiverId: caregiverId,
+            photoId: docRef.id,
           },
         };
       })
@@ -66,6 +65,22 @@ export async function uploadPhoto({
   } catch (error) {
     return { success: false, error: `Upload failed: ${error}` };
   }
+}
+
+// TODO edit photo endpoint
+export async function editPhoto({
+  photoId,
+  newPhoto,
+  caption,
+  mediaRelease,
+}: {
+  photoId: string;
+  newPhoto?: string;
+  caption?: string;
+  mediaRelease?: boolean;
+}) {
+  // check if photo was changed and if so, delete then reupload
+  // if any other info has been edited change that other info
 }
 
 // TODO check if this works when connecting to frontend

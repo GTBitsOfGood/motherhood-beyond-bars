@@ -10,7 +10,8 @@ type PasswordForm = {
   confirmPassword: string;
 };
 
-// TODO fix styles
+// TODO fix styles including Log Out button
+// Swap out everything for components
 export default function SettingsPage() {
   const {
     register,
@@ -134,12 +135,7 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+      <SignOutButton />
     </form>
   );
 }
-
-//     <div>
-//       <SignOutButton />
-//     </div>
-//   );
-// }
