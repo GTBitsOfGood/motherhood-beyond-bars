@@ -39,7 +39,7 @@ export default function HalfScreen({
           </div>
         )}
       </div>
-      <div className="hidden sm:flex fixed bottom-16">
+      <div className="hidden sm:flex fixed bottom-16 cursor-pointer">
         <Link href="https://www.netlify.com/" target="_blank">
           <Image src={NetlifyLogo} />
         </Link>
