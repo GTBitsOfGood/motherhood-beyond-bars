@@ -1,3 +1,6 @@
+import Link from "next/link";
+import Image from "next/image";
+import NetlifyLogo from "public/NetlifyLogo.svg";
 import BackButton from "@components/atoms/BackButton";
 
 interface Props {
@@ -35,6 +38,11 @@ export default function HalfScreen({
             Caregiver
           </div>
         )}
+      </div>
+      <div className="hidden sm:flex fixed bottom-16">
+        <Link href="https://www.netlify.com/" target="_blank">
+          <Image src={NetlifyLogo} />
+        </Link>
       </div>
     </div>
   );
