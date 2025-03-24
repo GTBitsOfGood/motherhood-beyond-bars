@@ -70,3 +70,5 @@ export const loginWithGoogle = async () => {
       return { success: false, error: errorMsg };
     });
 };
+
+// add new comments
