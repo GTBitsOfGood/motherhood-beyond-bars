@@ -2,9 +2,12 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import Cookies from "js-cookie"; // For setting cookies
 import { auth } from "db/firebase";
+import { createCaregiverAccount } from "./SignUp";
+import { useRouter } from "next/router";
 
 // Login with Email and Password
 export const loginWithCredentials = async (email: string, password: string) => {
@@ -62,6 +65,18 @@ export const loginWithGoogle = async () => {
       // Check if the user is new
       const isNewUser =
         res.user.metadata.creationTime === res.user.metadata.lastSignInTime;
+      if (isNewUser) {
+        const caregiverResult = await createCaregiverAccount(
+          res,
+          "",
+          "",
+          "",
+          null
+        );
+        if (!caregiverResult.success) {
+          return { success: false, error: caregiverResult.error };
+        }
+      }
       return { success: true, isNewUser };
     })
     .catch((error) => {
