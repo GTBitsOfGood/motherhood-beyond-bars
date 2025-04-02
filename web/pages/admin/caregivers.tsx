@@ -74,6 +74,13 @@ export default function GenCaregiversTab() {
 
   async function loadData() {
     const caregivers = await getCaregivers();
+    console.log(caregivers);
+    caregivers.sort((a, b) => {
+      if (!a.createdAt) return 1;
+      if (!b.createdAt) return -1;
+      return b.createdAt - a.createdAt;
+    })
+    console.log(caregivers);
     setCaregivers(caregivers);
 
     if (!search) {
