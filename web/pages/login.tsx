@@ -93,7 +93,7 @@ export default function LoginScreen() {
                           // Push to a generic route, let middleware handle role-based redirection
                           router.push("/home");
                         } else {
-                          setErrorBannerMsg("error" in res ? res.error : "");
+                          setErrorBannerMsg("error" in res && res.error ? res.error : "An error occurred");
                         }
                       } catch (err) {
                         console.error(err);
@@ -117,7 +117,7 @@ export default function LoginScreen() {
                             router.push("/home");
                           }
                         } else {
-                          setErrorBannerMsg("error" in e ? e.error : "");
+                          setErrorBannerMsg("error" in e && e.error ? e.error : "An error occurred");
                         }
                       });
                     }}
