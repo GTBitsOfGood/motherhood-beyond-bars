@@ -71,9 +71,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <div className="flex flex-col sm:flex-row flex-no-wrap h-screen">
         {!hideNavBar &&
           (isMobile ? (
-            <MobileNavBar isAdmin={isAdmin} items={SideBarItems} />
+            <MobileNavBar isAdmin={isAdmin} items={SideBarItems}/>
           ) : (
-            <SideBar isAdmin={isAdmin} items={SideBarItems} />
+            <SideBar isAdmin={isAdmin} items={SideBarItems}/>
           ))}
         <NextNProgress />
         <Component {...pageProps} />
