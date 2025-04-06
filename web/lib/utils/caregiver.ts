@@ -27,6 +27,7 @@ export default async function getCaregiversFromCaregiverDocs(
         houseHoldInfo: `${data.numAdults} adults, ${data.numChildren} children`,
         // liabilityWaiver: data.signedWaivers?.at(-1).id || null,
         liabilityWaiver: "",
+        createdAt: data.createdAt,
       };
     })
   );

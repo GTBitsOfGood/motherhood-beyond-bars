@@ -3,16 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { collection, query, onSnapshot } from "firebase/firestore";
-import { db } from "db/firebase";
+import { collection, query, onSnapshot, doc } from "firebase/firestore";
+import { auth, db } from "db/firebase";
 
 import { Caregiver } from "@lib/types/users";
 import NavBarLogo from "./logos/NavBarLogo";
+import { onAuthStateChanged } from "firebase/auth";
 
 function SideBar(props: any) {
   const [pendingCount, setPendingCount] = useState();
   const [route, setRoute] = useState("");
   const router = useRouter();
+  const [caregiver, setCaregiver] = useState<any>(null);
 
   useEffect(() => {
     setRoute(window.location.pathname);
@@ -40,12 +42,34 @@ function SideBar(props: any) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user.uid);
+        const caregiverRef = doc(db, "caregivers", user.uid);
+        const unsubscribeCaregiver = onSnapshot(caregiverRef, (snapshot) => {
+          if (snapshot.exists()) {
+            setCaregiver(snapshot.data());
+          }
+        });
+        return () => unsubscribeCaregiver();
+      } else {
+        setCaregiver(null);
+      }
+    });
+    return () => unsubscribeAuth();
+  }, []);
+
   return (
     // TODO fix current tab highlight
     <div className="fixed top-0 sm:top-auto sm:static h-full w-2/3 sm:w-[18%] bg-black text-white z-50 sm:z-0">
       <div className="w-full flex-col justify-start z-50 sm:z-0">
         {/* TODO populate name */}
-        <NavBarLogo isAdmin={props.isAdmin} caregiverName="Jane Care" />
+        <NavBarLogo isAdmin={props.isAdmin} caregiverName={
+          caregiver
+          ? caregiver.firstName + " " + caregiver.lastName
+          : "Jane Care"
+        } />
         <div className="pt-4">
           {(props.isAdmin
             ? props.items.AdminSideBarItems
@@ -103,3 +127,4 @@ function SideBar(props: any) {
 }
 
 export default SideBar;
+

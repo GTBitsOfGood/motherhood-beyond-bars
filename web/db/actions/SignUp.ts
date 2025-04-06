@@ -130,6 +130,7 @@ export async function createCaregiverAccount(
         auth: authData.uid,
         babyCount: 0,
         onboarding: false,
+        createdAt: new Date(),
       });
 
       return { success: true };

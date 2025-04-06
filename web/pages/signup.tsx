@@ -285,7 +285,7 @@ export default function SignUpScreen() {
                                 setPage(2);
                               }
                             } else {
-                              setErrorBannerMsg("error" in e ? e.error : "");
+                              setErrorBannerMsg("error" in e && e.error ? e.error : "An error occurred");
                             }
                           });
                         }}
