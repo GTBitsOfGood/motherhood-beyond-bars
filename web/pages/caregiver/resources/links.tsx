@@ -20,28 +20,28 @@ export default function Links({ links }: { links: Link[] }) {
   return (
     <div className="w-full h-full flex flex-col justify-start items-start">
       <TitleTopBar title="Resources" />
-      <div className="ml-10 my-6 flex">
+      <div className="w-full p-6 overflow-auto">
         <BackButton
           onClick={() => {
             router.push("/caregiver/resources");
           }}
           darkerColor={true}
         />
-      </div>
-      <div className="w-full flex flex-col">
-        <div className="text-2xl font-bold mb-6 m-6 sm:ml-[5.5rem] sm:mt-0">
-          Links
-        </div>
-        <div className="flex flex-col justify-center items-center">
-          {links.map((link, i) => {
-            return (
-              <LinkCard
-                title={link["title"]}
-                description={link["description"]}
-                URL={link["url"]}
-              ></LinkCard>
-            );
-          })}
+        <div className="flex flex-col justify-center items-center w-full sm:px-[5rem]">
+          <h1 className="text-2xl font-bold my-[1.125rem] w-full">
+            Links
+          </h1>
+          <div className="flex flex-col gap-4 w-full">
+            {links.map((link, i) => {
+              return (
+                <LinkCard
+                  title={link["title"]}
+                  description={link["description"]}
+                  URL={link["url"]}
+                ></LinkCard>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -49,7 +49,9 @@ export default function Links({ links }: { links: Link[] }) {
 }
 
 export const getServerSideProps: GetServerSideProps<Link[]> = async () => {
+  const linksDoc = await getDoc(doc(db, "resources", "links"));
+
   return {
-    props: (await getDoc(doc(db, "resources", "links"))).data() as Link[],
+    props: linksDoc.data() as Link[],
   };
 };

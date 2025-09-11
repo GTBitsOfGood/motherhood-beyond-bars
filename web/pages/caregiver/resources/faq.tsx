@@ -19,28 +19,28 @@ export default function FAQ({ faqs }: { faqs: FAQEntry[] }) {
   return (
     <div className="w-full h-full flex flex-col justify-start items-start">
       <TitleTopBar title="Resources" />
-      <div className="ml-10 my-6 flex">
+      <div className="w-full p-6 overflow-auto">
         <BackButton
           onClick={() => {
             router.push("/caregiver/resources");
           }}
           darkerColor={true}
         />
-      </div>
-      <div className="w-full flex flex-col">
-        <div className="text-2xl font-bold mb-6 m-6 sm:ml-[5.5rem] sm:mt-0">
-          FAQ
-        </div>
-        <div className="flex flex-col justify-center items-center">
-          {faqs.map((faq, i) => {
-            return (
-              <QuestionAnswer
-                title={faq["question"]}
-                description={faq["answer"]}
-                showDesc={false}
-              ></QuestionAnswer>
-            );
-          })}
+        <div className="flex flex-col justify-center items-center w-full sm:px-[5rem]">
+          <h1 className="text-2xl font-bold my-[1.125rem] w-full">
+            FAQ
+          </h1>
+          <div className="flex flex-col gap-4 w-full">
+            {faqs.map((faq, i) => {
+              return (
+                <QuestionAnswer
+                  title={faq["question"]}
+                  description={faq["answer"]}
+                  showDesc={false}
+                ></QuestionAnswer>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -48,7 +48,9 @@ export default function FAQ({ faqs }: { faqs: FAQEntry[] }) {
 }
 
 export const getServerSideProps: GetServerSideProps<FAQEntry[]> = async () => {
+  const faqDoc = await getDoc(doc(db, "resources", "faq"));
+
   return {
-    props: (await getDoc(doc(db, "resources", "faq"))).data() as FAQEntry[],
+    props: faqDoc.data() as FAQEntry[],
   };
 };

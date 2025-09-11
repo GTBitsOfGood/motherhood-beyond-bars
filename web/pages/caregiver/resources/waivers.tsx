@@ -33,11 +33,11 @@ export default function Waivers({ waivers }: Props) {
           }}
           darkerColor={true}
         />
-        <div className="flex flex-col justify-center items-center">
-          <h1 className="text-2xl font-bold mb-[1.125rem] w-full">
+        <div className="flex flex-col justify-center items-center w-full sm:px-[5rem]">
+          <h1 className="text-2xl font-bold my-[1.125rem] w-full">
             Waivers & Forms
           </h1>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-full">
             {waivers.map((waiver, i) => (
               <QuestionAnswer
                 key={i}
