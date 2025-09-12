@@ -30,7 +30,7 @@ export default function FAQ({ faqs }: { faqs: FAQEntry[] }) {
           <h1 className="text-2xl font-bold my-[1.125rem] w-full">
             FAQ
           </h1>
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col w-full">
             {faqs.map((faq, i) => {
               return (
                 <QuestionAnswer

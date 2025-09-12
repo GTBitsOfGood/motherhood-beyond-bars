@@ -31,7 +31,7 @@ export default function Links({ links }: { links: Link[] }) {
           <h1 className="text-2xl font-bold my-[1.125rem] w-full">
             Links
           </h1>
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col w-full">
             {links.map((link, i) => {
               return (
                 <LinkCard
