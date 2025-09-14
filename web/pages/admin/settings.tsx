@@ -49,7 +49,7 @@ export default function SettingsPage() {
 
   return (
     <form
-      className="flex flex-col items-start p-6 bg-gray-50 rounded-lg shadow-md w-full"
+      className="flex flex-col items-start p-6 bg-gray-50 rounded-lg shadow-md w-full sm:w-[82%]"
       onSubmit={handleSubmit(onSubmit)}
     >
       <h1 className="text-2xl mb-6 font-bold text-gray-800">Settings</h1>
