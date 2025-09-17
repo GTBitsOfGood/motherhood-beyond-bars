@@ -26,18 +26,18 @@ export default function Waivers({ waivers }: Props) {
   return (
     <div className="w-full h-full flex flex-col justify-start items-start">
       <TitleTopBar title="Resources" />
-      <div className="w-full p-6 overflow-auto">
+      <div className="w-full p-6 overflow-auto sm:pt-[3rem] sm:px-[4.5rem]">
         <BackButton
           onClick={() => {
             router.push("/caregiver/resources");
           }}
           darkerColor={true}
         />
-        <div className="flex flex-col justify-center items-center">
-          <h1 className="text-2xl font-bold mb-[1.125rem] w-full">
+        <div className="flex flex-col justify-center items-center w-full px-1">
+          <h1 className="text-2xl font-bold my-[1.125rem] w-full">
             Waivers & Forms
           </h1>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-full">
             {waivers.map((waiver, i) => (
               <QuestionAnswer
                 key={i}
