@@ -78,7 +78,7 @@ function SideBar(props: any) {
             <ul
               key={idx}
               className={`px-8 py-2 flex-col justify-center items-center  
-                ${item.route === route ? "bg-gray-600 text-white" : "text-navbar-gray-text hover:text-white"}
+                ${route.startsWith(item.route) ? "bg-gray-600 text-white" : "text-navbar-gray-text hover:text-white"}
                 ${item.name === "Item Requests" && router.asPath.includes("/item-management") ? "bg-gray-600" : ""}
               `}
             >
