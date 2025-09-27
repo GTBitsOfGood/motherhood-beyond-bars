@@ -1,6 +1,29 @@
-
+import { useRouter } from "next/router";
+import { auth } from "db/firebase";
+import { signOut } from "firebase/auth";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
 
 export default function Error404Page() {
+    const router = useRouter();
+
+    useEffect(() => {
+        const autologout = async () => {
+            try {
+                // Log out from Firebase
+                await signOut(auth);
+                // Clear auth token cookie
+                Cookies.remove("authToken", { path: "/" });
+                // Redirect to auth page
+                router.push("/login");
+            } catch (error) {
+                console.error("Error during sign out:", error);
+            }
+        };
+
+        autologout();
+    }, []);
+
     return (
         <div className="w-full h-full flex flex-col justify-center items-center">
             <div className="flex flex-row justify-center items-center">
