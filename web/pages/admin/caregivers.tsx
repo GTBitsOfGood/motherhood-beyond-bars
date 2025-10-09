@@ -121,9 +121,9 @@ export default function GenCaregiversTab() {
   };
 
   return (
-    <div>
+    <div className="sm:overflow-auto">
       <div className="flex flex-col border-t">
-        <div className="flex flex-row justify-between mx-9 my-4">
+        <div className="flex flex-row justify-between mx-9 my-4 sm:min-h-[2.95rem]">
           <div className="flex flex-row gap-6 items-center">
             <h1 className="text-2xl font-bold">Caregivers</h1>
             <h2 className="text-sm text-slate-500">
