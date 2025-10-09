@@ -7,11 +7,13 @@ export default function ResourcesPage() {
   const router = useRouter();
 
   return (
-    <div className="w-full h-full flex flex-col justify-start items-center">
-      <TitleTopBar title="Resources" />
-      <div className="sm:flex sm:flex-row sm:w-[60.313rem] sm:h-[29.563rem] sm:mt-14">
-        <ContactInfo></ContactInfo>
-        <div className="sm:ml-12 sm:w-[20.438rem] sm:h-[23.25rem]">
+    <div className="w-full h-full flex flex-col justify-start items-center sm:overflow-auto">
+      <TitleTopBar title="Resources"/>
+      <div className="sm:flex sm:flex-row sm:w-full sm:pt-14 sm:justify-center sm:overflow-auto sm:pb-6">
+        <div className="sm:flex sm:w-1/2 sm:flex-row sm:justify-center sm:pl-[6rem] sm:pr-[3rem]">
+          <ContactInfo></ContactInfo>
+        </div>
+        <div className="sm:flex sm:w-1/2 sm:flex-col sm:justify-center sm:items-center sm:pl-[3rem] sm:pr-[6rem]">
           <InfoCard
             title="FAQ"
             description="Answers to the most commonly asked questions"
