@@ -6,7 +6,7 @@ interface Props {
 
 export default function LinkCard({ title, description, URL }: Props) {
   return (
-    <div className="w-[21.5rem] px-3 justify-center items-center gap-6 text-start sm:w-[66.5rem]">
+    <div className="px-3 justify-center items-center gap-6 text-start w-full">
       <div className="flex flex-col">
         <div className="flex flex-row justify-between">
           <div className="w-[15.75rem]">{title}</div>

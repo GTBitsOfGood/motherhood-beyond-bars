@@ -64,12 +64,14 @@ function SideBar(props: any) {
     // TODO fix current tab highlight
     <div className="fixed top-0 sm:top-auto sm:static h-full w-2/3 sm:w-[18%] bg-black text-white z-50 sm:z-0">
       <div className="w-full flex-col justify-start z-50 sm:z-0">
-        {/* TODO populate name */}
-        <NavBarLogo isAdmin={props.isAdmin} caregiverName={
-          caregiver
-          ? caregiver.firstName + " " + caregiver.lastName
-          : "Jane Care"
-        } />
+        <div className="sm:h-[5rem]">
+          {/* TODO populate name */}
+          <NavBarLogo isAdmin={props.isAdmin} caregiverName={
+            caregiver
+            ? caregiver.firstName + " " + caregiver.lastName
+            : "Jane Care"
+          } />
+        </div>
         <div className="pt-4">
           {(props.isAdmin
             ? props.items.AdminSideBarItems
@@ -78,7 +80,7 @@ function SideBar(props: any) {
             <ul
               key={idx}
               className={`px-8 py-2 flex-col justify-center items-center  
-                ${item.route === route ? "bg-gray-600 text-white" : "text-navbar-gray-text hover:text-white"}
+                ${route.startsWith(item.route) ? "bg-gray-600 text-white" : "text-navbar-gray-text hover:text-white"}
                 ${item.name === "Item Requests" && router.asPath.includes("/item-management") ? "bg-gray-600" : ""}
               `}
             >

@@ -23,7 +23,7 @@ export default function QuestionAnswer({
   return (
     // TODO fix so that width isn't set
     <button
-      className="px-3 pt-2.5 pb-[0.563rem] bg-white rounded shadow justify-center items-center gap-6 text-start mb-6 sm:w-[65rem]"
+      className="px-3 pt-2.5 pb-[0.563rem] bg-white rounded shadow justify-center items-center gap-6 text-start mb-6 w-full"
       onClick={action}
     >
       <div className="flex flex-col">
