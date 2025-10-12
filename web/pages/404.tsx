@@ -8,20 +8,18 @@ export default function Error404Page() {
     const router = useRouter();
 
     useEffect(() => {
-        const autologout = async () => {
-            try {
-                // Log out from Firebase
-                await signOut(auth);
-                // Clear auth token cookie
-                Cookies.remove("authToken", { path: "/" });
-                // Redirect to auth page
-                router.push("/login");
-            } catch (error) {
-                console.error("Error during sign out:", error);
-            }
-        };
-
-        autologout();
+        if (router.isReady && router.asPath === "/403") {
+            const logout = async () => {
+                try {
+                    await signOut(auth);
+                    Cookies.remove("authToken", { path: "/" });
+                    router.push("/login");
+                } catch (error) {
+                    console.error("Error during sign out:", error);
+                }
+            };
+            logout();
+        }
     }, []);
 
     return (
